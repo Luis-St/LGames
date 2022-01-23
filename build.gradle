@@ -1,0 +1,75 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'java'
+	id 'application'
+	id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+    	url "https://libraries.minecraft.net"
+	}
+}
+
+ext {
+	javaMainClass = 'net.project.Main'
+}
+
+eclipse {
+	jdt {
+		sourceCompatibility = '17'
+		targetCompatibility = '17'
+	}
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+javafx {
+	version = "17"
+	modules = [ 'javafx.controls' ]
+}
+
+compileJava {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + 'Java Runtime:' + System.getProperty("java.runtime.version") + ' Arch: ' + System.getProperty('os.arch'))
+
+dependencies {
+	implementation 'com.google.code.gson:gson:2.8.9'
+	implementation 'net.sf.jopt-simple:jopt-simple:5.0.4'
+	implementation 'com.google.guava:guava:31.0.1-jre'
+	implementation group: 'io.netty', name: 'netty-all', version: '4.1.25.Final'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+	implementation 'com.mojang:datafixerupper:4.0.26'
+}
+
+task mainRun(type:JavaExec) {
+	group = 'runs'
+	main = 'net.project.Main'
+	classpath = sourceSets.main.runtimeClasspath
+	args("--ide", "--debugMode", "true")
+	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
+}
+
+wrapper {
+    gradleVersion = '7.1'
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+jar {
+	manifest {
+		attributes([
+			'Main-Class': javaMainClass
+		])
+	}
+}
