@@ -1,8 +1,8 @@
-package net.project.data.tag.tags.collection;
+package net.vgc.data.tag.tags.collection;
 
 import java.util.AbstractList;
 
-import net.project.data.tag.Tag;
+import net.vgc.data.tag.Tag;
 
 public abstract class CollectionTag<T extends Tag> extends AbstractList<T> implements Tag {
 	

@@ -1,18 +1,18 @@
-package net.project.data.tag;
+package net.vgc.data.tag;
 
-import net.project.data.tag.tags.CompoundTag;
-import net.project.data.tag.tags.EndTag;
-import net.project.data.tag.tags.StringTag;
-import net.project.data.tag.tags.collection.ListTag;
-import net.project.data.tag.tags.collection.array.ByteArrayTag;
-import net.project.data.tag.tags.collection.array.IntArrayTag;
-import net.project.data.tag.tags.collection.array.LongArrayTag;
-import net.project.data.tag.tags.numeric.ByteTag;
-import net.project.data.tag.tags.numeric.DoubleTag;
-import net.project.data.tag.tags.numeric.FloatTag;
-import net.project.data.tag.tags.numeric.IntTag;
-import net.project.data.tag.tags.numeric.LongTag;
-import net.project.data.tag.tags.numeric.ShortTag;
+import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.data.tag.tags.EndTag;
+import net.vgc.data.tag.tags.StringTag;
+import net.vgc.data.tag.tags.collection.ListTag;
+import net.vgc.data.tag.tags.collection.array.ByteArrayTag;
+import net.vgc.data.tag.tags.collection.array.IntArrayTag;
+import net.vgc.data.tag.tags.collection.array.LongArrayTag;
+import net.vgc.data.tag.tags.numeric.ByteTag;
+import net.vgc.data.tag.tags.numeric.DoubleTag;
+import net.vgc.data.tag.tags.numeric.FloatTag;
+import net.vgc.data.tag.tags.numeric.IntTag;
+import net.vgc.data.tag.tags.numeric.LongTag;
+import net.vgc.data.tag.tags.numeric.ShortTag;
 
 public class TagTypes {
 	

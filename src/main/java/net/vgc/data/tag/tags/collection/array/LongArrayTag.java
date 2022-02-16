@@ -1,4 +1,4 @@
-package net.project.data.tag.tags.collection.array;
+package net.vgc.data.tag.tags.collection.array;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -8,12 +8,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import net.project.data.tag.Tag;
-import net.project.data.tag.TagType;
-import net.project.data.tag.tags.collection.CollectionTag;
-import net.project.data.tag.tags.numeric.LongTag;
-import net.project.data.tag.tags.numeric.NumericTag;
-import net.project.data.tag.visitor.TagVisitor;
+import net.vgc.data.tag.Tag;
+import net.vgc.data.tag.TagType;
+import net.vgc.data.tag.tags.collection.CollectionTag;
+import net.vgc.data.tag.tags.numeric.LongTag;
+import net.vgc.data.tag.tags.numeric.NumericTag;
+import net.vgc.data.tag.visitor.TagVisitor;
 
 public class LongArrayTag extends CollectionTag<LongTag> {
 	

@@ -1,11 +1,11 @@
-package net.project.data.tag.tags.numeric;
+package net.vgc.data.tag.tags.numeric;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import net.project.data.tag.TagType;
-import net.project.data.tag.visitor.TagVisitor;
+import net.vgc.data.tag.TagType;
+import net.vgc.data.tag.visitor.TagVisitor;
 
 public class ByteTag extends NumericTag {
 	

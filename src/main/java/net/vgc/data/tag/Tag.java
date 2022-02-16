@@ -1,4 +1,4 @@
-package net.project.data.tag;
+package net.vgc.data.tag;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import net.project.data.tag.visitor.StringTagVisitor;
-import net.project.data.tag.visitor.TagVisitor;
+import net.vgc.data.tag.visitor.StringTagVisitor;
+import net.vgc.data.tag.visitor.TagVisitor;
 
 public interface Tag {
 	

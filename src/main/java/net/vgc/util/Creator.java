@@ -1,4 +1,4 @@
-package net.project.util;
+package net.vgc.util;
 
 public interface Creator<T> {
 	

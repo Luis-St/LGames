@@ -1,12 +1,12 @@
-package net.project.data.tag.tags;
+package net.vgc.data.tag.tags;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import net.project.data.tag.Tag;
-import net.project.data.tag.TagType;
-import net.project.data.tag.visitor.TagVisitor;
+import net.vgc.data.tag.Tag;
+import net.vgc.data.tag.TagType;
+import net.vgc.data.tag.visitor.TagVisitor;
 
 public class EndTag implements Tag {
 	

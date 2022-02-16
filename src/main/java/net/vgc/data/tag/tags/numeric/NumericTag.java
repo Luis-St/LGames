@@ -1,6 +1,6 @@
-package net.project.data.tag.tags.numeric;
+package net.vgc.data.tag.tags.numeric;
 
-import net.project.data.tag.Tag;
+import net.vgc.data.tag.Tag;
 
 public abstract class NumericTag implements Tag {
 

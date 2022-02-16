@@ -1,16 +1,16 @@
 plugins {
-    id 'java-library'
-    id 'eclipse'
-    id 'java'
+	id 'java-library'
+	id 'eclipse'
+	id 'java'
 	id 'application'
 	id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 repositories {
-    jcenter()
-    mavenCentral()
-    maven {
-    	url "https://libraries.minecraft.net"
+	jcenter()
+	mavenCentral()
+	maven {
+		url "https://libraries.minecraft.net"
 	}
 }
 
@@ -37,8 +37,8 @@ javafx {
 }
 
 compileJava {
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
 }
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + 'Java Runtime:' + System.getProperty("java.runtime.version") + ' Arch: ' + System.getProperty('os.arch'))
@@ -57,12 +57,36 @@ task mainRun(type:JavaExec) {
 	group = 'runs'
 	main = 'net.project.Main'
 	classpath = sourceSets.main.runtimeClasspath
-	args("--ide", "--debugMode", "true")
+	args("--debugMode", "true", "--ide", "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
+	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
+}
+
+task serverRun(type:JavaExec) {
+	group = 'runs'
+	main = 'net.project.client.Main'
+	classpath = sourceSets.test.runtimeClasspath
+	args("--debugMode", "true", "--server", "--host", "localhost", "--port", 8080, "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
+	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
+}
+
+task clientRun(type:JavaExec) {
+	group = 'runs'
+	main = 'net.project.client.Main'
+	classpath = sourceSets.test.runtimeClasspath
+	args("--debugMode", "true", "--client", "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
+	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
+}
+
+task testRun(type:JavaExec) {
+	group = 'runs'
+	main = 'net.project.test.TestMain'
+	classpath = sourceSets.test.runtimeClasspath
+	args("--gameDir", file('run'), "--resourceDir", file('src/test/resources/'))
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
 wrapper {
-    gradleVersion = '7.1'
+    gradleVersion = '7.3'
     distributionType = Wrapper.DistributionType.ALL
 }
 

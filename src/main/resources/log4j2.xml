@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><Configuration name="BuilderTest" status="ERROR">
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="BuilderTest" status="ERROR">
   <ThresholdFilter onMatch="ACCEPT" onMismatch="NEUTRAL" level="DEBUG"/>
   <Appenders>
     <CONSOLE name="Console" target="SYSTEM_OUT">

@@ -1,4 +1,4 @@
-package net.project.util.streams;
+package net.vgc.util.streams;
 
 import java.io.OutputStream;
 

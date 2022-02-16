@@ -1,22 +1,22 @@
-package net.project.test;
+package net.vgc.test;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
-import net.project.util.ClasspathInspector;
-import net.project.util.ReflectionUtil;
+import net.vgc.util.ClasspathInspector;
+import net.vgc.util.ReflectionHelper;
+import net.vgc.util.Util;
 
-public class TestMain {
+public class VGCMain {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(TestMain.class);
+	protected static final Logger LOGGER = Util.getLogger(VGCMain.class);
 	public static Path resourceDir;
 	
 	public static void main(String[] args) throws Exception {
@@ -30,7 +30,7 @@ public class TestMain {
 		if (!set.has(resourceDir)) {
 			throw new IllegalStateException("Fail to get resource directory from program arguments");
 		} else {
-			TestMain.resourceDir = set.valueOf(resourceDir).toPath();
+			VGCMain.resourceDir = set.valueOf(resourceDir).toPath();
 		}
 		startTests();
 	}
@@ -42,12 +42,12 @@ public class TestMain {
 		LOGGER.info("");
 		for (Class<?> clazz : classes) {
 			try {
-				TestMain.class.getClassLoader().loadClass(clazz.getName());
-				if (clazz.isAnnotationPresent(ProjectTest.class) && ReflectionUtil.hasInterface(clazz, IProjectTest.class)) {
-					ProjectTest projectTest = clazz.getAnnotation(ProjectTest.class);
+				VGCMain.class.getClassLoader().loadClass(clazz.getName());
+				if (clazz.isAnnotationPresent(VGCTest.class) && ReflectionHelper.hasInterface(clazz, IVGCest.class)) {
+					VGCTest projectTest = clazz.getAnnotation(VGCTest.class);
 					if (projectTest.shoudLoad()) {
 						long testTime = System.currentTimeMillis();
-						IProjectTest test = (IProjectTest) ReflectionUtil.newInstance(clazz);
+						IVGCest test = (IVGCest) ReflectionHelper.newInstance(clazz);
 						LOGGER.info("Start testing of {}", clazz.getSimpleName());
 						test.start();
 						LOGGER.info("Stop testing of {}", clazz.getSimpleName());

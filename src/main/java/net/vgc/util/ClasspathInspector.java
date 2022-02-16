@@ -1,4 +1,4 @@
-package net.project.util;
+package net.vgc.util;
 
 import java.io.File;
 import java.io.FilenameFilter;

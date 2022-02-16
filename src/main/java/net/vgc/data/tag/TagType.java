@@ -1,9 +1,9 @@
-package net.project.data.tag;
+package net.vgc.data.tag;
 
 import java.io.DataInput;
 import java.io.IOException;
 
-import net.project.data.tag.tags.EndTag;
+import net.vgc.data.tag.tags.EndTag;
 
 public interface TagType<T extends Tag> {
 	
