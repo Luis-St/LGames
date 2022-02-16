@@ -14,9 +14,9 @@ import net.vgc.util.ClasspathInspector;
 import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 
-public class VGCMain {
+public class VGCTestMain {
 	
-	protected static final Logger LOGGER = Util.getLogger(VGCMain.class);
+	protected static final Logger LOGGER = Util.getLogger(VGCTestMain.class);
 	public static Path resourceDir;
 	
 	public static void main(String[] args) throws Exception {
@@ -30,7 +30,7 @@ public class VGCMain {
 		if (!set.has(resourceDir)) {
 			throw new IllegalStateException("Fail to get resource directory from program arguments");
 		} else {
-			VGCMain.resourceDir = set.valueOf(resourceDir).toPath();
+			VGCTestMain.resourceDir = set.valueOf(resourceDir).toPath();
 		}
 		startTests();
 	}
@@ -42,7 +42,7 @@ public class VGCMain {
 		LOGGER.info("");
 		for (Class<?> clazz : classes) {
 			try {
-				VGCMain.class.getClassLoader().loadClass(clazz.getName());
+				VGCTestMain.class.getClassLoader().loadClass(clazz.getName());
 				if (clazz.isAnnotationPresent(VGCTest.class) && ReflectionHelper.hasInterface(clazz, IVGCest.class)) {
 					VGCTest projectTest = clazz.getAnnotation(VGCTest.class);
 					if (projectTest.shoudLoad()) {

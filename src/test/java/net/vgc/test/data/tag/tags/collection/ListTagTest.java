@@ -7,7 +7,7 @@ import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.collection.ListTag;
 import net.vgc.data.tag.tags.numeric.ByteTag;
 import net.vgc.test.IVGCest;
-import net.vgc.test.VGCMain;
+import net.vgc.test.VGCTestMain;
 import net.vgc.test.VGCTest;
 
 @VGCTest
@@ -21,13 +21,13 @@ public class ListTagTest implements IVGCest {
 		for (int i = 10; i < 21; i++) {
 			tag.add(ByteTag.valueOf((byte) i));
 		}
-		Tag.write(VGCMain.resourceDir.resolve(this.path), tag);
+		Tag.write(VGCTestMain.resourceDir.resolve(this.path), tag);
 		LOGGER.debug("{}", tag);
 	}
 
 	@Override
 	public void stop() throws Exception {
-		Tag tag = Tag.load(VGCMain.resourceDir.resolve(this.path));
+		Tag tag = Tag.load(VGCTestMain.resourceDir.resolve(this.path));
 		if (tag instanceof ListTag listTag) {
 			for (int i = 0; i < listTag.size(); i++) {
 				LOGGER.debug("{}:{}", i, listTag.get(i));

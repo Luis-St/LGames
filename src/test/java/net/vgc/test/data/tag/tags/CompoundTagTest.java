@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.test.IVGCest;
-import net.vgc.test.VGCMain;
+import net.vgc.test.VGCTestMain;
 import net.vgc.test.VGCTest;
 
 @VGCTest
@@ -24,13 +24,13 @@ public class CompoundTagTest implements IVGCest {
 		compoundTag.putInt("test_int", 4545);
 		tag.put("test_compound", compoundTag );
 		tag.putBoolean("test_boolean", false);
-		Tag.write(VGCMain.resourceDir.resolve(this.path), tag);
+		Tag.write(VGCTestMain.resourceDir.resolve(this.path), tag);
 		LOGGER.debug("{}", tag);
 	}
 
 	@Override
 	public void stop() throws Exception {
-		Tag tag = Tag.load(VGCMain.resourceDir.resolve(this.path));
+		Tag tag = Tag.load(VGCTestMain.resourceDir.resolve(this.path));
 		if (tag instanceof CompoundTag compoundTag) {
 			LOGGER.debug("{}:{}", "test_int", compoundTag.getInt("test_int"));
 			LOGGER.debug("{}:{}", "test_long", compoundTag.getLong("test_long"));

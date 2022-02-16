@@ -7,8 +7,8 @@ import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.collection.array.IntArrayTag;
 import net.vgc.data.tag.tags.numeric.IntTag;
 import net.vgc.test.IVGCest;
-import net.vgc.test.VGCMain;
 import net.vgc.test.VGCTest;
+import net.vgc.test.VGCTestMain;
 
 @VGCTest
 public class IntArrayTagTest implements IVGCest {
@@ -21,13 +21,13 @@ public class IntArrayTagTest implements IVGCest {
 		for (int i = 0; i < 4; i++) {
 			tag.add(IntTag.valueOf((int) i));
 		}
-		Tag.write(VGCMain.resourceDir.resolve(this.path), tag);
+		Tag.write(VGCTestMain.resourceDir.resolve(this.path), tag);
 		LOGGER.debug("{}", tag);
 	}
 
 	@Override
 	public void stop() throws Exception {
-		Tag tag = Tag.load(VGCMain.resourceDir.resolve(this.path));
+		Tag tag = Tag.load(VGCTestMain.resourceDir.resolve(this.path));
 		if (tag instanceof IntArrayTag arrayTag) {
 			for (int i = 0; i < arrayTag.size(); i++) {
 				LOGGER.debug("{}:{}", i, arrayTag.get(i));

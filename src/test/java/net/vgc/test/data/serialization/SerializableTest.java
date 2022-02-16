@@ -8,7 +8,7 @@ import net.vgc.data.serialization.SerializationUtil;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.test.IVGCest;
-import net.vgc.test.VGCMain;
+import net.vgc.test.VGCTestMain;
 import net.vgc.test.VGCTest;
 
 @VGCTest
@@ -24,28 +24,28 @@ public class SerializableTest implements IVGCest {
 	public void start() throws Exception {
 		DeserializeConstructor deserializeConstructor = new DeserializeConstructor("deserialize constructor", 485754152);
 		LOGGER.debug("{}" , deserializeConstructor);
-		Tag.write(VGCMain.resourceDir.resolve(this.deserializeConstructorPath), deserializeConstructor.serialize());
+		Tag.write(VGCTestMain.resourceDir.resolve(this.deserializeConstructorPath), deserializeConstructor.serialize());
 		LoadMethod loadMethod = new LoadMethod("load method", 18832015);
 		LOGGER.debug("{}" , loadMethod);
-		Tag.write(VGCMain.resourceDir.resolve(this.loadMethodPath), loadMethod.serialize());
+		Tag.write(VGCTestMain.resourceDir.resolve(this.loadMethodPath), loadMethod.serialize());
 		DeserializeMethod deserializeMethod = new DeserializeMethod("deserialize method", 978232154);
 		LOGGER.debug("{}" , deserializeMethod);
-		Tag.write(VGCMain.resourceDir.resolve(this.deserializeMethodPath), deserializeMethod.serialize());
+		Tag.write(VGCTestMain.resourceDir.resolve(this.deserializeMethodPath), deserializeMethod.serialize());
 		CreateMethod createMethod = new CreateMethod("create method", 135024800);
 		LOGGER.debug("{}" , createMethod);
-		Tag.write(VGCMain.resourceDir.resolve(this.createMethodPath), createMethod.serialize());
+		Tag.write(VGCTestMain.resourceDir.resolve(this.createMethodPath), createMethod.serialize());
 		LoadConstructor loadConstructor = new LoadConstructor("load constructor", 96218721);
 		LOGGER.debug("{}" , loadConstructor);
-		Tag.write(VGCMain.resourceDir.resolve(this.loadConstructorPath), loadConstructor.serialize());
+		Tag.write(VGCTestMain.resourceDir.resolve(this.loadConstructorPath), loadConstructor.serialize());
 	}
 
 	@Override
 	public void stop() throws Exception {
-		LOGGER.debug("{}", SerializationUtil.deserialize(DeserializeConstructor.class, (CompoundTag) Tag.load(VGCMain.resourceDir.resolve(this.deserializeConstructorPath))));
-		LOGGER.debug("{}", SerializationUtil.deserialize(LoadMethod.class, (CompoundTag) Tag.load(VGCMain.resourceDir.resolve(this.loadMethodPath))));
-		LOGGER.debug("{}", SerializationUtil.deserialize(DeserializeMethod.class, (CompoundTag) Tag.load(VGCMain.resourceDir.resolve(this.deserializeMethodPath))));
-		LOGGER.debug("{}", SerializationUtil.deserialize(CreateMethod.class, (CompoundTag) Tag.load(VGCMain.resourceDir.resolve(this.createMethodPath))));
-		LOGGER.debug("{}", SerializationUtil.deserialize(LoadConstructor.class, (CompoundTag) Tag.load(VGCMain.resourceDir.resolve(this.loadConstructorPath))));
+		LOGGER.debug("{}", SerializationUtil.deserialize(DeserializeConstructor.class, (CompoundTag) Tag.load(VGCTestMain.resourceDir.resolve(this.deserializeConstructorPath))));
+		LOGGER.debug("{}", SerializationUtil.deserialize(LoadMethod.class, (CompoundTag) Tag.load(VGCTestMain.resourceDir.resolve(this.loadMethodPath))));
+		LOGGER.debug("{}", SerializationUtil.deserialize(DeserializeMethod.class, (CompoundTag) Tag.load(VGCTestMain.resourceDir.resolve(this.deserializeMethodPath))));
+		LOGGER.debug("{}", SerializationUtil.deserialize(CreateMethod.class, (CompoundTag) Tag.load(VGCTestMain.resourceDir.resolve(this.createMethodPath))));
+		LOGGER.debug("{}", SerializationUtil.deserialize(LoadConstructor.class, (CompoundTag) Tag.load(VGCTestMain.resourceDir.resolve(this.loadConstructorPath))));
 	}
 	
 	static final class DeserializeConstructor implements Serializable {
