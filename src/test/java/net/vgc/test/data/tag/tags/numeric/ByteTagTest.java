@@ -5,12 +5,12 @@ import java.nio.file.Path;
 
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.numeric.ByteTag;
-import net.vgc.test.IVGCest;
-import net.vgc.test.VGCTestMain;
+import net.vgc.test.IVGTest;
 import net.vgc.test.VGCTest;
+import net.vgc.test.VGCTestMain;
 
 @VGCTest
-public class ByteTagTest implements IVGCest {
+public class ByteTagTest implements IVGTest {
 	
 	protected final Path path = new File("test/tag/numeric/byte_test.txt").toPath();
 	

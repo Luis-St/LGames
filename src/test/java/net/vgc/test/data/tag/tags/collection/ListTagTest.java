@@ -6,12 +6,12 @@ import java.nio.file.Path;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.collection.ListTag;
 import net.vgc.data.tag.tags.numeric.ByteTag;
-import net.vgc.test.IVGCest;
-import net.vgc.test.VGCTestMain;
+import net.vgc.test.IVGTest;
 import net.vgc.test.VGCTest;
+import net.vgc.test.VGCTestMain;
 
 @VGCTest
-public class ListTagTest implements IVGCest {
+public class ListTagTest implements IVGTest {
 	
 	protected final Path path = new File("test/tag/collection/list_test.txt").toPath();
 	

@@ -6,15 +6,15 @@ import java.lang.reflect.Modifier;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.util.ReflectionHelper;
-import net.vgc.util.Util;
 
 public class SerializationUtil {
 	
-	protected static final Logger LOGGER = Util.getLogger(SerializationUtil.class);
+	protected static final Logger LOGGER = LogManager.getLogger(SerializationUtil.class);
 	
 	@Nullable
 	@SuppressWarnings("unchecked")

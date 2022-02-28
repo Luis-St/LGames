@@ -8,13 +8,14 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
 public class ReflectionHelper {
 	
-	protected static final Logger LOGGER = Util.getLogger(ReflectionHelper.class);
+	protected static final Logger LOGGER = LogManager.getLogger(ReflectionHelper.class);
 	
 	public static boolean hasInterface(Class<?> clazz, Class<?> iface) {
 		if (iface.isInterface()) {

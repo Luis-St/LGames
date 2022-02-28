@@ -5,12 +5,12 @@ import java.nio.file.Path;
 
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.numeric.DoubleTag;
-import net.vgc.test.IVGCest;
-import net.vgc.test.VGCTestMain;
+import net.vgc.test.IVGTest;
 import net.vgc.test.VGCTest;
+import net.vgc.test.VGCTestMain;
 
 @VGCTest
-public class DoubleTagTest implements IVGCest {
+public class DoubleTagTest implements IVGTest {
 	
 	protected final Path path = new File("test/tag/numeric/double_test.txt").toPath();
 	

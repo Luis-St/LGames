@@ -2,12 +2,10 @@ plugins {
 	id 'java-library'
 	id 'eclipse'
 	id 'java'
-	id 'application'
 	id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 repositories {
-	jcenter()
 	mavenCentral()
 	maven {
 		url "https://libraries.minecraft.net"
@@ -15,7 +13,8 @@ repositories {
 }
 
 ext {
-	javaMainClass = 'net.project.Main'
+	sourceSets.main.java.srcDirs = ['src']
+	javaMainClass = 'net.vgc.Main'
 }
 
 eclipse {
@@ -55,15 +54,15 @@ dependencies {
 
 task mainRun(type:JavaExec) {
 	group = 'runs'
-	main = 'net.project.Main'
+	main = 'net.vgc.Main'
 	classpath = sourceSets.main.runtimeClasspath
-	args("--debugMode", "true", "--ide", "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
+	args("--ide", "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
 task serverRun(type:JavaExec) {
 	group = 'runs'
-	main = 'net.project.client.Main'
+	main = 'net.vgc.client.Main'
 	classpath = sourceSets.test.runtimeClasspath
 	args("--debugMode", "true", "--server", "--host", "localhost", "--port", 8080, "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
@@ -71,7 +70,7 @@ task serverRun(type:JavaExec) {
 
 task clientRun(type:JavaExec) {
 	group = 'runs'
-	main = 'net.project.client.Main'
+	main = 'net.vgc.client.Main'
 	classpath = sourceSets.test.runtimeClasspath
 	args("--debugMode", "true", "--client", "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
@@ -79,7 +78,7 @@ task clientRun(type:JavaExec) {
 
 task testRun(type:JavaExec) {
 	group = 'runs'
-	main = 'net.project.test.TestMain'
+	main = 'net.vgc.test.TestMain'
 	classpath = sourceSets.test.runtimeClasspath
 	args("--gameDir", file('run'), "--resourceDir", file('src/test/resources/'))
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")

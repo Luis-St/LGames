@@ -7,12 +7,12 @@ import net.vgc.data.serialization.Serializable;
 import net.vgc.data.serialization.SerializationUtil;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.test.IVGCest;
-import net.vgc.test.VGCTestMain;
+import net.vgc.test.IVGTest;
 import net.vgc.test.VGCTest;
+import net.vgc.test.VGCTestMain;
 
 @VGCTest
-public class SerializableTest implements IVGCest {
+public class SerializableTest implements IVGTest {
 	
 	protected final Path deserializeConstructorPath = new File("test/serialization/deserialize_constructor_test.txt").toPath();
 	protected final Path loadMethodPath = new File("test/serialization/load_method_test.txt").toPath();

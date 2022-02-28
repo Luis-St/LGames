@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import joptsimple.OptionParser;
@@ -12,11 +13,10 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.vgc.util.ClasspathInspector;
 import net.vgc.util.ReflectionHelper;
-import net.vgc.util.Util;
 
 public class VGCTestMain {
 	
-	protected static final Logger LOGGER = Util.getLogger(VGCTestMain.class);
+	protected static final Logger LOGGER = LogManager.getLogger(VGCTestMain.class);
 	public static Path resourceDir;
 	
 	public static void main(String[] args) throws Exception {
@@ -43,11 +43,11 @@ public class VGCTestMain {
 		for (Class<?> clazz : classes) {
 			try {
 				VGCTestMain.class.getClassLoader().loadClass(clazz.getName());
-				if (clazz.isAnnotationPresent(VGCTest.class) && ReflectionHelper.hasInterface(clazz, IVGCest.class)) {
+				if (clazz.isAnnotationPresent(VGCTest.class) && ReflectionHelper.hasInterface(clazz, IVGTest.class)) {
 					VGCTest projectTest = clazz.getAnnotation(VGCTest.class);
 					if (projectTest.shoudLoad()) {
 						long testTime = System.currentTimeMillis();
-						IVGCest test = (IVGCest) ReflectionHelper.newInstance(clazz);
+						IVGTest test = (IVGTest) ReflectionHelper.newInstance(clazz);
 						LOGGER.info("Start testing of {}", clazz.getSimpleName());
 						test.start();
 						LOGGER.info("Stop testing of {}", clazz.getSimpleName());

@@ -6,12 +6,12 @@ import java.nio.file.Path;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.collection.array.IntArrayTag;
 import net.vgc.data.tag.tags.numeric.IntTag;
-import net.vgc.test.IVGCest;
+import net.vgc.test.IVGTest;
 import net.vgc.test.VGCTest;
 import net.vgc.test.VGCTestMain;
 
 @VGCTest
-public class IntArrayTagTest implements IVGCest {
+public class IntArrayTagTest implements IVGTest {
 	
 	protected final Path path = new File("test/tag/collection/array/int_array_test.txt").toPath();
 	

@@ -5,12 +5,12 @@ import java.nio.file.Path;
 
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.test.IVGCest;
-import net.vgc.test.VGCTestMain;
+import net.vgc.test.IVGTest;
 import net.vgc.test.VGCTest;
+import net.vgc.test.VGCTestMain;
 
 @VGCTest
-public class CompoundTagTest implements IVGCest {
+public class CompoundTagTest implements IVGTest {
 	
 	protected final Path path = new File("test/tag/compound_test.txt").toPath();
 	

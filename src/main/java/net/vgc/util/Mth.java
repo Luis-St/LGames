@@ -1,10 +1,11 @@
 package net.vgc.util;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Mth {
 	
-	protected static final Logger LOGGER = Util.getLogger(Mth.class);
+	protected static final Logger LOGGER = LogManager.getLogger(Mth.class);
 	
 	public static byte sum(byte b) {
 		String s = String.valueOf(b);
