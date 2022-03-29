@@ -52,35 +52,19 @@ dependencies {
 	implementation 'com.mojang:datafixerupper:4.0.26'
 }
 
-task mainRun(type:JavaExec) {
+task serverRun(type:JavaExec) {
 	group = 'runs'
 	main = 'net.vgc.Main'
 	classpath = sourceSets.main.runtimeClasspath
-	args("--ide", "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
-	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
-}
-
-task serverRun(type:JavaExec) {
-	group = 'runs'
-	main = 'net.vgc.client.Main'
-	classpath = sourceSets.test.runtimeClasspath
 	args("--debugMode", "true", "--server", "--host", "localhost", "--port", 8080, "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
 task clientRun(type:JavaExec) {
 	group = 'runs'
-	main = 'net.vgc.client.Main'
-	classpath = sourceSets.test.runtimeClasspath
+	main = 'net.vgc.Main'
+	classpath = sourceSets.main.runtimeClasspath
 	args("--debugMode", "true", "--client", "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
-	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
-}
-
-task testRun(type:JavaExec) {
-	group = 'runs'
-	main = 'net.vgc.test.TestMain'
-	classpath = sourceSets.test.runtimeClasspath
-	args("--gameDir", file('run'), "--resourceDir", file('src/test/resources/'))
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
