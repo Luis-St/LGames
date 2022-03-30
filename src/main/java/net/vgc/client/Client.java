@@ -31,6 +31,7 @@ public class Client extends GameApplication {
 	}));
 	protected Path gameDirectory; 
 	protected Path resourceDirectory;
+	protected double loadingPercent; // TODO: add update in #handleStart
 	protected LaunchState launchState;
 	protected Scene currentScene;
 	protected Scene previousScene;
@@ -50,11 +51,13 @@ public class Client extends GameApplication {
 	@Override
 	public void start(String[] args) throws Exception {
 		LOGGER.info("Start Virtual Game Collection");
+		this.loadingPercent = 0.0;
 		this.launchState = LaunchState.STARTING;
 		this.stage.setScene(new Scene(new Group(), 400, 400));
-		handleStart(args);
 		this.setScreen(new LoadingScreen());
 		this.stage.show();
+		handleStart(args);
+		this.loadingPercent = 1.0;
 		this.launchState = LaunchState.STARTED;
 		LOGGER.info("Successfully starting of Virtual Game Collection");
 	}
@@ -88,6 +91,22 @@ public class Client extends GameApplication {
 		if (this.stage != null && this.stage.getScene() instanceof ScreenScene screenScene) {
 			screenScene.tick();
 		}
+	}
+	
+	public Path getGameDirectory() {
+		return this.gameDirectory;
+	}
+	
+	public Path getResourceDirectory() {
+		return this.resourceDirectory;
+	}
+	
+	public double getLoadingPercent() {
+		return this.loadingPercent;
+	}
+	
+	public LaunchState getLaunchState() {
+		return this.launchState;
 	}
 	
 	public void setScreen(Screen screen) {

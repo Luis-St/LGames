@@ -26,10 +26,11 @@ public class LoadingScreen extends Screen {
 	@Override
 	public void tick() {
 		double progress = this.bar.getProgress();
-		if (progress >= 1.0) {
-			this.bar.setProgress(0.0);
-		} else {
-			this.bar.setProgress(progress + 0.01);
+		double loadingPercent = this.client.getLoadingPercent();
+		if (progress > 1.0) {
+			this.bar.setProgress(1.0);
+		} else if (progress != loadingPercent) {
+			this.bar.setProgress(loadingPercent);
 		}
 	}
 	
