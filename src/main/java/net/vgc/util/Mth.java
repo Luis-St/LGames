@@ -1,5 +1,7 @@
 package net.vgc.util;
 
+import java.util.Random;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +46,15 @@ public class Mth {
 			}
 		}
 		return sum;
+	}
+	
+	public static int randomInt(Random rng, int min, int max) {
+		return min + rng.nextInt(max - min + 1);
+	}
+	
+	public static double roundTo(double value, double roundValue) {
+		double d = Math.round(value * roundValue);
+		return d / roundValue;
 	}
 	
 }
