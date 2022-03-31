@@ -21,6 +21,10 @@ public class ScreenScene extends Scene implements Tickable {
 	public Screen getScreen() {
 		return this.screen;
 	}
+	
+	public boolean shouldCenter() {
+		return this.screen.shouldCenter;
+	}
 
 	public void setInputListeners() {
 		this.setOnKeyPressed((event) -> {

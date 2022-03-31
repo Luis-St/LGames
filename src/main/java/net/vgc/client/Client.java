@@ -2,64 +2,72 @@ package net.vgc.client;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.vgc.Constans;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.screen.LoadingScreen;
+import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.screen.Screen;
 import net.vgc.client.window.ErrorWindow;
 import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
+import net.vgc.util.Util;
 
 public class Client extends GameApplication {
 	
 	protected static Client instance;
 	
-	protected final Timeline ticker = new Timeline(20.0, new KeyFrame(Duration.millis(50), "ClientTicker", (event) -> {
+	protected final Timeline ticker = Util.createTicker("ClientTicker", () -> {
 		Client.getInstance().tick();
-	}));
+	});
 	protected Path gameDirectory; 
 	protected Path resourceDirectory;
-	protected double loadingPercent; // TODO: add update in #handleStart
-	protected LaunchState launchState;
+	protected LaunchState launchState = LaunchState.UNKNOWN;
 	protected Scene currentScene;
 	protected Scene previousScene;
+	protected boolean instantLoading;
+	protected Random rng;
 	
+	@Nullable
 	public static Client getInstance() {
 		return instance;
 	}
 	
 	@Override
 	public void init() throws Exception {
+		super.init();
 		LOGGER.info("Initial Virtual Game Collection");
 		instance = this;
 		this.ticker.setCycleCount(Animation.INDEFINITE);
 		this.ticker.play();
+		this.rng = new Random(System.currentTimeMillis());
 	}
 	
 	@Override
 	public void start(String[] args) throws Exception {
-		LOGGER.info("Start Virtual Game Collection");
-		this.loadingPercent = 0.0;
+		LOGGER.info("Starting Virtual Game Collection");
+		LOGGER.info("Version {}", Constans.VERSION);
 		this.launchState = LaunchState.STARTING;
 		this.stage.setScene(new Scene(new Group(), 400, 400));
 		this.setScreen(new LoadingScreen());
 		this.stage.show();
 		handleStart(args);
-		this.loadingPercent = 1.0;
-		this.launchState = LaunchState.STARTED;
-		LOGGER.info("Successfully starting of Virtual Game Collection");
+		if (this.isInstantLoading()) {
+			this.setScreen(new MenuScreen());
+		}
 	}
 	
 	protected void handleStart(String[] args) {
@@ -67,6 +75,7 @@ public class Client extends GameApplication {
 		parser.allowsUnrecognizedOptions();
 		OptionSpec<File> gameDir = parser.accepts("gameDir").withRequiredArg().ofType(File.class);
 		OptionSpec<File> resourceDir = parser.accepts("resourceDir").withRequiredArg().ofType(File.class);
+		OptionSpec<Boolean> instantLoading = parser.accepts("instantLoading").withRequiredArg().ofType(Boolean.class);
 		OptionSet set = parser.parse(args);
 		if (set.has(gameDir)) {
 			this.gameDirectory = set.valueOf(gameDir).toPath();
@@ -83,6 +92,12 @@ public class Client extends GameApplication {
 		} else {
 			LOGGER.info("No resource directory set, use the default directory {}/assets", this.gameDirectory);
 			this.resourceDirectory = this.gameDirectory.resolve("assets");
+		}
+		if (set.has(instantLoading)) {
+			this.instantLoading = set.valueOf(instantLoading);
+			if (this.instantLoading) {
+				LOGGER.info("Try instant loading");
+			}
 		}
 	}
 	
@@ -101,12 +116,12 @@ public class Client extends GameApplication {
 		return this.resourceDirectory;
 	}
 	
-	public double getLoadingPercent() {
-		return this.loadingPercent;
-	}
-	
 	public LaunchState getLaunchState() {
 		return this.launchState;
+	}
+	
+	public boolean isInstantLoading() {
+		return this.instantLoading;
 	}
 	
 	public void setScreen(Screen screen) {
@@ -117,6 +132,11 @@ public class Client extends GameApplication {
 	protected void setScene(Scene scene) {
 		this.initScene(scene);
 		this.stage.setScene(scene);
+		if (scene instanceof ScreenScene screenScene) {
+			if (screenScene.shouldCenter()) {
+				this.stage.centerOnScreen();
+			}
+		}
 	}
 	
 	protected void initScene(Scene scene) {

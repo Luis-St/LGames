@@ -14,7 +14,7 @@ public abstract class GameApplication extends Application implements Tickable {
 	protected Stage stage;
 	
 	public void init() throws Exception {
-		
+		Thread.currentThread().setName("main");
 	}
 	
 	@Override
@@ -25,6 +25,10 @@ public abstract class GameApplication extends Application implements Tickable {
 	}
 	
 	public abstract void start(String[] args) throws Exception;
+	
+	public Stage getStage() {
+		return this.stage;
+	}
 	
 	public void stop() throws Exception {
 		
