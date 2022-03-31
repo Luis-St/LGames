@@ -5,6 +5,7 @@ public enum LaunchState {
 	STARTING(),
 	STARTED(),
 	STOPPING(),
-	STOPPED();
+	STOPPED(),
+	UNKNOWN();
 	
 }

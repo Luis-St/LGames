@@ -33,10 +33,10 @@ public class Main {
 			LOGGER.trace("Can not launch a client and a server");
 			System.exit(-1);
 		} else if (client) {
-			System.setProperty("net.vgc.launch.type", "client");
+			Constans.LAUNCH_TYPE = "client";
 			Client.launch(Client.class, args);
 		} else if (server) {
-			System.setProperty("net.vgc.launch.type", "server");
+			Constans.LAUNCH_TYPE = "server";
 			Server.launch(Server.class, args);
 		} else {
 			LOGGER.trace("Unknown launch type for the Virtual Game Collection, use '--server' to start a server and '--client' to start a client");
