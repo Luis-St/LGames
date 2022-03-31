@@ -40,7 +40,7 @@ compileJava {
 	targetCompatibility = '17'
 }
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + 'Java Runtime:' + System.getProperty("java.runtime.version") + ' Arch: ' + System.getProperty('os.arch'))
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + 'Java Runtime:' + System.getProperty("java.runtime.version"))
 
 dependencies {
 	implementation 'com.google.code.gson:gson:2.8.9'
@@ -56,6 +56,7 @@ task serverRun(type:JavaExec) {
 	group = 'runs'
 	main = 'net.vgc.Main'
 	classpath = sourceSets.main.runtimeClasspath
+	enableAssertions = true
 	args("--debugMode", "true", "--server", "--host", "localhost", "--port", 8080, "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
@@ -64,7 +65,16 @@ task clientRun(type:JavaExec) {
 	group = 'runs'
 	main = 'net.vgc.Main'
 	classpath = sourceSets.main.runtimeClasspath
-	args("--debugMode", "true", "--client", "--gameDir", file('run'), "--resourceDir", file('src/main/resources/'))
+	enableAssertions = true
+	args("--debugMode", "false", "--client", "--gameDir", file("run"), "--resourceDir", file("src/main/resources/"), "--instantLoading", "false")
+	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
+}
+
+task testRun(type:JavaExec) {
+	group = 'runs'
+	main = 'net.vgc.Test'
+	classpath = sourceSets.main.runtimeClasspath
+	enableAssertions = true
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
