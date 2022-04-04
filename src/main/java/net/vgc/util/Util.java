@@ -10,6 +10,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import net.vgc.Constans;
+import net.vgc.client.Client;
+import net.vgc.server.Server;
 import net.vgc.util.streams.DebugPrintStream;
 import net.vgc.util.streams.InfoPrintStream;
 
@@ -54,11 +56,11 @@ public class Util {
 	}
 	
 	public static boolean isClient() {
-		return Constans.LAUNCH_TYPE.equals("client");
+		return Constans.LAUNCH_TYPE.equals("client") && Server.getInstance() == null;
 	}
 	
 	public static boolean isServer() {
-		return Constans.LAUNCH_TYPE.equals("server");
+		return Constans.LAUNCH_TYPE.equals("server") && Client.getInstance() == null;
 	}
 	
 	public static void warpStreams(boolean debugMode) {

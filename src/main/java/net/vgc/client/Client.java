@@ -18,6 +18,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.vgc.Constans;
 import net.vgc.client.fx.ScreenScene;
+import net.vgc.client.fx.Screenable;
 import net.vgc.client.screen.LoadingScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.screen.Screen;
@@ -26,7 +27,7 @@ import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
 import net.vgc.util.Util;
 
-public class Client extends GameApplication {
+public class Client extends GameApplication implements Screenable {
 	
 	protected static Client instance;
 	
@@ -39,6 +40,7 @@ public class Client extends GameApplication {
 	protected Scene currentScene;
 	protected Scene previousScene;
 	protected boolean instantLoading;
+	protected boolean safeLoading;
 	protected Random rng;
 	
 	@Nullable
@@ -59,14 +61,16 @@ public class Client extends GameApplication {
 	@Override
 	public void start(String[] args) throws Exception {
 		LOGGER.info("Starting Virtual Game Collection");
-		LOGGER.info("Version {}", Constans.VERSION);
 		this.launchState = LaunchState.STARTING;
 		this.stage.setScene(new Scene(new Group(), 400, 400));
 		this.setScreen(new LoadingScreen());
 		this.stage.show();
 		handleStart(args);
+		this.launchState = LaunchState.STARTED;
+		LOGGER.info("Successfully start of Virtual Game Collection with version {}", Constans.VERSION);
 		if (this.isInstantLoading()) {
 			this.setScreen(new MenuScreen());
+			this.stage.centerOnScreen();
 		}
 	}
 	
@@ -76,6 +80,7 @@ public class Client extends GameApplication {
 		OptionSpec<File> gameDir = parser.accepts("gameDir").withRequiredArg().ofType(File.class);
 		OptionSpec<File> resourceDir = parser.accepts("resourceDir").withRequiredArg().ofType(File.class);
 		OptionSpec<Boolean> instantLoading = parser.accepts("instantLoading").withRequiredArg().ofType(Boolean.class);
+		OptionSpec<Boolean> safeLoading = parser.accepts("safeLoading").withRequiredArg().ofType(Boolean.class);
 		OptionSet set = parser.parse(args);
 		if (set.has(gameDir)) {
 			this.gameDirectory = set.valueOf(gameDir).toPath();
@@ -94,9 +99,10 @@ public class Client extends GameApplication {
 			this.resourceDirectory = this.gameDirectory.resolve("assets");
 		}
 		if (set.has(instantLoading)) {
-			this.instantLoading = set.valueOf(instantLoading);
-			if (this.instantLoading) {
+			if (this.instantLoading = set.valueOf(instantLoading)) {
 				LOGGER.info("Try instant loading");
+			} else if (set.has(safeLoading)) {
+				this.safeLoading = set.valueOf(safeLoading);
 			}
 		}
 	}
@@ -120,37 +126,43 @@ public class Client extends GameApplication {
 		return this.launchState;
 	}
 	
+	public boolean isRunning() {
+		return this.launchState == LaunchState.STARTED;
+	}
+	
 	public boolean isInstantLoading() {
 		return this.instantLoading;
 	}
 	
+	public boolean isSafeLoading() {
+		return this.safeLoading;
+	}
+	
+	@Override
 	public void setScreen(Screen screen) {
-		screen.init();
+		this.initScreen(screen);
 		this.setScene(screen.show());
 	}
 	
-	protected void setScene(Scene scene) {
-		this.initScene(scene);
-		this.stage.setScene(scene);
-		if (scene instanceof ScreenScene screenScene) {
-			if (screenScene.shouldCenter()) {
-				this.stage.centerOnScreen();
-			}
+	protected void initScreen(Screen screen) {
+		screen.init();
+		if (screen.title != null) {
+			this.stage.setTitle(screen.title);
+		} else if (!this.stage.getTitle().trim().isEmpty()) {
+			this.stage.setTitle("");
+		}
+		if (screen.shouldCenter) {
+			this.stage.centerOnScreen();
 		}
 	}
 	
-	protected void initScene(Scene scene) {
+	protected void setScene(Scene scene) {
 		this.previousScene = this.currentScene;
 		if (scene instanceof ScreenScene screenScene) {
 			screenScene.setInputListeners();
-			String title = screenScene.getScreen().title;
-			if (title != null) {
-				this.stage.setTitle(title);
-			} else if (!this.stage.getTitle().trim().isEmpty()) {
-				this.stage.setTitle("");
-			}
 		}
 		this.currentScene = scene;
+		this.stage.setScene(scene);
 	}
 	
 	public void exit() {

@@ -17,4 +17,8 @@ public class Constans {
 		
 	}
 	
+	public static class Account {
+		
+	}
+	
 }
