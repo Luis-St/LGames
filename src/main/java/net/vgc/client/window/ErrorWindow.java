@@ -10,9 +10,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.vgc.client.Client;
+import net.vgc.common.ErrorLevel;
 import net.vgc.server.Server;
 
 public class ErrorWindow {
@@ -22,6 +24,7 @@ public class ErrorWindow {
 	protected final String title;
 	protected final String errorMessage;
 	protected final Runnable action;
+	protected ErrorLevel errorLevel = ErrorLevel.NON;
 	
 	protected ErrorWindow(String title, String errorMessage, Runnable action) {
 		this.title = title;
@@ -38,7 +41,7 @@ public class ErrorWindow {
 			}
 			LOGGER.trace("Something went wrong while handle a critical error");
 			System.exit(-1);
-		});
+		}).setErrorLevel(ErrorLevel.CRITICAL);
 	}
 	
 	public static ErrorWindow make(String errorMessage, Runnable action) {
@@ -58,6 +61,15 @@ public class ErrorWindow {
 		return this.errorMessage;
 	}
 	
+	public ErrorLevel getErrorLevel() {
+		return this.errorLevel;
+	}
+	
+	public ErrorWindow setErrorLevel(ErrorLevel errorLevel) {
+		this.errorLevel = errorLevel;
+		return this;
+	}
+	
 	public void show() {
 		Stage stage = new Stage();
 		GridPane pane = new GridPane();
@@ -69,6 +81,8 @@ public class ErrorWindow {
 		boolean flag = this.errorMessage != null;
 		if (flag) {
 			Text text = new Text(this.errorMessage);
+			text.setFill(this.errorLevel.getColor());
+			text.setFill(Color.RED);
 			pane.add(text, 0, 0);
 			width = Math.max(200.0, text.getLayoutBounds().getWidth() + 10.0);
 			double d = text.getLayoutBounds().getHeight();
