@@ -1,5 +1,6 @@
 package net.vgc.util;
 
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +20,7 @@ import net.vgc.util.streams.InfoPrintStream;
 public class Util {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Util.class);
+	public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 	
 	public static <T> T make(T object, Consumer<T> consumer) {	
 		consumer.accept(object);
