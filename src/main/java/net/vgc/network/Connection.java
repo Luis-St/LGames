@@ -62,7 +62,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	
 	@SuppressWarnings("unchecked")
 	protected <T extends PacketListener> void handle(PacketListener listener, Packet<T> packet) {
-		packet.handle((T) listener);
+		packet.handleLater((T) listener);
 	}
 	
 	public Channel getChannel() {
