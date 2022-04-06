@@ -63,7 +63,7 @@ public class IntArrayTag extends CollectionTag<IntTag> {
 	}
 	
 	@Override
-	public void write(DataOutput output) throws IOException {
+	public void save(DataOutput output) throws IOException {
 		output.writeInt(this.data.length);
 		for (int i = 0; i < this.data.length; i++) {
 			output.writeInt(this.data[i]);

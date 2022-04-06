@@ -42,7 +42,7 @@ public class LongTag extends NumericTag {
 	}
 	
 	@Override
-	public void write(DataOutput output) throws IOException {
+	public void save(DataOutput output) throws IOException {
 		output.writeLong(this.data);
 	}
 

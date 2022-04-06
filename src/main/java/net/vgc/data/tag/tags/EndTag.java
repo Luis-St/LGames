@@ -33,7 +33,7 @@ public class EndTag implements Tag {
 	}
 	
 	@Override
-	public void write(DataOutput output) throws IOException {
+	public void save(DataOutput output) throws IOException {
 		
 	}
 

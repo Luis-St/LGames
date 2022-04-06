@@ -49,7 +49,7 @@ public class ByteTag extends NumericTag {
 	}
 	
 	@Override
-	public void write(DataOutput output) throws IOException {
+	public void save(DataOutput output) throws IOException {
 		output.writeByte(this.data);
 	}
 

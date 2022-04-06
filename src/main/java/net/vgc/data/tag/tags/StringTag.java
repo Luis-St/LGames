@@ -43,7 +43,7 @@ public class StringTag implements Tag {
 	}
 	
 	@Override
-	public void write(DataOutput output) throws IOException {
+	public void save(DataOutput output) throws IOException {
 		output.writeUTF(this.data);
 	}
 

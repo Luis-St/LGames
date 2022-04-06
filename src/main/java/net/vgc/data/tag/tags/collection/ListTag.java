@@ -72,7 +72,7 @@ public class ListTag extends CollectionTag<Tag> {
 	}
 	
 	@Override
-	public void write(DataOutput output) throws IOException {
+	public void save(DataOutput output) throws IOException {
 		if (this.data.isEmpty()) {
 			this.type = 0;
 		} else {
@@ -81,7 +81,7 @@ public class ListTag extends CollectionTag<Tag> {
 		output.writeByte(this.type);
 		output.writeInt(this.data.size());
 		for (Tag tag : this.data) {
-			tag.write(output);
+			tag.save(output);
 		}
 	}
 

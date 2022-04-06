@@ -31,7 +31,7 @@ public interface Tag {
 	byte COMPOUND_TAG = 12;
 	byte PRIMITIVE_TAG = 99;
 	
-	void write(DataOutput output) throws IOException;
+	void save(DataOutput output) throws IOException;
 
 	String toString();
 
@@ -66,7 +66,7 @@ public interface Tag {
 		}
 		DataOutputStream output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path.toFile())));
 		output.writeByte(tag.getId());
-		tag.write(output);
+		tag.save(output);
 		output.flush();
 		output.close();
 	}

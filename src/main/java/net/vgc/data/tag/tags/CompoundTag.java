@@ -70,14 +70,14 @@ public class CompoundTag implements Tag {
 	}
 	
 	@Override
-	public void write(DataOutput output) throws IOException {
+	public void save(DataOutput output) throws IOException {
 		output.writeInt(this.data.size());
 		for (String key : this.data.keySet()) {
 			Tag tag = this.data.get(key);
 			output.writeByte(tag.getId());
 			if (tag.getId() != 0) {
 				output.writeUTF(key);
-				tag.write(output);
+				tag.save(output);
 			}
 		}
 	}
