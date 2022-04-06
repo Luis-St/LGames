@@ -1,12 +1,12 @@
 package net.vgc.client;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import javafx.animation.Animation;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -23,13 +23,24 @@ import net.vgc.client.screen.LoadingScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.screen.Screen;
 import net.vgc.client.window.ErrorWindow;
+import net.vgc.common.ErrorLevel;
 import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
+import net.vgc.network.Connection;
+import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
-public class Client extends GameApplication implements Screenable {
+public class Client extends GameApplication  implements Tickable, Screenable {
 	
 	protected static Client instance;
+	
+	@Nullable
+	public static Client getInstance() {
+		if (Util.isClient()) {
+			return instance;
+		}
+		return null;
+	}
 	
 	protected final Timeline ticker = Util.createTicker("ClientTicker", () -> {
 		Client.getInstance().tick();
@@ -42,18 +53,14 @@ public class Client extends GameApplication implements Screenable {
 	protected boolean instantLoading;
 	protected boolean safeLoading;
 	protected Random rng;
-	
-	@Nullable
-	public static Client getInstance() {
-		return instance;
-	}
+	protected Connection serverConnection;
+	protected Connection accountServerConnection;
 	
 	@Override
 	public void init() throws Exception {
 		super.init();
 		LOGGER.info("Initial Virtual Game Collection");
 		instance = this;
-		this.ticker.setCycleCount(Animation.INDEFINITE);
 		this.ticker.play();
 		this.rng = new Random(System.currentTimeMillis());
 	}
@@ -65,16 +72,16 @@ public class Client extends GameApplication implements Screenable {
 		this.stage.setScene(new Scene(new Group(), 400, 400));
 		this.setScreen(new LoadingScreen());
 		this.stage.show();
-		handleStart(args);
+		this.handleStart(args);
 		this.launchState = LaunchState.STARTED;
-		LOGGER.info("Successfully start of Virtual Game Collection with version {}", Constans.VERSION);
+		LOGGER.info("Successfully start of Virtual Game Collection with version {}", Constans.Client.VERSION);
 		if (this.isInstantLoading()) {
 			this.setScreen(new MenuScreen());
 			this.stage.centerOnScreen();
 		}
 	}
 	
-	protected void handleStart(String[] args) {
+	protected void handleStart(String[] args) throws Exception { // TODO: create Loading Steps, which are load from 0 til 1
 		OptionParser parser = new OptionParser();
 		parser.allowsUnrecognizedOptions();
 		OptionSpec<File> gameDir = parser.accepts("gameDir").withRequiredArg().ofType(File.class);
@@ -84,27 +91,39 @@ public class Client extends GameApplication implements Screenable {
 		OptionSet set = parser.parse(args);
 		if (set.has(gameDir)) {
 			this.gameDirectory = set.valueOf(gameDir).toPath();
+			LOGGER.debug("Set game directory to {}", this.gameDirectory);
 		} else {
-			LOGGER.error("Fail to get game directory");
+			LOGGER.warn("Fail to get game directory");
 			ErrorWindow.make("Fail to get game directory", () -> {
 				DirectoryChooser chooser = new DirectoryChooser();
 				chooser.setTitle("Choose game directory");
 				this.gameDirectory = chooser.showDialog(new Stage()).toPath();
-			}).show();
+				LOGGER.debug("Set game directory to {}", this.gameDirectory);
+			}).setErrorLevel(ErrorLevel.ERROR).show(); // TODO: stop loading
+		}
+		if (!Files.exists(this.gameDirectory)) {
+			Files.createDirectories(this.gameDirectory);
 		}
 		if (set.has(resourceDir)) {
 			this.resourceDirectory = set.valueOf(resourceDir).toPath();
+			LOGGER.debug("Set resource directory to {}", this.resourceDirectory);
 		} else {
 			LOGGER.info("No resource directory set, use the default directory {}/assets", this.gameDirectory);
 			this.resourceDirectory = this.gameDirectory.resolve("assets");
+		}
+		if (!Files.exists(this.resourceDirectory)) {
+			Files.createDirectories(this.resourceDirectory);
+			LOGGER.debug("Create Client directory");
 		}
 		if (set.has(instantLoading)) {
 			if (this.instantLoading = set.valueOf(instantLoading)) {
 				LOGGER.info("Try instant loading");
 			} else if (set.has(safeLoading)) {
 				this.safeLoading = set.valueOf(safeLoading);
+				LOGGER.info("Use safe loading");
 			}
 		}
+
 	}
 	
 	@Override
@@ -112,6 +131,31 @@ public class Client extends GameApplication implements Screenable {
 		if (this.stage != null && this.stage.getScene() instanceof ScreenScene screenScene) {
 			screenScene.tick();
 		}
+	}
+	
+	public void connectServer() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void disconnectServer() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void connectAccountServer() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void disconnectAccountServer() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	protected String getThreadName() {
+		return "client";
 	}
 	
 	public Path getGameDirectory() {
@@ -142,6 +186,7 @@ public class Client extends GameApplication implements Screenable {
 	public void setScreen(Screen screen) {
 		this.initScreen(screen);
 		this.setScene(screen.show());
+		LOGGER.debug("Update Screen to {}", screen.getClass().getSimpleName());
 	}
 	
 	protected void initScreen(Screen screen) {
@@ -167,10 +212,7 @@ public class Client extends GameApplication implements Screenable {
 	
 	public void exit() {
 		LOGGER.info("Exit Virtual Game Collection");
-		this.launchState = LaunchState.STOPPING;
 		Platform.exit();
-		this.handleStop();
-		this.launchState = LaunchState.STOPPED;
 	}
 	
 	@Override
