@@ -11,9 +11,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import net.vgc.Constans;
-import net.vgc.client.Client;
-import net.vgc.server.Server;
-import net.vgc.server.account.AccountServer;
 import net.vgc.util.streams.DebugPrintStream;
 import net.vgc.util.streams.InfoPrintStream;
 
@@ -56,18 +53,6 @@ public class Util {
 		}));
 		timeline.setDelay(Duration.millis(delay));
 		timeline.play();
-	}
-	
-	public static boolean isClient() {
-		return Constans.LAUNCH_TYPE.equals("client") && Server.getInstance() == null && AccountServer.getInstance() == null;
-	}
-	
-	public static boolean isServer() {
-		return Constans.LAUNCH_TYPE.equals("server") && Client.getInstance() == null&& AccountServer.getInstance() == null;
-	}
-	
-	public static boolean isAccountServer() {
-		return Constans.LAUNCH_TYPE.equals("account_server") && Client.getInstance() == null && Server.getInstance() == null;
 	}
 	
 	public static void warpStreams(boolean debugMode) {

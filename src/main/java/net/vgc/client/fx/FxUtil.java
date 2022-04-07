@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.vgc.Constans;
 import net.vgc.client.Client;
-import net.vgc.util.Util;
+import net.vgc.network.NetworkSide;
 
 public class FxUtil {
 	
@@ -104,7 +104,7 @@ public class FxUtil {
 	}
 	
 	public static <T extends Region> T setResize(T region, double width, double height) {
-		if (Util.isClient()) {
+		if (NetworkSide.CLIENT.isOn()) {
 			return setResize(Client.getInstance().getStage(), region, width, height);
 		}
 		return region;

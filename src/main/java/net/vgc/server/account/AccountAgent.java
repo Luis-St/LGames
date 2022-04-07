@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
-public class AccountAgent {
+public final class AccountAgent {
 	
 	protected final List<PlayerAccount> accounts;
 	

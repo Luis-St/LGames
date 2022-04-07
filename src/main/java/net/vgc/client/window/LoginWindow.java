@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import net.vgc.client.Client;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.util.Util;
+import net.vgc.network.NetworkSide;
 
 public class LoginWindow {
 	
@@ -173,7 +173,7 @@ public class LoginWindow {
 	public void show() {
 		this.setScene(this.main());
 		this.stage.show();
-		if (Util.isClient()) {
+		if (NetworkSide.CLIENT.isOn()) {
 			Stage stage = Client.getInstance().getStage();
 			this.stage.setX(stage.getX() + stage.getWidth());
 			this.stage.setY(stage.getY());

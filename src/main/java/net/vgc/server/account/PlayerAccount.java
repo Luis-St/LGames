@@ -6,9 +6,10 @@ import net.vgc.Constans;
 import net.vgc.data.serialization.Serializable;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.network.NetworkSide;
 import net.vgc.util.Util;
 
-public class PlayerAccount implements Serializable {
+public final class PlayerAccount implements Serializable {
 	
 	public static final PlayerAccount UNKNOWN = new PlayerAccount("Unknown", "unknown", Util.EMPTY_UUID, false);
 	
@@ -37,7 +38,7 @@ public class PlayerAccount implements Serializable {
 	}
 	
 	public String getPassword() {
-		if (Util.isAccountServer() || Constans.IDE || this == UNKNOWN) {
+		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this == UNKNOWN) {
 			return this.password;
 		}
 		return this.obfuscated();
@@ -85,7 +86,7 @@ public class PlayerAccount implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder("PlayerAccount[");
 		builder.append("name=").append(this.name).append(",");
-		if (Util.isAccountServer() || Constans.IDE || this == UNKNOWN) {
+		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this == UNKNOWN) {
 			builder.append("password=").append(this.password).append(",");
 		} else {
 			builder.append("password=").append(this.obfuscated()).append(",");
