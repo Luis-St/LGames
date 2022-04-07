@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -17,6 +20,8 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketListener;
 
 public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
+	
+	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	protected final PacketListener listener;
 	protected final List<Connection.PacketHolder> waitingPackets = new ArrayList<>();
@@ -39,6 +44,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	protected void channelRead0(ChannelHandlerContext context, Packet<?> packet) throws Exception {
 		if (this.channel.isOpen()) {
 			try {
+				LOGGER.debug("Received Packet of type {}", packet.getClass().getSimpleName());
 				this.handle(this.listener, packet);
 				++this.receivedPackets;
 			} catch (ClassCastException e) {
@@ -50,13 +56,16 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
 		if (cause instanceof SkipPacketException) {
-			
+			LOGGER.info("Skipping Packet");
 		} else if (this.channel.isOpen()) {
+			LOGGER.warn("Caught Exception", cause);
 			if (cause instanceof TimeoutException) {
 				this.disconnect("Timeout", cause);
 			} else {
 				this.disconnect("Internal Exception", cause);
 			}
+		} else {
+			LOGGER.warn("Caught Exception while channel is closed", cause);
 		}
 	}
 	
@@ -84,14 +93,16 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	public void send(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener) {
 		if (this.isConnected()) {
 			this.flush();
-			this.sendPacket(packet, listener);
+			this.sendPacket(packet, listener, false);
 		} else {
+			LOGGER.info("Unable to send Packet, since the connection is not open");
 			this.waitingPackets.add(new Connection.PacketHolder(packet, listener));
 		}
 	}
 	
-	protected void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener) {
+	protected void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener, boolean waiting) {
 		ChannelFuture channelFuture = this.channel.writeAndFlush(packet);
+		LOGGER.debug("Send {} Packet of type {}", waiting ? "waiting" : "", packet.getClass().getSimpleName());
 		if (listener != null) {
 			channelFuture.addListener(listener);
 		}
@@ -104,7 +115,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 			Iterator<PacketHolder> iterator = this.waitingPackets.iterator();
 			while (iterator.hasNext()) {
 				PacketHolder packetHolder = iterator.next();
-				this.sendPacket(packetHolder.packet(), packetHolder.listener());
+				this.sendPacket(packetHolder.packet(), packetHolder.listener(), true);
 				iterator.remove();
 			}
 		}

@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public abstract class GameApplication extends Application {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(GameApplication.class);
+	protected static final Logger LOGGER = LogManager.getLogger();
 	protected static final boolean NATIVE = Epoll.isAvailable();
 	
 	protected Stage stage;

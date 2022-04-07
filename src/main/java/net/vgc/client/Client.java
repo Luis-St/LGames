@@ -5,8 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -23,6 +21,7 @@ import net.vgc.client.screen.Screen;
 import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
 import net.vgc.network.Connection;
+import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.util.Tickable;
@@ -32,12 +31,11 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 	
 	protected static Client instance;
 	
-	@Nullable
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
 			return instance;
 		}
-		return null;
+		throw new InvalidNetworkSideException(NetworkSide.CLIENT);
 	}
 	
 	protected final Timeline ticker = Util.createTicker("ClientTicker", () -> {

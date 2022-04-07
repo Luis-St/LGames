@@ -6,6 +6,7 @@ import net.vgc.Constans;
 import net.vgc.data.serialization.Serializable;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.NetworkSide;
 import net.vgc.util.Util;
 
@@ -31,6 +32,14 @@ public final class PlayerAccount implements Serializable {
 		this.password = tag.getString("password");
 		this.uuid = TagUtil.readUUID(tag.getCompound("uuid"));
 		this.guest = tag.getBoolean("guest");
+	}
+	
+	protected String obfuscated() {
+		String obfuscated = "";
+		for (int i = 0; i < this.password.length(); i++) {
+			obfuscated += "?";
+		}
+		return obfuscated;
 	}
 	
 	public String getName() {
@@ -64,6 +73,17 @@ public final class PlayerAccount implements Serializable {
 		return this.name.equals(name) && this.password.equals(password);
 	}
 	
+	public boolean match(String name, String password, UUID uuid, boolean guest) {
+		return this.name.equals(name) && this.password.equals(password) && this.uuid.equals(uuid) && this.guest == guest;
+	}
+	
+	public void write(FriendlyByteBuffer buffer) {
+		buffer.writeString(this.name);
+		buffer.writeString(this.password);
+		buffer.writeUUID(this.uuid);
+		buffer.writeBoolean(this.guest);
+	}
+	
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
@@ -74,12 +94,15 @@ public final class PlayerAccount implements Serializable {
 		return tag;
 	}
 	
-	protected String obfuscated() {
-		String obfuscated = "";
-		for (int i = 0; i < this.password.length(); i++) {
-			obfuscated += "?";
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof PlayerAccount account) {
+			return this.match(account.name, account.password, account.uuid, account.guest);
+		} else if (object instanceof PlayerAccountInfo info) {
+			PlayerAccount account = info.account();
+			return this.match(account.name, account.password, account.uuid, account.guest);
 		}
-		return obfuscated;
+		return false;
 	}
 	
 	@Override
