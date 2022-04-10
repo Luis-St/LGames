@@ -1,0 +1,25 @@
+{
+  "language": {
+    "name": "Deutsch",
+    "file_name": "de_de"
+  },
+  "keys": {
+    "window.login.back": "Zurück",
+    "window.login.login": "Einloggen",
+    "screen.menu.multiplayer": "Mehrspieler",
+    "window.login.username": "Nutzername",
+    "window.login.password": "Passwort",
+    "window.login.register": "Profil",
+    "screen.loading.title": "Virtuelle Spielesammlung wird geladen",
+    "window.login.confirm_password": "Passwort bestätigen",
+    "screen.loading.loading.text": "Wird geladen %1%%",
+    "screen.menu.login": "Anmeldung",
+    "screen.menu.singleplayer": "Einzelspieler",
+    "screen.menu.settings": "Einstellungen",
+    "window.login.guest": "Gast",
+    "screen.menu.profile": "Profile",
+    "window.login.user": "Benutzer",
+    "main.constans.name": "Virtuelle Spielesammlung",
+    "window.login.name": "Name"
+  }
+}
