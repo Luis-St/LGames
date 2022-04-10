@@ -1,10 +1,15 @@
 package net.vgc.util;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Lists;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -53,6 +58,14 @@ public class Util {
 		}));
 		timeline.setDelay(Duration.millis(delay));
 		timeline.play();
+	}
+	
+	public static <K, V, T> List<T> mapList(Map<K, V> map, BiFunction<K, V, T> function) {
+		List<T> list = Lists.newArrayList();
+		for (Map.Entry<K, V> entry : map.entrySet()) {
+			list.add(function.apply(entry.getKey(), entry.getValue()));
+		}
+		return list;
 	}
 	
 	public static void warpStreams(boolean debugMode) {

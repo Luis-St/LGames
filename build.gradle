@@ -57,7 +57,7 @@ task clientRun(type:JavaExec) {
 	main = 'net.vgc.Main'
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--client", "--gameDir", file("run/client"), "--resourceDir", file("src/main/resources/"), "--instantLoading", "true", "--safeLoading", "false")
+	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("src/main/resources/"), "--instantLoading", "true", "--safeLoading", "false")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
@@ -66,7 +66,7 @@ task serverRun(type:JavaExec) {
 	main = 'net.vgc.Main'
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--server", "--host", "localhost", "--port", 8080, "--accountServer", "--accountHost", "localhost", "--accountPort", "8081", "--gameDir", file('run/server'), "--resourceDir", file('src/main/resources/'))
+	args("--debugMode", "false", "--ide", "--server", "--gameDir", file('run/server'), "--resourceDir", file('src/main/resources/'), "--host", "localhost", "--port", "8080")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
@@ -75,7 +75,7 @@ task accountServerRun(type:JavaExec) {
 	main = 'net.vgc.Main'
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--accountServer", "--accountServerHost", "localhost", "--accountServerPort", "8081", "--accountServerDir", file('run/account_server'))
+	args("--debugMode", "false", "--ide", "--accountServer", "--gameDir", file('run/account_server'), "--host", "localhost", "--port", "8081")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 

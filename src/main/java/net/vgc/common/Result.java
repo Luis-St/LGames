@@ -30,7 +30,7 @@ public enum Result {
 				return result;
 			}
 		}
-		return null;
+		return UNKNOWN;
 	}
 	
 }

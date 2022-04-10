@@ -9,20 +9,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import net.vgc.Constans;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.window.LoginWindow;
+import net.vgc.language.TranslationKey;
 
 public class MenuScreen extends Screen {
 	
 	protected VBox singleplayerButtonBox;
 	protected VBox multiplayerButtonBox;
 	protected VBox settingsButtonBox;
+	protected Button loginButton;
 	protected VBox loginButtonBox;
 	protected VBox centerBox;
 	
 	public MenuScreen() {
-		this.title = Constans.NAME;
 		this.width = 600;
 		this.height = 600;
 		this.shouldCenter = true;
@@ -30,23 +30,31 @@ public class MenuScreen extends Screen {
 	
 	@Override
 	public void init() {
-		this.singleplayerButtonBox = FxUtil.makeCentered(new Button("Singleplayer"), (button) -> {
+		this.singleplayerButtonBox = FxUtil.makeCentered(new Button(TranslationKey.createAndGet("screen.menu.singleplayer")), (button) -> {
 			button.setOnAction(this::handleSingleplayer);
 			FxUtil.setResize(button, 0.5, 0.1);
 		});
-		this.multiplayerButtonBox = FxUtil.makeCentered(new Button("Multiplayer"), (button) -> {
+		this.multiplayerButtonBox = FxUtil.makeCentered(new Button(TranslationKey.createAndGet("screen.menu.multiplayer")), (button) -> {
 			button.setOnAction(this::handleMultiplayer);
 			FxUtil.setResize(button, 0.5, 0.1);
 		});
-		this.settingsButtonBox = FxUtil.makeCentered(new Button("Settings"), (button) -> {
+		this.settingsButtonBox = FxUtil.makeCentered(new Button(TranslationKey.createAndGet("screen.menu.settings")), (button) -> {
 			button.setOnAction(this::handleSettings);
 			FxUtil.setResize(button, 0.5, 0.1);
 		});
-		this.loginButtonBox = FxUtil.make(new Button("Login"), Pos.CENTER_RIGHT, (button) -> {
-			button.setOnAction(this::handleLogin);
+		this.loginButton = FxUtil.makeButton(this.client.isLoggedIn() ? TranslationKey.createAndGet("screen.menu.profile") : TranslationKey.createAndGet("screen.menu.login"), () -> {
+			this.handleLogin();
 		});
+		this.loginButtonBox = FxUtil.make(this.loginButton, Pos.CENTER_RIGHT);
 		this.loginButtonBox.setPadding(new Insets(20.0));
 		this.centerBox = FxUtil.makeVerticalBox(Pos.CENTER, 0.0);
+	}
+	
+	@Override
+	public void tick() {
+		if (this.client.isLoggedIn()) {
+			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.profile"));
+		}
 	}
 
 	@Override
@@ -74,7 +82,7 @@ public class MenuScreen extends Screen {
 		LOGGER.debug("Settings");
 	}
 	
-	protected void handleLogin(ActionEvent event) {
+	protected void handleLogin() {
 		LoginWindow loginWindow = new LoginWindow(new Stage());
 		loginWindow.show();
 	}

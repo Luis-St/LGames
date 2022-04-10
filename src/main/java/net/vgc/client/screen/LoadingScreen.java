@@ -6,9 +6,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import net.vgc.Constans;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.ScreenScene;
+import net.vgc.language.TranslationKey;
 import net.vgc.util.Mth;
 
 public class LoadingScreen extends Screen {
@@ -21,22 +21,22 @@ public class LoadingScreen extends Screen {
 	protected boolean enterMenu;
 	
 	public LoadingScreen() {
-		this.title = "Loading " + Constans.NAME;
+		this.title = TranslationKey.createAndGet("screen.loading.title");
 		this.width = 400;
 		this.height = 550;
 	}
 	
 	@Override
 	public void init() {
-		this.vgcText = new Text(Constans.NAME);
+		this.vgcText = new Text(TranslationKey.createAndGet("main.constans.name"));
 		this.vgcText.setFont(new Font(25.0));
 		this.vgcTextBox = FxUtil.makeCentered(this.vgcText);
-		this.loadingText = new Text("Loading 0%");
+		this.loadingText = new Text(TranslationKey.createAndGet("screen.loading.loading.text", 0.0));
 		this.loadingTextBox = FxUtil.makeCentered(this.loadingText);
 		this.loadingBar = new ProgressBar();
 		FxUtil.setResize(this.loadingBar, 0.75, 0.04);
 		this.loadingBar.progressProperty().addListener((observable, oldValue, newValue) -> {
-			this.loadingText.setText("Loading " + Mth.roundTo(newValue.doubleValue() * 100, 100) + "%");
+			this.loadingText.setText(TranslationKey.createAndGet("screen.loading.loading.text", Mth.roundTo(newValue.doubleValue() * 100, 100)));
 		});
 		this.enterMenu = false;
 	}
