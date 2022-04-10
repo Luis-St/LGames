@@ -28,7 +28,7 @@ public class FxUtil {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	public static <T extends Node> VBox make(T node, Pos pos) {
-		return makeCentered(node, null);
+		return make(node, pos, null);
 	}
 	
 	public static <T extends Node> VBox make(T node, Pos pos, @Nullable Consumer<T> consumer) {
