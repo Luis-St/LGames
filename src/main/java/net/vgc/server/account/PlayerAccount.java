@@ -2,7 +2,12 @@ package net.vgc.server.account;
 
 import java.util.UUID;
 
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import net.vgc.Constans;
+import net.vgc.client.fx.FxUtil;
 import net.vgc.data.serialization.Serializable;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
@@ -53,6 +58,26 @@ public final class PlayerAccount implements Serializable {
 		return this.obfuscated();
 	}
 	
+	public void getPassword(GridPane pane) {
+		if (NetworkSide.CLIENT.isOn() || Constans.IDE || this == UNKNOWN) {
+			Text text = new Text(this.obfuscated());
+			ToggleButton button = new ToggleButton();
+			button.setToggleGroup(new ToggleGroup());
+			button.setGraphic(FxUtil.makeImageView("textures/password_invisible.png", 20.0, 20.0));
+			button.setOnAction((event) ->  {
+				if (button.isSelected()) {
+					text.setText(this.password);
+					button.setGraphic(FxUtil.makeImageView("textures/password_visible.png", 20.0, 20.0));
+				} else {
+					text.setText(this.obfuscated());
+					button.setGraphic(FxUtil.makeImageView("textures/password_invisible.png", 20.0, 20.0));
+				}
+			});
+			pane.add(text, 1, 1);
+			pane.add(button, 2, 1);
+		}
+	}
+	
 	public UUID getUUID() {
 		return this.uuid;
 	}
@@ -70,10 +95,16 @@ public final class PlayerAccount implements Serializable {
 	}
 	
 	public boolean match(String name, String password) {
+		if (this.guest) {
+			return this.name.equals(name);
+		}
 		return this.name.equals(name) && this.password.equals(password);
 	}
 	
 	public boolean match(String name, String password, UUID uuid, boolean guest) {
+		if (this.guest && guest) {
+			return this.name.equals(name) && this.uuid.equals(uuid);
+		}
 		return this.name.equals(name) && this.password.equals(password) && this.uuid.equals(uuid) && this.guest == guest;
 	}
 	

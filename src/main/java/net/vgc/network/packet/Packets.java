@@ -4,21 +4,41 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.Maps;
 
 import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.packet.account.ClientLoginPacket;
+import net.vgc.network.packet.account.ClientLogoutPacket;
+import net.vgc.network.packet.client.ClientLoggedInPacket;
+import net.vgc.network.packet.client.ClientLoggedOutPacket;
 import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 
 
 public class Packets {
 	
+	protected static final Logger LOGGER = LogManager.getLogger();
 	protected static final Map<Integer, Class<? extends Packet<?>>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
-		
+		int i = 0;
+		map.put(i++, ClientLoginPacket.class);
+		map.put(i++, ClientLogoutPacket.class);
+		map.put(i++, ClientLoggedInPacket.class);
+		map.put(i++, ClientLoggedOutPacket.class);
 	});
 	
+	@Nullable
 	public static Class<? extends Packet<?>> byId(int id) {
-		return PACKETS.get(id);
+		Class<? extends Packet<?>> clazz = PACKETS.get(id);
+		if (clazz != null) {
+			return clazz;
+		}
+		LOGGER.warn("Unable to get Packet for id {}", id);
+		return null;
 	}
 	
 	public static int getId(Class<? extends Packet<?>> clazz) {
@@ -27,9 +47,11 @@ public class Packets {
 				return entry.getKey();
 			}
 		}
+		LOGGER.warn("Unable to get Packet id for Packet {}", clazz.getSimpleName());
 		return -1;
 	}
 	
+	@Nullable
 	public static Packet<?> getPacket(int id, FriendlyByteBuffer buffer) {
 		Class<? extends Packet<?>> clazz = byId(id);
 		if (clazz != null) {
@@ -37,9 +59,13 @@ public class Packets {
 				if (ReflectionHelper.hasConstructor(clazz, FriendlyByteBuffer.class)) {
 					Constructor<? extends Packet<?>> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
 					return constructor.newInstance(buffer);
+				} else {
+					LOGGER.error("Packet {} does not have a constructor with FriendlyByteBuffer as parameter", clazz.getSimpleName());
+					throw new InvalidPacketException("Packet " + clazz.getSimpleName() + " does not have a FriendlyByteBuffer constructor");
 				}
 			} catch (Exception e) {
-				
+				LOGGER.error("Fail to get create Packet of type {} for id {}, since {}", clazz.getSimpleName(), id, e.getMessage());
+				throw new RuntimeException(e);
 			}
 		}
 		return null;

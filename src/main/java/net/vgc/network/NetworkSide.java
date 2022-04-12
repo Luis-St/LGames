@@ -6,7 +6,7 @@ public enum NetworkSide {
 	
 	CLIENT("client"),
 	SERVER("server"),
-	ACCOUNT_SERVER("account-server");
+	ACCOUNT_SERVER("account");
 	
 	private final String name;
 	

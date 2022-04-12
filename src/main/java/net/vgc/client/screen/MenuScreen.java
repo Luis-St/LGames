@@ -3,13 +3,13 @@ package net.vgc.client.screen;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.vgc.client.fx.FxUtil;
+import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.language.TranslationKey;
 
@@ -58,7 +58,7 @@ public class MenuScreen extends Screen {
 	}
 
 	@Override
-	public Scene show() {
+	public ScreenScene show() {
 		BorderPane border = new BorderPane();
 		GridPane grid = FxUtil.makeGrid(Pos.CENTER, 6.0, 10.0);
 		grid.addColumn(0, this.singleplayerButtonBox, this.multiplayerButtonBox, this.settingsButtonBox);
@@ -67,7 +67,7 @@ public class MenuScreen extends Screen {
 		border.setTop(this.loginButtonBox);
 		BorderPane.setAlignment(this.centerBox, Pos.CENTER);
 		border.setCenter(this.centerBox);
-		return new Scene(border, this.width, this.height);
+		return new ScreenScene(border, this.width, this.height, this);
 	}
 	
 	protected void handleSingleplayer(ActionEvent event) { // TODO: impl
@@ -83,8 +83,10 @@ public class MenuScreen extends Screen {
 	}
 	
 	protected void handleLogin() {
-		LoginWindow loginWindow = new LoginWindow(new Stage());
-		loginWindow.show();
+		if (LoginWindow.getInstance() == null)  {
+			LoginWindow loginWindow = new LoginWindow(new Stage());
+			loginWindow.show();
+		}
 	}
 
 }

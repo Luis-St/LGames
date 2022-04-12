@@ -19,7 +19,14 @@ import javafx.stage.Stage;
 import net.vgc.client.Client;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.network.NetworkSide;
+import net.vgc.common.LoginType;
+import net.vgc.common.Result;
+import net.vgc.language.TranslationKey;
+import net.vgc.network.Connection;
+import net.vgc.network.packet.Packet;
+import net.vgc.network.packet.account.ClientLoginPacket;
+import net.vgc.server.account.PlayerAccount;
+import net.vgc.util.Util;
 
 public class LoginWindow {
 	
@@ -31,6 +38,7 @@ public class LoginWindow {
 		return INSTANCE;
 	}
 	
+	protected final Client client = Client.getInstance();
 	protected final Stage stage;
 	protected Text registrationInfoText = new Text("");
 	protected Text loginGuestInfoText = new Text("");
@@ -41,7 +49,7 @@ public class LoginWindow {
 		this.stage = stage;
 		this.stage.setResizable(false);
 		this.stage.setOnCloseRequest((event) -> {
-			INSTANCE = null;
+			this.close();
 		});
 	}
 	
@@ -51,63 +59,72 @@ public class LoginWindow {
 	
 	protected Pane main() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		Button registrationButton = FxUtil.makeButton("Register", () -> {
+		Button registrationButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.register"), () -> {
 			this.setScene(this.registration());
 		});
-		Button loginButton = FxUtil.makeButton("Login", () -> {
+		Button loginButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
 			this.setScene(this.loginSelect());
 		});
 		pane.addColumn(0, FxUtil.makeCentered(registrationButton), FxUtil.makeCentered(loginButton));
-		this.stage.setTitle("Login");
+		return pane;
+	}
+	
+	protected Pane profile() { // REWORK -> show password only if user -> log out button
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 15.0);
+		PlayerAccount account = this.client.getAccount();
+		pane.addColumn(0, new Text(TranslationKey.createAndGet("window.login.username")), new Text(TranslationKey.createAndGet("window.login.password")));
+		pane.addColumn(1, new Text(account.getName()));
+		account.getPassword(pane);
 		return pane;
 	}
 	
 	protected Pane registration() {
 		VBox box = FxUtil.makeVerticalBox(Pos.CENTER, 10.0);
 		this.registrationInfoText.setVisible(false);
-		this.registrationInfoText.setFill(Color.RED);
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 15.0);
 		TextField userNameField = new TextField();
 		PasswordField passwordField = new PasswordField();
 		PasswordField confirmPasswordField = new PasswordField();
-		Button backButton = FxUtil.makeButton("Back", () -> {
-			this.setScene(this.main());
+		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
+			this.setScene(this.client.isLoggedIn() ? this.profile() : this.main());
 		});
-		Button registrationButton = FxUtil.makeButton("Register", () -> {
-			String user = userNameField.getText();
+		Button registrationButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.register"), () -> {
+			String userName = userNameField.getText();
 			String password = passwordField.getText();
 			String confirmPassword = confirmPasswordField.getText();
-			if (user.trim().isEmpty()) {
+			if (userName.trim().isEmpty()) {
 				FxAnimationUtil.makeEmptyText(userNameField, 750);
-			}
-			if (password.trim().isEmpty()) {
+				LOGGER.info("Username is not set");
+			} else if (password.trim().isEmpty()) {
 				FxAnimationUtil.makeEmptyText(passwordField, 750);
-			}
-			if (confirmPassword.trim().isEmpty()) {
+				LOGGER.info("Password is not set");
+			} else if (confirmPassword.trim().isEmpty()) {
 				FxAnimationUtil.makeEmptyText(confirmPasswordField, 750);
+				LOGGER.info("Password was not confirmed");
+			} else if (!password.trim().equals(confirmPassword.trim())) {
+				FxAnimationUtil.makeEmptyText(passwordField, 750);
+				FxAnimationUtil.makeEmptyText(confirmPasswordField, 750);
+				LOGGER.info("Passwords do not match");
+			} else {
+				this.connectAndSend(new ClientLoginPacket(LoginType.REGISTRATION, userName, password));
 			}
-			// TODO: registration via AccountServer
 		});
-		pane.addColumn(0, new Text("Username:"), new Text("Password:"), new Text("Confirm Password:"), backButton);
+		pane.addColumn(0, new Text(TranslationKey.createAndGet("window.login.username")), new Text(TranslationKey.createAndGet("window.login.password")), new Text(TranslationKey.createAndGet("window.login.confirm_password")), backButton);
 		pane.addColumn(1, userNameField, passwordField, confirmPasswordField, FxUtil.makeCentered(registrationButton));
 		box.getChildren().addAll(pane, this.registrationInfoText);
 		return box;
 	}
 	
-	public void setRegistrationInfo(String text) {
-		this.registrationInfoText.setText(text);
-	}
-	
 	protected Pane loginSelect() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 15.0);
-		Button guestButton = FxUtil.makeButton("Guest", () -> {
+		Button guestButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.guest"), () -> {
 			this.setScene(this.loginGuest());
 		});
-		Button userButton = FxUtil.makeButton("User", () -> {
+		Button userButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.user"), () -> {
 			this.setScene(this.loginUser());
 		});
-		Button backButton = FxUtil.makeButton("Back", () -> {
-			this.setScene(this.main());
+		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
+			this.setScene(this.client.isLoggedIn() ? this.profile() : this.main());
 		});
 		pane.addColumn(0, FxUtil.makeCentered(guestButton), FxUtil.makeCentered(userButton), FxUtil.makeCentered(backButton));
 		return pane;
@@ -116,73 +133,110 @@ public class LoginWindow {
 	protected Pane loginGuest() {
 		VBox box = FxUtil.makeVerticalBox(Pos.CENTER, 10.0);
 		this.loginGuestInfoText.setVisible(false);
-		this.loginGuestInfoText.setFill(Color.RED);
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField userNameField = new TextField();
-		Button backButton = FxUtil.makeButton("Back", () -> {
+		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
 			this.setScene(this.loginSelect());
 		});
-		Button loginButton = FxUtil.makeButton("Login", () -> {
+		Button loginButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
 			String userName = userNameField.getText();
 			if (userName.trim().isEmpty()) {
 				FxAnimationUtil.makeEmptyText(userNameField, 750);
+				LOGGER.info("Guest name is not set");
+			} else {
+				this.connectAndSend(new ClientLoginPacket(LoginType.GUEST_LOGIN, userName, ""));
 			}
-			// TODO: login guest via AccountServer
 		});
-		pane.addColumn(0, new Text("Name:"), backButton);
+		pane.addColumn(0, new Text(TranslationKey.createAndGet("window.login.name")), backButton);
 		pane.addColumn(1, userNameField, FxUtil.makeCentered(loginButton));
 		box.getChildren().addAll(pane, this.loginGuestInfoText);
 		return box;
 	}
 	
-	public void setLoginGuestInfo(String text) {
-		this.loginGuestInfoText.setText(text);
-	}
-	
 	protected Pane loginUser() {
 		VBox box = FxUtil.makeVerticalBox(Pos.CENTER, 10.0);
 		this.loginUserInfoText.setVisible(false);
-		this.loginUserInfoText.setFill(Color.RED);
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField userNameField = new TextField();
 		PasswordField passwordField = new PasswordField();
-		Button backButton = FxUtil.makeButton("Back", () -> {
+		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
 			this.setScene(this.loginSelect());
 		});
-		Button loginButton = FxUtil.makeButton("Login", () -> {
+		Button loginButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
 			String userName = userNameField.getText();
 			String password = passwordField.getText();
 			if (userName.trim().isEmpty()) {
 				FxAnimationUtil.makeEmptyText(userNameField, 750);
-			}
-			if (password.trim().isEmpty()) {
+				LOGGER.info("Username is not set");
+			} else if (password.trim().isEmpty()) {
 				FxAnimationUtil.makeEmptyText(passwordField, 750);
+				LOGGER.info("Password is not set");
+			} else {
+				this.connectAndSend(new ClientLoginPacket(LoginType.USER_LOGIN, userName, password));
 			}
-			// TODO: login user via AccountServer
 		});
-		pane.addColumn(0, new Text("Username:"), new Text("Password:"), backButton);
+		pane.addColumn(0, new Text(TranslationKey.createAndGet("window.login.username") + ":"), new Text(TranslationKey.createAndGet("window.login.password") + ":"), backButton);
 		pane.addColumn(1, userNameField, passwordField, FxUtil.makeCentered(loginButton));
 		box.getChildren().addAll(pane, this.loginUserInfoText);
 		return box;
 	}
 	
-	public void setLoginUserInfo(String text) {
-		this.loginUserInfoText.setText(text);
+	protected void connectAndSend(Packet<?> packet) {
+		try {
+			this.client.connectAccount();
+		} catch (Exception e) {
+			LOGGER.warn("Fail to connect to account server, since: {}", e.getMessage());
+		}
+		
+		Util.runDelayed("LoginPacketSend", 1000, () -> {
+			Connection connection = this.client.getAccountConnection();
+			if (this.client.isAccountConnected()) {
+				connection.send(packet);
+			} else {
+				LOGGER.warn("Unable to send Packet of type {} to account server, since connection is closed", packet.getClass().getSimpleName());
+			}
+		});
 	}
 	
-	public void show() {
-		this.setScene(this.main());
-		this.stage.show();
-		if (NetworkSide.CLIENT.isOn()) {
-			Stage stage = Client.getInstance().getStage();
-			this.stage.setX(stage.getX() + stage.getWidth());
-			this.stage.setY(stage.getY());
+	public void setInfo(LoginType loginType, Result result, String info) {
+		switch (loginType) {
+			case REGISTRATION -> this.setinfo(this.registrationInfoText, result, info);
+			case USER_LOGIN -> this.setinfo(this.loginUserInfoText, result, info);
+			case GUEST_LOGIN -> this.setinfo(this.loginGuestInfoText, result, info);
+			case UNKNOWN -> LOGGER.warn("Fail to set login info: {}", info);
 		}
 	}
 	
+	protected void setinfo(Text text, Result result, String info) {
+		text.setText(info);
+		text.setFill(result == Result.FAILED ? Color.RED : Color.GREEN);
+		text.setVisible(true);
+		Util.runDelayed("InfoTextInvisible", 5000, () -> {
+			text.setVisible(false);
+		});
+	}
+	
+	public void handleLoggedIn(LoginType loginType) {
+		this.stage.setTitle(TranslationKey.createAndGet("screen.menu.profile"));
+		this.setScene(this.profile());
+	}
+	
+	public void show() {
+		boolean loggedIn = this.client.isLoggedIn();
+		this.setScene(loggedIn ? this.profile() : this.main());
+		this.stage.setTitle(loggedIn ? TranslationKey.createAndGet("screen.menu.profile") : TranslationKey.createAndGet("screen.menu.login"));
+		this.stage.show();
+		Stage stage = this.client.getStage();
+		this.stage.setX(stage.getX() + stage.getWidth());
+		this.stage.setY(stage.getY());
+	}
+	
 	public void exit() {
-		INSTANCE = null;
 		this.stage.close();
+	}
+	
+	protected void close() {
+		INSTANCE = null;
 	}
 	
 }
