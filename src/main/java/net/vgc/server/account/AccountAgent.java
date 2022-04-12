@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 
 import net.vgc.common.InfoResult;
 import net.vgc.common.Result;
+import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 
 public final class AccountAgent {
@@ -58,23 +59,23 @@ public final class AccountAgent {
 		});
 		if (accounts.isEmpty()) {
 			LOGGER.warn("Fail to login, since there is no account with the following account data: name {} password {}", name, password);
-			return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.login.no")), PlayerAccount.UNKNOWN);
+			return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.login.no")), PlayerAccount.UNKNOWN);
 		} if (accounts.size() == 1) {
 			PlayerAccount account = accounts.get(0);
 			if (account.isTaken()) {
 				LOGGER.warn("Fail to login, since the account {} is already used by another player", account.toString().replace("PlayerAccount", ""));
-				return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.login.taken")), PlayerAccount.UNKNOWN);
+				return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.login.taken")), PlayerAccount.UNKNOWN);
 			} else if (this.accounts.remove(account)) {
 				account.setTaken(true);
 				this.accounts.add(account); 
-				return new PlayerAccountInfo(new InfoResult(Result.SUCCESS, TranslationKey.createAndGet("account.login.successfully")), account);
+				return new PlayerAccountInfo(new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.login.successfully")), account);
 			}
 		}
 		List<String> accountStrings = accounts.stream().map(PlayerAccount::toString).map((string) -> { 
 			return string.replace("PlayerAccount", "").replace("[", "{").replace("]", "}");
 		}).toList();
 		LOGGER.warn("Fail to login, since the following accounts {} match with the following account data: name {} password {}", accountStrings.toString(), name, password);
-		return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.login.error")), PlayerAccount.UNKNOWN);
+		return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.login.error")), PlayerAccount.UNKNOWN);
 	}
 	
 	@Nullable
@@ -92,13 +93,13 @@ public final class AccountAgent {
 			if (account.isTaken()) {
 				account.setTaken(false);
 				this.accounts.add(account);
-				return new InfoResult(Result.SUCCESS, TranslationKey.createAndGet("account.logout.successfully"));
+				return new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.logout.successfully"));
 			}
 			LOGGER.warn("Fail to logout, since the Account is not used by a player");
-			return new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.logout.unused"));
+			return new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.logout.unused"));
 		}
 		LOGGER.warn("Fail to logout, since there is no Account with the following account data: name {} password {}", name, password);
-		return new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.login.no"));
+		return new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.login.no"));
 	}
 	
 	public void close() {

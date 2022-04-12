@@ -74,16 +74,16 @@ public class AccountServer extends GameApplication {
 	}
 	
 	@Override
-	public void start(String[] args) throws Exception { // TODO: create Scene
+	public void start(String[] args) throws Exception {
 		LOGGER.info("Starting account server");
 		this.launchState = LaunchState.STARTING;
 		Network.INSTANCE.setNetworkSide(NetworkSide.ACCOUNT_SERVER);
-		this.stage.setScene(new Scene(new Group(), 400, 400));
-		this.stage.show();
 		this.handleStart(args);
 		LanguageProvider.INSTANCE.load();
 		this.launchServer();
 		this.loadAccounts();
+		this.stage.setScene(new Scene(new Group(), 400, 400));
+		this.stage.show();
 		this.launchState = LaunchState.STARTED;
 		LOGGER.info("Successfully start of account server with version {}", Constans.Account.VERSION);
 	}
@@ -100,7 +100,7 @@ public class AccountServer extends GameApplication {
 			this.gameDirectory = set.valueOf(gameDir).toPath();
 		} else {
 			this.gameDirectory = new File(System.getProperty("user.home")).toPath().resolve("Desktop/run/account_server");
-			LOGGER.warn("Fail to get game directory, use default directory: {}", this.gameDirectory); // TODO: use ErrorWindow & interrupt loading while open/not choose
+			LOGGER.warn("Fail to get game directory, use default directory: {}", this.gameDirectory);
 		}
 		if (set.has(resourceDir)) {
 			this.resourceDirectory = set.valueOf(resourceDir).toPath();
