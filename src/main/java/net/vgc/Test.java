@@ -26,6 +26,10 @@ public class Test {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	public static void main(String[] args) {
+		
+	}
+	
+	protected static void makeLanguageFiles() {
 		List<Translation> english = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("main.constans.name", "Virtual Game Collection"));
 			list.add(new Translation("screen.loading.title", "Loading Virtual Game Collection"));
@@ -44,6 +48,15 @@ public class Test {
 			list.add(new Translation("window.login.name", "Name"));
 			list.add(new Translation("window.login.user", "User"));
 			list.add(new Translation("window.login.back", "Back"));
+			list.add(new Translation("account.login.create", "Account has been created"));
+			list.add(new Translation("account.login.guest", "Successfully logged in as a guest"));
+			list.add(new Translation("account.login.unknown", "Unknown login type. Please try again later"));
+			list.add(new Translation("account.login.no", "No Account found with matching account data"));
+			list.add(new Translation("account.login.taken", "Account is already used by another player"));
+			list.add(new Translation("account.login.successfully", "Successfully logged in"));
+			list.add(new Translation("account.login.error", "There was an error checking your account. Please try again later"));
+			list.add(new Translation("account.logout.unused", "The Account which should be logged out is not used by a player"));
+			list.add(new Translation("account.logout.successfully", "Successfully logged out"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("main.constans.name", "Virtuelle Spielesammlung"));
@@ -63,6 +76,15 @@ public class Test {
 			list.add(new Translation("window.login.name", "Name"));
 			list.add(new Translation("window.login.user", "Benutzer"));
 			list.add(new Translation("window.login.back", "Zurück"));
+			list.add(new Translation("account.login.create", "Konto wurde erstellt"));
+			list.add(new Translation("account.login.guest", "Als Gast erfolgreich eingeloggt"));
+			list.add(new Translation("account.login.unknown", "Unbekannter Anmeldetyp. Bitte versuchen Sie es später erneut"));
+			list.add(new Translation("account.login.no", "Kein Konto mit übereinstimmenden Kontodaten gefunden"));
+			list.add(new Translation("account.login.taken", "Konto wird bereits von einem anderen Spieler verwendet"));
+			list.add(new Translation("account.login.successfully", "Erfolgreich eingeloggt"));
+			list.add(new Translation("account.login.error", "Bei der Überprüfung Ihres Kontos ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut"));
+			list.add(new Translation("account.logout.unused", "Das abzumeldende Konto wird von keinem Spieler verwendet"));
+			list.add(new Translation("account.logout.successfully", "Erfolgreich abgemeldet"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);
