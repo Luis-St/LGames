@@ -1,5 +1,8 @@
 package net.vgc.client.fx;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -14,13 +17,18 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.vgc.Constans;
 import net.vgc.client.Client;
+import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 
 public class FxUtil {
@@ -116,6 +124,27 @@ public class FxUtil {
 			region.prefHeightProperty().bind(Bindings.multiply(stage.heightProperty(), height));
 		}
 		return region;
+	}
+	
+	public static ImageView makeImageView(String path, double width, double heigh) {
+		File file = Network.INSTANCE.getResourceDirectory().resolve(path).toFile();
+		ImageView imageView = null;
+		try {
+			imageView = new ImageView(new Image(new FileInputStream(file)));
+			imageView.setFitWidth(width);
+			imageView.setFitHeight(heigh);
+			imageView.setSmooth(true);
+		} catch (IOException e) {
+			LOGGER.error("Unable to load image {}, since: {}", file.toPath(), e.getMessage());
+			throw new RuntimeException(e);
+		}
+		return imageView;
+	}
+	
+	public static Text makeText(String displayText, double fontSize) {
+		Text text = new Text(displayText);
+		text.setFont(new Font(fontSize));
+		return text;
 	}
 	
 }

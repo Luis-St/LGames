@@ -1,8 +1,8 @@
 plugins {
-	id 'java-library'
-	id 'eclipse'
-	id 'java'
-	id 'org.openjfx.javafxplugin' version '0.0.10'
+	id "java-library"
+	id "eclipse"
+	id "java"
+	id "org.openjfx.javafxplugin" version "0.0.10"
 }
 
 repositories {
@@ -13,14 +13,14 @@ repositories {
 }
 
 ext {
-	sourceSets.main.java.srcDirs = ['src']
-	javaMainClass = 'net.vgc.Main'
+	sourceSets.main.java.srcDirs = ["src"]
+	javaMainClass = "net.vgc.Main"
 }
 
 eclipse {
 	jdt {
-		sourceCompatibility = '17'
-		targetCompatibility = '17'
+		sourceCompatibility = "17"
+		targetCompatibility = "17"
 	}
 }
 
@@ -32,70 +32,71 @@ java {
 
 javafx {
 	version = "17"
-	modules = [ 'javafx.controls' ]
+	modules = [ "javafx.controls" ]
 }
 
 compileJava {
-	sourceCompatibility = '17'
-	targetCompatibility = '17'
+	sourceCompatibility = "17"
+	targetCompatibility = "17"
 }
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + 'Java Runtime:' + System.getProperty("java.runtime.version"))
+println("Java: " + System.getProperty("java.version") + " JVM: " + System.getProperty("java.vm.version") + "Java Runtime:" + System.getProperty("java.runtime.version"))
 
 dependencies {
-	implementation 'com.google.code.gson:gson:2.8.9'
-	implementation 'net.sf.jopt-simple:jopt-simple:5.0.4'
-	implementation 'com.google.guava:guava:31.0.1-jre'
-	implementation group: 'io.netty', name: 'netty-all', version: '4.1.25.Final'
-	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
-	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
-	implementation 'com.mojang:datafixerupper:4.0.26'
+	implementation "com.google.code.gson:gson:2.8.9"
+	implementation "net.sf.jopt-simple:jopt-simple:5.0.4"
+	implementation "com.google.guava:guava:31.0.1-jre"
+	implementation group: "io.netty", name: "netty-all", version: "4.1.25.Final"
+	implementation group: "org.apache.logging.log4j", name: "log4j-api", version: "2.14.1"
+	implementation group: "org.apache.logging.log4j", name: "log4j-core", version: "2.14.1"
+	implementation "com.mojang:datafixerupper:4.0.26"
 }
 
 task clientRun(type:JavaExec) {
-	group = 'runs'
-	main = 'net.vgc.Main'
+	group = "runs"
+	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("src/main/resources/"), "--instantLoading", "true", "--safeLoading", "false")
+	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("src/main/resources/assets"), "--serverHost", "localhost", "--serverPort", "8080", "--accountHost", "localhost", "--accountPort", "8081")
+	args("--instantLoading", "true", "--safeLoading", "false")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
 task serverRun(type:JavaExec) {
-	group = 'runs'
-	main = 'net.vgc.Main'
+	group = "runs"
+	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--server", "--gameDir", file('run/server'), "--resourceDir", file('src/main/resources/'), "--host", "localhost", "--port", "8080")
+	args("--debugMode", "false", "--ide", "--server", "--gameDir", file('run/server'), "--resourceDir", file('src/main/resources/assets'), "--host", "localhost", "--port", "8080")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task accountServerRun(type:JavaExec) {
-	group = 'runs'
-	main = 'net.vgc.Main'
+task accountRun(type:JavaExec) {
+	group = "runs"
+	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--accountServer", "--gameDir", file('run/account_server'), "--host", "localhost", "--port", "8081")
+	args("--debugMode", "false", "--ide", "--account", "--gameDir", file('run/account_server'), "--resourceDir", file('src/main/resources/assets'), "--host", "localhost", "--port", "8081")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
 task testRun(type:JavaExec) {
-	group = 'runs'
-	main = 'net.vgc.Test'
+	group = "runs"
+	main = "net.vgc.Test"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
 wrapper {
-    gradleVersion = '7.3'
+    gradleVersion = "7.3"
     distributionType = Wrapper.DistributionType.ALL
 }
 
 jar {
 	manifest {
 		attributes([
-			'Main-Class': javaMainClass
+			"Main-Class": javaMainClass
 		])
 	}
 }

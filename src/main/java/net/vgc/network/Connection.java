@@ -102,7 +102,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	
 	protected void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener, boolean waiting) {
 		ChannelFuture channelFuture = this.channel.writeAndFlush(packet);
-		LOGGER.debug("Send {} Packet of type {}", waiting ? "waiting" : "", packet.getClass().getSimpleName());
+		LOGGER.debug("Send{}Packet of type {}", waiting ? " waiting " : " ", packet.getClass().getSimpleName());
 		if (listener != null) {
 			channelFuture.addListener(listener);
 		}

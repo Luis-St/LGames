@@ -345,7 +345,6 @@ public class CompoundTag implements Tag {
 				if (!tag.isEmpty() && (type == -1 || tag.getElementType() == type)) {
 					return tag;
 				}
-				return new ListTag();
 			}
 		} catch (ClassCastException e) {
 			throw new RuntimeException("Fail to read tag of type: " + TagTypes.getType(this.getTagType(key)).getName() + ", since it's corrupt");
@@ -370,6 +369,10 @@ public class CompoundTag implements Tag {
 	
 	public void remove(String key) {
 		this.data.remove(key);
+	}
+	
+	public boolean isEmpty() {
+		return this.data.isEmpty();
 	}
 	
 	@Override

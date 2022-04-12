@@ -131,7 +131,7 @@ public class FriendlyByteBuffer {
 	}
 	
 	public void writeAccountInfo(PlayerAccountInfo value) {
-		this.writeInfoResult(value.info());
+		this.writeInfoResult(value.infoResult());
 		this.writeAccount(value.account());
 	}
 	

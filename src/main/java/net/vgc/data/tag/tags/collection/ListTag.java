@@ -76,7 +76,7 @@ public class ListTag extends CollectionTag<Tag> {
 		if (this.data.isEmpty()) {
 			this.type = 0;
 		} else {
-			this.type = this.data.get(type).getId();
+			this.type = this.data.get(0).getId();
 		}
 		output.writeByte(this.type);
 		output.writeInt(this.data.size());

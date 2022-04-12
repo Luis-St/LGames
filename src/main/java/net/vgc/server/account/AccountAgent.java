@@ -1,5 +1,6 @@
 package net.vgc.server.account;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ import com.google.common.collect.Lists;
 
 import net.vgc.common.InfoResult;
 import net.vgc.common.Result;
+import net.vgc.language.TranslationKey;
 
 public final class AccountAgent {
 	
@@ -27,14 +29,26 @@ public final class AccountAgent {
 		return this.accounts;
 	}
 	
-	public PlayerAccount createAccount(String name, String password, UUID uuid, boolean guest) {
+	protected PlayerAccount createAccount(String name, String password, UUID uuid, boolean guest) {
 		PlayerAccount account = new PlayerAccount(name, password, uuid, guest);
 		this.accounts.add(account);
 		return account;
 	}
 	
-	public PlayerAccount createGuestAccount(String name, String password, UUID uuid) {
-		return this.createAccount(name, password, uuid, true);
+	public PlayerAccount createUserAccount(String name, String password, UUID uuid) {
+		return this.createAccount(name, this.checkOrCreatePassword(password), uuid, false);
+	}
+	
+	public PlayerAccount createGuestAccount(String name, UUID uuid) {
+		return this.createAccount(name, this.checkOrCreatePassword(null), uuid, true);
+	}
+	
+	protected String checkOrCreatePassword(String password) {
+		if (password != null && !password.trim().isEmpty()) {
+			return password;
+		}
+		SecureRandom rng = new SecureRandom();
+		return String.valueOf(rng.nextInt(100000));
 	}
 	
 	public PlayerAccountInfo accountLogin(String name, String password) {
@@ -43,24 +57,24 @@ public final class AccountAgent {
 			return !account.match(name, password);
 		});
 		if (accounts.isEmpty()) {
-			LOGGER.warn("Fail to login, since there is no Account with the following account data: name {} password {}", name, password);
-			return new PlayerAccountInfo(new InfoResult(Result.FAILED, "There is no Account which match with the given account data!"), PlayerAccount.UNKNOWN);
+			LOGGER.warn("Fail to login, since there is no account with the following account data: name {} password {}", name, password);
+			return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.login.no")), PlayerAccount.UNKNOWN);
 		} if (accounts.size() == 1) {
 			PlayerAccount account = accounts.get(0);
 			if (account.isTaken()) {
-				LOGGER.warn("Fail to login, since the Account {} is already used by another player", account.toString().replace("PlayerAccount", ""));
-				return new PlayerAccountInfo(new InfoResult(Result.FAILED, "Account is already used by another player!"), PlayerAccount.UNKNOWN);
+				LOGGER.warn("Fail to login, since the account {} is already used by another player", account.toString().replace("PlayerAccount", ""));
+				return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.login.taken")), PlayerAccount.UNKNOWN);
 			} else if (this.accounts.remove(account)) {
 				account.setTaken(true);
 				this.accounts.add(account); 
-				return new PlayerAccountInfo(new InfoResult(Result.SUCCESS, "Successfully logged in"), account);
+				return new PlayerAccountInfo(new InfoResult(Result.SUCCESS, TranslationKey.createAndGet("account.login.successfully")), account);
 			}
 		}
 		List<String> accountStrings = accounts.stream().map(PlayerAccount::toString).map((string) -> { 
 			return string.replace("PlayerAccount", "").replace("[", "{").replace("]", "}");
 		}).toList();
-		LOGGER.warn("Fail to login, since the following Accounts {} match with the following account data: name {} password {}", accountStrings.toString(), name, password);
-		return new PlayerAccountInfo(new InfoResult(Result.FAILED, "There was an error checking your account. Please try again later!"), PlayerAccount.UNKNOWN);
+		LOGGER.warn("Fail to login, since the following accounts {} match with the following account data: name {} password {}", accountStrings.toString(), name, password);
+		return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.login.error")), PlayerAccount.UNKNOWN);
 	}
 	
 	@Nullable
@@ -78,13 +92,13 @@ public final class AccountAgent {
 			if (account.isTaken()) {
 				account.setTaken(false);
 				this.accounts.add(account);
-				return new InfoResult(Result.SUCCESS, "Successfully logged out");
+				return new InfoResult(Result.SUCCESS, TranslationKey.createAndGet("account.logout.successfully"));
 			}
 			LOGGER.warn("Fail to logout, since the Account is not used by a player");
-			return new InfoResult(Result.FAILED, "The Account which should be logged out is not used by a player");
+			return new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.logout.unused"));
 		}
 		LOGGER.warn("Fail to logout, since there is no Account with the following account data: name {} password {}", name, password);
-		return new InfoResult(Result.FAILED, "There is no Account which match with the given account data!");
+		return new InfoResult(Result.FAILED, TranslationKey.createAndGet("account.login.no"));
 	}
 	
 	public void close() {
