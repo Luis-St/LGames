@@ -26,7 +26,7 @@ public class Test {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	public static void main(String[] args) {
-		
+		makeLanguageFiles();
 	}
 	
 	protected static void makeLanguageFiles() {
@@ -48,6 +48,7 @@ public class Test {
 			list.add(new Translation("window.login.name", "Name"));
 			list.add(new Translation("window.login.user", "User"));
 			list.add(new Translation("window.login.back", "Back"));
+			list.add(new Translation("window.logout.logout", "Logout"));
 			list.add(new Translation("account.login.create", "Account has been created"));
 			list.add(new Translation("account.login.guest", "Successfully logged in as a guest"));
 			list.add(new Translation("account.login.unknown", "Unknown login type. Please try again later"));
@@ -66,16 +67,17 @@ public class Test {
 			list.add(new Translation("screen.menu.multiplayer", "Mehrspieler"));
 			list.add(new Translation("screen.menu.settings", "Einstellungen"));
 			list.add(new Translation("screen.menu.login", "Anmeldung"));
-			list.add(new Translation("screen.menu.profile", "Profile"));
-			list.add(new Translation("window.login.register", "Profil"));
+			list.add(new Translation("screen.menu.profile", "Profil"));
+			list.add(new Translation("window.login.register", "Registrieren"));
 			list.add(new Translation("window.login.username", "Nutzername"));
 			list.add(new Translation("window.login.password", "Passwort"));
 			list.add(new Translation("window.login.confirm_password", "Passwort bestätigen"));
-			list.add(new Translation("window.login.login", "Einloggen"));
+			list.add(new Translation("window.login.login", "Anmelden"));
 			list.add(new Translation("window.login.guest", "Gast"));
 			list.add(new Translation("window.login.name", "Name"));
 			list.add(new Translation("window.login.user", "Benutzer"));
 			list.add(new Translation("window.login.back", "Zurück"));
+			list.add(new Translation("window.logout.logout", "Abmelden"));
 			list.add(new Translation("account.login.create", "Konto wurde erstellt"));
 			list.add(new Translation("account.login.guest", "Als Gast erfolgreich eingeloggt"));
 			list.add(new Translation("account.login.unknown", "Unbekannter Anmeldetyp. Bitte versuchen Sie es später erneut"));

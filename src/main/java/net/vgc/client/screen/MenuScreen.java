@@ -54,6 +54,8 @@ public class MenuScreen extends Screen {
 	public void tick() {
 		if (this.client.isLoggedIn()) {
 			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.profile"));
+		} else if (this.loginButton.getText().equals(TranslationKey.createAndGet("screen.menu.profile"))) {
+			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.login"));
 		}
 	}
 
@@ -70,15 +72,15 @@ public class MenuScreen extends Screen {
 		return new ScreenScene(border, this.width, this.height, this);
 	}
 	
-	protected void handleSingleplayer(ActionEvent event) { // TODO: impl
+	protected void handleSingleplayer(ActionEvent event) { 
 		LOGGER.debug("Singleplayer");
 	}
 	
-	protected void handleMultiplayer(ActionEvent event) { // TODO: impl
+	protected void handleMultiplayer(ActionEvent event) {
 		LOGGER.debug("Multiplayer");
 	}
 	
-	protected void handleSettings(ActionEvent event) { // TODO: impl
+	protected void handleSettings(ActionEvent event) {
 		LOGGER.debug("Settings");
 	}
 	

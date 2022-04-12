@@ -26,45 +26,35 @@ public class ClientPacketListener extends AbstractPacketListener {
 				case REGISTRATION: {
 					if (accountInfo.isSuccess()) {
 						LOGGER.info("Create successfully a new account");
-						this.client.setAccount(accountInfo.account());
+						this.client.login(accountInfo.account());
 						if (loginWindow != null) {
-							loginWindow.setInfo(loginType, infoResult.result(), infoResult.info());
 							loginWindow.handleLoggedIn(loginType);
 						}
 					} else {
 						LOGGER.warn("Fail to log in: {}", infoResult.info());
-						if (loginWindow != null) {
-							loginWindow.setInfo(loginType, infoResult.result(), infoResult.info());
-						}
 					}
 				} break;
 				case USER_LOGIN: {
 					if (accountInfo.isSuccess()) {
 						LOGGER.debug("Successfully logged in");
-						this.client.setAccount(accountInfo.account());
+						this.client.login(accountInfo.account());
 						if (loginWindow != null) {
-							loginWindow.setInfo(loginType, infoResult.result(), infoResult.info());
 							loginWindow.handleLoggedIn(loginType);
 						}
 					} else {
 						LOGGER.warn("Fail to log in: {}", infoResult.info());
-						if (loginWindow != null) {
-							loginWindow.setInfo(loginType, infoResult.result(), infoResult.info());
-						}
 					}
 				} break;
 				case GUEST_LOGIN: {
 					if (accountInfo.isSuccess()) {
 						LOGGER.debug("Successfully logged in as a guest");
-						this.client.setAccount(accountInfo.account());
+						this.client.login(accountInfo.account());
 						if (loginWindow != null) {
-							loginWindow.setInfo(loginType, infoResult.result(), infoResult.info());
 							loginWindow.handleLoggedIn(loginType);
 						}
 					} else {
 						LOGGER.warn("Fail to log in: {}", infoResult.info());
 						if (loginWindow != null) {
-							loginWindow.setInfo(loginType, infoResult.result(), infoResult.info());
 							loginWindow.handleLoggedIn(loginType);
 						}
 					}
@@ -82,11 +72,15 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public void handleClientLoggedOut(InfoResult infoResult) { // TODO: window message & add button
+	public void handleClientLoggedOut(InfoResult infoResult) {
 		this.checkSide();
+		LoginWindow loginWindow = LoginWindow.getInstance();
 		if (infoResult.isSuccess()) {
 			LOGGER.info("Successfully logged out");
-			this.client.setAccount(null);
+			this.client.logout();
+			if (loginWindow != null) {
+				loginWindow.handleLoggedOut();
+			}
 		} else {
 			LOGGER.warn("Fail to log out: {}", infoResult.info());
 		}

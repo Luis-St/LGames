@@ -15,6 +15,7 @@
     "screen.menu.settings": "Settings",
     "screen.menu.profile": "Profile",
     "account.login.guest": "Successfully logged in as a guest",
+    "window.logout.logout": "Logout",
     "main.constans.name": "Virtual Game Collection",
     "account.login.unknown": "Unknown login type. Please try again later",
     "screen.menu.multiplayer": "Multiplayer",
