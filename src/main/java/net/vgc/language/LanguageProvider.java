@@ -92,7 +92,7 @@ public class LanguageProvider {
 		return null;
 	}
 	
-	public String getTranslation(TranslationKey key) {
+	public String getTranslation(Language language, TranslationKey key) {
 		if (this.isLanguageLoad(this.currentLanguage)) {
 			LanguageFile languageFile = this.getFileForLanguage(this.currentLanguage);
 			if (languageFile != null) {
@@ -109,6 +109,10 @@ public class LanguageProvider {
 		}
 		LOGGER.warn("Fail to get translation for key {} in language {}, since the language is not load", key.getKey(), this.currentLanguage);
 		return key.getKey();
+	}
+	
+	public String getTranslation(TranslationKey key) {
+		return this.getTranslation(this.currentLanguage, key);
 	}
 	
 }

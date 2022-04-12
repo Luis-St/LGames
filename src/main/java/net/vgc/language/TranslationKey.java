@@ -18,12 +18,27 @@ public class TranslationKey {
 		return new TranslationKey(key, objects).getValue();
 	}
 	
+	public static String createAndGet(Language language, String key, Object... objects) {
+		return new TranslationKey(key, objects).getValue(language);
+	}
+	
 	public String getKey() {
 		return this.key;
 	}
 	
 	public String getValue() {
 		String translation = LanguageProvider.INSTANCE.getTranslation(this);
+		for (int i = 0; i < this.objects.size(); i++) {
+			String s = "%" + (i + 1) + "%";
+			if (translation.contains(s)) {
+				translation = translation.replace(s, this.objects.get(i).toString());
+			}
+		}
+		return translation;
+	}
+	
+	public String getValue(Language language) {
+		String translation = LanguageProvider.INSTANCE.getTranslation(language, this);
 		for (int i = 0; i < this.objects.size(); i++) {
 			String s = "%" + (i + 1) + "%";
 			if (translation.contains(s)) {
