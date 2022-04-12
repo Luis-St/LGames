@@ -25,29 +25,45 @@ public class Main {
 		parser.allowsUnrecognizedOptions();
 		parser.accepts("client");
 		parser.accepts("server");
-		parser.accepts("accountServer");
+		parser.accepts("account");
 		OptionSpec<Boolean> debugMode = parser.accepts("debugMode").withRequiredArg().ofType(Boolean.class);
 		parser.accepts("ide");
 		OptionSet set = parser.parse(args);
 		boolean client = set.has("client");
 		boolean server = set.has("server");
-		boolean accountServer = set.has("accountServer");
+		boolean account = set.has("account");
 		Util.warpStreams(set.has(debugMode) ? set.valueOf(debugMode) : false);
 		Constans.IDE = set.has("ide");
-		if (client && server) {
-			LOGGER.trace("Can not launch a client and a server");
-			System.exit(-1);
-		} else if (client) {
+		checkLaunch(client, server, account);
+		if (client) {
 			Constans.LAUNCH_TYPE = "client";
 			Client.launch(Client.class, args);
 		} else if (server) {
 			Constans.LAUNCH_TYPE = "server";
 			Server.launch(Server.class, args);
-		} else if (accountServer) {
-			Constans.LAUNCH_TYPE = "account_server";
+		} else if (account) {
+			Constans.LAUNCH_TYPE = "account";
 			AccountServer.launch(AccountServer.class, args);
 		} else {
-			LOGGER.trace("Unknown launch type for the Virtual Game Collection, use '--client' to start a client, '--server' to start a server or '--accountServer' to start a account server");
+			System.exit(-1);
+		}
+	}
+	
+	protected static void checkLaunch(boolean client, boolean server, boolean account) {
+		if (client && server && account) {
+			LOGGER.trace("Can not launch a client, a server and a account server");
+			System.exit(-1);
+		} else if (client && server) {
+			LOGGER.trace("Can not launch a client and a server");
+			System.exit(-1);
+		} else if (client && account) {
+			LOGGER.trace("Can not launch a client and a account server");
+			System.exit(-1);
+		} else if (server && account) {
+			LOGGER.trace("Can not launch a server and a account server");
+			System.exit(-1);
+		} else if (!client && !server && !account) {
+			LOGGER.trace("Unknown launch type for the Virtual Game Collection, use '--client' to start a client, '--server' to start a server or '--account' to start a account server");
 			System.exit(-1);
 		}
 	}
