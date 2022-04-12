@@ -2,10 +2,10 @@ package net.vgc.server.account;
 
 import net.vgc.common.InfoResult;
 
-public record PlayerAccountInfo(InfoResult info, PlayerAccount account) {
+public record PlayerAccountInfo(InfoResult infoResult, PlayerAccount account) {
 	
 	public boolean isSuccess() {
-		return this.info.isSuccess() && account != PlayerAccount.UNKNOWN;
+		return this.infoResult.isSuccess() && this.account != PlayerAccount.UNKNOWN;
 	}
 	
 }

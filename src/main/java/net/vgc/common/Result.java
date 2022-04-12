@@ -26,7 +26,7 @@ public enum Result {
 	@Nullable
 	public static Result fromName(String name) {
 		for (Result result : Result.values()) {
-			if (result.name().equals(name)) {
+			if (result.getName().equals(name)) {
 				return result;
 			}
 		}
