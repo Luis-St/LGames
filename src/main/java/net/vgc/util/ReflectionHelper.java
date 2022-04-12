@@ -1,6 +1,7 @@
 package net.vgc.util;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -15,7 +16,7 @@ import com.google.common.collect.Lists;
 
 public class ReflectionHelper {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(ReflectionHelper.class);
+	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	public static boolean hasInterface(Class<?> clazz, Class<?> iface) {
 		if (iface.isInterface()) {
@@ -30,9 +31,9 @@ public class ReflectionHelper {
 		try {
 			constructor = clazz.getDeclaredConstructor(parameters);
 		} catch (NoSuchMethodException e) {
-			LOGGER.warn("Fail to get Constructor for parameters " + Lists.newArrayList(parameters).stream().map(Class::getSimpleName).collect(Collectors.toList()) + " in Class " + clazz.getSimpleName(), e);
+			LOGGER.warn("Fail to get constructor for parameters " + Lists.newArrayList(parameters).stream().map(Class::getSimpleName).collect(Collectors.toList()) + " in class " + clazz.getSimpleName(), e);
 		} catch (SecurityException e) {
-			LOGGER.warn("No permisson to get the Constructor of Class " + clazz.getSimpleName(), e);
+			LOGGER.warn("No permisson to get the constructor of class " + clazz.getSimpleName(), e);
 		}
 		return constructor;
 	}
@@ -55,13 +56,13 @@ public class ReflectionHelper {
 			constructor.setAccessible(true);
 			instance = constructor.newInstance(parameters);
 		} catch (InstantiationException e) {
-			LOGGER.warn("Can not create a new instance of Class " + constructor.getDeclaringClass().getSimpleName() + " with arguments " + parameterNames, e);
+			LOGGER.warn("Can not create a new instance of class " + constructor.getDeclaringClass().getSimpleName() + " with arguments " + parameterNames, e);
 		} catch (IllegalAccessException e) {
-			LOGGER.warn("Can not access the Constructor of Class " + constructor.getDeclaringClass().getSimpleName(), e);
+			LOGGER.warn("Can not access the constructor of class " + constructor.getDeclaringClass().getSimpleName(), e);
 		} catch (IllegalArgumentException e) {
-			LOGGER.warn("The arguments " + parameterNames + " does not match with those of the Constructor");
+			LOGGER.warn("The arguments " + parameterNames + " does not match with those of the constructor");
 		} catch (InvocationTargetException e) {
-			LOGGER.warn("Something went wrong while invoke the Constructor of Class " + constructor.getDeclaringClass().getSimpleName(), e);
+			LOGGER.warn("Something went wrong while invoke the Cconstructor of class " + constructor.getDeclaringClass().getSimpleName(), e);
 		}
 		return instance;
 	}
@@ -78,9 +79,9 @@ public class ReflectionHelper {
 		try {
 			method = clazz.getDeclaredMethod(name, parameters);
 		} catch (NoSuchMethodException e) {
-			LOGGER.warn("Fail to get Method for name " + name + " and parameters " + parameterNames + " in Class " + clazz.getSimpleName(), e);
+			LOGGER.warn("Fail to get method for name " + name + " and parameters " + parameterNames + " in class " + clazz.getSimpleName(), e);
 		} catch (SecurityException e) {
-			LOGGER.warn("No permisson to get the Method with name " + name + " and parameters " + parameterNames + " in Class " + clazz.getSimpleName(), e);
+			LOGGER.warn("No permisson to get the method with name " + name + " and parameters " + parameterNames + " in class " + clazz.getSimpleName(), e);
 		}
 		return method;
 	}
@@ -96,25 +97,82 @@ public class ReflectionHelper {
 	}
 	
 	@Nullable
-	public static Object invoke(Method method, Object instance, Object... parameters) {
+	public static Object invoke(Method method, @Nullable Object instance, Object... parameters) {
 		List<String> parameterNames = Lists.newArrayList(parameters).stream().map(Object::getClass).map(Class::getSimpleName).collect(Collectors.toList());
 		Object returnValue = null;
 		try {
 			method.setAccessible(true);
 			returnValue = method.invoke(instance, parameters);
 		} catch (IllegalAccessException e) {
-			LOGGER.warn("Can not access the Method of Class " + method.getDeclaringClass().getSimpleName() + " with name " + method.getName() + " and parameters " + parameterNames, e);
+			LOGGER.warn("Can not access the method in class " + method.getDeclaringClass().getSimpleName() + " with name " + method.getName() + " and parameters " + parameterNames, e);
 		} catch (IllegalArgumentException e) {
-			LOGGER.warn("The parameters " + parameterNames + " does not match with those of the Method");
+			LOGGER.warn("The parameters " + parameterNames + " does not match with those of the method");
 		} catch (InvocationTargetException e) {
-			LOGGER.warn("Something went wrong while invoke the Method of Class " + method.getDeclaringClass().getSimpleName() + " with name " + method.getName() + " and parameters " + parameterNames, e);
+			LOGGER.warn("Something went wrong while invoke the method in class " + method.getDeclaringClass().getSimpleName() + " with name " + method.getName() + " and parameters " + parameterNames, e);
 		}
 		return returnValue;
 	}
 	
 	@Nullable
-	public static Object invoke(Class<?> clazz, String name, Object... parameters) {
-		return invoke(getMethod(clazz, name, Lists.newArrayList(parameters).stream().map(Object::getClass).toArray(Class<?>[]::new)), name, parameters);
+	public static Object invoke(Class<?> clazz, String name, @Nullable Object instance, Object... parameters) {
+		return invoke(getMethod(clazz, name, Lists.newArrayList(parameters).stream().map(Object::getClass).toArray(Class<?>[]::new)), instance, parameters);
+	}
+	
+	@Nullable
+	public static Field getField(Class<?> clazz, String name) {
+		Field field = null;
+		try {
+			field = clazz.getDeclaredField(name);
+		} catch (NoSuchFieldException e) {
+			LOGGER.warn("Fail to get field for name " + name + " in class " + clazz.getSimpleName(), e);
+		} catch (SecurityException e) {
+			LOGGER.warn("No permisson to get the field with name " + name + " in class " + clazz.getSimpleName(), e);
+		}
+		return field;
+	}
+	
+	public static boolean hasField(Class<?> clazz, String name) {
+		Field field = null;
+		try {
+			field = clazz.getDeclaredField(name);
+		} catch (Exception e) {
+			
+		}
+		return field != null;
+	}
+	
+	@Nullable
+	public static Object get(Field field, @Nullable Object instance) {
+		Object value = null;
+		try {
+			field.setAccessible(true);
+			value = field.get(instance);
+		} catch (IllegalArgumentException e) {
+			LOGGER.warn("Fail to get value of field with name " + field.getName() + " in class " + instance.getClass().getSimpleName() + " ", e);
+		} catch (IllegalAccessException e) {
+			LOGGER.warn("Can not access the field in class " + field.getDeclaringClass().getSimpleName() + " with name " + field.getName() + " ", e);
+		}
+		return value;
+	}
+	
+	@Nullable
+	public static Object get(Class<?> clazz, String name, @Nullable Object instance) {
+		return get(getField(clazz, name), instance);
+	}
+	
+	public static void set(Field field, @Nullable Object instance, Object value) {
+		try {
+			field.setAccessible(true);
+			field.set(instance, value);
+		} catch (IllegalArgumentException e) {
+			LOGGER.warn("Fail to set value of type " + value.getClass().getSimpleName() + " to field with name " + field.getName() + " in class " + instance.getClass().getSimpleName() + " ", e);
+		} catch (IllegalAccessException e) {
+			LOGGER.warn("Can not access the field in class " + field.getDeclaringClass().getSimpleName() + " with name " + field.getName() + " ", e);
+		}
+	}
+	
+	public static void set(Class<?> clazz, String name, @Nullable Object instance, Object value) {
+		set(getField(clazz, name), instance, value);
 	}
 	
 }
