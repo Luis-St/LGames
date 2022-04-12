@@ -144,7 +144,7 @@ public class AccountServer extends GameApplication {
 		LOGGER.info("Launch account server on host {} with port {}", this.host, this.port);
 	}
 	
-	protected void loadAccounts() { // TODO: fix
+	protected void loadAccounts() {
 		try {
 			List<PlayerAccount> accounts = Lists.newArrayList();
 			Path path = this.gameDirectory.resolve("accounts.acc");

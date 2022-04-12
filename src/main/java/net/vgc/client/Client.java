@@ -171,7 +171,7 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 	}
 	
 	@Override
-	public void tick() { // REWORK
+	public void tick() {
 		if (this.stage != null && this.stage.getScene() instanceof ScreenScene screenScene) {
 			screenScene.tick();
 		}
