@@ -15,6 +15,18 @@ import net.vgc.util.Util;
 
 public class Main {
 	
+	/* TODO's:
+	 *  - add new info system form server -> client
+	 *  - impl. singleplayer, multiplayer and settings
+	 *  - create Loading Steps, which are load from 0 til 1
+	 *  - use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
+	 *  - crypt data in Tags -> custom Input-/OutputData
+	 *  - add server side path for Network#getGameDirectory and Network#getResourceDirectory
+	 *  - create Scene for account server
+	 *  - create value chooser similar to DirectoryChooser (for primitive values)
+	 *  - layout and grafic rework
+	 */
+	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
 	
 	public static void main(String[] args) {

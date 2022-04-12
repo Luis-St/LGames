@@ -103,7 +103,7 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 		LOGGER.info("Successfully start of virtual game collection with version {}", Constans.Client.VERSION);
 	}
 	
-	protected void handleStart(String[] args) throws Exception { // TODO: create Loading Steps, which are load from 0 til 1
+	protected void handleStart(String[] args) throws Exception {
 		OptionParser parser = new OptionParser();
 		parser.allowsUnrecognizedOptions();
 		OptionSpec<File> gameDir = parser.accepts("gameDir").withRequiredArg().ofType(File.class);
@@ -120,7 +120,7 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 			LOGGER.debug("Set game directory to {}", this.gameDirectory);
 		} else {
 			this.gameDirectory = new File(System.getProperty("user.home")).toPath().resolve("Desktop/run/client");
-			LOGGER.warn("Fail to get game directory, use default directory: {}", this.gameDirectory); // TODO: use ErrorWindow & interrupt loading while open/not choose
+			LOGGER.warn("Fail to get game directory, use default directory: {}", this.gameDirectory);
 		}
 		if (!Files.exists(this.gameDirectory)) {
 			Files.createDirectories(this.gameDirectory);
@@ -269,11 +269,14 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 		return this.account;
 	}
 	
-	public void setAccount(PlayerAccount account) {
-		if (account != null && account != PlayerAccount.UNKNOWN) {
-			LOGGER.info("Login with account: {}", account);
-			this.account = account;
-		}
+	public void login(PlayerAccount account) {
+		LOGGER.info("Login with account: {}", account);
+		this.account = account;
+	}
+	
+	public void logout() {
+		LOGGER.info("Logout");
+		this.account = null;
 	}
 	
 	public boolean isLoggedIn() {

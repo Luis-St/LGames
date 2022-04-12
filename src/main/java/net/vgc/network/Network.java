@@ -27,7 +27,7 @@ public class Network {
 		if (NetworkSide.CLIENT.isOn()) {
 			return Client.getInstance().getResourceDirectory();
 		} else if (NetworkSide.SERVER.isOn()) {
-			throw new UnsupportedOperationException("Not implemeted yet"); // TODO: add server side path
+			throw new UnsupportedOperationException("Not implemeted yet"); 
 		} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
 			return AccountServer.getInstance().getResourceDirectory();
 		}
@@ -38,7 +38,7 @@ public class Network {
 		if (NetworkSide.CLIENT.isOn()) {
 			return Client.getInstance().getResourceDirectory();
 		} else if (NetworkSide.SERVER.isOn()) {
-			throw new UnsupportedOperationException("Not implemeted yet"); // TODO: add server side path
+			throw new UnsupportedOperationException("Not implemeted yet");
 		} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
 			return AccountServer.getInstance().getResourceDirectory();
 		}

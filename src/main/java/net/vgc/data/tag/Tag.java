@@ -59,7 +59,7 @@ public interface Tag {
 		return tag;
 	}
 	
-	static void save(Path path, Tag tag) throws IOException { // TODO: crypt data in Tags
+	static void save(Path path, Tag tag) throws IOException {
 		if (!Files.exists(path)) {
 			Files.createDirectories(path.getParent());
 			Files.createFile(path);

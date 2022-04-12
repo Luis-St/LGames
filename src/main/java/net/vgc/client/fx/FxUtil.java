@@ -118,7 +118,7 @@ public class FxUtil {
 		return region;
 	}
 	
-	public static <T extends Region> T setResize(Stage stage, T region, double width, double height) { // TODO: resize font
+	public static <T extends Region> T setResize(Stage stage, T region, double width, double height) {
 		if (width > 0.0 && height > 0.0) {
 			region.prefWidthProperty().bind(Bindings.multiply(stage.widthProperty(), width));
 			region.prefHeightProperty().bind(Bindings.multiply(stage.heightProperty(), height));
