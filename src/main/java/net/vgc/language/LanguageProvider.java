@@ -25,7 +25,7 @@ public class LanguageProvider {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	protected List<LanguageFile> loadLanguageFiles;
-	protected Language currentLanguage = Languages.DE_DE;
+	protected Language currentLanguage = Languages.EN_US;
 	
 	public void load() {
 		List<LanguageFile> languageFiles = Lists.newArrayList();
