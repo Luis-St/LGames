@@ -2,8 +2,8 @@ package net.vgc.network;
 
 import java.nio.file.Path;
 
+import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
-import net.vgc.server.account.AccountServer;
 
 public class Network {
 	

@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import net.vgc.account.PlayerAccount;
 import net.vgc.client.Client;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.client.fx.FxUtil;
@@ -23,7 +24,6 @@ import net.vgc.network.Connection;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
-import net.vgc.server.account.PlayerAccount;
 import net.vgc.util.Util;
 
 public class LoginWindow {

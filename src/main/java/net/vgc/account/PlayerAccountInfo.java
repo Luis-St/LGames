@@ -1,4 +1,4 @@
-package net.vgc.server.account;
+package net.vgc.account;
 
 import net.vgc.common.InfoResult;
 

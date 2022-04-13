@@ -1,10 +1,10 @@
 package net.vgc.network.packet.client;
 
+import net.vgc.account.PlayerAccountInfo;
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.common.LoginType;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.packet.Packet;
-import net.vgc.server.account.PlayerAccountInfo;
 
 public class ClientLoggedInPacket implements Packet<ClientPacketListener> {
 	

@@ -1,4 +1,4 @@
-package net.vgc.server.account;
+package net.vgc.account;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -25,6 +25,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.vgc.Constans;
+import net.vgc.account.network.AccountServerPacketListener;
 import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
 import net.vgc.data.serialization.SerializationUtil;
@@ -39,7 +40,6 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
 import net.vgc.network.packet.PacketListener;
-import net.vgc.server.account.network.AccountServerPacketListener;
 
 public class AccountServer extends GameApplication {
 	

@@ -23,6 +23,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.vgc.Constans;
+import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
 import net.vgc.client.network.ClientPacketListener;
@@ -38,7 +39,6 @@ import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
-import net.vgc.server.account.PlayerAccount;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 

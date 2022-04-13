@@ -1,9 +1,9 @@
 package net.vgc.network.packet.account;
 
+import net.vgc.account.network.AccountServerPacketListener;
 import net.vgc.common.LoginType;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.packet.Packet;
-import net.vgc.server.account.network.AccountServerPacketListener;
 
 public class ClientLoginPacket implements Packet<AccountServerPacketListener> {
 	

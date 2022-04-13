@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.vgc.account.PlayerAccount;
+import net.vgc.account.PlayerAccountInfo;
 import net.vgc.common.InfoResult;
 import net.vgc.common.Result;
-import net.vgc.server.account.PlayerAccount;
-import net.vgc.server.account.PlayerAccountInfo;
 
 public class FriendlyByteBuffer {
 	

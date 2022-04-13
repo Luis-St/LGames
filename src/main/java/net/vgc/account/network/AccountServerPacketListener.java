@@ -1,7 +1,11 @@
-package net.vgc.server.account.network;
+package net.vgc.account.network;
 
 import java.util.UUID;
 
+import net.vgc.account.AccountAgent;
+import net.vgc.account.AccountServer;
+import net.vgc.account.PlayerAccount;
+import net.vgc.account.PlayerAccountInfo;
 import net.vgc.common.InfoResult;
 import net.vgc.common.LoginType;
 import net.vgc.common.Result;
@@ -11,10 +15,6 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
-import net.vgc.server.account.AccountAgent;
-import net.vgc.server.account.AccountServer;
-import net.vgc.server.account.PlayerAccount;
-import net.vgc.server.account.PlayerAccountInfo;
 
 public class AccountServerPacketListener extends AbstractPacketListener {
 	

@@ -8,9 +8,9 @@ import org.apache.logging.log4j.Logger;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
 import net.vgc.server.Server;
-import net.vgc.server.account.AccountServer;
 import net.vgc.util.Util;
 
 public class Main {

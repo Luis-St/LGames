@@ -1,12 +1,12 @@
 package net.vgc.client.network;
 
+import net.vgc.account.PlayerAccountInfo;
 import net.vgc.client.Client;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.common.InfoResult;
 import net.vgc.common.LoginType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
-import net.vgc.server.account.PlayerAccountInfo;
 
 public class ClientPacketListener extends AbstractPacketListener {
 	
