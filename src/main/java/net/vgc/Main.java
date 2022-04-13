@@ -20,7 +20,6 @@ public class Main {
 	 *  - impl. singleplayer, multiplayer and settings
 	 *  - create Loading Steps, which are load from 0 til 1
 	 *  - use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
-	 *  - crypt data in Tags -> custom Input-/OutputData
 	 *  - add server side path for Network#getGameDirectory and Network#getResourceDirectory
 	 *  - create Scene for account server
 	 *  - create value chooser similar to DirectoryChooser (for primitive values)

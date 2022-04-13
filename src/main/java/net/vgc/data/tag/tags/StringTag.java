@@ -5,6 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 
+import net.vgc.data.DataUtil;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.TagType;
 import net.vgc.data.tag.visitor.TagVisitor;
@@ -14,7 +15,7 @@ public class StringTag implements Tag {
 	public static final TagType<StringTag> TYPE = new TagType<StringTag>() {
 		@Override
 		public StringTag load(DataInput input) throws IOException {
-			return StringTag.valueOf(input.readUTF());
+			return StringTag.valueOf(DataUtil.decrypt(CRYPT_KEY, input.readUTF()));
 		}
 		
 		@Override
@@ -37,14 +38,14 @@ public class StringTag implements Tag {
 	
 	public static StringTag valueOf(String data) {
 		if (data == null) {
-			return new StringTag("");
+			return EMPTY;
 		}
 		return data.isEmpty() ? EMPTY : new StringTag(data);
 	}
 	
 	@Override
 	public void save(DataOutput output) throws IOException {
-		output.writeUTF(this.data);
+		output.writeUTF(DataUtil.encrypt(CRYPT_KEY, this.data));
 	}
 
 	@Override

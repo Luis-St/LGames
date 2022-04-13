@@ -1,20 +1,25 @@
 package net.vgc.data.tag;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.vgc.data.DataUtil;
+import net.vgc.data.tag.tags.EndTag;
 import net.vgc.data.tag.visitor.StringTagVisitor;
 import net.vgc.data.tag.visitor.TagVisitor;
 
 public interface Tag {
+	
+	Logger LOGGER = LogManager.getLogger();
+	
+	long CRYPT_KEY = 100;
 	
 	byte END_TAG = 0;
 	byte BYTE_TAG = 1;
@@ -49,9 +54,10 @@ public interface Tag {
 	
 	static Tag load(Path path) throws IOException {
 		if (!Files.exists(path)) {
-			throw new IllegalStateException("Fail to load Tag from " + path + " , since the files does not exists");
+			LOGGER.warn("Fail to load Tag from {}, since the files does not exists", path);
+			return EndTag.INSTANCE;
 		}
-		DataInputStream input = new DataInputStream(new BufferedInputStream(new FileInputStream(path.toFile())));
+		DataInputStream input = DataUtil.inputStream(path);
 		byte type = input.readByte();
 		TagType<?> tagType = TagTypes.getType(type);
 		Tag tag = tagType.load(input);
@@ -64,7 +70,7 @@ public interface Tag {
 			Files.createDirectories(path.getParent());
 			Files.createFile(path);
 		}
-		DataOutputStream output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path.toFile())));
+		DataOutputStream output = DataUtil.outputStream(path);
 		output.writeByte(tag.getId());
 		tag.save(output);
 		output.flush();

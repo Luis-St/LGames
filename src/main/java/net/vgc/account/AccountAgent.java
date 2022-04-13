@@ -32,6 +32,7 @@ public final class AccountAgent {
 	
 	protected PlayerAccount createAccount(String name, String password, UUID uuid, boolean guest) {
 		PlayerAccount account = new PlayerAccount(name, password, uuid, guest);
+		account.setTaken(true);
 		this.accounts.add(account);
 		return account;
 	}
@@ -80,9 +81,12 @@ public final class AccountAgent {
 	
 	@Nullable
 	protected PlayerAccount takeAccount(String name, String password, UUID uuid, boolean guest) {
-		PlayerAccount account = this.accounts.get(this.accounts.indexOf(new PlayerAccount(name, password, uuid, guest)));
-		if (account != null && this.accounts.remove(account)) {
-			return account;
+		int index = this.accounts.indexOf(new PlayerAccount(name, password, uuid, guest));
+		if (index >= 0) {
+			PlayerAccount account = this.accounts.get(index);
+			if (account != null && this.accounts.remove(account)) {
+				return account;
+			}
 		}
 		return null;
 	}

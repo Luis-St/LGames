@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
 
+import net.vgc.data.DataUtil;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.TagType;
 import net.vgc.data.tag.TagTypes;
@@ -39,8 +40,8 @@ public class CompoundTag implements Tag {
 			for (int i = 0; i < size; i++) {
 				byte type = input.readByte();
 				TagType<?> tagType = TagTypes.getType(type);
-				if (type != 0) {
-					String key = input.readUTF();
+				if (type != END_TAG) {
+					String key = DataUtil.decrypt(CRYPT_KEY, input.readUTF());
 					Tag tag = tagType.load(input);
 					data.put(key, tag);
 				}
@@ -76,7 +77,7 @@ public class CompoundTag implements Tag {
 			Tag tag = this.data.get(key);
 			output.writeByte(tag.getId());
 			if (tag.getId() != 0) {
-				output.writeUTF(key);
+				output.writeUTF(DataUtil.encrypt(CRYPT_KEY, key));
 				tag.save(output);
 			}
 		}

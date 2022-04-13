@@ -24,11 +24,11 @@ public class SerializationUtil {
 			Tag tag = Tag.load(path);
 			if (tag instanceof CompoundTag CcompoundTag) {
 				return deserialize(clazz, CcompoundTag);
+			} else {
+				LOGGER.warn("Tag {} is not an instance of CompoundTag, but it is a type of {}", tag, tag.getClass().getSimpleName());
 			}
-			LOGGER.warn("Tag {} is not an instance of CompoundTag, but it is a type of {}", tag, tag.getClass().getSimpleName());
 		} catch (Exception e) {
-			LOGGER.error("Fail to load Tag from file {}", path);
-			throw new RuntimeException(e);
+			LOGGER.warn("Fail to load Tag from file " + path, e);
 		}
 		return null;
 	}
