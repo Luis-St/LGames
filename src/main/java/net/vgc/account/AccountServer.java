@@ -42,7 +42,9 @@ import net.vgc.data.serialization.SerializationUtil;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.data.tag.tags.collection.ListTag;
+import net.vgc.language.Language;
 import net.vgc.language.LanguageProvider;
+import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
 import net.vgc.network.InvalidNetworkSideException;
@@ -109,6 +111,7 @@ public class AccountServer extends GameApplication {
 		OptionSpec<File> resourceDir = parser.accepts("resourceDir").withRequiredArg().ofType(File.class);
 		OptionSpec<String> host = parser.accepts("host").withRequiredArg().ofType(String.class);
 		OptionSpec<Integer> port = parser.accepts("port").withRequiredArg().ofType(Integer.class);
+		OptionSpec<String> language = parser.accepts("language").withRequiredArg().ofType(String.class);
 		OptionSet set = parser.parse(args);
 		if (set.has(gameDir)) {
 			this.gameDirectory = set.valueOf(gameDir).toPath();
@@ -138,6 +141,14 @@ public class AccountServer extends GameApplication {
 		} else {
 			this.port = 8081;
 			LOGGER.warn("Fail to get port, use default port: 8081");
+		}
+		if (set.has(language)) {
+			Language lang = Languages.fromFileName(set.valueOf(language));
+			if (lang != null) {
+				LanguageProvider.INSTANCE.setCurrentLanguage(lang);
+			} else {
+				LOGGER.info("Fail to get language, since the {} language does not exists", set.valueOf(language));
+			}
 		}
 	}
 	
@@ -207,12 +218,12 @@ public class AccountServer extends GameApplication {
 		VBox viewBox = new VBox();
 		this.accountView = new TreeView<>();
 		this.accountView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		TreeItem<String> treeItem = new TreeItem<>();
+		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("account.window.accounts"));
 		for (PlayerAccount account : this.agent.getAccounts()) {
 			treeItem.getChildren().add(account.display());
 		}
 		this.accountView.setRoot(treeItem);
-		this.accountView.setShowRoot(false);
+		this.accountView.setShowRoot(Constans.DEBUG);
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
 		Button createAccountButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.create"), this::createAccount);
 		createAccountButton.setPrefWidth(110.0);
@@ -252,7 +263,7 @@ public class AccountServer extends GameApplication {
 			treeItem.getChildren().add(account.display());
 		}
 		this.accountView.setRoot(treeItem);
-		this.accountView.setShowRoot(false);
+		this.accountView.setShowRoot(Constans.DEBUG);
 	}
 	
 	@Override

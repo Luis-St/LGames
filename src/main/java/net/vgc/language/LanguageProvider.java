@@ -74,6 +74,7 @@ public class LanguageProvider {
 	}
 	
 	public void setCurrentLanguage(Language currentLanguage) {
+		LOGGER.info("Change language from {} to {}", this.currentLanguage, currentLanguage);
 		this.currentLanguage = currentLanguage;
 	}
 	

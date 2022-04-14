@@ -2,6 +2,8 @@ package net.vgc.language;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 
 public class Languages {
@@ -14,6 +16,26 @@ public class Languages {
 	protected static Language register(Language language) {
 		LANGUAGES.add(language);
 		return language;
+	}
+	
+	@Nullable
+	public static Language fromName(String name) {
+		for (Language language : LANGUAGES) {
+			if (language.getName().equals(name)) {
+				return language;
+			}
+		}
+		return null;
+	}
+	
+	@Nullable
+	public static Language fromFileName(String fileName) {
+		for (Language language : LANGUAGES) {
+			if (language.getFileName().equals(fileName)) {
+				return language;
+			}
+		}
+		return null;
 	}
 	
 }

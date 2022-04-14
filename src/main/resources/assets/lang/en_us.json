@@ -16,6 +16,7 @@
     "window.login.confirm_password": "Confirm Password",
     "account.login.no": "No Account found with matching account data",
     "account.window.accounts": "Accounts",
+    "account.window.account_taken": "Taken: %1%",
     "screen.menu.settings": "Settings",
     "screen.menu.profile": "Profile",
     "account.login.guest": "Successfully logged in as a guest",

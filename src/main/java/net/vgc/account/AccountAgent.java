@@ -45,8 +45,12 @@ public final class AccountAgent {
 	public boolean removeAccount(UUID uuid) {
 		if (this.isPresent(uuid)) {
 			PlayerAccount account = this.getAccount(uuid);
-			LOGGER.info("Remove account: {}", account);
-			return this.accounts.remove(account);
+			if (!account.isTaken()) {
+				LOGGER.info("Remove account: {}", account);
+				return this.accounts.remove(account);
+			}
+			LOGGER.warn("Unable to remove account {}, since the account is currently used by a player", account);
+			return false;
 		}
 		LOGGER.warn("Fail to remove account with uuid {}, since it does not exists", uuid);
 		return false;
@@ -97,6 +101,7 @@ public final class AccountAgent {
 	public PlayerAccount createAndLogin(String name, String password, boolean guest) {
 		PlayerAccount account = this.createAccount(name, password, guest);
 		account.setTaken(true);
+		AccountServer.getInstance().refresh();
 		return account;
 	}
 	
@@ -110,6 +115,7 @@ public final class AccountAgent {
 			} else {
 				LOGGER.info("Client logged in with account: {}", account);
 				this.setTaken(uuid, true);
+				AccountServer.getInstance().refresh();
 				return new PlayerAccountInfo(new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.login.successfully")), account);
 			}
 		}
@@ -123,6 +129,7 @@ public final class AccountAgent {
 			if (this.getAccount(uuid).isTaken()) {
 				LOGGER.info("Client logged out with account: {}", this.getAccount(uuid));
 				this.setTaken(uuid, false);
+				AccountServer.getInstance().refresh();
 				return new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.logout.successfully"));
 			} else {
 				LOGGER.warn("Fail to logout, since the account is not used by a player");

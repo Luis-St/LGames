@@ -76,7 +76,7 @@ task accountRun(type:JavaExec) {
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--account", "--gameDir", file('run/account_server'), "--resourceDir", file('src/main/resources/assets'), "--host", "localhost", "--port", "8081")
+	args("--debugMode", "false", "--ide", "--account", "--gameDir", file('run/account_server'), "--resourceDir", file('src/main/resources/assets'), "--host", "localhost", "--port", "8081", "--language", "de_de")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
