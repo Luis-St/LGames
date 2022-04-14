@@ -209,8 +209,8 @@ public class AccountServer extends GameApplication {
 			LOGGER.debug("Load {} PlayerAccounts", accounts.size());
 			this.agent = new AccountAgent(accounts);
 		} catch (Exception e) {
-			LOGGER.error("Fail to load accounts, since {}", e.getMessage());
-			throw new RuntimeException(e);
+			LOGGER.error("Fail to load accounts", e);
+			throw new RuntimeException();
 		}
 	}
 	

@@ -32,9 +32,9 @@ public class JsonHelper {
 			reader.close();
 			return element;
 		} catch (IOException e) {
-			LOGGER.warn("Fail to load file {}, since: {}", path, e.getMessage());
+			LOGGER.warn("Fail to load file {}" + path, e);
+			throw new RuntimeException();
 		}
-		return null;
 	}
 	
 	public static void save(Gson gson, JsonElement jsonElement, Path path) {
@@ -49,7 +49,8 @@ public class JsonHelper {
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
-			LOGGER.warn("Fail to save file {}, since: {}", path, e.getMessage());
+			LOGGER.warn("Fail to save file " + path, e);
+			throw new RuntimeException();
 		}
 	}
 	

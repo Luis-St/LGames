@@ -43,7 +43,7 @@ import net.vgc.network.PacketEncoder;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
-public class Client extends GameApplication  implements Tickable, Screenable {
+public class Client extends GameApplication implements Tickable, Screenable {
 	
 	protected static Client instance;
 	
@@ -211,8 +211,8 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 			}).connect(this.accountHost, this.accountPort).sync().channel();
 			LOGGER.info("Start connection to account server on host {} with port {}", this.accountHost, this.accountPort);
 		} catch (Exception e) {
-			LOGGER.error("Fail to start connection to account server on host {} with port {}, since {}", this.accountHost, this.accountPort, e.getMessage());
-			throw new RuntimeException(e);
+			LOGGER.error("Fail to start connection to account server on host " + this.accountHost + " with port " + this.accountPort, e);
+			throw new RuntimeException();
 		}
 	}
 	

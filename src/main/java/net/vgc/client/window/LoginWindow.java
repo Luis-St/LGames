@@ -176,7 +176,7 @@ public class LoginWindow {
 		try {
 			this.client.connectAccount();
 		} catch (Exception e) {
-			LOGGER.warn("Fail to connect to account server, since: {}", e.getMessage());
+			LOGGER.warn("Fail to connect to account server", e);
 		}
 		Util.runDelayed("LoginPacketSend", 1000, () -> {
 			Connection connection = this.client.getAccountConnection();
