@@ -62,7 +62,7 @@ public class SerializationUtil {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("Fail to deserialize a serializable object of type {}" + clazz.getSimpleName(), e);
+			LOGGER.warn("Fail to deserialize a serializable object of type {}" + clazz.getSimpleName(), e);
 		}
 		LOGGER.warn("Fail deserialize a serializable object of type {}", clazz.getSimpleName());
 		return null;

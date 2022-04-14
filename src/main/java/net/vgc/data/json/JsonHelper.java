@@ -32,7 +32,7 @@ public class JsonHelper {
 			reader.close();
 			return element;
 		} catch (IOException e) {
-			LOGGER.warn("Fail to load file {}" + path, e);
+			LOGGER.error("Fail to load file {}" + path, e);
 			throw new RuntimeException();
 		}
 	}
@@ -49,7 +49,7 @@ public class JsonHelper {
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
-			LOGGER.warn("Fail to save file " + path, e);
+			LOGGER.error("Fail to save file " + path, e);
 			throw new RuntimeException();
 		}
 	}
