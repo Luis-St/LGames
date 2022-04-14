@@ -24,7 +24,7 @@ public class ClientLogoutPacket implements Packet<AccountServerPacketListener> {
 
 	@Override
 	public void handle(AccountServerPacketListener listener) {
-		listener.handleClientLogout(this.account);
+		listener.handleClientLogout(this.account.getName(), this.account.getPassword());
 	}
 
 }

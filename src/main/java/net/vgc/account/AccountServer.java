@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
@@ -19,13 +20,22 @@ import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import javafx.application.Platform;
-import javafx.scene.Group;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.vgc.Constans;
 import net.vgc.account.network.AccountServerPacketListener;
+import net.vgc.account.window.AccountCreationWindow;
+import net.vgc.client.fx.FxUtil;
 import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
 import net.vgc.data.serialization.SerializationUtil;
@@ -33,6 +43,7 @@ import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.data.tag.tags.collection.ListTag;
 import net.vgc.language.LanguageProvider;
+import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
 import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.Network;
@@ -64,6 +75,7 @@ public class AccountServer extends GameApplication {
 	protected int port;
 	protected LaunchState launchState = LaunchState.UNKNOWN;
 	protected AccountAgent agent;
+	protected TreeView<String> accountView;
 	
 	@Override
 	public void init() throws Exception {
@@ -82,7 +94,9 @@ public class AccountServer extends GameApplication {
 		LanguageProvider.INSTANCE.load();
 		this.launchServer();
 		this.loadAccounts();
-		this.stage.setScene(new Scene(new Group(), 400, 400));
+		this.stage.setResizable(false);
+		this.stage.setTitle(TranslationKey.createAndGet("account.constans.name"));
+		this.stage.setScene(this.makeScene());
 		this.stage.show();
 		this.launchState = LaunchState.STARTED;
 		LOGGER.info("Successfully start of account server with version {}", Constans.Account.VERSION);
@@ -189,6 +203,58 @@ public class AccountServer extends GameApplication {
 		}
 	}
 	
+	protected Scene makeScene() {
+		VBox viewBox = new VBox();
+		this.accountView = new TreeView<>();
+		this.accountView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		TreeItem<String> treeItem = new TreeItem<>();
+		for (PlayerAccount account : this.agent.getAccounts()) {
+			treeItem.getChildren().add(account.display());
+		}
+		this.accountView.setRoot(treeItem);
+		this.accountView.setShowRoot(false);
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
+		Button createAccountButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.create"), this::createAccount);
+		createAccountButton.setPrefWidth(110.0);
+		Button removeAccountButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.remove"), this::removeAccount);
+		removeAccountButton.setPrefWidth(110.0);
+		Button refreshButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refresh);
+		refreshButton.setPrefWidth(110.0);
+		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), this::exit);
+		closeButton.setPrefWidth(110.0);
+		pane.addRow(0, createAccountButton, removeAccountButton, refreshButton, closeButton);
+		viewBox.getChildren().addAll(this.accountView, pane);
+		return new Scene(viewBox, 450.0, 400.0);
+	}
+	
+	protected void createAccount() {
+		AccountCreationWindow window = new AccountCreationWindow(this, new Stage());
+		window.show();
+	}
+	
+	protected void removeAccount() {
+		int index = this.accountView.getSelectionModel().getSelectedIndex();
+		if (this.accountView.getRoot().getChildren().size() > index && index >= 0) {
+			TreeItem<String> treeItem = this.accountView.getRoot().getChildren().get(index);
+			if (treeItem.getChildren().size() == 4) {
+				UUID uuid = UUID.fromString(treeItem.getChildren().get(2).getValue().split(": ")[1]);
+				if (this.agent.removeAccount(uuid)) {
+					this.accountView.getRoot().getChildren().remove(index);
+					this.refresh();
+				}
+			}
+		}
+	}
+	
+	public void refresh() {
+		TreeItem<String> treeItem = new TreeItem<>();
+		for (PlayerAccount account : this.agent.getAccounts()) {
+			treeItem.getChildren().add(account.display());
+		}
+		this.accountView.setRoot(treeItem);
+		this.accountView.setShowRoot(false);
+	}
+	
 	@Override
 	protected String getThreadName() {
 		return "account";
@@ -244,7 +310,7 @@ public class AccountServer extends GameApplication {
 			Tag.save(path, tag);
 			LOGGER.info("Save {} accounts", accountsTag.size());
 		} catch (Exception e) {
-			LOGGER.warn("Fail to save accounts, since: {}", e.getMessage());
+			LOGGER.warn("Fail to save accounts", e);
 		}
 	}
 	

@@ -66,8 +66,8 @@ public class FxUtil {
 	public static GridPane makeGrid(Pos pos, double gap, double padding) {
 		GridPane pane = new GridPane();
 		pane.setAlignment(pos);
-		pane.setHgap(6.0);
-		pane.setVgap(6.0);
+		pane.setHgap(gap);
+		pane.setVgap(gap);
 		pane.setPadding(new Insets(padding));
 		pane.setGridLinesVisible(Constans.DEBUG);
 		return pane;

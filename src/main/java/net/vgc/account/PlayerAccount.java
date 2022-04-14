@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import net.vgc.Constans;
@@ -11,6 +12,7 @@ import net.vgc.client.fx.FxUtil;
 import net.vgc.data.serialization.Serializable;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.language.TranslationKey;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.NetworkSide;
 import net.vgc.util.Util;
@@ -39,6 +41,15 @@ public final class PlayerAccount implements Serializable {
 		this.guest = tag.getBoolean("guest");
 	}
 	
+	public TreeItem<String> display() {
+		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("account.window.account", this.name));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_name", this.name)));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_password", this.password)));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_uuid", this.uuid)));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_guest", this.guest)));
+		return treeItem;
+	}
+	
 	protected String obfuscated() {
 		String obfuscated = "";
 		for (int i = 0; i < this.password.length(); i++) {
@@ -58,7 +69,7 @@ public final class PlayerAccount implements Serializable {
 		return this.obfuscated();
 	}
 	
-	public void getPassword(GridPane pane) {
+	public void displayPassword(GridPane pane) {
 		if (NetworkSide.CLIENT.isOn() || Constans.IDE || this == UNKNOWN) {
 			Text text = new Text(this.obfuscated());
 			ToggleButton button = new ToggleButton();
@@ -138,7 +149,7 @@ public final class PlayerAccount implements Serializable {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("PlayerAccount[");
+		StringBuilder builder = new StringBuilder("PlayerAccount{");
 		builder.append("name=").append(this.name).append(",");
 		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this == UNKNOWN) {
 			builder.append("password=").append(this.password).append(",");
@@ -146,7 +157,7 @@ public final class PlayerAccount implements Serializable {
 			builder.append("password=").append(this.obfuscated()).append(",");
 		}
 		builder.append("uuid=").append(this.uuid).append(",");
-		builder.append("guest=").append(this.guest).append("]");
+		builder.append("guest=").append(this.guest).append("}");
 		return builder.toString();
 	}
 	
