@@ -185,7 +185,7 @@ public class AccountServer extends GameApplication {
 							if (accountTag instanceof CompoundTag) {
 								PlayerAccount account = SerializationUtil.deserialize(PlayerAccount.class, (CompoundTag) accountTag);
 								if (account != null) {
-									LOGGER.debug("Load {}", account);
+									LOGGER.debug("Load {} account", account);
 									accounts.add(account);
 								} else {
 									LOGGER.error("Fail to load PlayerAccount");
@@ -199,11 +199,11 @@ public class AccountServer extends GameApplication {
 						if (loadTag.isEmpty()) {
 							LOGGER.info("No accounts present in {}", path);
 						} else {
-							LOGGER.warn("Fail to load accounts from File {}, since the CompoundTag {} does not contains the key \"accounts\"", path, loadTag);
+							LOGGER.warn("Fail to load accounts from file {}, since the CompoundTag {} does not contains the key \"accounts\"", path, loadTag);
 						}
 					}
 				} else {
-					LOGGER.warn("Fail to load accounts from File {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());	
+					LOGGER.warn("Fail to load accounts from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());	
 				}
 			}
 			LOGGER.debug("Load {} PlayerAccounts", accounts.size());
@@ -284,7 +284,7 @@ public class AccountServer extends GameApplication {
 	}
 	
 	public void exit() {
-		LOGGER.info("Exit Account Server");
+		LOGGER.info("Exit account server");
 		Platform.exit();
 	}
 	
