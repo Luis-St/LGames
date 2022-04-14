@@ -17,13 +17,15 @@ public class Main {
 	
 	/* TODO's:
 	 *  - add new info system form server -> client
-	 *  - impl. singleplayer, multiplayer and settings
+	 *  - impl. singleplayer, multiplayer and settings (PlayerSettings)
 	 *  - create Loading Steps, which are load from 0 til 1
 	 *  - use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
 	 *  - add server side path for Network#getGameDirectory and Network#getResourceDirectory
-	 *  - create Scene for account server
 	 *  - create value chooser similar to DirectoryChooser (for primitive values)
 	 *  - layout and grafic rework
+	 *  - language client side -> send Key through Network
+	 *  - super class for Windows
+	 *  - rework of AccountAgent -> add util methods & do no allow ' ' and ':' in PlayerAccount
 	 */
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);

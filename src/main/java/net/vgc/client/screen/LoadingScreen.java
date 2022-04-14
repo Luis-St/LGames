@@ -28,7 +28,7 @@ public class LoadingScreen extends Screen {
 	
 	@Override
 	public void init() {
-		this.vgcText = new Text(TranslationKey.createAndGet("main.constans.name"));
+		this.vgcText = new Text(TranslationKey.createAndGet("client.constans.name"));
 		this.vgcText.setFont(new Font(25.0));
 		this.vgcTextBox = FxUtil.makeCentered(this.vgcText);
 		this.loadingText = new Text(TranslationKey.createAndGet("screen.loading.loading.text", 0.0));

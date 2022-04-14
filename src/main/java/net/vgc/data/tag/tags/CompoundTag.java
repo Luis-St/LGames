@@ -66,7 +66,7 @@ public class CompoundTag implements Tag {
 		this(Maps.newHashMap());
 	}
 	
-	public CompoundTag(Map<String, Tag> data) {
+	protected CompoundTag(Map<String, Tag> data) {
 		this.data = data;
 	}
 	

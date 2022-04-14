@@ -15,14 +15,14 @@ public abstract class Screen implements Showable, Tickable, InputHandler {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
 	
-	protected final Client client = Client.getInstance();
-	public String title = TranslationKey.createAndGet("main.constans.name");
+	protected final Client client;
+	public String title = TranslationKey.createAndGet("client.constans.name");
 	public int width = 400;
 	public int height = 400;
 	public boolean shouldCenter = false;
 	
 	public Screen() {
-		
+		this.client = Client.getInstance();
 	}
 	
 	public void init() {

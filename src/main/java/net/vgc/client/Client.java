@@ -30,6 +30,7 @@ import net.vgc.client.network.ClientPacketListener;
 import net.vgc.client.screen.LoadingScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.screen.Screen;
+import net.vgc.client.window.LoginWindow;
 import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
 import net.vgc.language.LanguageProvider;
@@ -54,7 +55,7 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 	}
 	
 	protected final Timeline ticker = Util.createTicker("ClientTicker", () -> {
-		Client.getInstance().tick();
+		this.tick();
 	});
 	protected final EventLoopGroup serverGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final EventLoopGroup accountGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
@@ -66,6 +67,7 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 	protected boolean instantLoading;
 	protected boolean safeLoading;
 	protected Random rng;
+	protected LoginWindow loginWindow;
 	protected PlayerAccount account;
 	protected String serverHost;
 	protected int serverPort;
@@ -226,6 +228,14 @@ public class Client extends GameApplication  implements Tickable, Screenable {
 		} else {
 			LOGGER.warn("Unable to disconnect from account server");
 		}
+	}
+	
+	public LoginWindow getLoginWindow() {
+		return this.loginWindow;
+	}
+	
+	public void setLoginWindow(LoginWindow loginWindow) {
+		this.loginWindow = loginWindow;
 	}
 	
 	public Connection getAccountConnection() {

@@ -46,7 +46,10 @@ public final class PlayerAccount implements Serializable {
 		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_name", this.name)));
 		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_password", this.password)));
 		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_uuid", this.uuid)));
-		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_guest", this.guest)));
+		String trueTranslation = TranslationKey.createAndGet("window.create_account.true");
+		String falseTranslation = TranslationKey.createAndGet("window.create_account.false");
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_guest", this.guest ? trueTranslation : falseTranslation)));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_taken", this.taken ? trueTranslation : falseTranslation)));
 		return treeItem;
 	}
 	

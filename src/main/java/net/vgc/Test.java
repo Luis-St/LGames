@@ -31,7 +31,7 @@ public class Test {
 	
 	protected static void makeLanguageFiles() {
 		List<Translation> english = Util.make(Lists.newArrayList(), (list) -> {
-			list.add(new Translation("main.constans.name", "Virtual Game Collection"));
+			list.add(new Translation("client.constans.name", "Virtual Game Collection"));
 			list.add(new Translation("screen.loading.title", "Loading Virtual Game Collection"));
 			list.add(new Translation("screen.loading.loading.text", "Loading %1%%"));
 			list.add(new Translation("screen.menu.singleplayer", "Singleplayer"));
@@ -55,12 +55,25 @@ public class Test {
 			list.add(new Translation("account.login.no", "No Account found with matching account data"));
 			list.add(new Translation("account.login.taken", "Account is already used by another player"));
 			list.add(new Translation("account.login.successfully", "Successfully logged in"));
-			list.add(new Translation("account.login.error", "There was an error checking your account. Please try again later"));
 			list.add(new Translation("account.logout.unused", "The Account which should be logged out is not used by a player"));
 			list.add(new Translation("account.logout.successfully", "Successfully logged out"));
+			list.add(new Translation("account.constans.name", "Account Server"));
+			list.add(new Translation("account.window.accounts", "Accounts"));
+			list.add(new Translation("account.window.account", "%1%'s Account"));
+			list.add(new Translation("account.window.account_name", "Name: %1%"));
+			list.add(new Translation("account.window.account_password", "Password: %1%"));
+			list.add(new Translation("account.window.account_uuid", "Id: %1%"));
+			list.add(new Translation("account.window.account_guest", "Guest: %1%"));
+			list.add(new Translation("account.window.account_taken", "Taken: %1%"));
+			list.add(new Translation("account.window.create", "Create account"));
+			list.add(new Translation("account.window.remove", "Remove account"));
+			list.add(new Translation("account.window.refresh", "Refresh"));
+			list.add(new Translation("account.window.close", "Close"));
+			list.add(new Translation("window.create_account.true", "Yes"));
+			list.add(new Translation("window.create_account.false", "No"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
-			list.add(new Translation("main.constans.name", "Virtuelle Spielesammlung"));
+			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
 			list.add(new Translation("screen.loading.title", "Virtuelle Spielesammlung wird geladen"));
 			list.add(new Translation("screen.loading.loading.text", "Wird geladen %1%%"));
 			list.add(new Translation("screen.menu.singleplayer", "Einzelspieler"));
@@ -84,9 +97,22 @@ public class Test {
 			list.add(new Translation("account.login.no", "Kein Konto mit übereinstimmenden Kontodaten gefunden"));
 			list.add(new Translation("account.login.taken", "Konto wird bereits von einem anderen Spieler verwendet"));
 			list.add(new Translation("account.login.successfully", "Erfolgreich eingeloggt"));
-			list.add(new Translation("account.login.error", "Bei der Überprüfung Ihres Kontos ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut"));
 			list.add(new Translation("account.logout.unused", "Das abzumeldende Konto wird von keinem Spieler verwendet"));
 			list.add(new Translation("account.logout.successfully", "Erfolgreich abgemeldet"));
+			list.add(new Translation("account.constans.name", "Account Server"));
+			list.add(new Translation("account.window.accounts", "Konten"));
+			list.add(new Translation("account.window.account", "%1%'s Konto"));
+			list.add(new Translation("account.window.account_name", "Name: %1%"));
+			list.add(new Translation("account.window.account_password", "Passwort: %1%"));
+			list.add(new Translation("account.window.account_uuid", "Id: %1%"));
+			list.add(new Translation("account.window.account_guest", "Gast: %1%"));
+			list.add(new Translation("account.window.account_taken", "Verwendet: %1%"));
+			list.add(new Translation("account.window.create", "Konto erstellen"));
+			list.add(new Translation("account.window.remove", "Konto löschen"));
+			list.add(new Translation("account.window.refresh", "Aktualisieren"));
+			list.add(new Translation("account.window.close", "Schließen"));
+			list.add(new Translation("window.create_account.true", "Ja"));
+			list.add(new Translation("window.create_account.false", "Nein"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

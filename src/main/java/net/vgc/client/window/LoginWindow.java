@@ -1,7 +1,5 @@
 package net.vgc.client.window;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,18 +27,13 @@ import net.vgc.util.Util;
 public class LoginWindow {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
-	protected static LoginWindow INSTANCE;
 	
-	@Nullable
-	public static LoginWindow getInstance() {
-		return INSTANCE;
-	}
-	
-	protected final Client client = Client.getInstance();
+	protected final Client client;
 	protected final Stage stage;
 	
-	public LoginWindow(Stage stage) {
-		INSTANCE = this;
+	public LoginWindow(Client client, Stage stage) {
+		this.client = client;
+		this.client.setLoginWindow(this);
 		this.stage = stage;
 		this.stage.setResizable(false);
 		this.stage.setOnCloseRequest((event) -> {
@@ -60,7 +53,10 @@ public class LoginWindow {
 		Button loginButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
 			this.setScene(this.loginSelect());
 		});
-		pane.addColumn(0, FxUtil.makeCentered(registrationButton), FxUtil.makeCentered(loginButton));
+		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), () -> {
+			this.exit();
+		});
+		pane.addColumn(0, FxUtil.makeCentered(registrationButton), FxUtil.makeCentered(loginButton), FxUtil.makeCentered(closeButton));
 		return pane;
 	}
 	
@@ -70,7 +66,7 @@ public class LoginWindow {
 		pane.addRow(0, new Text(TranslationKey.createAndGet("window.login.username")), new Text(account.getName()));
 		if (!account.isGuest()) {
 			pane.addRow(1, new Text(TranslationKey.createAndGet("window.login.password")));
-			account.getPassword(pane);
+			account.displayPassword(pane);
 		}
 		Button logoutButton = FxUtil.makeButton(TranslationKey.createAndGet("window.logout.logout"), () -> {
 			Connection connection = this.client.getAccountConnection();
@@ -206,10 +202,10 @@ public class LoginWindow {
 		boolean loggedIn = this.client.isLoggedIn();
 		this.setScene(loggedIn ? this.profile() : this.main());
 		this.stage.setTitle(loggedIn ? TranslationKey.createAndGet("screen.menu.profile") : TranslationKey.createAndGet("screen.menu.login"));
-		this.stage.show();
 		Stage stage = this.client.getStage();
 		this.stage.setX(stage.getX() + stage.getWidth());
 		this.stage.setY(stage.getY());
+		this.stage.show();
 	}
 	
 	public void exit() {
@@ -218,7 +214,7 @@ public class LoginWindow {
 	}
 	
 	protected void close() {
-		INSTANCE = null;
+		this.client.setLoginWindow(null);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package net.vgc.client.window;
+package net.vgc.common.window;
 
 import javax.annotation.Nullable;
 

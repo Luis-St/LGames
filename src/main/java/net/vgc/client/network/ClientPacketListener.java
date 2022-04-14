@@ -19,7 +19,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 	
 	public void handleClientLoggedIn(LoginType loginType, PlayerAccountInfo accountInfo) {
 		this.checkSide();
-		LoginWindow loginWindow = LoginWindow.getInstance();
+		LoginWindow loginWindow = this.client.getLoginWindow();
 		InfoResult infoResult = accountInfo.infoResult();
 		if (!this.client.isLoggedIn()) {
 			switch (loginType) {
@@ -74,7 +74,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 	
 	public void handleClientLoggedOut(InfoResult infoResult) {
 		this.checkSide();
-		LoginWindow loginWindow = LoginWindow.getInstance();
+		LoginWindow loginWindow = this.client.getLoginWindow();
 		if (infoResult.isSuccess()) {
 			LOGGER.info("Successfully logged out");
 			this.client.logout();

@@ -85,9 +85,9 @@ public class MenuScreen extends Screen {
 	}
 	
 	protected void handleLogin() {
-		if (LoginWindow.getInstance() == null)  {
-			LoginWindow loginWindow = new LoginWindow(new Stage());
-			loginWindow.show();
+		if (this.client.getLoginWindow() == null)  {
+			LoginWindow window = new LoginWindow(this.client, new Stage());
+			window.show();
 		}
 	}
 
