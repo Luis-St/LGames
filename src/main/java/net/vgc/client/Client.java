@@ -57,14 +57,14 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	protected final Timeline ticker = Util.createTicker("ClientTicker", this);
 	protected final EventLoopGroup serverGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final EventLoopGroup accountGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+	protected Random rng;
+	protected LaunchState launchState = LaunchState.UNKNOWN;
 	protected Path gameDirectory; 
 	protected Path resourceDirectory;
-	protected LaunchState launchState = LaunchState.UNKNOWN;
 	protected Scene currentScene;
 	protected Scene previousScene;
 	protected boolean instantLoading;
 	protected boolean safeLoading;
-	protected Random rng;
 	protected LoginWindow loginWindow;
 	protected PlayerAccount account;
 	protected String serverHost;
@@ -103,6 +103,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		LOGGER.info("Successfully start of virtual game collection with version {}", Constans.Client.VERSION);
 	}
 	
+	@Override
 	protected void handleStart(String[] args) throws Exception {
 		OptionParser parser = new OptionParser();
 		parser.allowsUnrecognizedOptions();
@@ -228,6 +229,11 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		}
 	}
 	
+	@Override
+	protected String getThreadName() {
+		return "client";
+	}
+	
 	public LoginWindow getLoginWindow() {
 		return this.loginWindow;
 	}
@@ -242,11 +248,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	
 	public boolean isAccountConnected() {
 		return this.accountConnection != null && this.accountConnection.isConnected();
-	}
-	
-	@Override
-	protected String getThreadName() {
-		return "client";
 	}
 	
 	public Path getGameDirectory() {
@@ -319,6 +320,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		this.stage.setScene(scene);
 	}
 	
+	@Override
 	public void exit() {
 		LOGGER.info("Exit virtual game collection");
 		Platform.exit();
@@ -333,7 +335,8 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		LOGGER.info("Successfully stopping virtual game collection");
 	}
 	
-	protected void handleStop() {
+	@Override
+	protected void handleStop() throws Exception {
 		this.ticker.stop();
 		this.disconnectAccount();
 		this.disconnectServer();

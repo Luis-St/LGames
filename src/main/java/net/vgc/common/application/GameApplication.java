@@ -27,13 +27,21 @@ public abstract class GameApplication extends Application {
 	
 	public abstract void start(String[] args) throws Exception;
 	
+	protected abstract void handleStart(String[] args) throws Exception;
+	
 	public Stage getStage() {
 		return this.stage;
 	}
 	
 	protected abstract String getThreadName();
 	
+	public abstract void exit();
+	
 	public void stop() throws Exception {
+		
+	}
+	
+	protected void handleStop() throws Exception {
 		
 	}
 	

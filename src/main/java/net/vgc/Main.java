@@ -23,9 +23,8 @@ public class Main {
 	 *  - add server side path for Network#getGameDirectory and Network#getResourceDirectory
 	 *  - create value chooser similar to DirectoryChooser (for primitive values)
 	 *  - layout and grafic rework
-	 *  - language client side -> send Key through Network
 	 *  - super class for Windows
-	 *  - rework of AccountAgent -> add util methods & do no allow ' ' and ':' in PlayerAccount
+	 *  - rework of Client/Server/AccountServer method order
 	 */
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);

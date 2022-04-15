@@ -70,13 +70,13 @@ public class AccountServer extends GameApplication {
 	protected final List<Connection> connections = Lists.newArrayList();
 	protected final List<Channel> channels = Lists.newArrayList();
 	protected Random rng;
+	protected LaunchState launchState = LaunchState.UNKNOWN;
+	protected TreeView<String> accountView;
 	protected Path gameDirectory;
 	protected Path resourceDirectory;
 	protected String host;
 	protected int port;
-	protected LaunchState launchState = LaunchState.UNKNOWN;
 	protected AccountAgent agent;
-	protected TreeView<String> accountView;
 	
 	@Override
 	public void init() throws Exception {
@@ -103,6 +103,7 @@ public class AccountServer extends GameApplication {
 		LOGGER.info("Successfully start of account server with version {}", Constans.Account.VERSION);
 	}
 	
+	@Override
 	protected void handleStart(String[] args) throws Exception {
 		OptionParser parser = new OptionParser();
 		parser.allowsUnrecognizedOptions();
@@ -146,7 +147,7 @@ public class AccountServer extends GameApplication {
 			if (lang != null) {
 				LanguageProvider.INSTANCE.setCurrentLanguage(lang);
 			} else {
-				LOGGER.info("Fail to get language, since the {} language does not exists", set.valueOf(language));
+				LOGGER.info("Fail to get language, since the {} language does not exists or is not load", set.valueOf(language));
 			}
 		}
 	}
@@ -282,6 +283,7 @@ public class AccountServer extends GameApplication {
 		return this.agent;
 	}
 	
+	@Override
 	public void exit() {
 		LOGGER.info("Exit account server");
 		Platform.exit();
@@ -293,6 +295,7 @@ public class AccountServer extends GameApplication {
 		this.launchState = LaunchState.STOPPING;
 		this.saveAccounts();
 		this.stopServer();
+		this.handleStop();
 		this.launchState = LaunchState.STOPPED;
 		LOGGER.info("Successfully stopping account server");
 	}
@@ -334,7 +337,8 @@ public class AccountServer extends GameApplication {
 		}
 	}
 	
-	protected void handleStop() {
+	@Override
+	protected void handleStop() throws Exception {
 		this.agent.close();
 	}
 	
