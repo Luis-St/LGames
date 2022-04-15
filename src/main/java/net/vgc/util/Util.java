@@ -29,9 +29,9 @@ public class Util {
 		return object;
 	}
 	
-	public static Timeline createTicker(String name, Runnable action) {
+	public static Timeline createTicker(String name, Tickable tickable) {
 		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(50), name, (event) -> {
-			action.run();
+			tickable.tick();
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
 		return timeline;

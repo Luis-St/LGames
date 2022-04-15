@@ -70,7 +70,6 @@ public class AccountServer extends GameApplication {
 	protected final List<Connection> connections = Lists.newArrayList();
 	protected final List<Channel> channels = Lists.newArrayList();
 	protected Random rng;
-
 	protected Path gameDirectory;
 	protected Path resourceDirectory;
 	protected String host;
@@ -321,7 +320,8 @@ public class AccountServer extends GameApplication {
 			Tag.save(path, tag);
 			LOGGER.info("Save {} accounts", accountsTag.size());
 		} catch (Exception e) {
-			LOGGER.warn("Fail to save accounts", e);
+			LOGGER.error("Fail to save accounts", e);
+			throw new RuntimeException();
 		}
 	}
 	

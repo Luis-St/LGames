@@ -54,9 +54,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		throw new InvalidNetworkSideException(NetworkSide.CLIENT);
 	}
 	
-	protected final Timeline ticker = Util.createTicker("ClientTicker", () -> {
-		this.tick();
-	});
+	protected final Timeline ticker = Util.createTicker("ClientTicker", this);
 	protected final EventLoopGroup serverGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final EventLoopGroup accountGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected Path gameDirectory; 
