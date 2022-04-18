@@ -18,9 +18,9 @@ public abstract class Screen implements Showable, Tickable, InputHandler {
 	
 	protected final Client client;
 	public String title = TranslationKey.createAndGet("client.constans.name");
-	public int width = 400;
-	public int height = 400;
-	public boolean shouldCenter = false;
+	public int width = 600;
+	public int height = 600;
+	public boolean shouldCenter = true;
 	
 	public Screen() {
 		this.client = Client.getInstance();

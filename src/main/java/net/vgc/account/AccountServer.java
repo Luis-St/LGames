@@ -1,6 +1,7 @@
 package net.vgc.account;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -207,7 +208,7 @@ public class AccountServer extends GameApplication {
 					LOGGER.warn("Fail to load accounts from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());	
 				}
 			}
-			LOGGER.debug("Load {} PlayerAccounts", accounts.size());
+			LOGGER.debug("Load {} accounts", accounts.size());
 			this.agent = new AccountAgent(accounts);
 		} catch (Exception e) {
 			LOGGER.error("Fail to load accounts", e);
@@ -316,6 +317,8 @@ public class AccountServer extends GameApplication {
 			for (PlayerAccount account : accounts) {
 				if (account != null) {
 					accountsTag.add(account.serialize());
+				} else {
+					LOGGER.warn("Fail to save PlayerAccount, since it was null");
 				}
 			}
 			if (!accountsTag.isEmpty()) {
@@ -323,7 +326,7 @@ public class AccountServer extends GameApplication {
 			}
 			Tag.save(path, tag);
 			LOGGER.info("Save {} accounts", accountsTag.size());
-		} catch (Exception e) {
+		} catch (IOException e) {
 			LOGGER.error("Fail to save accounts", e);
 			throw new RuntimeException();
 		}

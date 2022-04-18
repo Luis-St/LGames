@@ -20,12 +20,6 @@ public class MenuScreen extends Screen {
 	protected ButtonBox loginButtonBox;
 	protected VBox centerBox;
 	
-	public MenuScreen() {
-		this.width = 600;
-		this.height = 600;
-		this.shouldCenter = true;
-	}
-	
 	@Override
 	public void init() {
 		this.singleplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.singleplayer"), this::handleSingleplayer);

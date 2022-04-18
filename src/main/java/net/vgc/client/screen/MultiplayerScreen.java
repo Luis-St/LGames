@@ -19,16 +19,13 @@ public class MultiplayerScreen extends Screen {
 	
 	public MultiplayerScreen(Screen backScreen) {
 		this.backScreen = backScreen;
-		this.width = 600;
-		this.height = 600;
-		this.shouldCenter = true;
 	}
 	
 	@Override
 	public void init() {
 		this.hostInputPane = new InputPane(TranslationKey.createAndGet("screen.multiplayer.server_host"));
 		this.portInputPane = new InputPane(TranslationKey.createAndGet("screen.multiplayer.server_port"));
-		this.connectButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.multiplayer.connect"), this::handleBack);
+		this.connectButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.multiplayer.connect"), this::handleConnect);
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
 	
