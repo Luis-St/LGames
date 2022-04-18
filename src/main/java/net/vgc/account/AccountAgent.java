@@ -94,14 +94,14 @@ public final class AccountAgent {
 		password = this.checkOrGeneratePassword(password, 15);
 		PlayerAccount account = new PlayerAccount(name, password, this.generateUUID(name, password), guest);
 		this.accounts.add(account);
-		AccountServer.getInstance().refresh();
+		AccountServer.getInstance().refreshScene();
 		return account;
 	}
 	
 	public PlayerAccount createAndLogin(String name, String password, boolean guest) {
 		PlayerAccount account = this.createAccount(name, password, guest);
 		account.setTaken(true);
-		AccountServer.getInstance().refresh();
+		AccountServer.getInstance().refreshScene();
 		return account;
 	}
 	
@@ -115,7 +115,7 @@ public final class AccountAgent {
 			} else {
 				LOGGER.info("Client logged in with account: {}", account);
 				this.setTaken(uuid, true);
-				AccountServer.getInstance().refresh();
+				AccountServer.getInstance().refreshScene();
 				return new PlayerAccountInfo(new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.login.successfully")), account);
 			}
 		}
@@ -129,7 +129,7 @@ public final class AccountAgent {
 			if (this.getAccount(uuid).isTaken()) {
 				LOGGER.info("Client logged out with account: {}", this.getAccount(uuid));
 				this.setTaken(uuid, false);
-				AccountServer.getInstance().refresh();
+				AccountServer.getInstance().refreshScene();
 				return new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.logout.successfully"));
 			} else {
 				LOGGER.warn("Fail to logout, since the account is not used by a player");

@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.vgc.account.AccountServer;
+import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.language.TranslationKey;
@@ -34,9 +35,9 @@ public class AccountCreationWindow {
 	protected Pane main() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField nameField = new TextField();
-		VBox nameBox = FxUtil.makeCentered(nameField);
+		VBox nameBox = new Box<>(nameField);
 		TextField passwordField = new TextField();
-		VBox passwordBox = FxUtil.makeCentered(passwordField);
+		VBox passwordBox = new Box<>(passwordField);
 		GridPane guestPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 0.0);
 		guestPane.setAlignment(Pos.CENTER);
 		ToggleGroup toggleGroup = new ToggleGroup();

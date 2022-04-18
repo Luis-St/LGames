@@ -3,20 +3,18 @@ package net.vgc.client.screen;
 import javafx.geometry.Pos;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.client.fx.ScreenScene;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.Mth;
 
 public class LoadingScreen extends Screen {
 	
-	protected Text vgcText;
-	protected VBox vgcTextBox;
-	protected Text loadingText;
-	protected VBox loadingTextBox;
+	protected Box<Text> vgcTextBox;
+	protected Box<Text> loadingTextBox;
 	protected ProgressBar loadingBar;
 	protected boolean enterMenu;
 	
@@ -28,15 +26,15 @@ public class LoadingScreen extends Screen {
 	
 	@Override
 	public void init() {
-		this.vgcText = new Text(TranslationKey.createAndGet("client.constans.name"));
-		this.vgcText.setFont(new Font(25.0));
-		this.vgcTextBox = FxUtil.makeCentered(this.vgcText);
-		this.loadingText = new Text(TranslationKey.createAndGet("screen.loading.loading.text", 0.0));
-		this.loadingTextBox = FxUtil.makeCentered(this.loadingText);
+		Text vgcText = new Text(TranslationKey.createAndGet("client.constans.name"));
+		vgcText.setFont(new Font(25.0));
+		this.vgcTextBox = new Box<>(vgcText);
+		Text loadingText = new Text(TranslationKey.createAndGet("screen.loading.loading.text", 0.0));
+		this.loadingTextBox = new Box<>(loadingText);
 		this.loadingBar = new ProgressBar();
 		FxUtil.setResize(this.loadingBar, 0.75, 0.04);
 		this.loadingBar.progressProperty().addListener((observable, oldValue, newValue) -> {
-			this.loadingText.setText(TranslationKey.createAndGet("screen.loading.loading.text", Mth.roundTo(newValue.doubleValue() * 100, 100)));
+			loadingText.setText(TranslationKey.createAndGet("screen.loading.loading.text", Mth.roundTo(newValue.doubleValue() * 100, 100)));
 		});
 		this.enterMenu = false;
 	}
@@ -58,12 +56,12 @@ public class LoadingScreen extends Screen {
 	}
 	
 	@Override
-	public ScreenScene show() {
+	protected Pane createPane() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		pane.add(this.vgcTextBox, 0, 0);
 		pane.add(this.loadingBar, 0, 10);
 		pane.add(this.loadingTextBox, 0, 10);
-		return new ScreenScene(pane, this.width, this.height, this);
+		return pane;
 	}
 	
 }

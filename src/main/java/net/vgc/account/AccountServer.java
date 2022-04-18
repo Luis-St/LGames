@@ -14,7 +14,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -52,7 +51,6 @@ import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
-import net.vgc.network.packet.PacketListener;
 
 public class AccountServer extends GameApplication {
 	
@@ -66,7 +64,6 @@ public class AccountServer extends GameApplication {
 	}
 	
 	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-	protected final PacketListener listener = new AccountServerPacketListener(this, NetworkSide.ACCOUNT_SERVER);
 	protected final List<Connection> connections = Lists.newArrayList();
 	protected final List<Channel> channels = Lists.newArrayList();
 	protected Random rng;
@@ -153,11 +150,11 @@ public class AccountServer extends GameApplication {
 	}
 	
 	protected void launchServer() {
-		new ServerBootstrap().group(this.group).channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
+		new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
 			@Override
 			protected void initChannel(Channel channel) throws Exception {
 				ChannelPipeline pipeline = channel.pipeline();
-				Connection connection = new Connection(AccountServer.this.listener);
+				Connection connection = new Connection(new AccountServerPacketListener(AccountServer.this, NetworkSide.ACCOUNT_SERVER));
 				pipeline.addLast("decoder", new PacketDecoder());
 				pipeline.addLast("encoder", new PacketEncoder());
 				pipeline.addLast("handler", connection);
@@ -175,24 +172,28 @@ public class AccountServer extends GameApplication {
 			Path path = this.gameDirectory.resolve("accounts.acc");
 			LOGGER.debug("Loading accounts from {}", path);
 			if (!Files.exists(path)) {
-				LOGGER.info("No accounts present");
+				LOGGER.info("No accounts present, since file does not exists");
 			} else {
 				Tag tag = Tag.load(path);
 				if (tag instanceof CompoundTag loadTag) {
 					if (loadTag.contains("accounts", Tag.LIST_TAG)) {
 						ListTag accountsTag = loadTag.getList("accounts", Tag.COMPOUND_TAG);
-						for (Tag accountTag : accountsTag) {
-							if (accountTag instanceof CompoundTag) {
-								PlayerAccount account = SerializationUtil.deserialize(PlayerAccount.class, (CompoundTag) accountTag);
-								if (account != null) {
-									LOGGER.debug("Load {} account", account);
-									accounts.add(account);
+						if (accountsTag.isEmpty()) {
+							LOGGER.info("No accounts present");
+						} else {
+							for (Tag accountTag : accountsTag) {
+								if (accountTag instanceof CompoundTag) {
+									PlayerAccount account = SerializationUtil.deserialize(PlayerAccount.class, (CompoundTag) accountTag);
+									if (account != null) {
+										LOGGER.debug("Load {} account", account);
+										accounts.add(account);
+									} else {
+										LOGGER.error("Fail to load PlayerAccount");
+										throw new NullPointerException("Something went wrong while loading accounts, since \"account\" is null");
+									}
 								} else {
-									LOGGER.error("Fail to load PlayerAccount");
-									throw new NullPointerException("Something went wrong while loading accounts, since \"account\" is null");
+									LOGGER.warn("Fail to load account, since Tag {} is not an instance of CompoundTag, but it is a type of {}", accountsTag, accountTag.getClass().getSimpleName());
 								}
-							} else {
-								LOGGER.warn("Fail to load account, since Tag {} is not an instance of CompoundTag, but it is a type of {}", accountsTag, accountTag.getClass().getSimpleName());
 							}
 						}
 					} else {
@@ -229,7 +230,7 @@ public class AccountServer extends GameApplication {
 		createAccountButton.setPrefWidth(110.0);
 		Button removeAccountButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.remove"), this::removeAccount);
 		removeAccountButton.setPrefWidth(110.0);
-		Button refreshButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refresh);
+		Button refreshButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshScene);
 		refreshButton.setPrefWidth(110.0);
 		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), this::exit);
 		closeButton.setPrefWidth(110.0);
@@ -251,13 +252,13 @@ public class AccountServer extends GameApplication {
 				UUID uuid = UUID.fromString(treeItem.getChildren().get(2).getValue().split(": ")[1]);
 				if (this.agent.removeAccount(uuid)) {
 					this.accountView.getRoot().getChildren().remove(index);
-					this.refresh();
+					this.refreshScene();
 				}
 			}
 		}
 	}
 	
-	public void refresh() {
+	public void refreshScene() {
 		TreeItem<String> treeItem = new TreeItem<>();
 		for (PlayerAccount account : this.agent.getAccounts()) {
 			treeItem.getChildren().add(account.display());
@@ -331,7 +332,9 @@ public class AccountServer extends GameApplication {
 	protected void stopServer() {
 		if (this.launchState == LaunchState.STOPPING) {
 			this.connections.clear();
-			this.channels.forEach(Channel::close);
+			this.channels.forEach((channel) ->  {
+				channel.closeFuture().syncUninterruptibly();
+			});
 			this.channels.clear();
 			this.group.shutdownGracefully();
 		}

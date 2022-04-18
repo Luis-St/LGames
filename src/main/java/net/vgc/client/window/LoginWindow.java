@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.Client;
+import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.common.LoginType;
@@ -56,12 +57,12 @@ public class LoginWindow {
 		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), () -> {
 			this.exit();
 		});
-		pane.addColumn(0, FxUtil.makeCentered(registrationButton), FxUtil.makeCentered(loginButton), FxUtil.makeCentered(closeButton));
+		pane.addColumn(0, new Box<>(registrationButton), new Box<>(loginButton), new Box<>(closeButton));
 		return pane;
 	}
 	
 	protected Pane profile() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 15.0);
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		PlayerAccount account = this.client.getAccount();
 		pane.addRow(0, new Text(TranslationKey.createAndGet("window.login.username")), new Text(account.getName()));
 		if (!account.isGuest()) {
@@ -74,12 +75,12 @@ public class LoginWindow {
 				connection.send(new ClientLogoutPacket(account));
 			}
 		});
-		pane.add(FxUtil.makeCentered(logoutButton), 1, 2);
+		pane.add(new Box<>(logoutButton), 1, 2);
 		return pane;
 	}
 	
 	protected Pane registration() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 15.0);
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField usernameField = new TextField();
 		PasswordField passwordField = new PasswordField();
 		PasswordField confirmPasswordField = new PasswordField();
@@ -108,12 +109,12 @@ public class LoginWindow {
 			}
 		});
 		pane.addColumn(0, new Text(TranslationKey.createAndGet("window.login.username")), new Text(TranslationKey.createAndGet("window.login.password")), new Text(TranslationKey.createAndGet("window.login.confirm_password")), backButton);
-		pane.addColumn(1, usernameField, passwordField, confirmPasswordField, FxUtil.makeCentered(registrationButton));
+		pane.addColumn(1, usernameField, passwordField, confirmPasswordField, new Box<>(registrationButton));
 		return pane;
 	}
 	
 	protected Pane loginSelect() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 15.0);
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		Button userButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.user"), () -> {
 			this.setScene(this.loginUser());
 		});
@@ -123,7 +124,7 @@ public class LoginWindow {
 		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
 			this.setScene(this.client.isLoggedIn() ? this.profile() : this.main());
 		});
-		pane.addColumn(0, FxUtil.makeCentered(userButton), FxUtil.makeCentered(guestButton), FxUtil.makeCentered(backButton));
+		pane.addColumn(0, new Box<>(userButton), new Box<>(guestButton), new Box<>(backButton));
 		return pane;
 	}
 	
@@ -143,7 +144,7 @@ public class LoginWindow {
 			}
 		});
 		pane.addColumn(0, new Text(TranslationKey.createAndGet("window.login.name")), backButton);
-		pane.addColumn(1, usernameField, FxUtil.makeCentered(loginButton));
+		pane.addColumn(1, usernameField, new Box<>(loginButton));
 		return pane;
 	}
 	
@@ -168,7 +169,7 @@ public class LoginWindow {
 			}
 		});
 		pane.addColumn(0, new Text(TranslationKey.createAndGet("window.login.username") + ":"), new Text(TranslationKey.createAndGet("window.login.password") + ":"), backButton);
-		pane.addColumn(1, usernameField, passwordField, FxUtil.makeCentered(loginButton));
+		pane.addColumn(1, usernameField, passwordField, new Box<>(loginButton));
 		return pane;
 	}
 	
