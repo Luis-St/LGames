@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -16,15 +15,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import net.vgc.Constans;
-import net.vgc.client.Client;
 import net.vgc.network.Network;
-import net.vgc.network.NetworkSide;
 
 public class FxUtil {
 	
@@ -62,21 +57,6 @@ public class FxUtil {
 			action.run();
 		});
 		return button;
-	}
-	
-	public static <T extends Region> T setResize(T region, double width, double height) {
-		if (NetworkSide.CLIENT.isOn()) {
-			return setResize(Client.getInstance().getStage(), region, width, height);
-		}
-		return region;
-	}
-	
-	public static <T extends Region> T setResize(Stage stage, T region, double width, double height) {
-		if (width > 0.0 && height > 0.0) {
-			region.prefWidthProperty().bind(Bindings.multiply(stage.widthProperty(), width));
-			region.prefHeightProperty().bind(Bindings.multiply(stage.heightProperty(), height));
-		}
-		return region;
 	}
 	
 	public static ImageView makeImageView(String path, double width, double heigh) {

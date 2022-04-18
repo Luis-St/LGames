@@ -29,11 +29,8 @@ public class MenuScreen extends Screen {
 	@Override
 	public void init() {
 		this.singleplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.singleplayer"), this::handleSingleplayer);
-		FxUtil.setResize(this.singleplayerButtonBox.getNode(), 0.5, 0.1);
 		this.multiplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.multiplayer"), this::handleMultiplayer);
-		FxUtil.setResize(this.multiplayerButtonBox.getNode(), 0.5, 0.1);
 		this.settingsButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.settings"), this::handleSettings);
-		FxUtil.setResize(this.settingsButtonBox.getNode(), 0.5, 0.1);
 		this.loginButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.login"), Pos.CENTER_RIGHT, this::handleLogin);
 		this.loginButtonBox.setPadding(new Insets(20.0));
 		this.centerBox = FxUtil.makeVerticalBox(Pos.CENTER, 0.0);

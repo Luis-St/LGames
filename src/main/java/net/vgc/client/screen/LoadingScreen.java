@@ -32,7 +32,6 @@ public class LoadingScreen extends Screen {
 		Text loadingText = new Text(TranslationKey.createAndGet("screen.loading.loading.text", 0.0));
 		this.loadingTextBox = new Box<>(loadingText);
 		this.loadingBar = new ProgressBar();
-		FxUtil.setResize(this.loadingBar, 0.75, 0.04);
 		this.loadingBar.progressProperty().addListener((observable, oldValue, newValue) -> {
 			loadingText.setText(TranslationKey.createAndGet("screen.loading.loading.text", Mth.roundTo(newValue.doubleValue() * 100, 100)));
 		});
