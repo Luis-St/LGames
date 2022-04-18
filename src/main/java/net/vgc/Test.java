@@ -71,6 +71,10 @@ public class Test {
 			list.add(new Translation("account.window.close", "Close"));
 			list.add(new Translation("window.create_account.true", "Yes"));
 			list.add(new Translation("window.create_account.false", "No"));
+			list.add(new Translation("server.constans.name", "Virtual Game Collection Server"));
+			list.add(new Translation("screen.multiplayer.server_host", "Server host"));
+			list.add(new Translation("screen.multiplayer.server_port", "Server port"));
+			list.add(new Translation("screen.multiplayer.connect", "Connect"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -113,6 +117,10 @@ public class Test {
 			list.add(new Translation("account.window.close", "Schlieﬂen"));
 			list.add(new Translation("window.create_account.true", "Ja"));
 			list.add(new Translation("window.create_account.false", "Nein"));
+			list.add(new Translation("server.constans.name", "Virtual Game Collection Server"));
+			list.add(new Translation("screen.multiplayer.server_host", "Server host"));
+			list.add(new Translation("screen.multiplayer.server_port", "Server port"));
+			list.add(new Translation("screen.multiplayer.connect", "Verbinden"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

@@ -17,7 +17,7 @@ public class Main {
 	
 	/* TODO's:
 	 *  - add new info system form server -> client
-	 *  - impl. singleplayer, multiplayer and settings (PlayerSettings)
+	 *  - impl. singleplayer, multiplayer (MultiplayerScreen#handleConnect) and settings (PlayerSettings)
 	 *  - create Loading Steps, which are load from 0 til 1
 	 *  - use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
 	 *  - add server side path for Network#getGameDirectory and Network#getResourceDirectory
@@ -25,6 +25,7 @@ public class Main {
 	 *  - layout and grafic rework
 	 *  - super class for Windows
 	 *  - rework of Client/Server/AccountServer method order
+	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
 	 */
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);

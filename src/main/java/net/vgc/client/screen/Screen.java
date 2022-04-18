@@ -3,6 +3,7 @@ package net.vgc.client.screen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.scene.layout.Pane;
 import net.vgc.Main;
 import net.vgc.client.Client;
 import net.vgc.client.fx.InputHandler;
@@ -34,7 +35,14 @@ public abstract class Screen implements Showable, Tickable, InputHandler {
 		
 	}
 	
-	@Override
-	public abstract ScreenScene show();
+	protected void showScreen(Screen screen) {
+		this.client.setScreen(screen);
+	}
+	
+	protected abstract Pane createPane();
+	
+	public final ScreenScene show() {
+		return new ScreenScene(this.createPane(), this.width, this.height, this);
+	}
 	
 }
