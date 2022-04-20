@@ -113,8 +113,8 @@ public abstract class GameApplication extends Application implements DataHandler
 	public void stop() throws Exception {
 		LOGGER.info("Stopping {}", this.getName());
 		this.launchState = LaunchState.STOPPING;
-		this.handleStop();
 		this.save();
+		this.handleStop();
 		this.launchState = LaunchState.STOPPED;
 		LOGGER.info("Successfully stopping {}", this.getName());
 	}

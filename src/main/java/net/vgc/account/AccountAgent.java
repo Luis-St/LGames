@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,7 +64,7 @@ public final class AccountAgent {
 	}
 	
 	protected String checkOrGeneratePassword(String password, int length) {
-		if (password != null && password.trim().isEmpty()) {
+		if (!StringUtils.trimToEmpty(password).isEmpty()) {
 			return password;
 		}
 		Random rng = new Random(System.currentTimeMillis());

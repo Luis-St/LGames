@@ -34,7 +34,6 @@ import net.vgc.Constans;
 import net.vgc.account.network.AccountServerPacketListener;
 import net.vgc.account.window.AccountCreationWindow;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
 import net.vgc.data.serialization.SerializationUtil;
 import net.vgc.data.tag.Tag;
@@ -220,7 +219,7 @@ public class AccountServer extends GameApplication {
 		int index = this.accountView.getSelectionModel().getSelectedIndex();
 		if (this.accountView.getRoot().getChildren().size() > index && index >= 0) {
 			TreeItem<String> treeItem = this.accountView.getRoot().getChildren().get(index);
-			if (treeItem.getChildren().size() == 4) {
+			if (treeItem.getChildren().size() == 5) {
 				UUID uuid = UUID.fromString(treeItem.getChildren().get(2).getValue().split(": ")[1]);
 				if (this.agent.removeAccount(uuid)) {
 					this.accountView.getRoot().getChildren().remove(index);
@@ -305,14 +304,10 @@ public class AccountServer extends GameApplication {
 	@Override
 	protected void handleStop() throws Exception {
 		this.agent.close();
-		if (this.launchState == LaunchState.STOPPING) {
-			this.connections.clear();
-			this.channels.forEach((channel) ->  {
-				channel.closeFuture().syncUninterruptibly();
-			});
-			this.channels.clear();
-			this.group.shutdownGracefully();
-		}
+		this.connections.clear();
+		this.channels.forEach(Channel::close);
+		this.channels.clear();
+		this.group.shutdownGracefully();
 	}
 	
 }
