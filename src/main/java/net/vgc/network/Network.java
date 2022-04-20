@@ -4,6 +4,7 @@ import java.nio.file.Path;
 
 import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
+import net.vgc.server.Server;
 
 public class Network {
 	
@@ -27,7 +28,7 @@ public class Network {
 		if (NetworkSide.CLIENT.isOn()) {
 			return Client.getInstance().getResourceDirectory();
 		} else if (NetworkSide.SERVER.isOn()) {
-			throw new UnsupportedOperationException("Not implemeted yet"); 
+			return Server.getInstance().getResourceDirectory();
 		} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
 			return AccountServer.getInstance().getResourceDirectory();
 		}
@@ -38,7 +39,7 @@ public class Network {
 		if (NetworkSide.CLIENT.isOn()) {
 			return Client.getInstance().getResourceDirectory();
 		} else if (NetworkSide.SERVER.isOn()) {
-			throw new UnsupportedOperationException("Not implemeted yet");
+			return Server.getInstance().getResourceDirectory();
 		} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
 			return AccountServer.getInstance().getResourceDirectory();
 		}

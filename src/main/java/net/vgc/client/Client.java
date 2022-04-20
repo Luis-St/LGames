@@ -1,23 +1,20 @@
 package net.vgc.client;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Random;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -33,10 +30,10 @@ import net.vgc.client.screen.Screen;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
-import net.vgc.language.LanguageProvider;
+import net.vgc.data.tag.Tag;
+import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.network.Connection;
 import net.vgc.network.InvalidNetworkSideException;
-import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
@@ -45,11 +42,9 @@ import net.vgc.util.Util;
 
 public class Client extends GameApplication implements Tickable, Screenable {
 	
-	protected static Client instance;
-	
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
-			return instance;
+			return (Client) instance;
 		}
 		throw new InvalidNetworkSideException(NetworkSide.CLIENT);
 	}
@@ -57,16 +52,11 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	protected final Timeline ticker = Util.createTicker("ClientTicker", this);
 	protected final EventLoopGroup serverGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final EventLoopGroup accountGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-	protected Random rng;
-	protected LaunchState launchState = LaunchState.UNKNOWN;
-	protected Path gameDirectory; 
-	protected Path resourceDirectory;
-	protected Scene currentScene;
-	protected Scene previousScene;
 	protected boolean instantLoading;
 	protected boolean safeLoading;
 	protected LoginWindow loginWindow;
 	protected PlayerAccount account;
+	protected ClientSettings settings;
 	protected String serverHost;
 	protected int serverPort;
 	protected String accountHost;
@@ -75,33 +65,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	protected Connection serverConnection;
 	protected Channel accountChannel;
 	protected Connection accountConnection;
-	
-	@Override
-	public void init() throws Exception {
-		super.init();
-		LOGGER.info("Initial virtual game collection");
-		instance = this;
-		this.ticker.play();
-		this.rng = new Random(System.currentTimeMillis());
-	}
-	
-	@Override
-	public void start(String[] args) throws Exception {
-		LOGGER.info("Starting virtual game collection");
-		this.launchState = LaunchState.STARTING;
-		Network.INSTANCE.setNetworkSide(NetworkSide.CLIENT);
-		this.handleStart(args);
-		LanguageProvider.INSTANCE.load();
-		this.stage.setScene(new Scene(new Group(), 400, 400));
-		this.setScreen(new LoadingScreen());
-		this.stage.show();
-		if (this.isInstantLoading()) {
-			this.setScreen(new MenuScreen());
-			this.stage.centerOnScreen();
-		}
-		this.launchState = LaunchState.STARTED;
-		LOGGER.info("Successfully start of virtual game collection with version {}", Constans.Client.VERSION);
-	}
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -172,20 +135,169 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	@Override
+	public void load() throws IOException {
+		Path settingsPath = this.gameDirectory.resolve("settings.data");
+		if (Files.exists(settingsPath)) {
+			Tag settingsTag = Tag.load(settingsPath);
+			if (settingsTag instanceof CompoundTag tag) {
+				this.settings = new ClientSettings(tag);
+				LOGGER.debug("Load settings");
+			} else {
+				LOGGER.warn("Fail to load settings from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", settingsPath, settingsTag, settingsTag.getClass().getSimpleName());
+			}
+		} else {
+			this.settings = new ClientSettings();
+			LOGGER.info("No settings present, use default settings");
+		}
+	}
+	
+	@Override
+	protected void setupStage() {
+		this.setScreen(new LoadingScreen());
+		this.stage.show();
+		if (this.isInstantLoading()) {
+			this.setScreen(new MenuScreen());
+			this.stage.centerOnScreen();
+		}
+	}
+	
+	@Override
 	public void tick() {
 		if (this.stage != null && this.stage.getScene() instanceof ScreenScene screenScene) {
 			screenScene.tick();
 		}
 	}
 	
+	@Override
+	public void setScreen(Screen screen) {
+		boolean reapply = this.isScreenReapply(screen);
+		screen.init();
+		if (screen.title != null) {
+			this.stage.setTitle(screen.title);
+		} else if (!this.stage.getTitle().trim().isEmpty()) {
+			this.stage.setTitle("");
+		}
+		if (screen.shouldCenter) {
+			this.stage.centerOnScreen();
+		}
+		this.setScene(screen.show());
+		if (!reapply) {
+			LOGGER.debug("Update Screen to {}", screen.getClass().getSimpleName());
+		}
+	}
+	
+	protected boolean isScreenReapply(Screen screen) {
+		if (this.stage == null) {
+			return false;
+		} else if (this.stage.getScene() == null) {
+			return false;
+		} else if (this.stage.getScene() instanceof ScreenScene screenScene) {
+			return screenScene.getScreen() != null && screenScene.getScreen() == screen;
+		}
+		return false;
+	}
+	
+	protected void setScene(Scene scene) {
+		if (scene instanceof ScreenScene screenScene) {
+			screenScene.setInputListeners();
+		}
+		this.stage.setScene(scene);
+	}
+	
+	@Override
+	protected String getThreadName() {
+		return "client";
+	}
+	
+	@Override
+	protected String getName() {
+		return "virtual game collection";
+	}
+	
+	@Override
+	protected String getVersion() {
+		return Constans.Client.VERSION;
+	}
+	
+	@Override
+	public NetworkSide getNetworkSide() {
+		return NetworkSide.CLIENT;
+	}
+	
+	@Override
+	protected Timeline getTicker() {
+		return this.ticker;
+	}
+	
+	public boolean isInstantLoading() {
+		return this.instantLoading;
+	}
+	
+	public boolean isSafeLoading() {
+		return this.safeLoading;
+	}
+	
+	public LoginWindow getLoginWindow() {
+		return this.loginWindow;
+	}
+	
+	public void setLoginWindow(LoginWindow loginWindow) {
+		this.loginWindow = loginWindow;
+	}
+	
+	public PlayerAccount getAccount() {
+		return this.account;
+	}
+	
+	public void login(PlayerAccount account) {
+		LOGGER.info("Login with account: {}", account);
+		this.account = account;
+	}
+	
+	public void logout() {
+		LOGGER.info("Logout");
+		this.account = null;
+	}
+	
+	public boolean isLoggedIn() {
+		return this.account != null;
+	}
+	
+	public ClientSettings getSettings() {
+		return this.settings;
+	}
+	
 	public void connectServer() {
-		// TODO Auto-generated method stub
-		
+		try {
+			this.serverConnection = new Connection(new ClientPacketListener(this, NetworkSide.CLIENT));
+			this.serverChannel = new Bootstrap().group(this.serverGroup).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
+				@Override
+				protected void initChannel(Channel channel) throws Exception {
+					ChannelPipeline pipeline = channel.pipeline();
+					pipeline.addLast("decoder", new PacketDecoder());
+					pipeline.addLast("encoder", new PacketEncoder());
+					pipeline.addLast("handler", Client.this.serverConnection);
+				}
+			}).connect(this.accountHost, this.accountPort).sync().channel();
+			LOGGER.info("Start connection to account server on host {} with port {}", this.serverHost, this.serverPort);
+		} catch (Exception e) {
+			LOGGER.error("Fail to start connection to account server on host " + this.serverHost + " with port " + this.serverPort, e);
+			throw new RuntimeException();
+		}
 	}
 	
 	public void disconnectServer() {
-		// TODO Auto-generated method stub
-		
+		if (this.launchState == LaunchState.STARTED || this.launchState == LaunchState.STOPPING) {
+			this.serverConnection = null;
+			if (this.serverChannel != null) {
+				this.serverChannel.closeFuture().syncUninterruptibly();
+			}
+			if (this.serverGroup != null) {
+				this.serverGroup.shutdownGracefully();
+			}
+		} else {
+			LOGGER.warn("Unable to disconnect from virtual game collection server");
+		}
 	}
 	
 	public Connection getServerConnection() {
@@ -199,7 +311,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	public void connectAccount() {
 		try {
 			this.accountConnection = new Connection(new ClientPacketListener(this, NetworkSide.CLIENT));
-			this.accountChannel = new Bootstrap().group(this.accountGroup).channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
+			this.accountChannel = new Bootstrap().group(this.accountGroup).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
 				@Override
 				protected void initChannel(Channel channel) throws Exception {
 					ChannelPipeline pipeline = channel.pipeline();
@@ -229,19 +341,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		}
 	}
 	
-	@Override
-	protected String getThreadName() {
-		return "client";
-	}
-	
-	public LoginWindow getLoginWindow() {
-		return this.loginWindow;
-	}
-	
-	public void setLoginWindow(LoginWindow loginWindow) {
-		this.loginWindow = loginWindow;
-	}
-	
 	public Connection getAccountConnection() {
 		return this.accountConnection;
 	}
@@ -250,96 +349,26 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		return this.accountConnection != null && this.accountConnection.isConnected();
 	}
 	
-	public Path getGameDirectory() {
-		return this.gameDirectory;
-	}
-	
-	public Path getResourceDirectory() {
-		return this.resourceDirectory;
-	}
-	
-	public LaunchState getLaunchState() {
-		return this.launchState;
-	}
-	
-	public boolean isRunning() {
-		return this.launchState == LaunchState.STARTED;
-	}
-	
-	public boolean isInstantLoading() {
-		return this.instantLoading;
-	}
-	
-	public boolean isSafeLoading() {
-		return this.safeLoading;
-	}
-	
-	public PlayerAccount getAccount() {
-		return this.account;
-	}
-	
-	public void login(PlayerAccount account) {
-		LOGGER.info("Login with account: {}", account);
-		this.account = account;
-	}
-	
-	public void logout() {
-		LOGGER.info("Logout");
-		this.account = null;
-	}
-	
-	public boolean isLoggedIn() {
-		return this.account != null;
-	}
-	
-	@Override
-	public void setScreen(Screen screen) {
-		this.initScreen(screen);
-		this.setScene(screen.show());
-		LOGGER.debug("Update Screen to {}", screen.getClass().getSimpleName());
-	}
-	
-	protected void initScreen(Screen screen) {
-		screen.init();
-		if (screen.title != null) {
-			this.stage.setTitle(screen.title);
-		} else if (!this.stage.getTitle().trim().isEmpty()) {
-			this.stage.setTitle("");
-		}
-		if (screen.shouldCenter) {
-			this.stage.centerOnScreen();
-		}
-	}
-	
-	protected void setScene(Scene scene) {
-		this.previousScene = this.currentScene;
-		if (scene instanceof ScreenScene screenScene) {
-			screenScene.setInputListeners();
-		}
-		this.currentScene = scene;
-		this.stage.setScene(scene);
-	}
-	
-	@Override
-	public void exit() {
-		LOGGER.info("Exit virtual game collection");
-		Platform.exit();
-	}
-	
-	@Override
-	public void stop() throws Exception {
-		LOGGER.info("Stopping virtual game collection");
-		this.launchState = LaunchState.STOPPING;
-		this.handleStop();
-		this.launchState = LaunchState.STOPPED;
-		LOGGER.info("Successfully stopping virtual game collection");
-	}
-	
 	@Override
 	protected void handleStop() throws Exception {
 		this.ticker.stop();
 		this.disconnectAccount();
 		this.disconnectServer();
+	}
+	
+	@Override
+	public void save() throws IOException {
+		Path settingsPath = this.gameDirectory.resolve("settings.data");
+		if (!Files.exists(settingsPath)) {
+			Files.createDirectories(settingsPath.getParent());
+			Files.createFile(settingsPath);
+		}
+		if (this.settings == null) {
+			this.settings = new ClientSettings();
+			LOGGER.info("Restore settings to default, since they're not present");
+		}
+		Tag.save(settingsPath, this.settings.serialize());
+		LOGGER.debug("Save settings");
 	}
 	
 }

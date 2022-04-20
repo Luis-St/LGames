@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import com.google.common.collect.Lists;
@@ -19,7 +18,6 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -48,18 +46,15 @@ import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
 import net.vgc.network.InvalidNetworkSideException;
-import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
 
 public class AccountServer extends GameApplication {
 	
-	public static AccountServer instance;
-	
 	public static AccountServer getInstance() {
 		if (NetworkSide.ACCOUNT_SERVER.isOn()) {
-			return instance;
+			return (AccountServer) instance;
 		}
 		throw new InvalidNetworkSideException(NetworkSide.ACCOUNT_SERVER);
 	}
@@ -67,39 +62,10 @@ public class AccountServer extends GameApplication {
 	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final List<Connection> connections = Lists.newArrayList();
 	protected final List<Channel> channels = Lists.newArrayList();
-	protected Random rng;
-	protected LaunchState launchState = LaunchState.UNKNOWN;
 	protected TreeView<String> accountView;
-	protected Path gameDirectory;
-	protected Path resourceDirectory;
 	protected String host;
 	protected int port;
 	protected AccountAgent agent;
-	
-	@Override
-	public void init() throws Exception {
-		super.init();
-		LOGGER.info("Initial account server");
-		instance = this;
-		this.rng = new Random(System.currentTimeMillis());
-	}
-	
-	@Override
-	public void start(String[] args) throws Exception {
-		LOGGER.info("Starting account server");
-		this.launchState = LaunchState.STARTING;
-		Network.INSTANCE.setNetworkSide(NetworkSide.ACCOUNT_SERVER);
-		this.handleStart(args);
-		LanguageProvider.INSTANCE.load();
-		this.launchServer();
-		this.loadAccounts();
-		this.stage.setResizable(false);
-		this.stage.setTitle(TranslationKey.createAndGet("account.constans.name"));
-		this.stage.setScene(this.makeScene());
-		this.stage.show();
-		this.launchState = LaunchState.STARTED;
-		LOGGER.info("Successfully start of account server with version {}", Constans.Account.VERSION);
-	}
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -148,6 +114,52 @@ public class AccountServer extends GameApplication {
 				LOGGER.info("Fail to get language, since the {} language does not exists or is not load", set.valueOf(language));
 			}
 		}
+		this.launchServer();
+	}
+	
+	@Override
+	public void load() throws IOException {
+		List<PlayerAccount> accounts = Lists.newArrayList();
+		Path path = this.gameDirectory.resolve("accounts.acc");
+		LOGGER.debug("Loading accounts from {}", path);
+		if (!Files.exists(path)) {
+			LOGGER.info("No accounts present, since file does not exists");
+		} else {
+			Tag tag = Tag.load(path);
+			if (tag instanceof CompoundTag loadTag) {
+				if (loadTag.contains("accounts", Tag.LIST_TAG)) {
+					ListTag accountsTag = loadTag.getList("accounts", Tag.COMPOUND_TAG);
+					if (accountsTag.isEmpty()) {
+						LOGGER.info("No accounts present");
+					} else {
+						for (Tag accountTag : accountsTag) {
+							if (accountTag instanceof CompoundTag) {
+								PlayerAccount account = SerializationUtil.deserialize(PlayerAccount.class, (CompoundTag) accountTag);
+								if (account != null) {
+									LOGGER.debug("Load {} account", account);
+									accounts.add(account);
+								} else {
+									LOGGER.error("Fail to load PlayerAccount");
+									throw new NullPointerException("Something went wrong while loading accounts, since \"account\" is null");
+								}
+							} else {
+								LOGGER.warn("Fail to load account, since Tag {} is not an instance of CompoundTag, but it is a type of {}", accountsTag, accountTag.getClass().getSimpleName());
+							}
+						}
+					}
+				} else {
+					if (loadTag.isEmpty()) {
+						LOGGER.info("No accounts present in {}", path);
+					} else {
+						LOGGER.warn("Fail to load accounts from file {}, since the CompoundTag {} does not contains the key \"accounts\"", path, loadTag);
+					}
+				}
+			} else {
+				LOGGER.warn("Fail to load accounts from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());	
+			}
+		}
+		LOGGER.debug("Load {} accounts", accounts.size());
+		this.agent = new AccountAgent(accounts);
 	}
 	
 	protected void launchServer() {
@@ -167,53 +179,12 @@ public class AccountServer extends GameApplication {
 		LOGGER.info("Launch account server on host {} with port {}", this.host, this.port);
 	}
 	
-	protected void loadAccounts() {
-		try {
-			List<PlayerAccount> accounts = Lists.newArrayList();
-			Path path = this.gameDirectory.resolve("accounts.acc");
-			LOGGER.debug("Loading accounts from {}", path);
-			if (!Files.exists(path)) {
-				LOGGER.info("No accounts present, since file does not exists");
-			} else {
-				Tag tag = Tag.load(path);
-				if (tag instanceof CompoundTag loadTag) {
-					if (loadTag.contains("accounts", Tag.LIST_TAG)) {
-						ListTag accountsTag = loadTag.getList("accounts", Tag.COMPOUND_TAG);
-						if (accountsTag.isEmpty()) {
-							LOGGER.info("No accounts present");
-						} else {
-							for (Tag accountTag : accountsTag) {
-								if (accountTag instanceof CompoundTag) {
-									PlayerAccount account = SerializationUtil.deserialize(PlayerAccount.class, (CompoundTag) accountTag);
-									if (account != null) {
-										LOGGER.debug("Load {} account", account);
-										accounts.add(account);
-									} else {
-										LOGGER.error("Fail to load PlayerAccount");
-										throw new NullPointerException("Something went wrong while loading accounts, since \"account\" is null");
-									}
-								} else {
-									LOGGER.warn("Fail to load account, since Tag {} is not an instance of CompoundTag, but it is a type of {}", accountsTag, accountTag.getClass().getSimpleName());
-								}
-							}
-						}
-					} else {
-						if (loadTag.isEmpty()) {
-							LOGGER.info("No accounts present in {}", path);
-						} else {
-							LOGGER.warn("Fail to load accounts from file {}, since the CompoundTag {} does not contains the key \"accounts\"", path, loadTag);
-						}
-					}
-				} else {
-					LOGGER.warn("Fail to load accounts from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());	
-				}
-			}
-			LOGGER.debug("Load {} accounts", accounts.size());
-			this.agent = new AccountAgent(accounts);
-		} catch (Exception e) {
-			LOGGER.error("Fail to load accounts", e);
-			throw new RuntimeException();
-		}
+	@Override
+	protected void setupStage() {
+		this.stage.setResizable(false);
+		this.stage.setTitle(TranslationKey.createAndGet("account.constans.name"));
+		this.stage.setScene(this.makeScene());
+		this.stage.show();
 	}
 	
 	protected Scene makeScene() {
@@ -273,6 +244,21 @@ public class AccountServer extends GameApplication {
 		return "account";
 	}
 	
+	@Override
+	protected String getName() {
+		return "account server";
+	}
+	
+	@Override
+	protected String getVersion() {
+		return Constans.Account.VERSION;
+	}
+	
+	@Override
+	public NetworkSide getNetworkSide() {
+		return NetworkSide.ACCOUNT_SERVER;
+	}
+	
 	public Path getGameDirectory() {
 		return this.gameDirectory;
 	}
@@ -286,23 +272,7 @@ public class AccountServer extends GameApplication {
 	}
 	
 	@Override
-	public void exit() {
-		LOGGER.info("Exit account server");
-		Platform.exit();
-	}
-	
-	@Override
-	public void stop() throws Exception {
-		LOGGER.info("Stopping account server");
-		this.launchState = LaunchState.STOPPING;
-		this.saveAccounts();
-		this.stopServer();
-		this.handleStop();
-		this.launchState = LaunchState.STOPPED;
-		LOGGER.info("Successfully stopping account server");
-	}
-	
-	protected void saveAccounts() {
+	public void save() {
 		try {
 			Path path = this.gameDirectory.resolve("accounts.acc");
 			LOGGER.debug("Remove guest accounts");
@@ -332,7 +302,9 @@ public class AccountServer extends GameApplication {
 		}
 	}
 	
-	protected void stopServer() {
+	@Override
+	protected void handleStop() throws Exception {
+		this.agent.close();
 		if (this.launchState == LaunchState.STOPPING) {
 			this.connections.clear();
 			this.channels.forEach((channel) ->  {
@@ -341,11 +313,6 @@ public class AccountServer extends GameApplication {
 			this.channels.clear();
 			this.group.shutdownGracefully();
 		}
-	}
-	
-	@Override
-	protected void handleStop() throws Exception {
-		this.agent.close();
 	}
 	
 }
