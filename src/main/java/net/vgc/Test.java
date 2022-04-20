@@ -75,6 +75,8 @@ public class Test {
 			list.add(new Translation("screen.multiplayer.server_host", "Server host"));
 			list.add(new Translation("screen.multiplayer.server_port", "Server port"));
 			list.add(new Translation("screen.multiplayer.connect", "Connect"));
+			list.add(new Translation("settings.language.name", "Language"));
+			list.add(new Translation("settings.language.description", "Language for the user interface"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -121,6 +123,8 @@ public class Test {
 			list.add(new Translation("screen.multiplayer.server_host", "Server host"));
 			list.add(new Translation("screen.multiplayer.server_port", "Server port"));
 			list.add(new Translation("screen.multiplayer.connect", "Verbinden"));
+			list.add(new Translation("settings.language.name", "Sprache"));
+			list.add(new Translation("settings.language.description", "Sprache für die Benutzeroberfläche"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

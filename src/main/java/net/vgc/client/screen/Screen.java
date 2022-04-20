@@ -39,6 +39,10 @@ public abstract class Screen implements Showable, Tickable, InputHandler {
 		this.client.setScreen(screen);
 	}
 	
+	protected void reapplyScreen() {
+		this.client.setScreen(this);
+	}
+	
 	protected abstract Pane createPane();
 	
 	public final ScreenScene show() {

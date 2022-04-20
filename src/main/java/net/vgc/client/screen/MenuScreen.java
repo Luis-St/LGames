@@ -14,19 +14,19 @@ import net.vgc.language.TranslationKey;
 
 public class MenuScreen extends Screen {
 	
+	protected ButtonBox loginButtonBox;
 	protected ButtonBox singleplayerButtonBox;
 	protected ButtonBox multiplayerButtonBox;
 	protected ButtonBox settingsButtonBox;
-	protected ButtonBox loginButtonBox;
 	protected VBox centerBox;
 	
 	@Override
 	public void init() {
+		this.loginButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.login"), Pos.CENTER_RIGHT, this::handleLogin);
+		this.loginButtonBox.setPadding(new Insets(20.0));
 		this.singleplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.singleplayer"), this::handleSingleplayer);
 		this.multiplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.multiplayer"), this::handleMultiplayer);
 		this.settingsButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.settings"), this::handleSettings);
-		this.loginButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.login"), Pos.CENTER_RIGHT, this::handleLogin);
-		this.loginButtonBox.setPadding(new Insets(20.0));
 		this.centerBox = FxUtil.makeVerticalBox(Pos.CENTER, 0.0);
 	}
 	
@@ -48,7 +48,7 @@ public class MenuScreen extends Screen {
 	}
 	
 	protected void handleSettings() {
-		LOGGER.debug("Settings");
+		this.showScreen(new SettingsScreen(this));
 	}
 	
 	protected void handleLogin() {

@@ -26,10 +26,14 @@ public class FxUtil {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	public static GridPane makeGrid(Pos pos, double gap, double padding) {
+		return makeGrid(pos, gap, gap, padding);
+	}
+	
+	public static GridPane makeGrid(Pos pos, double hGap, double vGap, double padding) {
 		GridPane pane = new GridPane();
 		pane.setAlignment(pos);
-		pane.setHgap(gap);
-		pane.setVgap(gap);
+		pane.setHgap(hGap);
+		pane.setVgap(vGap);
 		pane.setPadding(new Insets(padding));
 		pane.setGridLinesVisible(Constans.DEBUG);
 		return pane;

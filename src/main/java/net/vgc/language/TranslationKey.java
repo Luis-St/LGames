@@ -1,48 +1,37 @@
 package net.vgc.language;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 
 public class TranslationKey {
 	
 	protected final String key;
-	protected final List<Object> objects;
 	
-	public TranslationKey(String key, Object... objects) {
+	public TranslationKey(String key) {
 		this.key = key;
-		this.objects = Lists.newArrayList(objects);
 	}
 	
 	public static String createAndGet(String key, Object... objects) {
-		return new TranslationKey(key, objects).getValue();
+		return new TranslationKey(key).getValue(objects);
 	}
 	
 	public static String createAndGet(Language language, String key, Object... objects) {
-		return new TranslationKey(key, objects).getValue(language);
+		return new TranslationKey(key).getValue(language, objects);
 	}
 	
 	public String getKey() {
 		return this.key;
 	}
 	
-	public String getValue() {
-		String translation = LanguageProvider.INSTANCE.getTranslation(this);
-		for (int i = 0; i < this.objects.size(); i++) {
-			String s = "%" + (i + 1) + "%";
-			if (translation.contains(s)) {
-				translation = translation.replace(s, this.objects.get(i).toString());
-			}
-		}
-		return translation;
+	public String getValue(Object... objects) {
+		return this.getValue(LanguageProvider.INSTANCE.getCurrentLanguage(), objects);
 	}
 	
-	public String getValue(Language language) {
+	public String getValue(Language language, Object... objects) {
 		String translation = LanguageProvider.INSTANCE.getTranslation(language, this);
-		for (int i = 0; i < this.objects.size(); i++) {
+		for (int i = 0; i < Lists.newArrayList(objects).size(); i++) {
 			String s = "%" + (i + 1) + "%";
 			if (translation.contains(s)) {
-				translation = translation.replace(s, this.objects.get(i).toString());
+				translation = translation.replace(s, Lists.newArrayList(objects).get(i).toString());
 			}
 		}
 		return translation;

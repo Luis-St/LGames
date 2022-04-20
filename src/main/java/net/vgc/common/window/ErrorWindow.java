@@ -13,8 +13,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
 import net.vgc.common.ErrorLevel;
+import net.vgc.network.NetworkSide;
 import net.vgc.server.Server;
 
 public class ErrorWindow {
@@ -34,9 +36,11 @@ public class ErrorWindow {
 	
 	public static ErrorWindow makeCrash(String errorMessage) {
 		return new ErrorWindow("Error", errorMessage, () -> {
-			if (System.getProperty("net.vgc.launch.type").equalsIgnoreCase("client")) {
+			if (NetworkSide.CLIENT.isOn()) {
 				Client.getInstance().exit();
-			} else if (System.getProperty("net.vgc.launch.type").equalsIgnoreCase("server")) {
+			} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
+				AccountServer.getInstance().exit();
+			} else if (NetworkSide.SERVER.isOn()) {
 				Server.getInstance().exit();
 			}
 			LOGGER.trace("Something went wrong while handle a critical error");

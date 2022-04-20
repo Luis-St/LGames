@@ -3,7 +3,6 @@ package net.vgc.client.screen;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.InputPane;
@@ -14,8 +13,8 @@ public class MultiplayerScreen extends Screen {
 	protected final Screen backScreen;
 	protected InputPane hostInputPane;
 	protected InputPane portInputPane;
-	protected VBox connectButtonBox;
-	protected VBox backButtonBox;
+	protected ButtonBox connectButtonBox;
+	protected ButtonBox backButtonBox;
 	
 	public MultiplayerScreen(Screen backScreen) {
 		this.backScreen = backScreen;
