@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientLoginPacket;
+import net.vgc.network.packet.account.ClientLogoutExitPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
@@ -29,6 +30,7 @@ public class Packets {
 		map.put(i++, ClientLogoutPacket.class);
 		map.put(i++, ClientLoggedInPacket.class);
 		map.put(i++, ClientLoggedOutPacket.class);
+		map.put(i++, ClientLogoutExitPacket.class);
 	});
 	
 	@Nullable

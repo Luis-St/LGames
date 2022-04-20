@@ -72,6 +72,10 @@ public final class PlayerAccount implements Serializable {
 		return this.obfuscated();
 	}
 	
+	public boolean isObfuscated() {
+		return !(NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this == UNKNOWN);
+	}
+	
 	public void displayPassword(GridPane pane) {
 		if (NetworkSide.CLIENT.isOn() || Constans.IDE || this == UNKNOWN) {
 			Text text = new Text(this.obfuscated());

@@ -179,7 +179,7 @@ public class LoginWindow {
 		} catch (Exception e) {
 			LOGGER.warn("Fail to connect to account server", e);
 		}
-		Util.runDelayed("LoginPacketSend", 1000, () -> {
+		Util.runDelayed("DelayedPacketSender", 1000, () -> {
 			Connection connection = this.client.getAccountConnection();
 			if (this.client.isAccountConnected()) {
 				connection.send(packet);
@@ -216,6 +216,9 @@ public class LoginWindow {
 	
 	protected void close() {
 		this.client.setLoginWindow(null);
+		if (!this.client.isLoggedIn()) {
+			this.client.disconnectAccount();
+		}
 	}
 	
 }

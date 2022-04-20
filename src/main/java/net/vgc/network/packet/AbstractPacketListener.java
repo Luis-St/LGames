@@ -11,7 +11,6 @@ public abstract class AbstractPacketListener implements PacketListener {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	protected final NetworkSide networkSide;
-	
 	protected Connection connection;
 	
 	public AbstractPacketListener(NetworkSide networkSide) {
@@ -31,6 +30,14 @@ public abstract class AbstractPacketListener implements PacketListener {
 	@Override
 	public void setConnection(Connection connection) {
 		this.connection = connection;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof AbstractPacketListener packetListener) {
+			return packetListener.getClass() == this.getClass();
+		}
+		return false;
 	}
 	
 }

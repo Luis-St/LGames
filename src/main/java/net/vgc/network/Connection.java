@@ -61,9 +61,9 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		} else if (this.channel.isOpen()) {
 			LOGGER.warn("Caught Exception", cause);
 			if (cause instanceof TimeoutException) {
-				this.disconnect("Timeout", cause);
+				throw new IOException("Timeout", cause);
 			} else {
-				this.disconnect("Internal Exception", cause);
+				throw new IOException("Internal Exception", cause);
 			}
 		} else {
 			LOGGER.warn("Caught Exception while channel is closed", cause);
@@ -122,8 +122,22 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		}
 	}
 	
-	public void disconnect(String message, Throwable cause) throws IOException {
-		throw new IOException(message, cause);
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Connection connection) {
+			if (this.sentPackets != connection.sentPackets) {
+				return false;
+			} else if (this.receivedPackets != connection.receivedPackets) {
+				return false;
+			} else if (this.failedPackets != connection.failedPackets) {
+				return false;
+			} else if (!this.listener.equals(connection.listener)) {
+				return false;
+			} else {
+				return this.channel.equals(connection.channel);
+			}
+		}
+		return false;
 	}
 	
 	protected static record PacketHolder(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener) {

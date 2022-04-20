@@ -82,6 +82,11 @@ public class AccountServer extends GameApplication {
 			this.gameDirectory = new File(System.getProperty("user.home")).toPath().resolve("Desktop/run/account_server");
 			LOGGER.warn("Fail to get game directory, use default directory: {}", this.gameDirectory);
 		}
+		if (!Files.exists(this.gameDirectory)) {
+			Files.createDirectories(this.gameDirectory);
+			LOGGER.debug("Create account server directory");
+			
+		}
 		if (set.has(resourceDir)) {
 			this.resourceDirectory = set.valueOf(resourceDir).toPath();
 			LOGGER.debug("Set resource directory to {}", this.resourceDirectory);
@@ -89,9 +94,9 @@ public class AccountServer extends GameApplication {
 			this.resourceDirectory = this.gameDirectory.resolve("assets");
 			LOGGER.warn("No resource directory set, use the default directory {}", this.gameDirectory);
 		}
-		if (!Files.exists(this.gameDirectory)) {
-			Files.createDirectories(this.gameDirectory);
-			LOGGER.debug("Create account server directory");
+		if (!Files.exists(this.resourceDirectory)) {
+			Files.createDirectories(this.resourceDirectory);
+			LOGGER.debug("Create resource directory");
 		}
 		if (set.has(host)) {
 			this.host = set.valueOf(host);
@@ -187,7 +192,7 @@ public class AccountServer extends GameApplication {
 	}
 	
 	protected Scene makeScene() {
-		VBox viewBox = new VBox();
+		VBox box = new VBox();
 		this.accountView = new TreeView<>();
 		this.accountView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("account.window.accounts"));
@@ -206,8 +211,8 @@ public class AccountServer extends GameApplication {
 		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), this::exit);
 		closeButton.setPrefWidth(110.0);
 		pane.addRow(0, createAccountButton, removeAccountButton, refreshButton, closeButton);
-		viewBox.getChildren().addAll(this.accountView, pane);
-		return new Scene(viewBox, 450.0, 400.0);
+		box.getChildren().addAll(this.accountView, pane);
+		return new Scene(box, 450.0, 400.0);
 	}
 	
 	protected void createAccount() {
@@ -268,6 +273,16 @@ public class AccountServer extends GameApplication {
 	
 	public AccountAgent getAgent() {
 		return this.agent;
+	}
+	
+	public void exitClient(Connection connection) {
+		String adress = connection.getChannel().remoteAddress().toString().replace("/", "");
+		if (this.channels.contains(connection.getChannel()) && this.connections.contains(connection)) {
+			this.channels.remove(connection.getChannel());
+			this.connections.remove(connection);
+			LOGGER.debug("Remove channel annd connection for client {}", adress);
+		}
+		LOGGER.debug("Client disconnected with adress {}", adress);
 	}
 	
 	@Override

@@ -28,7 +28,6 @@ import net.vgc.client.screen.LoadingScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.screen.Screen;
 import net.vgc.client.window.LoginWindow;
-import net.vgc.common.LaunchState;
 import net.vgc.common.application.GameApplication;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
@@ -37,6 +36,7 @@ import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
+import net.vgc.network.packet.account.ClientLogoutExitPacket;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
@@ -57,8 +57,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	protected LoginWindow loginWindow;
 	protected PlayerAccount account;
 	protected ClientSettings settings;
-	protected String serverHost;
-	protected int serverPort;
 	protected String accountHost;
 	protected int accountPort;
 	protected Channel serverChannel;
@@ -72,8 +70,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		parser.allowsUnrecognizedOptions();
 		OptionSpec<File> gameDir = parser.accepts("gameDir").withRequiredArg().ofType(File.class);
 		OptionSpec<File> resourceDir = parser.accepts("resourceDir").withRequiredArg().ofType(File.class);
-		OptionSpec<String> serverHost = parser.accepts("serverHost").withRequiredArg().ofType(String.class);
-		OptionSpec<Integer> serverPort = parser.accepts("serverPort").withRequiredArg().ofType(Integer.class);
 		OptionSpec<String> accountHost = parser.accepts("accountHost").withRequiredArg().ofType(String.class);
 		OptionSpec<Integer> accountPort = parser.accepts("accountPort").withRequiredArg().ofType(Integer.class);
 		OptionSpec<Boolean> instantLoading = parser.accepts("instantLoading").withRequiredArg().ofType(Boolean.class);
@@ -88,6 +84,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		}
 		if (!Files.exists(this.gameDirectory)) {
 			Files.createDirectories(this.gameDirectory);
+			LOGGER.debug("Create client directory");
 		}
 		if (set.has(resourceDir)) {
 			this.resourceDirectory = set.valueOf(resourceDir).toPath();
@@ -96,21 +93,9 @@ public class Client extends GameApplication implements Tickable, Screenable {
 			this.resourceDirectory = this.gameDirectory.resolve("assets");
 			LOGGER.warn("No resource directory set, use the default directory {}", this.gameDirectory);
 		}
-		if (!Files.exists(this.gameDirectory)) {
-			Files.createDirectories(this.gameDirectory);
-			LOGGER.debug("Create client directory");
-		}
-		if (set.has(serverHost)) {
-			this.serverHost = set.valueOf(serverHost);
-		} else {
-			this.serverHost = "localhost";
-			LOGGER.warn("Fail to get server host, use default host: 127.0.0.1");
-		}
-		if (set.has(serverPort)) {
-			this.serverPort = set.valueOf(serverPort);
-		} else {
-			this.serverPort = 8080;
-			LOGGER.warn("Fail to get server port, use default host: 8080");
+		if (!Files.exists(this.resourceDirectory)) {
+			Files.createDirectories(this.resourceDirectory);
+			LOGGER.debug("Create resource directory");
 		}
 		if (set.has(accountHost)) {
 			this.accountHost = set.valueOf(accountHost);
@@ -121,7 +106,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		if (set.has(accountPort)) {
 			this.accountPort = set.valueOf(accountPort);
 		} else {
-			this.serverPort = 8081;
+			this.accountPort = 8081;
 			LOGGER.warn("Fail to get account server port, use default host: 8081");
 		}
 		if (set.has(instantLoading)) {
@@ -240,7 +225,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	public void logout() {
-		LOGGER.info("Logout");
 		this.account = null;
 	}
 	
@@ -252,7 +236,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		return this.settings;
 	}
 	
-	public void connectServer() {
+	public void connectServer(String host, int port) {
 		try {
 			this.serverConnection = new Connection(new ClientPacketListener(this, NetworkSide.CLIENT));
 			this.serverChannel = new Bootstrap().group(this.serverGroup).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
@@ -263,25 +247,24 @@ public class Client extends GameApplication implements Tickable, Screenable {
 					pipeline.addLast("encoder", new PacketEncoder());
 					pipeline.addLast("handler", Client.this.serverConnection);
 				}
-			}).connect(this.accountHost, this.accountPort).sync().channel();
-			LOGGER.info("Start connection to account server on host {} with port {}", this.serverHost, this.serverPort);
+			}).connect(host, port).sync().channel();
+			LOGGER.info("Start connection to account server on host {} with port {}", host, port);
 		} catch (Exception e) {
-			LOGGER.error("Fail to start connection to virtual game collection server on host {} with port {}", this.serverHost, this.serverPort);
+			LOGGER.error("Fail to start connection to virtual game collection server on host {} with port {}", host, port);
 			throw new RuntimeException(e);
 		}
 	}
 	
 	public void disconnectServer() {
-		if (this.launchState == LaunchState.STARTED || this.launchState == LaunchState.STOPPING) {
-			this.serverConnection = null;
-			if (this.serverChannel != null) {
-				this.serverChannel.closeFuture().syncUninterruptibly();
-			}
-			if (this.serverGroup != null) {
-				this.serverGroup.shutdownGracefully();
-			}
-		} else {
-			LOGGER.warn("Unable to disconnect from virtual game collection server");
+		if (this.isServerConnected()) {
+			// TODO: send
+		}
+		this.serverConnection = null;
+		if (this.serverChannel != null) {
+			this.serverChannel.closeFuture();
+		}
+		if (this.serverGroup != null) {
+			this.serverGroup.shutdownGracefully();
 		}
 	}
 	
@@ -307,22 +290,21 @@ public class Client extends GameApplication implements Tickable, Screenable {
 			}).connect(this.accountHost, this.accountPort).sync().channel();
 			LOGGER.info("Start connection to account server on host {} with port {}", this.accountHost, this.accountPort);
 		} catch (Exception e) {
-			LOGGER.error("Fail to start connection to account server on host {} with port {}", this.serverHost, this.serverPort);
+			LOGGER.error("Fail to start connection to account server on host {} with port {}", this.accountHost, this.accountPort);
 			throw new RuntimeException(e);
 		}
 	}
 	
 	public void disconnectAccount() {
-		if (this.launchState == LaunchState.STARTED || this.launchState == LaunchState.STOPPING) {
-			this.accountConnection = null;
-			if (this.accountChannel != null) {
-				this.accountChannel.closeFuture().syncUninterruptibly();
-			}
-			if (this.accountGroup != null) {
-				this.accountGroup.shutdownGracefully();
-			}
-		} else {
-			LOGGER.warn("Unable to disconnect from account server");
+		if (this.isAccountConnected()) {
+			this.accountConnection.send(new ClientLogoutExitPacket(this.account));
+		}
+		this.accountConnection = null;
+		if (this.accountChannel != null) {
+			this.accountChannel.closeFuture();
+		}
+		if (this.accountGroup != null) {
+			this.accountGroup.shutdownGracefully();
 		}
 	}
 	

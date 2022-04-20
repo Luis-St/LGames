@@ -22,12 +22,4 @@ public interface PacketListener {
 		}
 	}
 	
-	default void onConnect() {
-		
-	}
-	
-	default void onDisconnect() {
-		
-	}
-	
 }

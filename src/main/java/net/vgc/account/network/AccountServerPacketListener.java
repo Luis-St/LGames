@@ -45,4 +45,13 @@ public class AccountServerPacketListener extends AbstractPacketListener {
 		this.connection.send(new ClientLoggedOutPacket(infoResult));
 	}
 	
+	public void handleClientLogoutExit(String name, String password) {
+		this.checkSide();
+		if (!name.equals(PlayerAccount.UNKNOWN.getName()) && !password.equals(PlayerAccount.UNKNOWN.getPassword())) {
+			LOGGER.info("Logout of client with name {} and password {}", name, password);
+			this.accountServer.getAgent().accountLogout(name, password);
+		}
+		this.accountServer.exitClient(this.connection);
+	}
+	
 }
