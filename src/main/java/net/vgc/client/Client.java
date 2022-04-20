@@ -170,7 +170,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	
 	@Override
 	public void setScreen(Screen screen) {
-		boolean reapply = this.isScreenReapply(screen);
 		screen.init();
 		if (screen.title != null) {
 			this.stage.setTitle(screen.title);
@@ -181,20 +180,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 			this.stage.centerOnScreen();
 		}
 		this.setScene(screen.show());
-		if (!reapply) {
-			LOGGER.debug("Update Screen to {}", screen.getClass().getSimpleName());
-		}
-	}
-	
-	protected boolean isScreenReapply(Screen screen) {
-		if (this.stage == null) {
-			return false;
-		} else if (this.stage.getScene() == null) {
-			return false;
-		} else if (this.stage.getScene() instanceof ScreenScene screenScene) {
-			return screenScene.getScreen() != null && screenScene.getScreen() == screen;
-		}
-		return false;
 	}
 	
 	protected void setScene(Scene scene) {
@@ -281,8 +266,8 @@ public class Client extends GameApplication implements Tickable, Screenable {
 			}).connect(this.accountHost, this.accountPort).sync().channel();
 			LOGGER.info("Start connection to account server on host {} with port {}", this.serverHost, this.serverPort);
 		} catch (Exception e) {
-			LOGGER.error("Fail to start connection to account server on host " + this.serverHost + " with port " + this.serverPort, e);
-			throw new RuntimeException();
+			LOGGER.error("Fail to start connection to virtual game collection server on host {} with port {}", this.serverHost, this.serverPort);
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -322,8 +307,8 @@ public class Client extends GameApplication implements Tickable, Screenable {
 			}).connect(this.accountHost, this.accountPort).sync().channel();
 			LOGGER.info("Start connection to account server on host {} with port {}", this.accountHost, this.accountPort);
 		} catch (Exception e) {
-			LOGGER.error("Fail to start connection to account server on host " + this.accountHost + " with port " + this.accountPort, e);
-			throw new RuntimeException();
+			LOGGER.error("Fail to start connection to account server on host {} with port {}", this.serverHost, this.serverPort);
+			throw new RuntimeException(e);
 		}
 	}
 	

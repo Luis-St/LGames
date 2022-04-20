@@ -58,26 +58,26 @@ public abstract class PlayerList implements Tickable {
 								CompoundTag playerTag = listTag.getCompoundTag(i);
 								GameProfile gameProfile = SerializationUtil.deserialize(GameProfile.class, playerTag.getCompound("game_profile"));
 								if (gameProfile != null) {
-									LOGGER.debug("Load {} player profile", gameProfile);
+									LOGGER.debug("Load {} Player GameProfile", gameProfile);
 									playerTag.remove("game_profile");
 									this.loadPlayers.add(Pair.of(gameProfile.getUUID(), playerTag));
 								} else {
 									LOGGER.error("Fail to load Player");
-									throw new NullPointerException("Something went wrong while loading Players, since \"gameProfile\" of a Player is null");
+									throw new NullPointerException("Something went wrong while loading players, since \"gameProfile\" of a Player is null");
 								}
 							}
 						}
 					} else {
-						LOGGER.warn("Fail to load Players from file {}, since the CompoundTag {} does not contains the key \"players\"", this.playerDirectory, loadTag);
+						LOGGER.warn("Fail to load players from file {}, since the CompoundTag {} does not contains the key \"players\"", this.playerDirectory, loadTag);
 					}
 				} else {
-					LOGGER.warn("Fail to load Players from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", this.playerDirectory, loadTag, loadTag.getClass().getSimpleName());
+					LOGGER.warn("Fail to load players from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", this.playerDirectory, loadTag, loadTag.getClass().getSimpleName());
 				}
 			}
-			LOGGER.debug("Load {} Players", this.loadPlayers.size());
+			LOGGER.debug("Load {} players", this.loadPlayers.size());
 		} catch (IOException e) {
-			LOGGER.error("Fail to load Players", e);
-			throw new RuntimeException();
+			LOGGER.error("Fail to load players from file {}", this.playerDirectory);
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -177,8 +177,8 @@ public abstract class PlayerList implements Tickable {
 			tag.putList("players", listTag);
 			Tag.save(this.playerDirectory, tag);
 		} catch (IOException e) {
-			LOGGER.error("Fail to save Players", e);
-			throw new RuntimeException();
+			LOGGER.error("Fail to save players to file {}", this.playerDirectory);
+			throw new RuntimeException(e);
 		}
 	}
 	

@@ -271,34 +271,29 @@ public class AccountServer extends GameApplication {
 	}
 	
 	@Override
-	public void save() {
-		try {
-			Path path = this.gameDirectory.resolve("accounts.acc");
-			LOGGER.debug("Remove guest accounts");
-			List<PlayerAccount> accounts = this.getAgent().getAccounts();
-			accounts.removeIf(PlayerAccount::isGuest);
-			if (!Files.exists(path)) {
-				Files.createDirectories(path.getParent());
-				Files.createFile(path);
-			}
-			CompoundTag tag = new CompoundTag();
-			ListTag accountsTag = new ListTag();
-			for (PlayerAccount account : accounts) {
-				if (account != null) {
-					accountsTag.add(account.serialize());
-				} else {
-					LOGGER.warn("Fail to save PlayerAccount, since it was null");
-				}
-			}
-			if (!accountsTag.isEmpty()) {
-				tag.put("accounts", accountsTag);
-			}
-			Tag.save(path, tag);
-			LOGGER.info("Save {} accounts", accountsTag.size());
-		} catch (IOException e) {
-			LOGGER.error("Fail to save accounts", e);
-			throw new RuntimeException();
+	public void save() throws IOException {
+		Path path = this.gameDirectory.resolve("accounts.acc");
+		LOGGER.debug("Remove guest accounts");
+		List<PlayerAccount> accounts = this.getAgent().getAccounts();
+		accounts.removeIf(PlayerAccount::isGuest);
+		if (!Files.exists(path)) {
+			Files.createDirectories(path.getParent());
+			Files.createFile(path);
 		}
+		CompoundTag tag = new CompoundTag();
+		ListTag accountsTag = new ListTag();
+		for (PlayerAccount account : accounts) {
+			if (account != null) {
+				accountsTag.add(account.serialize());
+			} else {
+				LOGGER.warn("Fail to save PlayerAccount, since it was null");
+			}
+		}
+		if (!accountsTag.isEmpty()) {
+			tag.put("accounts", accountsTag);
+		}
+		Tag.save(path, tag);
+		LOGGER.info("Save {} accounts", accountsTag.size());
 	}
 	
 	@Override

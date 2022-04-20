@@ -32,8 +32,8 @@ public class JsonHelper {
 			reader.close();
 			return element;
 		} catch (IOException e) {
-			LOGGER.error("Fail to load file {}" + path, e);
-			throw new RuntimeException();
+			LOGGER.error("Fail to load JsonElement from file {}", path);
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -49,8 +49,8 @@ public class JsonHelper {
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
-			LOGGER.error("Fail to save file " + path, e);
-			throw new RuntimeException();
+			LOGGER.error("Fail to save JsonElement to file {}", path);
+			throw new RuntimeException(e);
 		}
 	}
 	

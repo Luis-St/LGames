@@ -44,7 +44,6 @@ public class ErrorWindow {
 				Server.getInstance().exit();
 			}
 			LOGGER.trace("Something went wrong while handle a critical error");
-			System.exit(-1);
 		}).setErrorLevel(ErrorLevel.CRITICAL);
 	}
 	

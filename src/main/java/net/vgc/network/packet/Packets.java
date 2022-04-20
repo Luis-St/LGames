@@ -64,7 +64,8 @@ public class Packets {
 					throw new InvalidPacketException("Packet " + clazz.getSimpleName() + " does not have a FriendlyByteBuffer constructor");
 				}
 			} catch (Exception e) {
-				LOGGER.warn("Fail to get create Packet of type " + clazz.getSimpleName() + " for id " + id, e);
+				LOGGER.error("Fail to get create Packet of type {} for id {}", clazz.getSimpleName(), id);
+				throw new RuntimeException(e);
 			}
 		}
 		return null;

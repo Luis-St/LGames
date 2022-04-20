@@ -48,6 +48,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 				this.handle(this.listener, packet);
 				++this.receivedPackets;
 			} catch (ClassCastException e) {
+				LOGGER.warn("Fail to handle Packet of type {}", packet.getClass().getSimpleName());
 				++this.failedPackets;
 			}
 		}

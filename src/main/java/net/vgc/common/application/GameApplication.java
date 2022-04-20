@@ -55,7 +55,12 @@ public abstract class GameApplication extends Application implements DataHandler
 		this.launchState = LaunchState.STARTING;
 		Network.INSTANCE.setNetworkSide(this.getNetworkSide());
 		this.handleStart(args);
-		this.load();
+		try {
+			this.load();
+		} catch (IOException e) {
+			LOGGER.error("Fail to load {}", this.getName());
+			throw new RuntimeException(e);
+		}
 		LanguageProvider.INSTANCE.load();
 		this.launchState = LaunchState.STARTED;
 		LOGGER.info("Successfully start of {} with version {}", this.getName(), this.getVersion());
@@ -113,7 +118,12 @@ public abstract class GameApplication extends Application implements DataHandler
 	public void stop() throws Exception {
 		LOGGER.info("Stopping {}", this.getName());
 		this.launchState = LaunchState.STOPPING;
-		this.save();
+		try {
+			this.save();
+		} catch (IOException e) {
+			LOGGER.error("Fail to save {}", this.getName());
+			throw new RuntimeException(e);
+		}
 		this.handleStop();
 		this.launchState = LaunchState.STOPPED;
 		LOGGER.info("Successfully stopping {}", this.getName());

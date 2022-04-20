@@ -4,31 +4,16 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.Lists;
 
 public class ClasspathInspector {
 	
-	public static List<Class<?>> getTestClasses() {
-		List<Class<?>> classes = getClasses();
-		classes.removeIf(clazz -> !isTestClass(clazz));
-		return classes;
-	}
+	protected static final Logger LOGGER = LogManager.getLogger();
 	
-	public static List<Class<?>> getMainClasses() {
-		List<Class<?>> classes = getClasses();
-		classes.removeIf(clazz -> isTestClass(clazz));
-		return classes;
-	}
-	
-	protected static boolean isTestClass(Class<?> clazz) {
-		String[] packages = clazz.getPackageName().split("\\.");
-		if (packages.length >= 3) {
-			return packages[2].contains("test");
-		}
-		return false;
-	}
-	
-	protected static List<Class<?>> getClasses() {
+	public static List<Class<?>> getClasses() {
 		List<Class<?>> classes = Lists.newArrayList();
 		for (File file : getClasspathClasses()) {
 			if (file.isDirectory()) {
@@ -42,10 +27,12 @@ public class ClasspathInspector {
 	protected static List<Class<?>> getClasses(File path) {
 		List<Class<?>> classes = Lists.newArrayList();
 		for (File file : getFiles(path, (dir, name) -> name.endsWith(".class"), true)) {
+			String className = getClassName(file.getAbsolutePath().substring(path.getAbsolutePath().length() + 1));
 			try {
-				classes.add(Class.forName(getClassName(file.getAbsolutePath().substring(path.getAbsolutePath().length() + 1))));
+				classes.add(Class.forName(className));
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				LOGGER.error("Fail to find Class for name {}, since it does not exists", className);
+				throw new RuntimeException(e);
 			}
 		}
 		return classes;

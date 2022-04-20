@@ -98,8 +98,8 @@ public class Server extends GameApplication implements Tickable {
 		try {
 			this.server.startServer();
 		} catch (Exception e) {
-			LOGGER.error("Something went wrong while launching the server", e);
-			throw new RuntimeException("Fail to launch server");
+			LOGGER.error("Something went wrong while launching the server");
+			throw new RuntimeException("Fail to launch server", e);
 		}
 	}
 	
