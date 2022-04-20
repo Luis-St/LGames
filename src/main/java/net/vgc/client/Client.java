@@ -36,7 +36,7 @@ import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
-import net.vgc.network.packet.account.ClientLogoutExitPacket;
+import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
@@ -297,7 +297,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	
 	public void disconnectAccount() {
 		if (this.isAccountConnected()) {
-			this.accountConnection.send(new ClientLogoutExitPacket(this.account));
+			this.accountConnection.send(new ClientExitPacket(this.account));
 		}
 		this.accountConnection = null;
 		if (this.accountChannel != null) {

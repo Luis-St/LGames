@@ -5,15 +5,15 @@ import net.vgc.account.network.AccountServerPacketListener;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.packet.Packet;
 
-public class ClientLogoutExitPacket implements Packet<AccountServerPacketListener> {
+public class ClientExitPacket implements Packet<AccountServerPacketListener> {
 	
 	protected final PlayerAccount account;
 	
-	public ClientLogoutExitPacket(PlayerAccount account) {
+	public ClientExitPacket(PlayerAccount account) {
 		this.account = account == null ? PlayerAccount.UNKNOWN : account;
 	}
 	
-	public ClientLogoutExitPacket(FriendlyByteBuffer buffer) {
+	public ClientExitPacket(FriendlyByteBuffer buffer) {
 		this.account = buffer.readAccount();
 	}
 	
