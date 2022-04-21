@@ -77,6 +77,13 @@ public class Test {
 			list.add(new Translation("screen.multiplayer.connect", "Connect"));
 			list.add(new Translation("settings.language.name", "Language"));
 			list.add(new Translation("settings.language.description", "Language for the user interface"));
+			list.add(new Translation("server.window.server", "Server"));
+			list.add(new Translation("server.window.server_host", "Server host: %1%"));
+			list.add(new Translation("server.window.server_port", "Server port: %1%"));
+			list.add(new Translation("server.window.players", "Players"));
+			list.add(new Translation("server.window.player", "%1%'s player"));
+			list.add(new Translation("server.window.player_name", "Name: %1%"));
+			list.add(new Translation("server.window.player_uuid", "Id: %1%"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -125,6 +132,13 @@ public class Test {
 			list.add(new Translation("screen.multiplayer.connect", "Verbinden"));
 			list.add(new Translation("settings.language.name", "Sprache"));
 			list.add(new Translation("settings.language.description", "Sprache für die Benutzeroberfläche"));
+			list.add(new Translation("server.window.server", "Server"));
+			list.add(new Translation("server.window.server_host", "Server host: %1%"));
+			list.add(new Translation("server.window.server_port", "Server port: %1%"));
+			list.add(new Translation("server.window.players", "Spieler"));
+			list.add(new Translation("server.window.player", "%1%'s spieler"));
+			list.add(new Translation("server.window.player_name", "Name: %1%"));
+			list.add(new Translation("server.window.player_uuid", "Id: %1%"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

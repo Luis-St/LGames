@@ -52,6 +52,7 @@ public class Server extends GameApplication implements Tickable {
 		}
 		if (!Files.exists(this.gameDirectory)) {
 			Files.createDirectories(this.gameDirectory);
+			LOGGER.debug("Create server directory");
 		}
 		if (set.has(resourceDir)) {
 			this.resourceDirectory = set.valueOf(resourceDir).toPath();
@@ -60,9 +61,9 @@ public class Server extends GameApplication implements Tickable {
 			this.resourceDirectory = this.gameDirectory.resolve("assets");
 			LOGGER.warn("No resource directory set, use the default directory {}", this.gameDirectory);
 		}
-		if (!Files.exists(this.gameDirectory)) {
-			Files.createDirectories(this.gameDirectory);
-			LOGGER.debug("Create client directory");
+		if (!Files.exists(this.resourceDirectory)) {
+			Files.createDirectories(this.resourceDirectory);
+			LOGGER.debug("Create resource directory");
 		}
 		if (set.has(host)) {
 			this.host = set.valueOf(host);
@@ -84,22 +85,23 @@ public class Server extends GameApplication implements Tickable {
 				LOGGER.info("Fail to get language, since the {} language does not exists or is not load", set.valueOf(language));
 			}
 		}
-		this.createServer();
-		this.launchServer();
 	}
 	
-	protected void createServer() throws Exception {
-		this.server = new DedicatedServer(this.host, this.port, this.gameDirectory);
-		this.server.init();
-		this.server.displayServer(this.stage);
-	}
-	
-	protected void launchServer() {
+	@Override
+	protected void setupStage() {
+		try {
+			this.server = new DedicatedServer(this.host, this.port, this.gameDirectory);
+			this.server.init();
+			this.server.displayServer(this.stage);
+		} catch (Exception e) {
+			LOGGER.error("Something went wrong while creating virtual game collection server");
+			throw new RuntimeException("Fail to creating virtual game collection server", e);
+		}
 		try {
 			this.server.startServer();
 		} catch (Exception e) {
-			LOGGER.error("Something went wrong while launching the server");
-			throw new RuntimeException("Fail to launch server", e);
+			LOGGER.error("Something went wrong while launching virtual game collection server");
+			throw new RuntimeException("Fail to launch virtual game collection server", e);
 		}
 	}
 	
