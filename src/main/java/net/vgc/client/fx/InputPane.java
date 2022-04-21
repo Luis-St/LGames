@@ -31,4 +31,12 @@ public class InputPane extends GridPane {
 		return this.inputField;
 	}
 	
+	public String getText() {
+		return this.inputField.getText();
+	}
+	
+	public void setText(String text) {
+		this.inputField.setText(text);
+	}
+	
 }

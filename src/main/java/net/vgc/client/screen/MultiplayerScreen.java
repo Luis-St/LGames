@@ -1,12 +1,22 @@
 package net.vgc.client.screen;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ButtonBox;
+import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.InputPane;
+import net.vgc.client.window.LoginWindow;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.Connection;
+import net.vgc.network.packet.Packet;
+import net.vgc.network.packet.server.ClientJoinPacket;
+import net.vgc.util.Util;
 
 public class MultiplayerScreen extends Screen {
 	
@@ -29,7 +39,42 @@ public class MultiplayerScreen extends Screen {
 	}
 	
 	protected void handleConnect() {
-		LOGGER.debug("Connect");
+		if (this.client.isLoggedIn()) {
+			String host = StringUtils.trimToEmpty(this.hostInputPane.getText());
+			String port = StringUtils.trimToEmpty(this.portInputPane.getText());
+			if (host.isEmpty() && port.isEmpty()) {
+				this.hostInputPane.setText("localhost");
+				FxAnimationUtil.makeEmptyText(this.portInputPane.getInputField(), 750);
+			} else if (host.isEmpty()) {
+				this.hostInputPane.setText("localhost");
+			} else if (port.isEmpty()) {
+				FxAnimationUtil.makeEmptyText(this.portInputPane.getInputField(), 750);
+			} else {
+				PlayerAccount account = this.client.getAccount();
+				this.connectAndSend(host, Integer.valueOf(port), new ClientJoinPacket(account.getName(), account.getUUID()));
+			}
+		} else {
+			if (this.client.getLoginWindow() == null)  {
+				LoginWindow window = new LoginWindow(this.client, new Stage());
+				window.show();
+			}
+		}
+	}
+	
+	protected void connectAndSend(String host, int port, Packet<?> packet) {
+		try {
+			this.client.connectServer(host, port);
+		} catch (Exception e) {
+			LOGGER.warn("Fail to connect to virtual game collection serverr", e);
+		}
+		Util.runDelayed("DelayedPacketSender", 1000, () -> {
+			Connection connection = this.client.getServerConnection();
+			if (this.client.isServerConnected()) {
+				connection.send(packet);
+			} else {
+				LOGGER.warn("Unable to send Packet of type {} to virtual game collection server, since connection is closed", packet.getClass().getSimpleName());
+			}
+		});
 	}
 	
 	protected void handleBack() {

@@ -280,7 +280,7 @@ public class AccountServer extends GameApplication {
 		if (this.channels.contains(connection.getChannel()) && this.connections.contains(connection)) {
 			this.channels.remove(connection.getChannel());
 			this.connections.remove(connection);
-			LOGGER.debug("Remove channel annd connection for client {}", adress);
+			LOGGER.debug("Remove channel and connection for client {}", adress);
 		}
 		LOGGER.debug("Client disconnected with adress {}", adress);
 	}

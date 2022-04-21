@@ -17,6 +17,8 @@ import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
+import net.vgc.network.packet.server.ClientJoinPacket;
+import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 
@@ -31,7 +33,8 @@ public class Packets {
 		map.put(i++, ClientLoggedInPacket.class);
 		map.put(i++, ClientLoggedOutPacket.class);
 		map.put(i++, ClientExitPacket.class);
-
+		map.put(i++, ClientJoinPacket.class);
+		map.put(i++, ClientLeavePacket.class);
 	});
 	
 	@Nullable

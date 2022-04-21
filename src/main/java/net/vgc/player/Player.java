@@ -1,6 +1,5 @@
 package net.vgc.player;
 
-import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.util.Tickable;
 
 public abstract class Player implements Tickable {
@@ -11,16 +10,8 @@ public abstract class Player implements Tickable {
 		this.gameProfile = gameProfile;
 	}
 	
-	public void load(CompoundTag tag) {
-		
-	}
-	
 	public GameProfile getGameProfile() {
 		return this.gameProfile;
-	}
-	
-	public CompoundTag save() {
-		return new CompoundTag();
 	}
 	
 	@Override

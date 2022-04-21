@@ -67,11 +67,20 @@ public abstract class AbstractServer implements Tickable {
 		this.playerList.addPlayer(connection, player);
 		if (this.admin != null && this.admin.equals(gameProfile.getUUID())) {
 			if (this.adminPlayer == null) {
+				LOGGER.info("Server admin joined the server");
 				this.adminPlayer = player;
 			} else {
 				LOGGER.error("Unable to set admin Player to {}, since he is already set {}", player, this.adminPlayer);
 				throw new IllegalStateException("Multiple server admins are not allowed");
 			}
+		}
+	}
+	
+	public void leavePlayer(Connection connection, ServerPlayer player) {
+		this.playerList.removePlayer(player);
+		if (this.admin != null && this.admin.equals(player.getGameProfile().getUUID()) && this.adminPlayer != null) {
+			LOGGER.info("Server admin left the server");
+			this.adminPlayer = null;
 		}
 	}
 	
@@ -98,7 +107,7 @@ public abstract class AbstractServer implements Tickable {
 	
 	@Nullable
 	public ServerPlayer getAdminPlayer() {
-		if (this.playerList != null) {
+		if (this.playerList != null && this.adminPlayer == null) {
 			this.adminPlayer = this.playerList.getPlayer(this.admin);
 		}
 		return this.adminPlayer;
@@ -109,6 +118,8 @@ public abstract class AbstractServer implements Tickable {
 	}
 	
 	public void stopServer() {
+		this.adminPlayer = null;
+		this.playerList.removeAllPlayers();
 		this.save();
 	}
 	

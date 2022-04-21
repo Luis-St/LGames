@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -37,6 +38,7 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
 import net.vgc.network.packet.account.ClientExitPacket;
+import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
@@ -56,6 +58,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	protected boolean safeLoading;
 	protected LoginWindow loginWindow;
 	protected PlayerAccount account;
+	protected UUID clientId;
 	protected ClientSettings settings;
 	protected String accountHost;
 	protected int accountPort;
@@ -222,6 +225,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	public void login(PlayerAccount account) {
 		LOGGER.info("Login with account: {}", account);
 		this.account = account;
+		this.clientId = account.getUUID();
 	}
 	
 	public void logout() {
@@ -257,7 +261,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	
 	public void disconnectServer() {
 		if (this.isServerConnected()) {
-			// TODO: send
+			this.serverConnection.send(new ClientLeavePacket(this.clientId));
 		}
 		this.serverConnection = null;
 		if (this.serverChannel != null) {

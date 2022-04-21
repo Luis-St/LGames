@@ -57,7 +57,7 @@ task clientRun(type:JavaExec) {
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("src/main/resources/assets"), "--serverHost", "localhost", "--serverPort", "8080", "--accountHost", "localhost", "--accountPort", "8081")
+	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("src/main/resources/assets"), "--accountHost", "localhost", "--accountPort", "8081")
 	args("--instantLoading", "true", "--safeLoading", "false")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
