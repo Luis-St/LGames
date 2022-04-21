@@ -6,7 +6,7 @@ import net.vgc.common.LoginType;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.packet.Packet;
 
-public class ClientLoggedInPacket implements Packet<ClientPacketListener> {
+public class ClientLoggedInPacket implements Packet<ClientPacketListener>, ClientPacket {
 	
 	protected final LoginType loginType;
 	protected final PlayerAccountInfo accountInfo;

@@ -7,7 +7,7 @@ import net.vgc.network.packet.Packet;
 import net.vgc.server.network.ServerPacketListener;
 import net.vgc.util.Util;
 
-public class ClientLeavePacket implements Packet<ServerPacketListener> {
+public class ClientLeavePacket implements Packet<ServerPacketListener>, ServerPacket {
 	
 	protected final UUID uuid;
 	

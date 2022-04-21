@@ -5,7 +5,7 @@ import net.vgc.account.network.AccountServerPacketListener;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.packet.Packet;
 
-public class ClientExitPacket implements Packet<AccountServerPacketListener> {
+public class ClientExitPacket implements Packet<AccountServerPacketListener>, AccountPacket {
 	
 	protected final PlayerAccount account;
 	
