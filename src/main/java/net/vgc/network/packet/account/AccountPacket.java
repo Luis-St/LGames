@@ -1,5 +1,8 @@
 package net.vgc.network.packet.account;
 
-public interface AccountPacket {
+import net.vgc.account.network.AccountServerPacketListener;
+import net.vgc.network.packet.Packet;
+
+public interface AccountPacket extends Packet<AccountServerPacketListener> {
 
 }

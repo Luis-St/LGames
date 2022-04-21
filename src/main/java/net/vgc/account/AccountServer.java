@@ -49,7 +49,7 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
 
-public class AccountServer extends GameApplication {
+public class AccountServer extends GameApplication<AccountServerPacketListener> {
 	
 	public static AccountServer getInstance() {
 		if (NetworkSide.ACCOUNT_SERVER.isOn()) {

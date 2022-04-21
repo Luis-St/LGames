@@ -4,9 +4,8 @@ import net.vgc.account.PlayerAccountInfo;
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.common.LoginType;
 import net.vgc.network.FriendlyByteBuffer;
-import net.vgc.network.packet.Packet;
 
-public class ClientLoggedInPacket implements Packet<ClientPacketListener>, ClientPacket {
+public class ClientLoggedInPacket implements ClientPacket {
 	
 	protected final LoginType loginType;
 	protected final PlayerAccountInfo accountInfo;

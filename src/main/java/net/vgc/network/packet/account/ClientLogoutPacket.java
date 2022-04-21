@@ -3,9 +3,8 @@ package net.vgc.network.packet.account;
 import net.vgc.account.PlayerAccount;
 import net.vgc.account.network.AccountServerPacketListener;
 import net.vgc.network.FriendlyByteBuffer;
-import net.vgc.network.packet.Packet;
 
-public class ClientLogoutPacket implements Packet<AccountServerPacketListener>, AccountPacket {
+public class ClientLogoutPacket implements AccountPacket {
 	
 	protected final PlayerAccount account;
 	

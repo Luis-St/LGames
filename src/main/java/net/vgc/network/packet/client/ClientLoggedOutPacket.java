@@ -3,9 +3,8 @@ package net.vgc.network.packet.client;
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.common.InfoResult;
 import net.vgc.network.FriendlyByteBuffer;
-import net.vgc.network.packet.Packet;
 
-public class ClientLoggedOutPacket implements Packet<ClientPacketListener>, ClientPacket {
+public class ClientLoggedOutPacket implements ClientPacket {
 	
 	protected final InfoResult infoResult;
 	

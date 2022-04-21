@@ -3,10 +3,9 @@ package net.vgc.network.packet.server;
 import java.util.UUID;
 
 import net.vgc.network.FriendlyByteBuffer;
-import net.vgc.network.packet.Packet;
 import net.vgc.server.network.ServerPacketListener;
 
-public class ClientJoinPacket implements Packet<ServerPacketListener>, ServerPacket {
+public class ClientJoinPacket implements ServerPacket {
 	
 	protected final String name;
 	protected final UUID uuid;

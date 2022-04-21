@@ -3,11 +3,10 @@ package net.vgc.network.packet.server;
 import java.util.UUID;
 
 import net.vgc.network.FriendlyByteBuffer;
-import net.vgc.network.packet.Packet;
 import net.vgc.server.network.ServerPacketListener;
 import net.vgc.util.Util;
 
-public class ClientLeavePacket implements Packet<ServerPacketListener>, ServerPacket {
+public class ClientLeavePacket implements ServerPacket {
 	
 	protected final UUID uuid;
 	
