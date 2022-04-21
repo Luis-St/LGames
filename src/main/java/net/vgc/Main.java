@@ -26,6 +26,7 @@ public class Main {
 	 *  - super class for Windows
 	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
+	 *  - rework of PacketHandler avoid double handling of Packets
 	 */
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);

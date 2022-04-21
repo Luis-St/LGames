@@ -10,9 +10,11 @@ import net.vgc.client.fx.InputHandler;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Showable;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.packet.PacketHandler;
+import net.vgc.network.packet.client.ClientScreenUpdatePacket;
 import net.vgc.util.Tickable;
 
-public abstract class Screen implements Showable, Tickable, InputHandler {
+public abstract class Screen implements Showable, Tickable, InputHandler, PacketHandler<ClientScreenUpdatePacket> {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
 	
@@ -32,6 +34,11 @@ public abstract class Screen implements Showable, Tickable, InputHandler {
 	
 	@Override
 	public void tick() {
+		
+	}
+	
+	@Override
+	public void handlePacket(ClientScreenUpdatePacket packet) {
 		
 	}
 	

@@ -1,5 +1,8 @@
 package net.vgc.network.packet.server;
 
-public interface ServerPacket {
+import net.vgc.network.packet.Packet;
+import net.vgc.server.network.ServerPacketListener;
+
+public interface ServerPacket extends Packet<ServerPacketListener> {
 
 }

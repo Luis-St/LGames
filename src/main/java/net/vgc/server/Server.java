@@ -16,10 +16,11 @@ import net.vgc.language.Languages;
 import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.network.ServerPacketListener;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
-public class Server extends GameApplication implements Tickable {
+public class Server extends GameApplication<ServerPacketListener> implements Tickable {
 	
 	public static Server getInstance() {
 		if (NetworkSide.SERVER.isOn()) {

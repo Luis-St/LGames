@@ -19,12 +19,15 @@ import net.vgc.data.DataHandler;
 import net.vgc.language.LanguageProvider;
 import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
+import net.vgc.network.packet.Packet;
+import net.vgc.network.packet.PacketHandler;
+import net.vgc.network.packet.PacketListener;
 
-public abstract class GameApplication extends Application implements DataHandler {
+public abstract class GameApplication<T extends PacketListener> extends Application implements DataHandler, PacketHandler<Packet<T>> {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	protected static final boolean NATIVE = Epoll.isAvailable();
-	protected static GameApplication instance;
+	protected static GameApplication<?> instance;
 	
 	protected Stage stage;
 	protected Random rng;
@@ -84,6 +87,11 @@ public abstract class GameApplication extends Application implements DataHandler
 	protected abstract String getVersion();
 	
 	public abstract NetworkSide getNetworkSide();
+	
+	@Override
+	public void handlePacket(Packet<T> packet) {
+		
+	}
 	
 	@Nullable
 	protected Timeline getTicker() {

@@ -2,6 +2,7 @@ package net.vgc.network.packet;
 
 import javafx.application.Platform;
 import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.Network;
 
 public interface Packet<T extends PacketListener> {
 	
@@ -10,9 +11,11 @@ public interface Packet<T extends PacketListener> {
 	default void handleLater(T listener) {
 		if (Platform.isFxApplicationThread()) {
 			this.handle(listener);
+			Network.INSTANCE.handlePacket(this);
 		} else {
 			Platform.runLater(() -> {
 				this.handle(listener);
+				Network.INSTANCE.handlePacket(this);
 			});
 		}
 	}

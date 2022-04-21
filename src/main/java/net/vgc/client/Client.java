@@ -37,12 +37,14 @@ import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
+import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientExitPacket;
+import net.vgc.network.packet.client.ClientScreenUpdatePacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
-public class Client extends GameApplication implements Tickable, Screenable {
+public class Client extends GameApplication<ClientPacketListener> implements Tickable, Screenable {
 	
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
@@ -195,6 +197,19 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	@Override
 	public NetworkSide getNetworkSide() {
 		return NetworkSide.CLIENT;
+	}
+	
+	@Override
+	public void handlePacket(Packet<ClientPacketListener> packet) {
+		if (packet instanceof ClientScreenUpdatePacket screenUpdate) {
+			Scene scene = this.stage.getScene();
+			if (scene != null && scene instanceof ScreenScene screenScene) {
+				Screen screen = screenScene.getScreen();
+				if (screen != null && screen.getClass() == screenUpdate.getScreen()) {
+					screen.handlePacket(screenUpdate);
+				}
+			}
+		}
 	}
 	
 	@Override
