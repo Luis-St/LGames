@@ -68,6 +68,7 @@ task serverRun(type:JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--server", "--gameDir", file('run/server'), "--resourceDir", file('src/main/resources/assets'), "--host", "localhost", "--port", "8080", "--language", "en_us")
+	args("--admin", "00000000-aae0-9a05-0000-000061e6a80d")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 

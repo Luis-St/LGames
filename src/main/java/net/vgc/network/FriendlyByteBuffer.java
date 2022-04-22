@@ -9,6 +9,7 @@ import net.vgc.account.PlayerAccount;
 import net.vgc.account.PlayerAccountInfo;
 import net.vgc.common.InfoResult;
 import net.vgc.common.Result;
+import net.vgc.player.GameProfile;
 
 public class FriendlyByteBuffer {
 	
@@ -139,6 +140,15 @@ public class FriendlyByteBuffer {
 		InfoResult info = this.readInfoResult();
 		PlayerAccount account = this.readAccount();
 		return new PlayerAccountInfo(info, account);
+	}
+	
+	public void writeGameProfile(GameProfile value) {
+		this.writeString(value.getName());
+		this.writeUUID(value.getUUID());
+	}
+	
+	public GameProfile readGameProfile() {
+		return new GameProfile(this.readString(), this.readUUID());
 	}
 	
 	public ByteBuf toBuffer() {

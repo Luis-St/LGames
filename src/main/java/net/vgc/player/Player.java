@@ -10,8 +10,15 @@ public abstract class Player implements Tickable {
 		this.gameProfile = gameProfile;
 	}
 	
+	public abstract boolean isClient();
+	
 	public GameProfile getGameProfile() {
 		return this.gameProfile;
+	}
+	
+	@Override
+	public void tick() {
+		
 	}
 	
 	@Override

@@ -80,10 +80,16 @@ public class Test {
 			list.add(new Translation("server.window.server", "Server"));
 			list.add(new Translation("server.window.server_host", "Server host: %1%"));
 			list.add(new Translation("server.window.server_port", "Server port: %1%"));
+			list.add(new Translation("server.window.server_admin", "Server admin: %1%"));
 			list.add(new Translation("server.window.players", "Players"));
 			list.add(new Translation("server.window.player", "%1%'s player"));
 			list.add(new Translation("server.window.player_name", "Name: %1%"));
 			list.add(new Translation("server.window.player_uuid", "Id: %1%"));
+			list.add(new Translation("server.window.player_admin", "Admin: %1%"));
+			list.add(new Translation("screen.lobby.game", "Game"));
+			list.add(new Translation("screen.lobby.leave", "Leave"));
+			list.add(new Translation("screen.lobby.remote_player", "%1%"));
+			list.add(new Translation("screen.lobby.local_player", "%1% (You)"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -135,10 +141,16 @@ public class Test {
 			list.add(new Translation("server.window.server", "Server"));
 			list.add(new Translation("server.window.server_host", "Server host: %1%"));
 			list.add(new Translation("server.window.server_port", "Server port: %1%"));
+			list.add(new Translation("server.window.server_admin", "Server Administrator: %1%"));
 			list.add(new Translation("server.window.players", "Spieler"));
 			list.add(new Translation("server.window.player", "%1%'s spieler"));
 			list.add(new Translation("server.window.player_name", "Name: %1%"));
 			list.add(new Translation("server.window.player_uuid", "Id: %1%"));
+			list.add(new Translation("server.window.player_admin", "Administrator: %1%"));
+			list.add(new Translation("screen.lobby.game", "Spiel"));
+			list.add(new Translation("screen.lobby.leave", "Verlassen"));
+			list.add(new Translation("screen.lobby.remote_player", "%1%"));
+			list.add(new Translation("screen.lobby.local_player", "%1% (Du)"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

@@ -15,8 +15,12 @@ import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
+import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
+import net.vgc.network.packet.client.ClientPlayerAddPacket;
+import net.vgc.network.packet.client.ClientPlayerRemovePacket;
+import net.vgc.network.packet.client.ServerClosedPacket;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.util.ReflectionHelper;
@@ -35,6 +39,10 @@ public class Packets {
 		map.put(i++, ClientExitPacket.class);
 		map.put(i++, ClientJoinPacket.class);
 		map.put(i++, ClientLeavePacket.class);
+		map.put(i++, ClientJoinedPacket.class);
+		map.put(i++, ClientPlayerAddPacket.class);
+		map.put(i++, ClientPlayerRemovePacket.class);
+		map.put(i++, ServerClosedPacket.class);
 	});
 	
 	@Nullable

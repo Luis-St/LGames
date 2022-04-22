@@ -43,10 +43,10 @@ public class MultiplayerScreen extends Screen {
 			String host = StringUtils.trimToEmpty(this.hostInputPane.getText());
 			String port = StringUtils.trimToEmpty(this.portInputPane.getText());
 			if (host.isEmpty() && port.isEmpty()) {
-				this.hostInputPane.setText("localhost");
+				this.hostInputPane.setText("127.0.0.1");
 				FxAnimationUtil.makeEmptyText(this.portInputPane.getInputField(), 750);
 			} else if (host.isEmpty()) {
-				this.hostInputPane.setText("localhost");
+				this.hostInputPane.setText("127.0.0.1");
 			} else if (port.isEmpty()) {
 				FxAnimationUtil.makeEmptyText(this.portInputPane.getInputField(), 750);
 			} else {

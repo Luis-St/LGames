@@ -1,12 +1,19 @@
 package net.vgc.client.network;
 
+import java.util.List;
+
 import net.vgc.account.PlayerAccountInfo;
 import net.vgc.client.Client;
+import net.vgc.client.player.LocalPlayer;
+import net.vgc.client.player.RemotePlayer;
+import net.vgc.client.screen.LobbyScreen;
+import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.common.InfoResult;
 import net.vgc.common.LoginType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
+import net.vgc.player.GameProfile;
 
 public class ClientPacketListener extends AbstractPacketListener {
 	
@@ -84,6 +91,44 @@ public class ClientPacketListener extends AbstractPacketListener {
 		} else {
 			LOGGER.warn("Fail to log out: {}", infoResult.info());
 		}
+	}
+	
+	public void handleClientJoined(List<GameProfile> gameProfiles) {
+		for (GameProfile gameProfile : gameProfiles) {
+			if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
+				this.client.setPlayer(new LocalPlayer(gameProfile));
+			} else {
+				this.client.addRemotePlayer(new RemotePlayer(gameProfile));
+			}
+		}
+		this.client.setScreen(new LobbyScreen());
+	}
+	
+	public void handleClientPlayerAdd(GameProfile gameProfile) {
+		if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
+			if (this.client.getPlayer() == null) {
+				LOGGER.warn("The local player is not set, that was not supposed to be");
+				this.client.setPlayer(new LocalPlayer(gameProfile));
+			} else {
+				LOGGER.warn("The local player is already set to {}, but there is another player with the same id {}", this.client.getPlayer().getGameProfile(), gameProfile);
+			}
+		} else {
+			this.client.addRemotePlayer(new RemotePlayer(gameProfile));
+		}
+	}
+	
+	public void handleClientPlayerRemove(GameProfile gameProfile) {
+		if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
+			this.client.removePlayer();
+		} else {
+			this.client.removeRemotePlayer(new RemotePlayer(gameProfile));
+		}
+	}
+	
+	public void handleServerClosed() {
+		this.client.getServerConnection().close();
+		this.client.removePlayer();
+		this.client.setScreen(new MenuScreen());
 	}
 	
 }

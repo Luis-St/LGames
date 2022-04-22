@@ -11,10 +11,10 @@ import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Showable;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientScreenUpdatePacket;
+import net.vgc.network.packet.client.ClientScreenPacket;
 import net.vgc.util.Tickable;
 
-public abstract class Screen implements Showable, Tickable, InputHandler, PacketHandler<ClientScreenUpdatePacket> {
+public abstract class Screen implements Showable, Tickable, InputHandler, PacketHandler<ClientScreenPacket> {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
 	
@@ -22,7 +22,6 @@ public abstract class Screen implements Showable, Tickable, InputHandler, Packet
 	public String title = TranslationKey.createAndGet("client.constans.name");
 	public int width = 600;
 	public int height = 600;
-	public boolean shouldCenter = true;
 	
 	public Screen() {
 		this.client = Client.getInstance();
@@ -38,7 +37,7 @@ public abstract class Screen implements Showable, Tickable, InputHandler, Packet
 	}
 	
 	@Override
-	public void handlePacket(ClientScreenUpdatePacket packet) {
+	public void handlePacket(ClientScreenPacket clientPacket) {
 		
 	}
 	

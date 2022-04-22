@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -25,6 +27,9 @@ import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
 import net.vgc.client.network.ClientPacketListener;
+import net.vgc.client.player.AbstractClientPlayer;
+import net.vgc.client.player.LocalPlayer;
+import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LoadingScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.screen.Screen;
@@ -39,7 +44,7 @@ import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientExitPacket;
-import net.vgc.network.packet.client.ClientScreenUpdatePacket;
+import net.vgc.network.packet.client.ClientScreenPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
@@ -56,11 +61,12 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	protected final Timeline ticker = Util.createTicker("ClientTicker", this);
 	protected final EventLoopGroup serverGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final EventLoopGroup accountGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+	protected final List<AbstractClientPlayer> players = Lists.newArrayList();
 	protected boolean instantLoading;
 	protected boolean safeLoading;
 	protected LoginWindow loginWindow;
 	protected PlayerAccount account;
-	protected UUID clientId;
+	protected LocalPlayer player;
 	protected ClientSettings settings;
 	protected String accountHost;
 	protected int accountPort;
@@ -156,6 +162,7 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 		if (this.stage != null && this.stage.getScene() instanceof ScreenScene screenScene) {
 			screenScene.tick();
 		}
+		this.players.forEach(AbstractClientPlayer::tick);
 	}
 	
 	@Override
@@ -165,9 +172,6 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 			this.stage.setTitle(screen.title);
 		} else if (!this.stage.getTitle().trim().isEmpty()) {
 			this.stage.setTitle("");
-		}
-		if (screen.shouldCenter) {
-			this.stage.centerOnScreen();
 		}
 		this.setScene(screen.show());
 	}
@@ -201,11 +205,11 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	
 	@Override
 	public void handlePacket(Packet<ClientPacketListener> packet) {
-		if (packet instanceof ClientScreenUpdatePacket screenUpdate) {
+		if (packet instanceof ClientScreenPacket screenUpdate) {
 			Scene scene = this.stage.getScene();
 			if (scene != null && scene instanceof ScreenScene screenScene) {
 				Screen screen = screenScene.getScreen();
-				if (screen != null && screen.getClass() == screenUpdate.getScreen()) {
+				if (screen != null && screenUpdate.getScreens().contains(screen.getClass())) {
 					screen.handlePacket(screenUpdate);
 				}
 			}
@@ -240,7 +244,6 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	public void login(PlayerAccount account) {
 		LOGGER.info("Login with account: {}", account);
 		this.account = account;
-		this.clientId = account.getUUID();
 	}
 	
 	public void logout() {
@@ -249,6 +252,44 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	
 	public boolean isLoggedIn() {
 		return this.account != null;
+	}
+	
+	public LocalPlayer getPlayer() {
+		return this.player;
+	}
+	
+	public void setPlayer(LocalPlayer player) {
+		if (this.player == null && player != null) {
+			LOGGER.info("Add local player {}", player.getGameProfile().getName());
+			this.player = player;
+			this.players.add(player);
+		} else {
+			this.removePlayer();
+		}
+	}
+	
+	public void removePlayer() {
+		if (this.player != null) {
+			LOGGER.info("Remove local player");
+			this.player = null;
+		}
+		LOGGER.info("Remove all remote players");
+		this.players.clear();
+		this.disconnectServer();
+	}
+	
+	public List<AbstractClientPlayer> getPlayers() {
+		return this.players;
+	}
+	
+	public void addRemotePlayer(RemotePlayer player) {
+		this.players.add(player);
+		LOGGER.info("Add remote player {}", player.getGameProfile().getName());
+	}
+	
+	public void removeRemotePlayer(RemotePlayer player) {
+		this.players.remove(player);
+		LOGGER.info("Remove remote player {}", player.getGameProfile().getName());
 	}
 	
 	public ClientSettings getSettings() {
@@ -267,7 +308,7 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 					pipeline.addLast("handler", Client.this.serverConnection);
 				}
 			}).connect(host, port).sync().channel();
-			LOGGER.info("Start connection to account server on host {} with port {}", host, port);
+			LOGGER.info("Start connection to virtual game collection server on host {} with port {}", host, port);
 		} catch (Exception e) {
 			LOGGER.error("Fail to start connection to virtual game collection server on host {} with port {}", host, port);
 			throw new RuntimeException(e);
@@ -275,15 +316,21 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	}
 	
 	public void disconnectServer() {
-		if (this.isServerConnected()) {
-			this.serverConnection.send(new ClientLeavePacket(this.clientId));
-		}
-		this.serverConnection = null;
-		if (this.serverChannel != null) {
-			this.serverChannel.closeFuture();
-		}
-		if (this.serverGroup != null) {
-			this.serverGroup.shutdownGracefully();
+		try {
+			if (this.serverChannel != null && this.isServerConnected()) {
+				this.serverConnection.send(new ClientLeavePacket(this.account != null ? this.account.getUUID() : null));
+			}
+			this.serverConnection = null;
+			if (this.serverChannel != null) {
+				this.serverChannel.closeFuture();
+			}
+			if (this.serverGroup != null) {
+				this.serverGroup.shutdownGracefully();
+			}
+			LOGGER.info("Close connection to virtual game collection server");
+		} catch (Exception e) {
+			LOGGER.error("Fail to close connection to virtual game collection server");
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -315,15 +362,21 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	}
 	
 	public void disconnectAccount() {
-		if (this.isAccountConnected()) {
-			this.accountConnection.send(new ClientExitPacket(this.account));
-		}
-		this.accountConnection = null;
-		if (this.accountChannel != null) {
-			this.accountChannel.closeFuture();
-		}
-		if (this.accountGroup != null) {
-			this.accountGroup.shutdownGracefully();
+		try {
+			if (this.isAccountConnected()) {
+				this.accountConnection.send(new ClientExitPacket(this.account));
+			}
+			this.accountConnection = null;
+			if (this.accountChannel != null) {
+				this.accountChannel.closeFuture();
+			}
+			if (this.accountGroup != null) {
+				this.accountGroup.shutdownGracefully();
+			}
+			LOGGER.info("Close connection to account server");
+		} catch (Exception e) {
+			LOGGER.error("Fail to close connection to account server");
+			throw new RuntimeException(e);
 		}
 	}
 	

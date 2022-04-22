@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
@@ -32,7 +31,6 @@ import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
-import net.vgc.player.GameProfile;
 import net.vgc.server.AbstractServer;
 import net.vgc.server.network.ServerPacketListener;
 import net.vgc.server.player.ServerPlayer;
@@ -83,6 +81,7 @@ public class DedicatedServer extends AbstractServer {
 		TreeItem<String> treeItem = new TreeItem<String>(TranslationKey.createAndGet("server.window.server"));
 		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_host", this.host)));
 		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_port", this.port)));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_admin", this.admin)));
 		this.playersTreeItem = new TreeItem<String>(TranslationKey.createAndGet("server.window.players"));
 		for (ServerPlayer player : this.playerList.getPlayers()) {
 			this.playersTreeItem.getChildren().add(player.display());
@@ -111,7 +110,6 @@ public class DedicatedServer extends AbstractServer {
 		for (ServerPlayer player : this.playerList.getPlayers()) {
 			this.playersTreeItem.getChildren().add(player.display());
 		}
-		this.playersTreeItem.getChildren().add(new ServerPlayer(new GameProfile("Test", UUID.randomUUID())).display());
 	}
 
 	@Override
@@ -145,7 +143,7 @@ public class DedicatedServer extends AbstractServer {
 	}
 	
 	@Override
-	public void stopServer() {
+	public void stopServer() throws Exception {
 		super.stopServer();
 		this.connections.clear();
 		this.channels.forEach(Channel::close);
@@ -154,8 +152,12 @@ public class DedicatedServer extends AbstractServer {
 	}
 
 	@Override
-	protected void save() {
-		
+	protected CompoundTag save() {
+		CompoundTag tag = new CompoundTag();
+		if (this.admin != null)  {
+			tag.putCompound("admin", TagUtil.writeUUID(this.admin));
+		}
+		return tag;
 	}
 
 }

@@ -2,16 +2,20 @@ package net.vgc.server.players;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import net.vgc.network.Connection;
 import net.vgc.network.packet.Packet;
+import net.vgc.network.packet.client.ServerClosedPacket;
+import net.vgc.player.GameProfile;
 import net.vgc.server.AbstractServer;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Tickable;
@@ -34,9 +38,13 @@ public abstract class PlayerList implements Tickable {
 	}
 	
 	public void addPlayer(Connection connection, ServerPlayer player) {
-		player.connection = connection;
-		this.players.add(player);
-		LOGGER.info("Add player {}", player.getGameProfile().getName());
+		if (this.getPlayer(player.getGameProfile().getUUID()) == null) {
+			player.connection = connection;
+			this.players.add(player);
+			LOGGER.info("Add player {}", player.getGameProfile().getName());
+		} else {
+			LOGGER.warn("Fail to add player {}, since the player already exists in the player list", player.getGameProfile().getName());
+		}
 	}
 	
 	public void removePlayer(ServerPlayer player) {
@@ -45,9 +53,10 @@ public abstract class PlayerList implements Tickable {
 	}
 	
 	public void removeAllPlayers() {
+		this.broadcastAll(new ServerClosedPacket());
 		this.players.removeIf((player) -> {
 			LOGGER.info("Remove player {}", player.getGameProfile().getName());
-			if (this.server.getAdmin().equals(player.getGameProfile().getUUID())) {
+			if (Objects.equal(this.server.getAdmin(), player.getGameProfile().getUUID())) {
 				LOGGER.info("Server admin left the server");
 			}
 			return true;
@@ -60,6 +69,10 @@ public abstract class PlayerList implements Tickable {
 	
 	public List<ServerPlayer> getPlayers() {
 		return this.players;
+	}
+	
+	public List<GameProfile> getGameProfiles() {
+		return this.players.stream().map(ServerPlayer::getGameProfile).collect(Collectors.toList());
 	}
 	
 	@Nullable

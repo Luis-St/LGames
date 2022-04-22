@@ -122,6 +122,11 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		}
 	}
 	
+	public void close() {
+		this.channel.close();
+		this.channel = null;
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Connection connection) {

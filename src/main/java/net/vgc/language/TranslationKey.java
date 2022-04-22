@@ -31,7 +31,12 @@ public class TranslationKey {
 		for (int i = 0; i < Lists.newArrayList(objects).size(); i++) {
 			String s = "%" + (i + 1) + "%";
 			if (translation.contains(s)) {
-				translation = translation.replace(s, Lists.newArrayList(objects).get(i).toString());
+				Object object = Lists.newArrayList(objects).get(i);
+				if (object != null) {
+					translation = translation.replace(s, object.toString());
+				} else {
+					translation = translation.replace(s, "null");
+				}
 			}
 		}
 		return translation;

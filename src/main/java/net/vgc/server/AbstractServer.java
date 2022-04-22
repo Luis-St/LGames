@@ -51,7 +51,7 @@ public abstract class AbstractServer implements Tickable {
 			if (loadTag instanceof CompoundTag tag) {
 				this.load(tag);
 			} else {
-				LOGGER.warn("Fail to load server from {}, since Tag {} is not a instance of CompoundTag but it is a Tag of type {}", this.serverDirectory.resolve("server.data"), loadTag, loadTag.getClass().getSimpleName());
+				LOGGER.warn("Fail to load server from {}, since Tag {} is not a instance of CompoundTag but it is a Tag of type {}", path, loadTag, loadTag.getClass().getSimpleName());
 			}
 		}
 	}
@@ -105,6 +105,10 @@ public abstract class AbstractServer implements Tickable {
 		this.admin = admin;
 	}
 	
+	public boolean isAdmin(ServerPlayer player) {
+		return player.getGameProfile().getUUID().equals(this.admin);
+	}
+	
 	@Nullable
 	public ServerPlayer getAdminPlayer() {
 		if (this.playerList != null && this.adminPlayer == null) {
@@ -117,12 +121,13 @@ public abstract class AbstractServer implements Tickable {
 		return this.playerList;
 	}
 	
-	public void stopServer() {
+	public void stopServer() throws Exception {
 		this.adminPlayer = null;
 		this.playerList.removeAllPlayers();
-		this.save();
+		Tag.save(this.serverDirectory.resolve("server.data"), this.save());
+		LOGGER.debug("Save server data");
 	}
 	
-	protected abstract void save();
+	protected abstract CompoundTag save();
 	
 }

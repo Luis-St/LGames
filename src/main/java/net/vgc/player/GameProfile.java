@@ -42,7 +42,7 @@ public class GameProfile implements Serializable {
 		StringBuilder builder = new StringBuilder("GameProfile{");
 		builder.append("name=").append(this.name).append(",");
 		builder.append("uuid=").append(this.uuid).append("}");
-		return super.toString();
+		return builder.toString();
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package net.vgc.server;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
 
 import javafx.animation.Timeline;
 import joptsimple.OptionParser;
@@ -32,6 +33,7 @@ public class Server extends GameApplication<ServerPacketListener> implements Tic
 	protected final Timeline ticker = Util.createTicker("ServerTicker", this);
 	protected String host;
 	protected int port;
+	protected UUID admin;
 	protected DedicatedServer server;
 	
 	@Override
@@ -43,6 +45,7 @@ public class Server extends GameApplication<ServerPacketListener> implements Tic
 		OptionSpec<String> host = parser.accepts("host").withRequiredArg().ofType(String.class);
 		OptionSpec<Integer> port = parser.accepts("port").withRequiredArg().ofType(Integer.class);
 		OptionSpec<String> language = parser.accepts("language").withRequiredArg().ofType(String.class);
+		OptionSpec<String> admin = parser.accepts("admin").withRequiredArg().ofType(String.class);
 		OptionSet set = parser.parse(args);
 		if (set.has(gameDir)) {
 			this.gameDirectory = set.valueOf(gameDir).toPath();
@@ -86,6 +89,14 @@ public class Server extends GameApplication<ServerPacketListener> implements Tic
 				LOGGER.info("Fail to get language, since the {} language does not exists or is not load", set.valueOf(language));
 			}
 		}
+		if (set.has(admin)) {
+			String string = set.valueOf(admin);
+			try {
+				this.admin = UUID.fromString(string);
+			} catch (IllegalArgumentException e) {
+				LOGGER.warn("Fail to create admin id, since the given id {} does not have the correct id formate", string);
+			}
+		}
 	}
 	
 	@Override
@@ -93,6 +104,13 @@ public class Server extends GameApplication<ServerPacketListener> implements Tic
 		try {
 			this.server = new DedicatedServer(this.host, this.port, this.gameDirectory);
 			this.server.init();
+			if (this.admin != null) {
+				if (this.server.getAdmin() == null) {
+					this.server.setAdmin(this.admin);
+				} else if (!this.admin.equals(this.server.getAdmin())) {
+					LOGGER.warn("Fail to set admin to {}, since the admin is already set to {}", this.admin, this.server.getAdmin());
+				}
+			}
 			this.server.displayServer(this.stage);
 		} catch (Exception e) {
 			LOGGER.error("Something went wrong while creating virtual game collection server");
