@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.Screen;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
@@ -34,7 +33,7 @@ public class ClientPlayerRemovePacket implements ClientScreenPacket {
 	
 	@Override
 	public List<Class<? extends Screen>> getScreens() {
-		return Lists.newArrayList(LobbyScreen.class);
+		return Lists.newArrayList();
 	}
 
 }

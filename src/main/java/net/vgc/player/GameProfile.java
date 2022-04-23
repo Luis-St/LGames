@@ -5,8 +5,11 @@ import java.util.UUID;
 import net.vgc.data.serialization.Serializable;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.util.Util;
 
 public class GameProfile implements Serializable {
+	
+	public static final GameProfile EMPTY = new GameProfile("empty", Util.EMPTY_UUID);
 	
 	protected final String name;
 	protected final UUID uuid;

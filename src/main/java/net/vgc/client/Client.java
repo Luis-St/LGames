@@ -209,7 +209,7 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 			Scene scene = this.stage.getScene();
 			if (scene != null && scene instanceof ScreenScene screenScene) {
 				Screen screen = screenScene.getScreen();
-				if (screen != null && screenUpdate.getScreens().contains(screen.getClass())) {
+				if (screen != null && (screenUpdate.getScreens().contains(screen.getClass())) || screenUpdate.receiveAllScreens()) {
 					screen.handlePacket(screenUpdate);
 				}
 			}

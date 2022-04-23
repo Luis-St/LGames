@@ -137,9 +137,9 @@ public class FriendlyByteBuffer {
 	}
 	
 	public PlayerAccountInfo readAccountInfo() {
-		InfoResult info = this.readInfoResult();
+		InfoResult infoResult = this.readInfoResult();
 		PlayerAccount account = this.readAccount();
-		return new PlayerAccountInfo(info, account);
+		return new PlayerAccountInfo(infoResult, account);
 	}
 	
 	public void writeGameProfile(GameProfile value) {
@@ -148,7 +148,9 @@ public class FriendlyByteBuffer {
 	}
 	
 	public GameProfile readGameProfile() {
-		return new GameProfile(this.readString(), this.readUUID());
+		String name = this.readString();
+		UUID uuid = this.readUUID();
+		return new GameProfile(name, uuid);
 	}
 	
 	public ByteBuf toBuffer() {

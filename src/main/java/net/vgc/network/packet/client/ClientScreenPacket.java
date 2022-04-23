@@ -12,6 +12,10 @@ public interface ClientScreenPacket extends ClientPacket {
 		
 	}
 	
+	default boolean receiveAllScreens() {
+		return this.getScreens().isEmpty();
+	}
+	
 	List<Class<? extends Screen>> getScreens();
 	
 }
