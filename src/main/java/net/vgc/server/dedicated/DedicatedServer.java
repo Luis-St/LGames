@@ -102,7 +102,7 @@ public class DedicatedServer extends AbstractServer {
 	}
 	
 	protected void openSettings() {
-		
+		LOGGER.debug("Settings");
 	}
 	
 	public void refreshPlayers() {

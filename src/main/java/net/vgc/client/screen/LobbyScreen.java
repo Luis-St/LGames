@@ -14,6 +14,7 @@ import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPlayerAddPacket;
 import net.vgc.network.packet.client.ClientPlayerRemovePacket;
 import net.vgc.network.packet.client.ClientScreenPacket;
+import net.vgc.network.packet.client.SyncPermissionPacket;
 
 public class LobbyScreen extends Screen {
 	
@@ -54,7 +55,7 @@ public class LobbyScreen extends Screen {
 	
 	@Override
 	public void handlePacket(ClientScreenPacket clientPacket) {
-		if (clientPacket instanceof ClientPlayerAddPacket || clientPacket instanceof ClientPlayerRemovePacket) {
+		if (clientPacket instanceof ClientPlayerAddPacket || clientPacket instanceof ClientPlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			this.refreshPlayers();
 		}
 	}
@@ -63,9 +64,17 @@ public class LobbyScreen extends Screen {
 		this.playerMenu.getItems().clear();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player instanceof LocalPlayer) {
-				this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.local_player", player.getGameProfile().getName())));
+				if (player.isAdmin()) {
+					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.local_player_admin", player.getGameProfile().getName())));
+				} else {
+					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.local_player", player.getGameProfile().getName())));
+				}
 			} else {
-				this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.remote_player", player.getGameProfile().getName())));
+				if (player.isAdmin()) {
+					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.remote_player_admin", player.getGameProfile().getName())));
+				} else {
+					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.remote_player", player.getGameProfile().getName())));
+				}
 			}
 		}
 	}

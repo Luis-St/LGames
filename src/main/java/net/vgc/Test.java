@@ -88,8 +88,10 @@ public class Test {
 			list.add(new Translation("server.window.player_admin", "Admin: %1%"));
 			list.add(new Translation("screen.lobby.game", "Game"));
 			list.add(new Translation("screen.lobby.leave", "Leave"));
-			list.add(new Translation("screen.lobby.remote_player", "%1%"));
 			list.add(new Translation("screen.lobby.local_player", "%1% (You)"));
+			list.add(new Translation("screen.lobby.local_player_admin", "%1% (You) (Admin)"));
+			list.add(new Translation("screen.lobby.remote_player", "%1%"));
+			list.add(new Translation("screen.lobby.remote_player_admin", "%1% (Admin)"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -149,8 +151,10 @@ public class Test {
 			list.add(new Translation("server.window.player_admin", "Administrator: %1%"));
 			list.add(new Translation("screen.lobby.game", "Spiel"));
 			list.add(new Translation("screen.lobby.leave", "Verlassen"));
-			list.add(new Translation("screen.lobby.remote_player", "%1%"));
 			list.add(new Translation("screen.lobby.local_player", "%1% (Du)"));
+			list.add(new Translation("screen.lobby.local_player_admin", "%1% (Du) (Administrator)"));
+			list.add(new Translation("screen.lobby.remote_player", "%1%"));
+			list.add(new Translation("screen.lobby.remote_player_admin", "%1% (Administrator)"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

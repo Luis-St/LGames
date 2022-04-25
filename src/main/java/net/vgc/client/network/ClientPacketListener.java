@@ -1,9 +1,11 @@
 package net.vgc.client.network;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.vgc.account.PlayerAccountInfo;
 import net.vgc.client.Client;
+import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
@@ -125,8 +127,19 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
+	public void handleSyncPermission(GameProfile gameProfile) {
+		for (AbstractClientPlayer player : this.client.getPlayers()) {
+			if (player.getGameProfile().equals(gameProfile)) {
+				player.setAdmin(true);
+			} else {
+				player.setAdmin(false);
+			}
+		}
+		LOGGER.info("Admins {}", this.client.getPlayers().stream().map(AbstractClientPlayer::isAdmin).collect(Collectors.toList()));
+	}
+	
 	public void handleServerClosed() {
-		this.client.getServerConnection().close();
+		this.client.getServerHandler().close();
 		this.client.removePlayer();
 		this.client.setScreen(new MenuScreen());
 	}
