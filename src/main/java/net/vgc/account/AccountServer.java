@@ -312,7 +312,7 @@ public class AccountServer extends GameApplication<AccountServerPacketListener> 
 	}
 	
 	@Override
-	protected void handleStop() throws Exception {
+	protected void handleStop() throws Exception { // TODO: Packet to client -> server disconnect and account logout
 		this.agent.close();
 		this.connections.clear();
 		this.channels.forEach(Channel::close);

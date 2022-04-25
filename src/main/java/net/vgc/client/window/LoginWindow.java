@@ -20,6 +20,7 @@ import net.vgc.client.fx.FxUtil;
 import net.vgc.common.LoginType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
+import net.vgc.network.ConnectionHandler;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
@@ -70,8 +71,9 @@ public class LoginWindow {
 			account.displayPassword(pane);
 		}
 		Button logoutButton = FxUtil.makeButton(TranslationKey.createAndGet("window.logout.logout"), () -> {
-			Connection connection = this.client.getAccountConnection();
-			if (this.client.isAccountConnected()) {
+			ConnectionHandler handler = this.client.getAccountHandler();
+			Connection connection = handler.getConnection();
+			if (connection.isConnected()) {
 				connection.send(new ClientLogoutPacket(account));
 			}
 		});
@@ -174,14 +176,15 @@ public class LoginWindow {
 	}
 	
 	protected void connectAndSend(Packet<?> packet) {
+		ConnectionHandler handler = this.client.getAccountHandler();
 		try {
-			this.client.connectAccount();
+			handler.connect(this.client.getAccountHost(), this.client.getAccountPort());
 		} catch (Exception e) {
 			LOGGER.warn("Fail to connect to account server", e);
 		}
 		Util.runDelayed("DelayedPacketSender", 1000, () -> {
-			Connection connection = this.client.getAccountConnection();
-			if (this.client.isAccountConnected()) {
+			Connection connection = handler.getConnection();
+			if (handler.isConnected()) {
 				connection.send(packet);
 			} else {
 				LOGGER.warn("Unable to send Packet of type {} to account server, since connection is closed", packet.getClass().getSimpleName());
@@ -217,7 +220,7 @@ public class LoginWindow {
 	protected void close() {
 		this.client.setLoginWindow(null);
 		if (!this.client.isLoggedIn()) {
-			this.client.disconnectAccount();
+			this.client.getAccountHandler().close();
 		}
 	}
 	

@@ -14,6 +14,7 @@ import net.vgc.client.fx.InputPane;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
+import net.vgc.network.ConnectionHandler;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.util.Util;
@@ -62,19 +63,20 @@ public class MultiplayerScreen extends Screen {
 	}
 	
 	protected void connectAndSend(String host, int port, Packet<?> packet) {
+		ConnectionHandler handler = this.client.getServerHandler();
 		try {
-			this.client.connectServer(host, port);
+			handler.connect(host, port);
+			Util.runDelayed("DelayedPacketSender", 1000, () -> {
+				Connection connection = handler.getConnection();
+				if (handler.isConnected()) {
+					connection.send(packet);
+				} else {
+					LOGGER.warn("Unable to send Packet of type {} to virtual game collection server, since connection is closed", packet.getClass().getSimpleName());
+				}
+			});
 		} catch (Exception e) {
-			LOGGER.warn("Fail to connect to virtual game collection serverr", e);
+			LOGGER.warn("Fail to connect to virtual game collection server", e);
 		}
-		Util.runDelayed("DelayedPacketSender", 1000, () -> {
-			Connection connection = this.client.getServerConnection();
-			if (this.client.isServerConnected()) {
-				connection.send(packet);
-			} else {
-				LOGGER.warn("Unable to send Packet of type {} to virtual game collection server, since connection is closed", packet.getClass().getSimpleName());
-			}
-		});
 	}
 	
 	protected void handleBack() {

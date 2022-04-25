@@ -123,8 +123,14 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	}
 	
 	public void close() {
-		this.channel.close();
-		this.channel = null;
+		if (this.channel != null) {
+			this.channel.close();
+			this.channel = null;
+		}
+	}
+	
+	public boolean isClosed() {
+		return this.channel == null;
 	}
 	
 	@Override

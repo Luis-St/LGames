@@ -8,15 +8,9 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollEventLoopGroup;
-import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import joptsimple.OptionParser;
@@ -37,11 +31,9 @@ import net.vgc.client.window.LoginWindow;
 import net.vgc.common.application.GameApplication;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.network.Connection;
+import net.vgc.network.ConnectionHandler;
 import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.PacketDecoder;
-import net.vgc.network.PacketEncoder;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.client.ClientScreenPacket;
@@ -62,6 +54,12 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	protected final EventLoopGroup serverGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final EventLoopGroup accountGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final List<AbstractClientPlayer> players = Lists.newArrayList();
+	protected final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
+		connection.send(new ClientLeavePacket(this.account));
+	});
+	protected final ConnectionHandler accountHandler = new ConnectionHandler("account server", new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
+		connection.send(new ClientExitPacket(this.account));
+	});
 	protected boolean instantLoading;
 	protected boolean safeLoading;
 	protected LoginWindow loginWindow;
@@ -70,10 +68,6 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	protected ClientSettings settings;
 	protected String accountHost;
 	protected int accountPort;
-	protected Channel serverChannel;
-	protected Connection serverConnection;
-	protected Channel accountChannel;
-	protected Connection accountConnection;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -275,7 +269,7 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 		}
 		LOGGER.info("Remove all remote players");
 		this.players.clear();
-		this.disconnectServer();
+		this.serverHandler.close();
 	}
 	
 	public List<AbstractClientPlayer> getPlayers() {
@@ -296,103 +290,27 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 		return this.settings;
 	}
 	
-	public void connectServer(String host, int port) {
-		try {
-			this.serverConnection = new Connection(new ClientPacketListener(this, NetworkSide.CLIENT));
-			this.serverChannel = new Bootstrap().group(this.serverGroup).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
-				@Override
-				protected void initChannel(Channel channel) throws Exception {
-					ChannelPipeline pipeline = channel.pipeline();
-					pipeline.addLast("decoder", new PacketDecoder());
-					pipeline.addLast("encoder", new PacketEncoder());
-					pipeline.addLast("handler", Client.this.serverConnection);
-				}
-			}).connect(host, port).sync().channel();
-			LOGGER.info("Start connection to virtual game collection server on host {} with port {}", host, port);
-		} catch (Exception e) {
-			LOGGER.error("Fail to start connection to virtual game collection server on host {} with port {}", host, port);
-			throw new RuntimeException(e);
-		}
+	public ConnectionHandler getServerHandler() {
+		return this.serverHandler;
 	}
 	
-	public void disconnectServer() {
-		try {
-			if (this.serverChannel != null && this.isServerConnected()) {
-				this.serverConnection.send(new ClientLeavePacket(this.account != null ? this.account.getUUID() : null));
-			}
-			this.serverConnection = null;
-			if (this.serverChannel != null) {
-				this.serverChannel.closeFuture();
-			}
-			if (this.serverGroup != null) {
-				this.serverGroup.shutdownGracefully();
-			}
-			LOGGER.info("Close connection to virtual game collection server");
-		} catch (Exception e) {
-			LOGGER.error("Fail to close connection to virtual game collection server");
-			throw new RuntimeException(e);
-		}
+	public ConnectionHandler getAccountHandler() {
+		return this.accountHandler;
 	}
 	
-	public Connection getServerConnection() {
-		return this.serverConnection;
+	public String getAccountHost() {
+		return this.accountHost;
 	}
 	
-	public boolean isServerConnected() {
-		return this.serverConnection != null && this.serverConnection.isConnected();
-	}
-	
-	public void connectAccount() {
-		try {
-			this.accountConnection = new Connection(new ClientPacketListener(this, NetworkSide.CLIENT));
-			this.accountChannel = new Bootstrap().group(this.accountGroup).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
-				@Override
-				protected void initChannel(Channel channel) throws Exception {
-					ChannelPipeline pipeline = channel.pipeline();
-					pipeline.addLast("decoder", new PacketDecoder());
-					pipeline.addLast("encoder", new PacketEncoder());
-					pipeline.addLast("handler", Client.this.accountConnection);
-				}
-			}).connect(this.accountHost, this.accountPort).sync().channel();
-			LOGGER.info("Start connection to account server on host {} with port {}", this.accountHost, this.accountPort);
-		} catch (Exception e) {
-			LOGGER.error("Fail to start connection to account server on host {} with port {}", this.accountHost, this.accountPort);
-			throw new RuntimeException(e);
-		}
-	}
-	
-	public void disconnectAccount() {
-		try {
-			if (this.isAccountConnected()) {
-				this.accountConnection.send(new ClientExitPacket(this.account));
-			}
-			this.accountConnection = null;
-			if (this.accountChannel != null) {
-				this.accountChannel.closeFuture();
-			}
-			if (this.accountGroup != null) {
-				this.accountGroup.shutdownGracefully();
-			}
-			LOGGER.info("Close connection to account server");
-		} catch (Exception e) {
-			LOGGER.error("Fail to close connection to account server");
-			throw new RuntimeException(e);
-		}
-	}
-	
-	public Connection getAccountConnection() {
-		return this.accountConnection;
-	}
-	
-	public boolean isAccountConnected() {
-		return this.accountConnection != null && this.accountConnection.isConnected();
+	public int getAccountPort() {
+		return this.accountPort;
 	}
 	
 	@Override
 	protected void handleStop() throws Exception {
 		this.ticker.stop();
-		this.disconnectAccount();
-		this.disconnectServer();
+		this.accountHandler.disconnect();
+		this.serverHandler.disconnect();
 	}
 	
 	@Override
