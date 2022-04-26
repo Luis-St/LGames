@@ -135,7 +135,7 @@ public class DedicatedServer extends AbstractServer {
 		if (this.channels.contains(connection.getChannel()) && this.connections.contains(connection)) {
 			this.channels.remove(connection.getChannel());
 			this.connections.remove(connection);
-			LOGGER.debug("Remove channel and connection for player {}", player);
+			LOGGER.debug("Remove channel and connection for player {}", player != null ? player.getGameProfile().getName() : "");
 		}
 		if (player != null) {
 			super.leavePlayer(connection, player);

@@ -16,7 +16,7 @@ public class ClientLeavePacket implements ServerPacket {
 	}
 	
 	public ClientLeavePacket(UUID uuid) {
-		this.uuid = Util.EMPTY_UUID;
+		this.uuid = uuid;
 	}
 	
 	public ClientLeavePacket(FriendlyByteBuffer buffer) {
