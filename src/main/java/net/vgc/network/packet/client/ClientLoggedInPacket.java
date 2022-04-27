@@ -1,8 +1,8 @@
 package net.vgc.network.packet.client;
 
+import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccountInfo;
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.common.LoginType;
 import net.vgc.network.FriendlyByteBuffer;
 
 public class ClientLoggedInPacket implements ClientPacket {

@@ -3,6 +3,7 @@ package net.vgc.client.network;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccountInfo;
 import net.vgc.client.Client;
 import net.vgc.client.player.AbstractClientPlayer;
@@ -11,8 +12,7 @@ import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
-import net.vgc.common.InfoResult;
-import net.vgc.common.LoginType;
+import net.vgc.common.info.InfoResult;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.player.GameProfile;

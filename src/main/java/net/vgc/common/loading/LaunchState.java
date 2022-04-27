@@ -1,4 +1,4 @@
-package net.vgc.common;
+package net.vgc.common.loading;
 
 public enum LaunchState {
 	

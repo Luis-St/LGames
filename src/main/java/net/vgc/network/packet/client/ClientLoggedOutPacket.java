@@ -1,7 +1,7 @@
 package net.vgc.network.packet.client;
 
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.common.InfoResult;
+import net.vgc.common.info.InfoResult;
 import net.vgc.network.FriendlyByteBuffer;
 
 public class ClientLoggedOutPacket implements ClientPacket {

@@ -14,7 +14,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import net.vgc.common.LaunchState;
+import net.vgc.common.loading.LaunchState;
 import net.vgc.data.DataHandler;
 import net.vgc.language.LanguageProvider;
 import net.vgc.network.Network;

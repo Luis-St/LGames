@@ -1,4 +1,4 @@
-package net.vgc.common;
+package net.vgc.common.info;
 
 public record InfoResult(Result result, String info) {
 	

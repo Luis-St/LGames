@@ -1,17 +1,16 @@
-package net.vgc.common;
+package net.vgc.common.info;
 
 import javax.annotation.Nullable;
 
-public enum LoginType {
+public enum Result {
 	
-	REGISTRATION("registration"),
-	USER_LOGIN("login_user"),
-	GUEST_LOGIN("login_guest"),
+	SUCCESS("success"),
+	FAILED("failed"),
 	UNKNOWN("unknown");
-	
+
 	private final String name;
 	
-	private LoginType(String name) {
+	private Result(String name) {
 		this.name = name;
 	}
 	
@@ -25,8 +24,8 @@ public enum LoginType {
 	}
 	
 	@Nullable
-	public static LoginType fromName(String name) {
-		for (LoginType result : LoginType.values()) {
+	public static Result fromName(String name) {
+		for (Result result : Result.values()) {
 			if (result.getName().equals(name)) {
 				return result;
 			}

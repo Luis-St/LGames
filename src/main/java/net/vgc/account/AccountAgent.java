@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.vgc.common.InfoResult;
-import net.vgc.common.Result;
+import net.vgc.common.info.InfoResult;
+import net.vgc.common.info.Result;
 import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 

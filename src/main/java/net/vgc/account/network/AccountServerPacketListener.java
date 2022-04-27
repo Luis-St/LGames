@@ -2,11 +2,11 @@ package net.vgc.account.network;
 
 import net.vgc.account.AccountAgent;
 import net.vgc.account.AccountServer;
+import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
 import net.vgc.account.PlayerAccountInfo;
-import net.vgc.common.InfoResult;
-import net.vgc.common.LoginType;
-import net.vgc.common.Result;
+import net.vgc.common.info.InfoResult;
+import net.vgc.common.info.Result;
 import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.NetworkSide;

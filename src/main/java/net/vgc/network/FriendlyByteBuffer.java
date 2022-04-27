@@ -7,8 +7,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.vgc.account.PlayerAccount;
 import net.vgc.account.PlayerAccountInfo;
-import net.vgc.common.InfoResult;
-import net.vgc.common.Result;
+import net.vgc.common.info.InfoResult;
+import net.vgc.common.info.Result;
 import net.vgc.player.GameProfile;
 
 public class FriendlyByteBuffer {
