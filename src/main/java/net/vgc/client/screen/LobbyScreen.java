@@ -1,28 +1,23 @@
 package net.vgc.client.screen;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.client.player.LocalPlayer;
+import net.vgc.client.screen.game.GameScreen;
+import net.vgc.game.Games;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPlayerAddPacket;
 import net.vgc.network.packet.client.ClientPlayerRemovePacket;
 import net.vgc.network.packet.client.ClientScreenPacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 
-public class LobbyScreen extends Screen {
+public class LobbyScreen extends GameScreen {
 	
-	protected HBox menuBox;
-	protected MenuBar playerMenuBar;
-	protected MenuBar gameMenuBar;
-	protected Menu playerMenu;
-	protected Menu gameMenu;
+	protected ButtonBox tttButtonBox;
 	
 	public LobbyScreen() {
 		
@@ -30,27 +25,11 @@ public class LobbyScreen extends Screen {
 	
 	@Override
 	public void init() {
-		this.menuBox = new HBox();
-		this.playerMenuBar = new MenuBar();
-		this.playerMenuBar.setPrefWidth(1000.0);
-		this.playerMenu = new Menu(TranslationKey.createAndGet("server.window.players"));
-		for (AbstractClientPlayer player : this.client.getPlayers()) {
-			if (player instanceof LocalPlayer) {
-				this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.local_player", player.getGameProfile().getName())));
-			} else {
-				this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.remote_player", player.getGameProfile().getName())));
-			}
-		}
-		this.playerMenuBar.getMenus().add(this.playerMenu);
-		this.gameMenuBar = new MenuBar();
-		this.gameMenu = new Menu(TranslationKey.createAndGet("screen.lobby.game"));
-		CustomMenuItem leaveItem = new CustomMenuItem();
-		leaveItem.setContent(FxUtil.makeButton(TranslationKey.createAndGet("screen.lobby.leave"), () -> {
-			this.client.removePlayer();
-			this.showScreen(new MenuScreen());
-		}));
-		this.gameMenu.getItems().add(leaveItem);
-		this.gameMenuBar.getMenus().addAll(this.gameMenu);
+		this.tttButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.ttt"), this::handleTTT);
+	}
+	
+	protected void handleTTT() {
+		this.showScreen(new PlayerSelectScreen(Games.TIC_TAC_TOE, this));
 	}
 	
 	@Override
@@ -60,29 +39,23 @@ public class LobbyScreen extends Screen {
 		}
 	}
 	
-	protected void refreshPlayers() {
-		this.playerMenu.getItems().clear();
-		for (AbstractClientPlayer player : this.client.getPlayers()) {
-			if (player instanceof LocalPlayer) {
-				if (player.isAdmin()) {
-					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.local_player_admin", player.getGameProfile().getName())));
-				} else {
-					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.local_player", player.getGameProfile().getName())));
-				}
-			} else {
-				if (player.isAdmin()) {
-					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.remote_player_admin", player.getGameProfile().getName())));
-				} else {
-					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.lobby.remote_player", player.getGameProfile().getName())));
-				}
-			}
-		}
-	}
-	
 	@Override
-	protected Pane createPane() {
-		this.menuBox.getChildren().addAll(this.playerMenuBar, this.gameMenuBar);
-		return new VBox(this.menuBox);
+	protected Menu createGameMenu() {
+		Menu menu = new Menu(TranslationKey.createAndGet("screen.lobby.game"));
+		CustomMenuItem leaveItem = new CustomMenuItem();
+		leaveItem.setContent(FxUtil.makeButton(TranslationKey.createAndGet("screen.lobby.leave"), () -> {
+			this.client.removePlayer();
+			this.showScreen(new MenuScreen());
+		}));
+		menu.getItems().add(leaveItem);
+		return menu;
+	}
+
+	@Override
+	protected Pane createGame() {
+		GridPane gridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		gridPane.addRow(0, this.tttButtonBox);
+		return gridPane;
 	}
 
 }
