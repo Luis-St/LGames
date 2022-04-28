@@ -15,6 +15,7 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketListener;
 
 public class ConnectionHandler {
@@ -63,6 +64,10 @@ public class ConnectionHandler {
 			LOGGER.error("Fail to start connection to {} on host {} with port {}", this.connectTo, host, port);
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public void send(Packet<?> packet) {
+		this.connection.send(packet);
 	}
 	
 	public Channel getChannel() {

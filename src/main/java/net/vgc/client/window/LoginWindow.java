@@ -19,7 +19,6 @@ import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.Connection;
 import net.vgc.network.ConnectionHandler;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientLoginPacket;
@@ -72,9 +71,8 @@ public class LoginWindow {
 		}
 		Button logoutButton = FxUtil.makeButton(TranslationKey.createAndGet("window.logout.logout"), () -> {
 			ConnectionHandler handler = this.client.getAccountHandler();
-			Connection connection = handler.getConnection();
-			if (connection.isConnected()) {
-				connection.send(new ClientLogoutPacket(account));
+			if (handler.isConnected()) {
+				handler.send(new ClientLogoutPacket(account));
 			}
 		});
 		pane.add(new Box<>(logoutButton), 1, 2);
@@ -183,9 +181,8 @@ public class LoginWindow {
 			LOGGER.warn("Fail to connect to account server", e);
 		}
 		Util.runDelayed("DelayedPacketSender", 1000, () -> {
-			Connection connection = handler.getConnection();
 			if (handler.isConnected()) {
-				connection.send(packet);
+				handler.send(packet);
 			} else {
 				LOGGER.warn("Unable to send Packet of type {} to account server, since connection is closed", packet.getClass().getSimpleName());
 			}

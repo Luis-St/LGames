@@ -13,7 +13,6 @@ import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.InputPane;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.Connection;
 import net.vgc.network.ConnectionHandler;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.server.ClientJoinPacket;
@@ -67,9 +66,8 @@ public class MultiplayerScreen extends Screen {
 		try {
 			handler.connect(host, port);
 			Util.runDelayed("DelayedPacketSender", 1000, () -> {
-				Connection connection = handler.getConnection();
 				if (handler.isConnected()) {
-					connection.send(packet);
+					handler.send(packet);
 				} else {
 					LOGGER.warn("Unable to send Packet of type {} to virtual game collection server, since connection is closed", packet.getClass().getSimpleName());
 				}
