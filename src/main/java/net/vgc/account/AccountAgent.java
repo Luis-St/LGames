@@ -9,11 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.vgc.common.info.InfoResult;
-import net.vgc.common.info.Result;
-import net.vgc.language.Languages;
-import net.vgc.language.TranslationKey;
-
 public final class AccountAgent {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
@@ -106,39 +101,39 @@ public final class AccountAgent {
 		return account;
 	}
 	
-	public PlayerAccountInfo accountLogin(String name, String password) {
+	public PlayerAccount accountLogin(String name, String password) {
 		UUID uuid = this.generateUUID(name, password);
 		if (this.isPresent(uuid)) {
 			PlayerAccount account = this.getAccount(uuid);
 			if (account.isTaken()) {
 				LOGGER.warn("Fail to login, since the account {} is already used by another player", account.toString().replace("PlayerAccount", ""));
-				return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.login.taken")), PlayerAccount.UNKNOWN);
+				return PlayerAccount.UNKNOWN;
 			} else {
 				LOGGER.info("Client logged in with account: {}", account);
 				this.setTaken(uuid, true);
 				AccountServer.getInstance().refreshScene();
-				return new PlayerAccountInfo(new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.login.successfully")), account);
+				return account;
 			}
 		}
 		LOGGER.warn("Fail to login, since there is no account with uuid {} and account data: name {} password {}", uuid, name, password);
-		return new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.login.no")), PlayerAccount.UNKNOWN);
+		return PlayerAccount.UNKNOWN;
 	}
 	
-	public InfoResult accountLogout(String name, String password) {
+	public boolean accountLogout(String name, String password) {
 		UUID uuid = this.generateUUID(name, password);
 		if (this.isPresent(uuid)) {
 			if (this.getAccount(uuid).isTaken()) {
 				LOGGER.info("Client logged out with account: {}", this.getAccount(uuid));
 				this.setTaken(uuid, false);
 				AccountServer.getInstance().refreshScene();
-				return new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.logout.successfully"));
+				return true;
 			} else {
 				LOGGER.warn("Fail to logout, since the account is not used by a player");
-				return new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.logout.unused"));
+				return false;
 			}
 		}
 		LOGGER.warn("Fail to logout, since there is no account with uuid {} and account data: name {} password {}", uuid, name, password);
-		return new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.login.no"));
+		return false;
 	}
 	
 	public void close() {

@@ -147,9 +147,6 @@ public final class PlayerAccount implements Serializable {
 	public boolean equals(Object object) {
 		if (object instanceof PlayerAccount account) {
 			return this.match(account.name, account.password, account.uuid, account.guest);
-		} else if (object instanceof PlayerAccountInfo info) {
-			PlayerAccount account = info.account();
-			return this.match(account.name, account.password, account.uuid, account.guest);
 		}
 		return false;
 	}

@@ -17,18 +17,15 @@ public class Main {
 	
 	/* TODO's:
 	 *  - add new info system form server -> client
-	 *  - impl. singleplayer, multiplayer (MultiplayerScreen#handleConnect)
+	 *  - impl. singleplayer
 	 *  - create Loading Steps, which are load from 0 til 1
 	 *  - use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
-	 *  - add server side path for Network#getGameDirectory and Network#getResourceDirectory
 	 *  - create value chooser similar to DirectoryChooser (for primitive values)
 	 *  - layout and grafic rework
-	 *  - super class for Windows
+	 *  - add super class for Windows
 	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
 	 *  - rework of PacketHandler avoid double handling of Packets
-	 *  - rename Packets (to Client) remove Client in name
-	 *  - remove old info system
 	 */
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);

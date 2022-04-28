@@ -4,11 +4,6 @@ import net.vgc.account.AccountAgent;
 import net.vgc.account.AccountServer;
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
-import net.vgc.account.PlayerAccountInfo;
-import net.vgc.common.info.InfoResult;
-import net.vgc.common.info.Result;
-import net.vgc.language.Languages;
-import net.vgc.language.TranslationKey;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
@@ -26,23 +21,22 @@ public class AccountServerPacketListener extends AbstractPacketListener {
 	public void handleClientLogin(LoginType loginType, String name, String password) {
 		this.checkSide();
 		AccountAgent agent = this.accountServer.getAgent();
-		PlayerAccountInfo accountInfo;
+		PlayerAccount account;
 		if (loginType == LoginType.REGISTRATION) {
-			accountInfo = new PlayerAccountInfo(new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.login.create")), agent.createAndLogin(name, password, false));
+			account = agent.createAndLogin(name, password, false);
 		} else if (loginType == LoginType.USER_LOGIN) {
-			accountInfo = agent.accountLogin(name, password);
+			account = agent.accountLogin(name, password);
 		} else if (loginType == LoginType.GUEST_LOGIN) {
-			accountInfo = new PlayerAccountInfo(new InfoResult(Result.SUCCESS, TranslationKey.createAndGet(Languages.EN_US, "account.login.guest")), agent.createAndLogin(name, "", true));
+			account = agent.createAndLogin(name, "", true);
 		} else {
-			accountInfo = new PlayerAccountInfo(new InfoResult(Result.FAILED, TranslationKey.createAndGet(Languages.EN_US, "account.login.unknown")), PlayerAccount.UNKNOWN);
+			account = PlayerAccount.UNKNOWN;
 		}
-		this.connection.send(new ClientLoggedInPacket(loginType, accountInfo));
+		this.connection.send(new ClientLoggedInPacket(loginType, account, account == PlayerAccount.UNKNOWN ? false : true));
 	}
 	
 	public void handleClientLogout(String name, String password) {
 		this.checkSide();
-		InfoResult infoResult = this.accountServer.getAgent().accountLogout(name, password);
-		this.connection.send(new ClientLoggedOutPacket(infoResult));
+		this.connection.send(new ClientLoggedOutPacket(this.accountServer.getAgent().accountLogout(name, password)));
 	}
 	
 	public void handleClientLogoutExit(String name, String password) {

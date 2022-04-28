@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import net.vgc.account.LoginType;
-import net.vgc.account.PlayerAccountInfo;
+import net.vgc.account.PlayerAccount;
 import net.vgc.client.Client;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
@@ -12,7 +12,6 @@ import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
-import net.vgc.common.info.InfoResult;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.player.GameProfile;
@@ -26,72 +25,56 @@ public class ClientPacketListener extends AbstractPacketListener {
 		this.client = client;
 	}
 	
-	public void handleClientLoggedIn(LoginType loginType, PlayerAccountInfo accountInfo) {
+	public void handleClientLoggedIn(LoginType loginType, PlayerAccount account, boolean successful) {
 		this.checkSide();
 		LoginWindow loginWindow = this.client.getLoginWindow();
-		InfoResult infoResult = accountInfo.infoResult();
 		if (!this.client.isLoggedIn()) {
-			switch (loginType) {
-				case REGISTRATION: {
-					if (accountInfo.isSuccess()) {
+			if (successful) {
+				switch (loginType) {
+					case REGISTRATION: {
 						LOGGER.info("Create successfully a new account");
-						this.client.login(accountInfo.account());
+						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} else {
-						LOGGER.warn("Fail to log in: {}", infoResult.info());
-					}
-				} break;
-				case USER_LOGIN: {
-					if (accountInfo.isSuccess()) {
+					} break;
+					case USER_LOGIN: {
 						LOGGER.debug("Successfully logged in");
-						this.client.login(accountInfo.account());
+						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} else {
-						LOGGER.warn("Fail to log in: {}", infoResult.info());
-					}
-				} break;
-				case GUEST_LOGIN: {
-					if (accountInfo.isSuccess()) {
+					} break;
+					case GUEST_LOGIN: {
 						LOGGER.debug("Successfully logged in as a guest");
-						this.client.login(accountInfo.account());
+						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} else {
-						LOGGER.warn("Fail to log in: {}", infoResult.info());
-						if (loginWindow != null) {
-							loginWindow.handleLoggedIn(loginType);
-						}
-					}
-				} break;
-				case UNKNOWN: {
-					if (accountInfo.isSuccess()) {
+					} break;
+					case UNKNOWN: {
 						LOGGER.warn("Fail to log in");
-					} else {
-						LOGGER.warn("Fail to log in: {}", infoResult.info());
-					}
-				} break;
+					} break;
+				}
+			} else {
+				LOGGER.warn("Fail to log in");
 			}
 		} else {
 			LOGGER.warn("Fail to log in, since already logged in");
 		}
 	}
 	
-	public void handleClientLoggedOut(InfoResult infoResult) {
+	public void handleClientLoggedOut(boolean successful) {
 		this.checkSide();
 		LoginWindow loginWindow = this.client.getLoginWindow();
-		if (infoResult.isSuccess()) {
+		if (successful) {
 			LOGGER.info("Successfully logged out");
 			this.client.logout();
 			if (loginWindow != null) {
 				loginWindow.handleLoggedOut();
 			}
 		} else {
-			LOGGER.warn("Fail to log out: {}", infoResult.info());
+			LOGGER.warn("Fail to log out");
 		}
 	}
 	

@@ -1,29 +1,28 @@
 package net.vgc.network.packet.client;
 
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.common.info.InfoResult;
 import net.vgc.network.FriendlyByteBuffer;
 
 public class ClientLoggedOutPacket implements ClientPacket {
 	
-	protected final InfoResult infoResult;
+	protected final boolean successful;
 	
-	public ClientLoggedOutPacket(InfoResult infoResult) {
-		this.infoResult = infoResult;
+	public ClientLoggedOutPacket(boolean successful) {
+		this.successful = successful;
 	}
 	
 	public ClientLoggedOutPacket(FriendlyByteBuffer buffer) {
-		this.infoResult = buffer.readInfoResult();
+		this.successful = buffer.readBoolean();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeInfoResult(this.infoResult);
+		buffer.writeBoolean(this.successful);
 	}
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		listener.handleClientLoggedOut(this.infoResult);
+		listener.handleClientLoggedOut(this.successful);
 	}
 
 }

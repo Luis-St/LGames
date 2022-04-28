@@ -1,34 +1,38 @@
 package net.vgc.network.packet.client;
 
 import net.vgc.account.LoginType;
-import net.vgc.account.PlayerAccountInfo;
+import net.vgc.account.PlayerAccount;
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.network.FriendlyByteBuffer;
 
 public class ClientLoggedInPacket implements ClientPacket {
 	
 	protected final LoginType loginType;
-	protected final PlayerAccountInfo accountInfo;
+	protected final PlayerAccount account;
+	protected final boolean successful;
 	
-	public ClientLoggedInPacket(LoginType loginType, PlayerAccountInfo accountInfo) {
+	public ClientLoggedInPacket(LoginType loginType, PlayerAccount account, boolean successful) {
 		this.loginType = loginType;
-		this.accountInfo = accountInfo;
+		this.account = account;
+		this.successful = successful;
 	}
 	
 	public ClientLoggedInPacket(FriendlyByteBuffer buffer) {
 		this.loginType = LoginType.fromName(buffer.readString());
-		this.accountInfo = buffer.readAccountInfo();
+		this.account = buffer.readAccount();
+		this.successful = buffer.readBoolean();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeString(this.loginType.getName());
-		buffer.writeAccountInfo(this.accountInfo);
+		buffer.writeAccount(this.account);
+		buffer.writeBoolean(this.successful);
 	}
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		listener.handleClientLoggedIn(this.loginType, this.accountInfo);
+		listener.handleClientLoggedIn(this.loginType, this.account, this.successful);
 	}
 
 }

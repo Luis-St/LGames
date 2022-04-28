@@ -6,9 +6,6 @@ import java.util.UUID;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.vgc.account.PlayerAccount;
-import net.vgc.account.PlayerAccountInfo;
-import net.vgc.common.info.InfoResult;
-import net.vgc.common.info.Result;
 import net.vgc.player.GameProfile;
 
 public class FriendlyByteBuffer {
@@ -108,17 +105,6 @@ public class FriendlyByteBuffer {
 		return new UUID(most, least);
 	}
 	
-	public void writeInfoResult(InfoResult value) {
-		this.writeString(value.result().getName());
-		this.writeString(value.info());
-	}
-	
-	public InfoResult readInfoResult() {
-		Result result = Result.fromName(this.readString());
-		String info = this.readString();
-		return new InfoResult(result, info);
-	}
-	
 	public void writeAccount(PlayerAccount value) {
 		value.write(this);
 	}
@@ -129,17 +115,6 @@ public class FriendlyByteBuffer {
 		UUID uuid = this.readUUID();
 		boolean guest = this.readBoolean();
 		return new PlayerAccount(name, password, uuid, guest);
-	}
-	
-	public void writeAccountInfo(PlayerAccountInfo value) {
-		this.writeInfoResult(value.infoResult());
-		this.writeAccount(value.account());
-	}
-	
-	public PlayerAccountInfo readAccountInfo() {
-		InfoResult infoResult = this.readInfoResult();
-		PlayerAccount account = this.readAccount();
-		return new PlayerAccountInfo(infoResult, account);
 	}
 	
 	public void writeGameProfile(GameProfile value) {
