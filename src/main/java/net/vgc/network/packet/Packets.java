@@ -18,8 +18,8 @@ import net.vgc.network.packet.account.ClientLogoutPacket;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
-import net.vgc.network.packet.client.ClientPlayerAddPacket;
-import net.vgc.network.packet.client.ClientPlayerRemovePacket;
+import net.vgc.network.packet.client.PlayerAddPacket;
+import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.ServerClosedPacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.server.ClientJoinPacket;
@@ -42,8 +42,8 @@ public class Packets {
 		map.put(i++, ClientLeavePacket.class);
 		map.put(i++, ClientJoinedPacket.class);
 		map.put(i++, SyncPermissionPacket.class);
-		map.put(i++, ClientPlayerAddPacket.class);
-		map.put(i++, ClientPlayerRemovePacket.class);
+		map.put(i++, PlayerAddPacket.class);
+		map.put(i++, PlayerRemovePacket.class);
 		map.put(i++, ServerClosedPacket.class);
 	});
 	

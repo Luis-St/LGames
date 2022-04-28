@@ -9,15 +9,15 @@ import net.vgc.client.screen.Screen;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 
-public class ClientPlayerAddPacket implements ClientScreenPacket {
+public class PlayerRemovePacket implements ClientScreenPacket {
 	
 	protected final GameProfile gameProfile;
 	
-	public ClientPlayerAddPacket(GameProfile gameProfile) {
+	public PlayerRemovePacket(GameProfile gameProfile) {
 		this.gameProfile = gameProfile;
 	}
 	
-	public ClientPlayerAddPacket(FriendlyByteBuffer buffer) {
+	public PlayerRemovePacket(FriendlyByteBuffer buffer) {
 		this.gameProfile = buffer.readGameProfile();
 	}
 	
@@ -28,12 +28,12 @@ public class ClientPlayerAddPacket implements ClientScreenPacket {
 	
 	@Override
 	public void handle(ClientPacketListener listener) {
-		listener.handleClientPlayerAdd(this.gameProfile);
+		listener.handleClientPlayerRemove(this.gameProfile);
 	}
 	
 	@Override
 	public List<Class<? extends Screen>> getScreens() {
 		return Lists.newArrayList();
 	}
-	
+
 }

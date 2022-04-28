@@ -1,8 +1,8 @@
 package net.vgc.server.dedicated;
 
 import net.vgc.network.Connection;
-import net.vgc.network.packet.client.ClientPlayerAddPacket;
-import net.vgc.network.packet.client.ClientPlayerRemovePacket;
+import net.vgc.network.packet.client.PlayerAddPacket;
+import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
@@ -23,7 +23,7 @@ public class DedicatedPlayerList extends PlayerList {
 	public void addPlayer(Connection connection, ServerPlayer player) {
 		super.addPlayer(connection, player);
 		this.refreshPlayers();
-		this.broadcastAllExclude(new ClientPlayerAddPacket(player.getGameProfile()), player);
+		this.broadcastAllExclude(new PlayerAddPacket(player.getGameProfile()), player);
 		if (this.server.isAdmin(player)) {
 			Util.runDelayed("PacketSendDelay", 1000, () -> {
 				this.broadcastAll(new SyncPermissionPacket(player.getGameProfile()));
@@ -35,7 +35,7 @@ public class DedicatedPlayerList extends PlayerList {
 	public void removePlayer(ServerPlayer player) {
 		super.removePlayer(player);
 		this.refreshPlayers();
-		this.broadcastAll(new ClientPlayerRemovePacket(player.getGameProfile()));
+		this.broadcastAll(new PlayerRemovePacket(player.getGameProfile()));
 		if (this.server.isAdmin(player)) {
 			this.broadcastAll(new SyncPermissionPacket(GameProfile.EMPTY));
 		}
