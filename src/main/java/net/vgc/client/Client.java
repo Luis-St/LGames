@@ -36,7 +36,7 @@ import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientExitPacket;
-import net.vgc.network.packet.client.ClientScreenPacket;
+import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
@@ -199,14 +199,18 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	
 	@Override
 	public void handlePacket(Packet<ClientPacketListener> packet) {
-		if (packet instanceof ClientScreenPacket screenUpdate) {
+		if (packet instanceof ClientPacket screenUpdate) {
 			Scene scene = this.stage.getScene();
 			if (scene != null && scene instanceof ScreenScene screenScene) {
 				Screen screen = screenScene.getScreen();
-				if (screen != null && (screenUpdate.getScreens().contains(screen.getClass())) || screenUpdate.receiveAllScreens()) {
+				if (screen != null) {
 					screen.handlePacket(screenUpdate);
+				} else {
+					LOGGER.warn("Fail to handle Packet of type {} in screen, since there is no screen set", packet.getClass().getSimpleName());
 				}
 			}
+		} else {
+			LOGGER.warn("Fail to handle packet {}, since it's a non client packet", packet.getClass().getSimpleName());
 		}
 	}
 	

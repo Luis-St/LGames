@@ -13,7 +13,7 @@ import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.screen.Screen;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.client.ClientScreenPacket;
+import net.vgc.network.packet.client.ClientPacket;
 
 public abstract class GameScreen extends Screen {
 	
@@ -25,7 +25,7 @@ public abstract class GameScreen extends Screen {
 	}
 	
 	@Override
-	public abstract void handlePacket(ClientScreenPacket clientPacket);
+	public abstract void handlePacket(ClientPacket clientPacket);
 	
 	protected abstract Menu createGameMenu();
 	

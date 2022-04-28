@@ -10,9 +10,9 @@ import net.vgc.client.fx.FxUtil;
 import net.vgc.client.screen.game.GameScreen;
 import net.vgc.game.Games;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
-import net.vgc.network.packet.client.ClientScreenPacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 
 public class LobbyScreen extends GameScreen {
@@ -33,7 +33,7 @@ public class LobbyScreen extends GameScreen {
 	}
 	
 	@Override
-	public void handlePacket(ClientScreenPacket clientPacket) {
+	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			this.refreshPlayers();
 		}
