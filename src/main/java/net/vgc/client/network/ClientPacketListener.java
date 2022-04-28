@@ -79,6 +79,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleClientJoined(List<GameProfile> gameProfiles) {
+		this.checkSide();
 		for (GameProfile gameProfile : gameProfiles) {
 			if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
 				this.client.setPlayer(new LocalPlayer(gameProfile));
@@ -90,6 +91,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleClientPlayerAdd(GameProfile gameProfile) {
+		this.checkSide();
 		if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
 			if (this.client.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
@@ -103,6 +105,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleClientPlayerRemove(GameProfile gameProfile) {
+		this.checkSide();
 		if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
 			this.client.removePlayer();
 		} else {
@@ -111,6 +114,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleSyncPermission(GameProfile gameProfile) {
+		this.checkSide();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player.getGameProfile().equals(gameProfile)) {
 				player.setAdmin(true);
