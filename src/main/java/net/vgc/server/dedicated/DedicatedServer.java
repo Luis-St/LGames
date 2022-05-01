@@ -26,6 +26,7 @@ import net.vgc.Constans;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.game.Game;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
@@ -40,6 +41,7 @@ public class DedicatedServer extends AbstractServer {
 	protected final List<Channel> channels = Lists.newArrayList();
 	protected final List<Connection> connections = Lists.newArrayList();
 	protected TreeItem<String> playersTreeItem;
+	protected Game game;
 	
 	public DedicatedServer(String host, int port, Path serverDirectory) throws Exception {
 		super(host, port, serverDirectory);
@@ -140,6 +142,14 @@ public class DedicatedServer extends AbstractServer {
 		if (player != null) {
 			super.leavePlayer(connection, player);
 		}
+	}
+	
+	public Game getGame() {
+		return this.game;
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
 	}
 	
 	@Override

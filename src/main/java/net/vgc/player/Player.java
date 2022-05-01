@@ -5,9 +5,15 @@ import net.vgc.util.Tickable;
 public abstract class Player implements Tickable {
 	
 	protected final GameProfile gameProfile;
+	protected boolean playing;
 	
 	public Player(GameProfile gameProfile) {
 		this.gameProfile = gameProfile;
+	}
+	
+	@Override
+	public void tick() {
+		
 	}
 	
 	public abstract boolean isClient();
@@ -16,9 +22,12 @@ public abstract class Player implements Tickable {
 		return this.gameProfile;
 	}
 	
-	@Override
-	public void tick() {
-		
+	public boolean isPlaying() {
+		return this.playing;
+	}
+	
+	public void setPlaying(boolean playing) {
+		this.playing = playing;
 	}
 	
 	@Override
