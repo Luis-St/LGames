@@ -15,7 +15,6 @@ import net.vgc.language.TranslationKey;
 public class MenuScreen extends Screen {
 	
 	protected ButtonBox loginButtonBox;
-	protected ButtonBox singleplayerButtonBox;
 	protected ButtonBox multiplayerButtonBox;
 	protected ButtonBox settingsButtonBox;
 	protected VBox centerBox;
@@ -24,7 +23,6 @@ public class MenuScreen extends Screen {
 	public void init() {
 		this.loginButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.login"), Pos.CENTER_RIGHT, this::handleLogin);
 		this.loginButtonBox.setPadding(new Insets(20.0));
-		this.singleplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.singleplayer"), this::handleSingleplayer);
 		this.multiplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.multiplayer"), this::handleMultiplayer);
 		this.settingsButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.settings"), this::handleSettings);
 		this.centerBox = FxUtil.makeVerticalBox(Pos.CENTER, 0.0);
@@ -37,10 +35,6 @@ public class MenuScreen extends Screen {
 		} else if (this.loginButtonBox.getNode().getText().equals(TranslationKey.createAndGet("screen.menu.profile"))) {
 			this.loginButtonBox.getNode().setText(TranslationKey.createAndGet("screen.menu.login"));
 		}
-	}
-	
-	protected void handleSingleplayer() { 
-		LOGGER.debug("Singleplayer");
 	}
 	
 	protected void handleMultiplayer() {
@@ -62,7 +56,7 @@ public class MenuScreen extends Screen {
 	protected Pane createPane() {
 		BorderPane border = new BorderPane();
 		GridPane grid = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		grid.addColumn(0, this.singleplayerButtonBox, this.multiplayerButtonBox, this.settingsButtonBox);
+		grid.addColumn(0, this.multiplayerButtonBox, this.settingsButtonBox);
 		this.centerBox.getChildren().add(grid);
 		BorderPane.setAlignment(this.loginButtonBox, Pos.CENTER_RIGHT);
 		border.setTop(this.loginButtonBox);

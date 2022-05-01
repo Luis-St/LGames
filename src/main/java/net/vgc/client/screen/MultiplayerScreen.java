@@ -65,7 +65,7 @@ public class MultiplayerScreen extends Screen {
 		ConnectionHandler handler = this.client.getServerHandler();
 		try {
 			handler.connect(host, port);
-			Util.runDelayed("DelayedPacketSender", 1000, () -> {
+			Util.runDelayed("DelayedPacketSender", 250, () -> {
 				if (handler.isConnected()) {
 					handler.send(packet);
 				} else {

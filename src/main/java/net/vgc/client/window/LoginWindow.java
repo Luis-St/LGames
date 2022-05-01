@@ -175,12 +175,14 @@ public class LoginWindow {
 	
 	protected void connectAndSend(Packet<?> packet) {
 		ConnectionHandler handler = this.client.getAccountHandler();
-		try {
-			handler.connect(this.client.getAccountHost(), this.client.getAccountPort());
-		} catch (Exception e) {
-			LOGGER.warn("Fail to connect to account server", e);
+		if (!handler.isConnected()) {
+			try {
+				handler.connect(this.client.getAccountHost(), this.client.getAccountPort());
+			} catch (Exception e) {
+				LOGGER.warn("Fail to connect to account server", e);
+			}
 		}
-		Util.runDelayed("DelayedPacketSender", 1000, () -> {
+		Util.runDelayed("DelayedPacketSender", 250, () -> {
 			if (handler.isConnected()) {
 				handler.send(packet);
 			} else {
