@@ -55,10 +55,10 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	protected final EventLoopGroup serverGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final EventLoopGroup accountGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final List<AbstractClientPlayer> players = Lists.newArrayList();
-	protected final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
+	protected final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", () -> new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
 		connection.send(new ClientLeavePacket(this.account));
 	});
-	protected final ConnectionHandler accountHandler = new ConnectionHandler("account server", new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
+	protected final ConnectionHandler accountHandler = new ConnectionHandler("account server", () ->  new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
 		connection.send(new ClientExitPacket(this.account));
 	});
 	protected boolean instantLoading;
@@ -328,8 +328,8 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	@Override
 	protected void handleStop() throws Exception {
 		this.ticker.stop();
-		this.accountHandler.disconnect();
-		this.serverHandler.disconnect();
+		this.accountHandler.close();
+		this.serverHandler.close();
 	}
 	
 	@Override

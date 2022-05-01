@@ -9,7 +9,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import net.vgc.Constans;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
@@ -78,12 +77,7 @@ public class PlayerSelectScreen extends Screen {
 			}
 		} else {
 			LOGGER.warn("Player {} tried to start a game but the action was canceled, since he has not the permission", this.client.getPlayer().getGameProfile().getName());
-			if (Constans.IDE) {
-				this.handleBack();
-			} else {
-				this.showScreen(new MenuScreen());
-				this.client.getServerHandler().close();
-			}
+			this.handleBack();
 		}
 	}
 	
