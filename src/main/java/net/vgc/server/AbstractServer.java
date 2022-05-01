@@ -19,8 +19,8 @@ import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.network.Connection;
 import net.vgc.player.GameProfile;
+import net.vgc.server.dedicated.DedicatedPlayerList;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.server.players.PlayerList;
 import net.vgc.util.Tickable;
 
 public abstract class AbstractServer implements Tickable {
@@ -32,7 +32,7 @@ public abstract class AbstractServer implements Tickable {
 	protected final String host;
 	protected final int port;
 	protected final Path serverDirectory;
-	protected PlayerList playerList;
+	protected DedicatedPlayerList playerList;
 	protected UUID admin;
 	protected ServerPlayer adminPlayer;
 	
@@ -117,7 +117,7 @@ public abstract class AbstractServer implements Tickable {
 		return this.adminPlayer;
 	}
 	
-	public PlayerList getPlayerList() {
+	public DedicatedPlayerList getPlayerList() {
 		return this.playerList;
 	}
 	

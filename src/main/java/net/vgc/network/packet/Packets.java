@@ -15,15 +15,21 @@ import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
+import net.vgc.network.packet.client.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
+import net.vgc.network.packet.client.ExitGamePacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.ServerClosedPacket;
+import net.vgc.network.packet.client.StartGamePacket;
+import net.vgc.network.packet.client.StopGamePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
+import net.vgc.network.packet.server.ExitGameRequestPacket;
+import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 
@@ -44,6 +50,12 @@ public class Packets {
 		map.put(i++, SyncPermissionPacket.class);
 		map.put(i++, PlayerAddPacket.class);
 		map.put(i++, PlayerRemovePacket.class);
+		map.put(i++, PlayGameRequestPacket.class);
+		map.put(i++, CancelPlayGameRequestPacket.class);
+		map.put(i++, StartGamePacket.class);
+		map.put(i++, ExitGameRequestPacket.class);
+		map.put(i++, ExitGamePacket.class);
+		map.put(i++, StopGamePacket.class);
 		map.put(i++, ServerClosedPacket.class);
 	});
 	

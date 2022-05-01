@@ -12,6 +12,7 @@ import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
+import net.vgc.game.GameType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.player.GameProfile;
@@ -90,7 +91,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handleClientPlayerAdd(GameProfile gameProfile) {
+	public void handlePlayerAdd(GameProfile gameProfile) {
 		this.checkSide();
 		if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
 			if (this.client.getPlayer() == null) {
@@ -104,7 +105,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public void handleClientPlayerRemove(GameProfile gameProfile) {
+	public void handlePlayerRemove(GameProfile gameProfile) {
 		this.checkSide();
 		if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
 			this.client.removePlayer();
@@ -118,14 +119,51 @@ public class ClientPacketListener extends AbstractPacketListener {
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player.getGameProfile().equals(gameProfile)) {
 				player.setAdmin(true);
+				LOGGER.debug("Player {} is now a admin", player.getGameProfile().getName());
 			} else {
 				player.setAdmin(false);
 			}
 		}
-		LOGGER.info("Admins {}", this.client.getPlayers().stream().map(AbstractClientPlayer::isAdmin).collect(Collectors.toList()));
+		LOGGER.info("Sync admins to value {}, should not be larger than 1", this.client.getPlayers().stream().filter(AbstractClientPlayer::isAdmin).collect(Collectors.toList()).size());
+	}
+	
+	public void handleStartGame(GameType<?> gameType, List<GameProfile> gameProfiles) {
+		this.checkSide();
+		boolean flag = false;
+		for (AbstractClientPlayer player : this.client.getPlayers(gameProfiles)) {
+			player.setPlaying(true);
+			if (this.client.getPlayer().getGameProfile().equals(player.getGameProfile())) {
+				flag = true;
+			}
+		}
+		if (flag) {
+			gameType.openScreen();
+		} else {
+			LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", gameType.getName());
+			this.client.setScreen(new LobbyScreen());
+		}
+	}
+	
+	public void handleExitGame() {
+		LOGGER.info("Exit the current game");
+		if (this.client.getPlayer().isPlaying()) {
+			this.client.getPlayer().setPlaying(false);
+		} else {
+			LOGGER.warn("Received a ExitGamePacket, but the local player is not playing a game");
+		}
+		this.client.setScreen(new LobbyScreen());
+	}
+	
+	public void handleStopGame() {
+		LOGGER.info("Stopping the current game");
+		for (AbstractClientPlayer player : this.client.getPlayers()) {
+			player.setPlaying(false);
+		}
+		this.client.setScreen(new LobbyScreen());
 	}
 	
 	public void handleServerClosed() {
+		this.checkSide();
 		this.client.getServerHandler().close();
 		this.client.removePlayer();
 		this.client.setScreen(new MenuScreen());

@@ -6,37 +6,44 @@ import com.google.common.collect.Lists;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import net.vgc.Constans;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.game.Game;
+import net.vgc.game.GameType;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.client.ClientPlayerAddPacket;
-import net.vgc.network.packet.client.ClientPlayerRemovePacket;
-import net.vgc.network.packet.client.ClientScreenPacket;
+import net.vgc.network.packet.client.CancelPlayGameRequestPacket;
+import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.PlayerAddPacket;
+import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
+import net.vgc.network.packet.server.PlayGameRequestPacket;
+import net.vgc.util.Util;
 
 public class PlayerSelectScreen extends Screen {
 	
-	protected final Game game;
+	protected final GameType<?> gameType;
 	protected final Screen backScreen;
 	protected ListView<String> playerList;
 	protected ButtonBox backButtonBox;
 	protected ButtonBox playButtonBox;
 	
-	public PlayerSelectScreen(Game game, Screen backScreen) {
-		this.game = game;
+	public PlayerSelectScreen(GameType<?> gameType, Screen backScreen) {
+		this.gameType = gameType;
 		this.backScreen = backScreen;
 	}
 	
 	@Override
 	public void init() {
 		this.playerList = new ListView<>();
+		this.playerList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
-			this.playerList.getItems().add(player.getGameProfile().getName());
+			if (!player.isPlaying()) {
+				this.playerList.getItems().add(player.getGameProfile().getName());
+			}
 		}
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 		this.playButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.player_select.play"), this::handlePlay);
@@ -50,10 +57,10 @@ public class PlayerSelectScreen extends Screen {
 		if (this.client.getPlayer().isAdmin()) {
 			List<String> selected = this.playerList.getSelectionModel().getSelectedItems();
 			int selectCount = selected.size();
-			if (selectCount > this.game.getMaxPlayers()) {
-				LOGGER.info("Unable to play game {}, since too many players were selected", this.game);
-			} else if (this.game.getMinPlayers() > selectCount) {
-				LOGGER.info("Unable to play game {}, since too few players were selected", this.game);
+			if (selectCount > this.gameType.getMaxPlayers()) {
+				LOGGER.info("Unable to play game {}, since too many players {} were selected", this.gameType, selectCount);
+			} else if (this.gameType.getMinPlayers() > selectCount) {
+				LOGGER.info("Unable to play game {}, since too few players {} were selected", this.gameType, selectCount);
 			} else {
 				List<AbstractClientPlayer> players = Lists.newArrayList();
 				for (AbstractClientPlayer player : this.client.getPlayers()) {
@@ -65,7 +72,8 @@ public class PlayerSelectScreen extends Screen {
 					LOGGER.warn("The player count does not match with the count of the selected players");
 					this.playerList.getSelectionModel().clearSelection();
 				} else {
-					LOGGER.debug("Play game");
+					LOGGER.debug("Send play game request to server");
+					this.client.getServerHandler().send(new PlayGameRequestPacket(this.gameType, players));
 				}
 			}
 		} else {
@@ -80,16 +88,21 @@ public class PlayerSelectScreen extends Screen {
 	}
 	
 	@Override
-	public void handlePacket(ClientScreenPacket clientPacket) {
-		if (clientPacket instanceof ClientPlayerAddPacket || clientPacket instanceof ClientPlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
-			this.refreshPlayers();
+	public void handlePacket(ClientPacket clientPacket) {
+		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
+			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
+		} else if (clientPacket instanceof CancelPlayGameRequestPacket) {
+			LOGGER.info("The game request was canceled by the server");
+			this.handleBack();
 		}
 	}
 	
 	public void refreshPlayers() {
 		this.playerList.getItems().clear();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
-			this.playerList.getItems().add(player.getGameProfile().getName());
+			if (!player.isPlaying()) {
+				this.playerList.getItems().add(player.getGameProfile().getName());
+			}
 		}
 	}
 

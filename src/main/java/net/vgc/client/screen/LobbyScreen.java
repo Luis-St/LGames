@@ -8,12 +8,13 @@ import javafx.scene.layout.Pane;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.screen.game.GameScreen;
-import net.vgc.game.Games;
+import net.vgc.game.GameTypes;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
+import net.vgc.util.Util;
 
 public class LobbyScreen extends GameScreen {
 	
@@ -26,16 +27,20 @@ public class LobbyScreen extends GameScreen {
 	@Override
 	public void init() {
 		this.tttButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.ttt"), this::handleTTT);
+		this.tttButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 	}
 	
 	protected void handleTTT() {
-		this.showScreen(new PlayerSelectScreen(Games.TIC_TAC_TOE, this));
+		if (this.client.getPlayer().isAdmin()) {
+			this.showScreen(new PlayerSelectScreen(GameTypes.TIC_TAC_TOE, this));
+		}
 	}
 	
 	@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
-			this.refreshPlayers();
+			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
+			this.tttButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 		}
 	}
 	
