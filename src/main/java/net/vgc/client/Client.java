@@ -38,6 +38,7 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
+import net.vgc.player.GameProfile;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
@@ -278,6 +279,20 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	
 	public List<AbstractClientPlayer> getPlayers() {
 		return this.players;
+	}
+	
+	public List<AbstractClientPlayer> getPlayers(List<GameProfile> gameProfiles) {
+		List<AbstractClientPlayer> players = Lists.newArrayList();
+		for (AbstractClientPlayer player : this.players) {
+			if (gameProfiles.contains(player.getGameProfile())) {
+				players.add(player);
+			}
+		}
+		if (gameProfiles.size() > players.size()) {
+			int i = gameProfiles.size() - players.size();
+			LOGGER.warn("Fail to get the player for {} game profile{}", i, i > 1 ? "s" : "");
+		}
+		return players;
 	}
 	
 	public void addRemotePlayer(RemotePlayer player) {

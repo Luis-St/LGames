@@ -23,7 +23,7 @@ public class PlayerRemovePacket implements ClientPacket {
 	
 	@Override
 	public void handle(ClientPacketListener listener) {
-		listener.handleClientPlayerRemove(this.gameProfile);
+		listener.handlePlayerRemove(this.gameProfile);
 	}
 	
 }

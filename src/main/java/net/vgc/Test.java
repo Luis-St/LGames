@@ -34,7 +34,6 @@ public class Test {
 			list.add(new Translation("client.constans.name", "Virtual Game Collection"));
 			list.add(new Translation("screen.loading.title", "Loading Virtual Game Collection"));
 			list.add(new Translation("screen.loading.loading.text", "Loading %1%%"));
-			list.add(new Translation("screen.menu.singleplayer", "Singleplayer"));
 			list.add(new Translation("screen.menu.multiplayer", "Multiplayer"));
 			list.add(new Translation("screen.menu.settings", "Settings"));
 			list.add(new Translation("screen.menu.login", "Login"));
@@ -91,7 +90,6 @@ public class Test {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
 			list.add(new Translation("screen.loading.title", "Virtuelle Spielesammlung wird geladen"));
 			list.add(new Translation("screen.loading.loading.text", "Wird geladen %1%%"));
-			list.add(new Translation("screen.menu.singleplayer", "Einzelspieler"));
 			list.add(new Translation("screen.menu.multiplayer", "Mehrspieler"));
 			list.add(new Translation("screen.menu.settings", "Einstellungen"));
 			list.add(new Translation("screen.menu.login", "Anmeldung"));

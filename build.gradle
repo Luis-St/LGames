@@ -89,6 +89,14 @@ task testRun(type:JavaExec) {
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
+task fxTestRun(type:JavaExec) {
+	group = "runs"
+	main = "net.vgc.FxTest"
+	classpath = sourceSets.main.runtimeClasspath
+	enableAssertions = true
+	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
+}
+
 wrapper {
     gradleVersion = "7.3"
     distributionType = Wrapper.DistributionType.ALL

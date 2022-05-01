@@ -23,7 +23,7 @@ public class PlayerAddPacket implements ClientPacket {
 	
 	@Override
 	public void handle(ClientPacketListener listener) {
-		listener.handleClientPlayerAdd(this.gameProfile);
+		listener.handlePlayerAdd(this.gameProfile);
 	}
 	
 }
