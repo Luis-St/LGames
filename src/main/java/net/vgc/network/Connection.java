@@ -44,11 +44,11 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	protected void channelRead0(ChannelHandlerContext context, Packet<?> packet) throws Exception {
 		if (this.channel.isOpen()) {
 			try {
-				LOGGER.debug("Received Packet of type {}", packet.getClass().getSimpleName());
+				LOGGER.debug("Received packet of type {}", packet.getClass().getSimpleName());
 				this.handle(this.listener, packet);
 				++this.receivedPackets;
 			} catch (ClassCastException e) {
-				LOGGER.warn("Fail to handle Packet of type {}", packet.getClass().getSimpleName());
+				LOGGER.warn("Fail to handle packet of type {}", packet.getClass().getSimpleName());
 				++this.failedPackets;
 			}
 		}
@@ -57,16 +57,16 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
 		if (cause instanceof SkipPacketException) {
-			LOGGER.info("Skipping Packet");
+			LOGGER.info("Skipping packet");
 		} else if (this.channel.isOpen()) {
 			LOGGER.warn("Caught Exception", cause);
 			if (cause instanceof TimeoutException) {
 				throw new IOException("Timeout", cause);
 			} else {
-				throw new IOException("Internal Exception", cause);
+				throw new IOException("Internal exception", cause);
 			}
 		} else {
-			LOGGER.warn("Caught Exception while channel is closed", cause);
+			LOGGER.warn("Caught exception while channel is closed", cause);
 		}
 	}
 	
@@ -96,14 +96,14 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 			this.flush();
 			this.sendPacket(packet, listener, false);
 		} else {
-			LOGGER.info("Unable to send Packet, since the connection is not open");
+			LOGGER.info("Unable to send packet, since the connection is not open");
 			this.waitingPackets.add(new Connection.PacketHolder(packet, listener));
 		}
 	}
 	
 	protected void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener, boolean waiting) {
 		ChannelFuture channelFuture = this.channel.writeAndFlush(packet);
-		LOGGER.debug("Send{}Packet of type {}", waiting ? " waiting " : " ", packet.getClass().getSimpleName());
+		LOGGER.debug("Send{}packet of type {}", waiting ? " waiting " : " ", packet.getClass().getSimpleName());
 		if (listener != null) {
 			channelFuture.addListener(listener);
 		}

@@ -25,7 +25,7 @@ public class Main {
 	 *  - add super class for Windows
 	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
-	 *  - rework of ConnectionHandler close connection and reopen will not work
+	 *  - Packet to client -> account server disconnect and account logout
 	 */
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
@@ -76,7 +76,7 @@ public class Main {
 			LOGGER.trace("Can not launch a server and a account server");
 			System.exit(-1);
 		} else if (!client && !server && !account) {
-			LOGGER.trace("Unknown launch type for the Virtual Game Collection, use '--client' to start a client, '--server' to start a server or '--account' to start a account server");
+			LOGGER.trace("Unknown launch type for the virtual game collection, use '--client' to start a client, '--server' to start a server or '--account' to start a account server");
 			System.exit(-1);
 		}
 	}

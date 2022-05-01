@@ -32,6 +32,7 @@ public class Test {
 	protected static void makeLanguageFiles() {
 		List<Translation> english = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtual Game Collection"));
+			list.add(new Translation("window.error.continue", "Continue"));
 			list.add(new Translation("screen.loading.title", "Loading Virtual Game Collection"));
 			list.add(new Translation("screen.loading.loading.text", "Loading %1%%"));
 			list.add(new Translation("screen.menu.multiplayer", "Multiplayer"));
@@ -88,6 +89,7 @@ public class Test {
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
+			list.add(new Translation("window.error.continue", "Weiter"));
 			list.add(new Translation("screen.loading.title", "Virtuelle Spielesammlung wird geladen"));
 			list.add(new Translation("screen.loading.loading.text", "Wird geladen %1%%"));
 			list.add(new Translation("screen.menu.multiplayer", "Mehrspieler"));

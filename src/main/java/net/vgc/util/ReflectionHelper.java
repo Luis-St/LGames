@@ -62,7 +62,7 @@ public class ReflectionHelper {
 		} catch (IllegalArgumentException e) {
 			LOGGER.warn("The arguments " + parameterNames + " does not match with those of the constructor");
 		} catch (InvocationTargetException e) {
-			LOGGER.warn("Something went wrong while invoke the Cconstructor of class " + constructor.getDeclaringClass().getSimpleName(), e);
+			LOGGER.warn("Something went wrong while invoke the constructor of class " + constructor.getDeclaringClass().getSimpleName(), e);
 		}
 		return instance;
 	}

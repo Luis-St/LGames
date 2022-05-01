@@ -28,7 +28,7 @@ public class SerializationUtil {
 				LOGGER.warn("Tag {} is not an instance of CompoundTag, but it is a type of {}", tag, tag.getClass().getSimpleName());
 			}
 		} catch (Exception e) {
-			LOGGER.warn("Fail to load Tag from file " + path, e);
+			LOGGER.warn("Fail to load tag from file " + path, e);
 		}
 		return null;
 	}

@@ -20,8 +20,8 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 	protected void encode(ChannelHandlerContext context, Packet<?> packet, ByteBuf output) throws Exception {
 		int id = Packets.getId((Class<? extends Packet<?>>) packet.getClass());
 		if (id == -1) {
-			LOGGER.error("Can not encode Packet {}", packet.getClass().getSimpleName());
-			throw new IOException("Can not encode Packet " + packet.getClass().getSimpleName() + ", since it is not registered");
+			LOGGER.error("Can not encode packet {}", packet.getClass().getSimpleName());
+			throw new IOException("Can not encode packet " + packet.getClass().getSimpleName() + ", since it is not registered");
 		} else {
 			FriendlyByteBuffer buffer = new FriendlyByteBuffer(output);
 			buffer.writeInt(id);
@@ -37,8 +37,8 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 				if (packet.skippable()) {
 					throw new SkipPacketException(e);
 				} else {
-					LOGGER.error("Fail to encode Packet {} with id {}, since it is not skippable", packet.getClass().getSimpleName(), id);
-					throw new RuntimeException("Fail to encode Packet " + packet.getClass().getSimpleName(), e);
+					LOGGER.error("Fail to encode packet {} with id {}, since it is not skippable", packet.getClass().getSimpleName(), id);
+					throw new RuntimeException("Fail to encode packet " + packet.getClass().getSimpleName(), e);
 				}
 			}
 

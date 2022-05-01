@@ -72,7 +72,7 @@ public class FxUtil {
 			imageView.setFitHeight(heigh);
 			imageView.setSmooth(true);
 		} catch (IOException e) {
-			LOGGER.error("Unable to load image " + file.toPath(), e);
+			LOGGER.error("Fail to load image " + file.toPath(), e);
 			throw new RuntimeException();
 		}
 		return imageView;

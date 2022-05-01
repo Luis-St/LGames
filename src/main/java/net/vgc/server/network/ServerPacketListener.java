@@ -70,7 +70,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 			if (mutable.isTrue()) {
 				LOGGER.warn("Fail to start game {}, since on player is already playing a game", gameType.getName());
 			} else {
-				LOGGER.warn("Fail to start game {}, since there was an error in a GameProfile", gameType.getName());
+				LOGGER.warn("Fail to start game {}, since there was an error in a game profile", gameType.getName());
 			}
 			this.connection.send(new CancelPlayGameRequestPacket());
 		}

@@ -24,12 +24,12 @@ public class PacketDecoder extends ByteToMessageDecoder {
 			int id = buffer.readInt();
 			Packet<?> packet = Packets.getPacket(id, buffer);
 			if (packet == null) {
-				LOGGER.error("Fail to get Packet for id {}" + id);
-				throw new IOException("Fail to get Packet for id: " + id);
+				LOGGER.error("Fail to get packet for id {}" + id);
+				throw new IOException("Fail to get packet for id: " + id);
 			} else {
 				int readableBytes = buffer.readableBytes();
 				if (readableBytes > 0) {
-					LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading Packet: {} with id: {}", readableBytes, Packets.byId(id).getSimpleName(), id);
+					LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading packet {} with id: {}", readableBytes, Packets.byId(id).getSimpleName(), id);
 //					LOGGER.error("Packet {} was to larger then expected", Packets.byId(id).getSimpleName());
 //					throw new IOException("Packet was to larger then expected, found " + readableBytes + " extra bytes whilst reading Packet: " + Packets.byId(id).getSimpleName() + " with id: " + id);
 				} else {

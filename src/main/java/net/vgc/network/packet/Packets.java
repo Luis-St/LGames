@@ -65,7 +65,7 @@ public class Packets {
 		if (clazz != null) {
 			return clazz;
 		}
-		LOGGER.warn("Unable to get Packet for id {}", id);
+		LOGGER.warn("Unable to get packet for id {}", id);
 		return null;
 	}
 	
@@ -75,7 +75,7 @@ public class Packets {
 				return entry.getKey();
 			}
 		}
-		LOGGER.warn("Unable to get Packet id for Packet {}", clazz.getSimpleName());
+		LOGGER.warn("Unable to get packet id for Packet {}", clazz.getSimpleName());
 		return -1;
 	}
 	
@@ -92,7 +92,7 @@ public class Packets {
 					throw new InvalidPacketException("Packet " + clazz.getSimpleName() + " does not have a FriendlyByteBuffer constructor");
 				}
 			} catch (Exception e) {
-				LOGGER.error("Fail to get create Packet of type {} for id {}", clazz.getSimpleName(), id);
+				LOGGER.error("Fail to get create packet of type {} for id {}", clazz.getSimpleName(), id);
 				throw new RuntimeException(e);
 			}
 		}

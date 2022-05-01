@@ -54,7 +54,7 @@ public interface Tag {
 	
 	static Tag load(Path path) throws IOException {
 		if (!Files.exists(path)) {
-			LOGGER.warn("Fail to load Tag from {}, since the file does not exists", path);
+			LOGGER.warn("Fail to load tag from {}, since the file does not exists", path);
 			return EndTag.INSTANCE;
 		}
 		DataInputStream input = DataUtil.inputStream(path);

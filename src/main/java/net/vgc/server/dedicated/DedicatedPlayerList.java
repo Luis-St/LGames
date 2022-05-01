@@ -99,7 +99,7 @@ public class DedicatedPlayerList implements Tickable {
 			if (player != null) {
 				players.add(player);
 			} else {
-				LOGGER.warn("Fail to get player for GameProfile {}", gameProfile);
+				LOGGER.warn("Fail to get player for game profile {}", gameProfile);
 			}
 		}
 		return players;

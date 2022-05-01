@@ -134,7 +134,7 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 				this.settings = new ClientSettings(tag);
 				LOGGER.debug("Load settings");
 			} else {
-				LOGGER.warn("Fail to load settings from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", settingsPath, settingsTag, settingsTag.getClass().getSimpleName());
+				LOGGER.warn("Fail to load settings from file {}, since tag {} is not an instance of CompoundTag, but it is a type of {}", settingsPath, settingsTag, settingsTag.getClass().getSimpleName());
 			}
 		} else {
 			this.settings = new ClientSettings();
@@ -207,7 +207,7 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 				if (screen != null) {
 					screen.handlePacket(screenUpdate);
 				} else {
-					LOGGER.warn("Fail to handle Packet of type {} in screen, since there is no screen set", packet.getClass().getSimpleName());
+					LOGGER.warn("Fail to handle packet of type {} in screen, since there is no screen set", packet.getClass().getSimpleName());
 				}
 			}
 		} else {

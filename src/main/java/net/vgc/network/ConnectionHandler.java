@@ -63,7 +63,7 @@ public class ConnectionHandler {
 		if (this.isConnected()) {
 			this.connection.send(packet);
 		} else {
-			LOGGER.warn("Fail to send Packet to {} since the connection is closed", this.connectTo);
+			LOGGER.warn("Fail to send packet to {} since the connection is closed", this.connectTo);
 		}
 	}
 	

@@ -31,7 +31,7 @@ public class ClasspathInspector {
 			try {
 				classes.add(Class.forName(className));
 			} catch (ClassNotFoundException e) {
-				LOGGER.error("Fail to find Class for name {}, since it does not exists", className);
+				LOGGER.error("Fail to find class for name {}, since it does not exists", className);
 				throw new RuntimeException(e);
 			}
 		}

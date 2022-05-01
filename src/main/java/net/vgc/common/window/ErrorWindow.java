@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
 import net.vgc.common.ErrorLevel;
+import net.vgc.language.TranslationKey;
 import net.vgc.network.NetworkSide;
 import net.vgc.server.Server;
 
@@ -93,7 +94,7 @@ public class ErrorWindow {
 				height = Math.max(100.0, d + 50.0);
 			}
 		}
-		Button button = new Button("Continue");
+		Button button = new Button(TranslationKey.createAndGet("window.error.continue"));
 		button.setOnAction((event) -> {
 			stage.close();
 			this.action.run();

@@ -69,7 +69,7 @@ public class MultiplayerScreen extends Screen {
 				if (handler.isConnected()) {
 					handler.send(packet);
 				} else {
-					LOGGER.warn("Unable to send Packet of type {} to virtual game collection server, since connection is closed", packet.getClass().getSimpleName());
+					LOGGER.warn("Unable to send packet of type {} to virtual game collection server, since connection is closed", packet.getClass().getSimpleName());
 				}
 			});
 		} catch (Exception e) {

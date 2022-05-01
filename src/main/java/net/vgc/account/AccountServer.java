@@ -143,11 +143,11 @@ public class AccountServer extends GameApplication<AccountServerPacketListener> 
 									LOGGER.debug("Load {} account", account);
 									accounts.add(account);
 								} else {
-									LOGGER.error("Fail to load PlayerAccount");
-									throw new NullPointerException("Something went wrong while loading accounts, since \"account\" is null");
+									LOGGER.error("Fail to load player account");
+									throw new NullPointerException("Something went wrong while loading player accounts, since \"account\" is null");
 								}
 							} else {
-								LOGGER.warn("Fail to load account, since Tag {} is not an instance of CompoundTag, but it is a type of {}", accountsTag, accountTag.getClass().getSimpleName());
+								LOGGER.warn("Fail to load account, since tag {} is not an instance of CompoundTag, but it is a type of {}", accountsTag, accountTag.getClass().getSimpleName());
 							}
 						}
 					}
@@ -155,11 +155,11 @@ public class AccountServer extends GameApplication<AccountServerPacketListener> 
 					if (loadTag.isEmpty()) {
 						LOGGER.info("No accounts present in {}", path);
 					} else {
-						LOGGER.warn("Fail to load accounts from file {}, since the CompoundTag {} does not contains the key \"accounts\"", path, loadTag);
+						LOGGER.warn("Fail to load player accounts from file {}, since the CompoundTag {} does not contains the key \"accounts\"", path, loadTag);
 					}
 				}
 			} else {
-				LOGGER.warn("Fail to load accounts from file {}, since Tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());	
+				LOGGER.warn("Fail to load player accounts from file {}, since tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());	
 			}
 		}
 		LOGGER.debug("Load {} accounts", accounts.size());
@@ -301,7 +301,7 @@ public class AccountServer extends GameApplication<AccountServerPacketListener> 
 			if (account != null) {
 				accountsTag.add(account.serialize());
 			} else {
-				LOGGER.warn("Fail to save PlayerAccount, since it was null");
+				LOGGER.warn("Fail to save player account, since it was null");
 			}
 		}
 		if (!accountsTag.isEmpty()) {
@@ -312,7 +312,7 @@ public class AccountServer extends GameApplication<AccountServerPacketListener> 
 	}
 	
 	@Override
-	protected void handleStop() throws Exception { // TODO: Packet to client -> server disconnect and account logout
+	protected void handleStop() throws Exception {
 		this.agent.close();
 		this.connections.clear();
 		this.channels.forEach(Channel::close);

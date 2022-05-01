@@ -49,7 +49,7 @@ public class Setting<T> implements Serializable {
 		this.description = TagUtil.readTranslationKey(tag.getCompound("description_key"));
 		int valueTypeId = tag.getInt("value_type");
 		this.valueType = (SettingValueType<T>) SettingValueTypes.fromId(valueTypeId);
-		Objects.requireNonNull(this.valueType, "Fail to load SettingValueType from Tag, since SettingValueType with id " + valueTypeId + " is not registered or does not exists");
+		Objects.requireNonNull(this.valueType, "Fail to load SettingValueType from tag, since SettingValueType with id " + valueTypeId + " is not registered or does not exists");
 		this.defaultValue = this.valueType.getValue(tag.getString("default_value"));
 		this.possibleValues = TagUtil.readList(tag.getList("possible_values", Tag.STRING_TAG), (stringTag) -> {
 			return Setting.this.valueType.getValue(((StringTag) stringTag).getAsString());
@@ -66,9 +66,9 @@ public class Setting<T> implements Serializable {
 	
 	protected void triggerListeners(T oldValue, T newValue) {
 		if (oldValue == null) {
-			LOGGER.debug("Update value of Setting {} from default {} to {}", this.name.getValue(Languages.EN_US), this.defaultValue, newValue);
+			LOGGER.debug("Update value of setting {} from default {} to {}", this.name.getValue(Languages.EN_US), this.defaultValue, newValue);
 		} else {
-			LOGGER.debug("Update value of Setting {} from {} to {}", this.name.getValue(Languages.EN_US), oldValue, newValue);
+			LOGGER.debug("Update value of setting {} from {} to {}", this.name.getValue(Languages.EN_US), oldValue, newValue);
 		}
 		this.listeners.forEach((listener) -> {
 			listener.accept(oldValue, newValue);

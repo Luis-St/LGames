@@ -51,7 +51,7 @@ public abstract class AbstractServer implements Tickable {
 			if (loadTag instanceof CompoundTag tag) {
 				this.load(tag);
 			} else {
-				LOGGER.warn("Fail to load server from {}, since Tag {} is not a instance of CompoundTag but it is a Tag of type {}", path, loadTag, loadTag.getClass().getSimpleName());
+				LOGGER.warn("Fail to load server from {}, since tag {} is not a instance of CompoundTag but it is a tag of type {}", path, loadTag, loadTag.getClass().getSimpleName());
 			}
 		}
 	}
@@ -70,7 +70,7 @@ public abstract class AbstractServer implements Tickable {
 				LOGGER.info("Server admin joined the server");
 				this.adminPlayer = player;
 			} else {
-				LOGGER.error("Unable to set admin Player to {}, since he is already set {}", player, this.adminPlayer);
+				LOGGER.error("Unable to set admin player to {}, since he is already set {}", player, this.adminPlayer);
 				throw new IllegalStateException("Multiple server admins are not allowed");
 			}
 		}

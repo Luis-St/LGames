@@ -261,7 +261,7 @@ public class ListTag extends CollectionTag<Tag> {
 	public Tag set(int index, Tag tag) {
 		Tag oldTag = this.get(index);
 		if (!this.setTag(index, tag)) {
-			throw new UnsupportedOperationException(String.format("Trying to add tag of type %d to data of %d", tag.getId(), this.type));
+			LOGGER.warn("Try to add tag of type {} to data of [}",tag.getId(), this.type);
 		}
 		return oldTag;
 	}
@@ -269,7 +269,7 @@ public class ListTag extends CollectionTag<Tag> {
 	@Override
 	public void add(int index, Tag tag) {
 		if (!this.addTag(index, tag)) {
-			throw new UnsupportedOperationException(String.format("Trying to add tag of type %d to data of %d", tag.getId(), this.type));
+			LOGGER.warn("Try to add tag of type {} to data of [}",tag.getId(), this.type);
 		}
 	}
 	

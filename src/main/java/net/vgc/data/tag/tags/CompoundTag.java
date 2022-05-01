@@ -133,7 +133,7 @@ public class CompoundTag implements Tag {
 	@Nullable
 	public Tag put(String key, Tag tag) {
 		if (tag == null) {
-			throw new IllegalArgumentException("Invalid Tag with value null for key: " + key);
+			throw new IllegalArgumentException("Invalid tag with value null for key: " + key);
 		}
 		return this.data.put(key, tag);
 	}
