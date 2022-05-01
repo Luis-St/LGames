@@ -1,6 +1,5 @@
 package net.vgc.network;
 
-import net.vgc.Constans;
 import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
 import net.vgc.network.packet.Packet;
@@ -48,7 +47,7 @@ public enum NetworkSide implements PacketHandler<Packet<?>> {
 	}
 	
 	public boolean isOn() {
-		return Network.INSTANCE.getNetworkSide() == this && Constans.LAUNCH_TYPE.equals(this.name);
+		return Network.INSTANCE.getNetworkSide() == this;
 	}
 	
 	@Override

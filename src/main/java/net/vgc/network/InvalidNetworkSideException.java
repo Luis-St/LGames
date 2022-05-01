@@ -9,11 +9,11 @@ public class InvalidNetworkSideException extends RuntimeException {
 	}
     
 	public InvalidNetworkSideException(NetworkSide networkSide) {
-		super("Invalid NetworkSide for " + networkSide + " since the current NetworkSide is " + Network.INSTANCE.getNetworkSide());
+		super("Invalid network side for " + networkSide + " since the current network side is " + Network.INSTANCE.getNetworkSide());
 	}
 
 	public InvalidNetworkSideException(NetworkSide networkSide, Throwable cause) {
-		super("Invalid NetworkSide for " + networkSide + " since the current NetworkSide is " + Network.INSTANCE.getNetworkSide(), cause);
+		super("Invalid network side for " + networkSide + " since the current network side is " + Network.INSTANCE.getNetworkSide(), cause);
 	}
 
 }
