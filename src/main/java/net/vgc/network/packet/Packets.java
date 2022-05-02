@@ -75,7 +75,7 @@ public class Packets {
 				return entry.getKey();
 			}
 		}
-		LOGGER.warn("Unable to get packet id for Packet {}", clazz.getSimpleName());
+		LOGGER.warn("Unable to get packet id for packet {}", clazz.getSimpleName());
 		return -1;
 	}
 	
