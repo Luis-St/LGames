@@ -8,7 +8,6 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import net.vgc.game.Game;
 import net.vgc.game.GameType;
-import net.vgc.game.action.GameEvent;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.CancelPlayGameRequestPacket;
@@ -74,15 +73,6 @@ public class ServerPacketListener extends AbstractPacketListener {
 				LOGGER.warn("Fail to start game {}, since there was an error in a game profile", gameType.getName());
 			}
 			this.connection.send(new CancelPlayGameRequestPacket());
-		}
-	}
-	
-	public void handleGameEvent(GameEvent event) {
-		Game game = this.server.getGame();
-		if (game != null) {
-			game.getActionHandler().handle(event);
-		} else {
-			LOGGER.warn("Unable to handle game event {}, since there is no game running", event.getClass().getSimpleName());
 		}
 	}
 	

@@ -1,7 +1,6 @@
 package net.vgc.game.ttt;
 
 import net.vgc.game.action.ActionHandler;
-import net.vgc.game.action.GameEvent;
 
 public class TTTActionHandler implements ActionHandler {
 	
@@ -12,7 +11,7 @@ public class TTTActionHandler implements ActionHandler {
 	}
 	
 	@Override
-	public void handle(GameEvent event) {
+	public void handle() {
 
 	}
 
