@@ -21,8 +21,6 @@ public interface Game {
 	
 	GameType<? extends Game> getType();
 	
-	ActionHandler getActionHandler();
-	
 	List<ServerPlayer> getPlayers();
 	
 	@Nullable
