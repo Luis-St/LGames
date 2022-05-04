@@ -45,5 +45,13 @@ public class PlayGameRequestPacket implements ServerPacket {
 	public void handle(ServerPacketListener listener) {
 		listener.handlePlayGameRequest(this.gameType, this.gameProfiles);
 	}
+	
+	public GameType<?> getGameType() {
+		return this.gameType;
+	}
+	
+	public List<GameProfile> getGameProfiles() {
+		return this.gameProfiles;
+	}
 
 }

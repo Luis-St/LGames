@@ -39,5 +39,9 @@ public class ClientJoinedPacket implements ClientPacket {
 	public void handle(ClientPacketListener listener) {
 		listener.handleClientJoined(this.gameProfiles);
 	}
+	
+	public List<GameProfile> getGameProfiles() {
+		return this.gameProfiles;
+	}
 
 }

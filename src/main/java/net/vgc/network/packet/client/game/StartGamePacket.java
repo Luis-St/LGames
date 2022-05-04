@@ -1,4 +1,4 @@
-package net.vgc.network.packet.client;
+package net.vgc.network.packet.client.game;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +9,7 @@ import net.vgc.client.network.ClientPacketListener;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
 import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
 
@@ -44,6 +45,14 @@ public class StartGamePacket implements ClientPacket {
 	@Override
 	public void handle(ClientPacketListener listener) {
 		listener.handleStartGame(this.gameType, this.gameProfiles);
+	}
+	
+	public GameType<?> getGameType() {
+		return this.gameType;
+	}
+	
+	public List<GameProfile> getGameProfiles() {
+		return this.gameProfiles;
 	}
 	
 }

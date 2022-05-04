@@ -34,5 +34,17 @@ public class ClientLoggedInPacket implements ClientPacket {
 	public void handle(ClientPacketListener listener) {
 		listener.handleClientLoggedIn(this.loginType, this.account, this.successful);
 	}
-
+	
+	public LoginType getLoginType() {
+		return this.loginType;
+	}
+	
+	public PlayerAccount getAccount() {
+		return this.account;
+	}
+	
+	public boolean isSuccessful() {
+		return this.successful;
+	}
+	
 }

@@ -25,5 +25,9 @@ public class ClientExitPacket implements AccountPacket {
 	public void handle(AccountServerPacketListener listener) {
 		listener.handleClientLogoutExit(this.account.getName(), this.account.getPassword());
 	}
+	
+	public PlayerAccount getAccount() {
+		return this.account;
+	}
 
 }

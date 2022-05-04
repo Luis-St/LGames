@@ -25,5 +25,9 @@ public class SyncPermissionPacket implements ClientPacket {
 	public void handle(ClientPacketListener listener) {
 		listener.handleSyncPermission(this.gameProfile);
 	}
+	
+	public GameProfile getGameProfile() {
+		return this.gameProfile;
+	}
 
 }

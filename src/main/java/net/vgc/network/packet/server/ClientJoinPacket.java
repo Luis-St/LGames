@@ -30,5 +30,13 @@ public class ClientJoinPacket implements ServerPacket {
 	public void handle(ServerPacketListener listener) {
 		listener.handleClientJoin(this.name, this.uuid);
 	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public UUID getUUID() {
+		return this.uuid;
+	}
 
 }

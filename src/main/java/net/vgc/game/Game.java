@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.vgc.game.action.ActionHandler;
 import net.vgc.network.packet.client.ExitGamePacket;
-import net.vgc.network.packet.client.StopGamePacket;
+import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.server.Server;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;

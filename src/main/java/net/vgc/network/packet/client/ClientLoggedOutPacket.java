@@ -24,5 +24,9 @@ public class ClientLoggedOutPacket implements ClientPacket {
 	public void handle(ClientPacketListener listener) {
 		listener.handleClientLoggedOut(this.successful);
 	}
+	
+	public boolean isSuccessful() {
+		return this.successful;
+	}
 
 }

@@ -13,6 +13,7 @@ import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.game.GameType;
+import net.vgc.game.ttt.TTTGrid;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.player.GameProfile;
@@ -160,6 +161,10 @@ public class ClientPacketListener extends AbstractPacketListener {
 			player.setPlaying(false);
 		}
 		this.client.setScreen(new LobbyScreen());
+	}
+	
+	public void handleUpdateTTTGame(TTTGrid grid, GameProfile gameProfile) {
+		
 	}
 	
 	public void handleServerClosed() {

@@ -26,4 +26,8 @@ public class PlayerRemovePacket implements ClientPacket {
 		listener.handlePlayerRemove(this.gameProfile);
 	}
 	
+	public GameProfile getGameProfile() {
+		return this.gameProfile;
+	}
+	
 }

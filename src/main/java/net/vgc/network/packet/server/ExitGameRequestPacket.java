@@ -25,5 +25,9 @@ public class ExitGameRequestPacket implements ServerPacket {
 	public void handle(ServerPacketListener listener) {
 		listener.handleExitGameRequest(this.gameProfile);
 	}
+	
+	public GameProfile getGameProfile() {
+		return this.gameProfile;
+	}
 
 }

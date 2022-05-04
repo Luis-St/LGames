@@ -26,4 +26,8 @@ public class PlayerAddPacket implements ClientPacket {
 		listener.handlePlayerAdd(this.gameProfile);
 	}
 	
+	public GameProfile getGameProfile() {
+		return this.gameProfile;
+	}
+	
 }

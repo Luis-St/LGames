@@ -27,7 +27,7 @@ public class Main {
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
 	 *  - Packet to client -> account server disconnect and account logout
 	 *  - fix Logger
-	 *  - 
+	 *  - rework of Button Position in TTT Game -> Use enum for left/mid/right and top/center/bottom
 	 */
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);

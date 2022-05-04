@@ -32,5 +32,9 @@ public class ClientLeavePacket implements ServerPacket {
 	public void handle(ServerPacketListener listener) {
 		listener.handleClientLeave(this.uuid);
 	}
-
+	
+	public UUID getUUID() {
+		return this.uuid;
+	}
+	
 }

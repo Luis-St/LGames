@@ -34,4 +34,16 @@ public class ClientLoginPacket implements AccountPacket {
 		listener.handleClientLogin(this.loginType, this.name, this.password);
 	}
 	
+	public LoginType getLoginType() {
+		return this.loginType;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getPassword() {
+		return this.password;
+	}
+	
 }
