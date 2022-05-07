@@ -47,7 +47,7 @@ public class DedicatedPlayerList implements Tickable {
 			this.broadcastAllExclude(new PlayerAddPacket(player.getGameProfile()), player);
 			if (this.server.isAdmin(player)) {
 				Util.runDelayed("PacketSendDelay", 1000, () -> {
-					player.connection.send(new SyncPermissionPacket(player.getGameProfile()));
+					this.broadcastAll(new SyncPermissionPacket(player.getGameProfile()));
 				});
 			} else if (this.server.getAdminPlayer() != null) {
 				Util.runDelayed("PacketSendDelay", 1000, () -> {
@@ -88,6 +88,21 @@ public class DedicatedPlayerList implements Tickable {
 		return this.players.size();
 	}
 	
+	@Nullable
+	public ServerPlayer getPlayer(UUID uuid) {
+		for (ServerPlayer player : this.players) {
+			if (player.getGameProfile().getUUID().equals(uuid)) {
+				return player;
+			}
+		}
+		return null;
+	}
+	
+	@Nullable
+	public ServerPlayer getPlayer(GameProfile gameProfile) {
+		return this.getPlayer(gameProfile.getUUID());
+	}
+	
 	public List<ServerPlayer> getPlayers() {
 		return this.players;
 	}
@@ -95,7 +110,7 @@ public class DedicatedPlayerList implements Tickable {
 	public List<ServerPlayer> getPlayers(List<GameProfile> gameProfiles) {
 		List<ServerPlayer> players = Lists.newArrayList();
 		for (GameProfile gameProfile : gameProfiles) {
-			ServerPlayer player = this.getPlayer(gameProfile.getUUID());
+			ServerPlayer player = this.getPlayer(gameProfile);
 			if (player != null) {
 				players.add(player);
 			} else {
@@ -109,15 +124,7 @@ public class DedicatedPlayerList implements Tickable {
 		return this.players.stream().map(ServerPlayer::getGameProfile).collect(Collectors.toList());
 	}
 	
-	@Nullable
-	public ServerPlayer getPlayer(UUID uuid) {
-		for (ServerPlayer player : this.players) {
-			if (player.getGameProfile().getUUID().equals(uuid)) {
-				return player;
-			}
-		}
-		return null;
-	}
+
 	
 	protected void broadcast(Packet<?> packet, ServerPlayer player) {
 		player.connection.send(packet);
@@ -126,6 +133,12 @@ public class DedicatedPlayerList implements Tickable {
 	public void broadcastAll(Packet<?> packet) {
 		for (int i = 0; i < this.players.size(); i++) {
 			this.broadcast(packet, this.players.get(i));
+		}
+	}
+	
+	public void broadcastAll(List<ServerPlayer> players, Packet<?> packet) {
+		for (ServerPlayer player : players) {
+			this.broadcast(packet, player);
 		}
 	}
 	

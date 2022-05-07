@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,17 +65,20 @@ public class FxUtil {
 		return button;
 	}
 	
+	@Nullable	
 	public static ImageView makeImageView(String path, double width, double heigh) {
-		File file = Network.INSTANCE.getResourceDirectory().resolve(path).toFile();
 		ImageView imageView = null;
-		try {
-			imageView = new ImageView(new Image(new FileInputStream(file)));
-			imageView.setFitWidth(width);
-			imageView.setFitHeight(heigh);
-			imageView.setSmooth(true);
-		} catch (IOException e) {
-			LOGGER.error("Fail to load image " + file.toPath(), e);
-			throw new RuntimeException();
+		if (path != null) {
+			File file = Network.INSTANCE.getResourceDirectory().resolve(path).toFile();
+			try {
+				imageView = new ImageView(new Image(new FileInputStream(file)));
+				imageView.setFitWidth(width);
+				imageView.setFitHeight(heigh);
+				imageView.setSmooth(true);
+			} catch (IOException e) {
+				LOGGER.error("Fail to load image " + file.toPath(), e);
+				throw new RuntimeException();
+			}
 		}
 		return imageView;
 	}
