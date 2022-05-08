@@ -219,10 +219,10 @@ public class TTTScreen extends GameScreen {
 			} else if (winnerProfile != GameProfile.EMPTY && loserProfile != GameProfile.EMPTY) {
 				if (resultLine != TTTResultLine.EMPTY) {
 					if (winnerProfile.equals(this.getPlayer().getProfile())) {
-						this.applyResultLine(packet.getWinnerType(), resultLine, TTTState.WIN);
+						this.applyResultLine(resultLine, TTTState.WIN);
 						// TODO: handle win
 					} else if (loserProfile.equals(this.getPlayer().getProfile())) {
-						this.applyResultLine(packet.getLoserType(), resultLine, TTTState.LOSE);
+						this.applyResultLine(resultLine, TTTState.LOSE);
 						// TODO: handle lose
 					} else {
 						LOGGER.warn("Fail to handle result, since the winner {} and the loser {} does not match with the local player {}", winnerProfile.getName(), loserProfile.getName(), this.getPlayer().getProfile().getName());
@@ -262,26 +262,17 @@ public class TTTScreen extends GameScreen {
 		LOGGER.info("Update field map to state {}", state);
 	}
 	
-	protected void applyResultLine(TTTType type, TTTResultLine resultLine, TTTState state) {
-		if (resultLine.getType() == type) {
-			this.applyResult(type, resultLine.getVMap0(), resultLine.getHMap0(), state);
-			this.applyResult(type, resultLine.getVMap1(), resultLine.getHMap1(), state);
-			this.applyResult(type, resultLine.getVMap2(), resultLine.getHMap2(), state);
-			LOGGER.info("Apply line from map pos {}:{} to {}:{} with type {} to result {}", resultLine.getVMap0(), resultLine.getHMap0(), resultLine.getVMap2(), resultLine.getHMap2(), resultLine.getType(), state);
-		} else {
-			LOGGER.warn("Fail to apply line, since the line type {} does not match with the player type {}", resultLine.getType(), type);
-		}
+	protected void applyResultLine(TTTResultLine resultLine, TTTState state) {
+		this.applyResult(resultLine.getVMap0(), resultLine.getHMap0(), state);
+		this.applyResult(resultLine.getVMap1(), resultLine.getHMap1(), state);
+		this.applyResult(resultLine.getVMap2(), resultLine.getHMap2(), state);
+		LOGGER.info("Apply line from map pos {}:{} to {}:{} with type {} to result {}", resultLine.getVMap0(), resultLine.getHMap0(), resultLine.getVMap2(), resultLine.getHMap2(), resultLine.getType(), state);
 	}
 	
-	protected void applyResult(TTTType type, int vMap, int hMap, TTTState state) {
+	protected void applyResult(int vMap, int hMap, TTTState state) {
 		TTTButton button = this.getButton(vMap, hMap);
 		if (button != null) {
-			TTTType buttonType = button.getType();
-			if (buttonType == type) {
-				button.setType(buttonType, state);
-			} else {
-				LOGGER.warn("Fail to apply result to field at map pos {}:{}, since button type {} does not match with result type {}", vMap, hMap, buttonType, type);
-			}
+			button.setType(button.getType(), state);
 		} else {
 			LOGGER.warn("Fail to apply result to field at map pos {}:{}, since \"button\" is null", vMap, hMap);
 		}

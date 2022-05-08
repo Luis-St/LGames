@@ -20,15 +20,14 @@ public class Main {
 	 *  - PlayerRemovePacket has 29 extra bytes -> when last player on server
 	 *  - stage close -> send ExitGameRequestPacket
 	 *  - rework of Button Position in TTT Game -> Use enum for left/mid/right and top/center/bottom -> add better system for fields (ResultLine avoid 6 ints)
-	 *  - Packet to client -> account server disconnect and account logout (maybe)
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
 	 *  - add super class for Windows
 	 *  - create Loading Steps, which are load from 0 til 1 -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
 	 *  - add new info system form server -> client
 	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
 	 *  - layout and grafic rework
-	 *  - impl. singleplayer
 	 *  - fix Logger
+	 *  - impl. singleplayer
 	 */
 	
 	public static final Logger LOGGER = LogManager.getLogger(Main.class);
