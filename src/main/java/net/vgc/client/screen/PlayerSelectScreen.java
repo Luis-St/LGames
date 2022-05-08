@@ -14,11 +14,11 @@ import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.game.GameType;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.client.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
+import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.Util;
 
@@ -91,7 +91,7 @@ public class PlayerSelectScreen extends Screen {
 		}
 	}
 	
-	public void refreshPlayers() {
+	protected void refreshPlayers() {
 		this.playerList.getItems().clear();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (!player.isPlaying()) {

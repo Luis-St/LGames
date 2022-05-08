@@ -37,12 +37,20 @@ public abstract class GameApplication<T extends PacketListener> extends Applicat
 	
 	public void init() throws Exception {
 		instance = this;
-		Thread.currentThread().setName(this.getThreadName().toLowerCase());
+		this.initThread();
 		this.rng = new Random(System.currentTimeMillis());
 		if (this.getTicker() != null) {
 			this.getTicker().play();
 		}
 		LOGGER.info("Initial {}", this.getName());
+	}
+	
+	protected final void initThread() {
+		Thread currentThread = Thread.currentThread();
+		currentThread.setName(this.getThreadName().toLowerCase());
+		currentThread.setUncaughtExceptionHandler((Thread thread, Throwable throwable) -> {
+			LOGGER.warn("Error in thread " + thread.getName(), throwable);
+		});
 	}
 	
 	@Override
@@ -53,7 +61,7 @@ public abstract class GameApplication<T extends PacketListener> extends Applicat
 	}
 	
 	public void start(String[] args) throws Exception {
-		Thread.currentThread().setName(this.getThreadName().toLowerCase());
+		this.initThread();
 		LOGGER.info("Starting {}", this.getName());
 		this.launchState = LaunchState.STARTING;
 		Network.INSTANCE.setNetworkSide(this.getNetworkSide());

@@ -46,11 +46,11 @@ public class DedicatedPlayerList implements Tickable {
 			this.players.add(player);
 			this.broadcastAllExclude(new PlayerAddPacket(player.getGameProfile()), player);
 			if (this.server.isAdmin(player)) {
-				Util.runDelayed("PacketSendDelay", 1000, () -> {
+				Util.runDelayed("PacketSendDelay", 250, () -> {
 					this.broadcastAll(new SyncPermissionPacket(player.getGameProfile()));
 				});
 			} else if (this.server.getAdminPlayer() != null) {
-				Util.runDelayed("PacketSendDelay", 1000, () -> {
+				Util.runDelayed("DelayedPacketSender", 250, () -> {
 					player.connection.send(new SyncPermissionPacket(this.server.getAdminPlayer().getGameProfile()));
 				});
 			}

@@ -8,8 +8,9 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.vgc.game.action.ActionHandler;
-import net.vgc.network.packet.client.ExitGamePacket;
+import com.google.common.collect.Lists;
+
+import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.server.Server;
 import net.vgc.server.dedicated.DedicatedServer;
@@ -27,6 +28,24 @@ public interface Game {
 	ServerPlayer getCurrentPlayer();
 	
 	void setCurrentPlayer(ServerPlayer currentPlayer);
+	
+	default ServerPlayer getStartPlayer() {
+		this.nextPlayer();
+		return this.getCurrentPlayer();
+	}
+	
+	default List<ServerPlayer> getEnemiesFor(ServerPlayer player) {
+		List<ServerPlayer> enemies = Lists.newArrayList();
+		for (ServerPlayer serverPlayer : this.getPlayers()) {
+			if (!serverPlayer.equals(player)) {
+				enemies.add(serverPlayer);
+			}
+		}
+		if (enemies.isEmpty()) {
+			LOGGER.warn("Fail to get enemies for player {}", player.getGameProfile().getName());
+		}
+		return enemies;
+	}
 	
 	default void nextPlayer() {
 		List<ServerPlayer> players = this.getPlayers();
@@ -54,6 +73,8 @@ public interface Game {
 	default boolean removePlayer(ServerPlayer player) {
 		if (this.getPlayers().remove(player)) {
 			player.connection.send(new ExitGamePacket());
+			player.setPlaying(false);
+			LOGGER.info("Remove player {} from game {}", player.getGameProfile().getName(), this.getType().getName().toLowerCase());
 			if (Objects.equals(this.getCurrentPlayer(), player)) {
 				this.nextPlayer();
 			}
@@ -66,6 +87,7 @@ public interface Game {
 	}
 	
 	default void stopGame() {
+		this.onStop();
 		DedicatedServer server = Server.getInstance().getServer();
 		for (ServerPlayer player : this.getPlayers()) {
 			player.connection.send(new StopGamePacket());
@@ -80,7 +102,15 @@ public interface Game {
 		}
 		this.getPlayers().clear();
 		server.setGame(null);
-		LOGGER.info("Game {} was successfully stopped", this.getType().getName());
+		LOGGER.info("Game {} was successfully stopped", this.getType().getName().toLowerCase());
+	}
+	
+	default void onStart() {
+		
+	}
+	
+	default void onStop() {
+		
 	}
 	
 }
