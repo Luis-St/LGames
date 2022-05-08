@@ -27,10 +27,17 @@ public class Main {
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
 	 *  - Packet to client -> account server disconnect and account logout
 	 *  - fix Logger
-	 *  - rework of Button Position in TTT Game -> Use enum for left/mid/right and top/center/bottom
+	 *  - rework of Button Position in TTT Game -> Use enum for left/mid/right and top/center/bottom -> add better system for fields (WinnerLine avoid 6 ints)
+	 *  - add playing property of Player to server window info
+	 *  - PlayerRemovePacket has 29 extra bytes -> when last player on server
+	 *  - stage close -> send ExitGameRequestPacket
+	 *  - shadowed Cross/Circle to TTTButton when place -> check on server
+	 *  - rework of GameStartPacket -> add function in GameType which creates Packet
+	 *  - rename GameProfile varibles to profile
+	 *  - sync Player#playing to client when player leaves game
 	 */
 	
-	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
+	public static final Logger LOGGER = LogManager.getLogger(Main.class);
 	
 	public static void main(String[] args) {
 		System.out.println();

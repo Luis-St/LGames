@@ -23,14 +23,14 @@ public class GameType<T extends Game> {
 	protected final String name;
 	protected final int minPlayers;
 	protected final int maxPlayers;
-	protected final Function<List<ServerPlayer>, T> creationFunction;
+	protected final Function<List<ServerPlayer>, T> createFunction;
 	protected final Supplier<? extends GameScreen> screenSupplier;
 	
-	public GameType(String name, int minPlayers, int maxPlayers, Function<List<ServerPlayer>, T> creationFunction, Supplier<? extends GameScreen> screenSupplier) {
+	public GameType(String name, int minPlayers, int maxPlayers, Function<List<ServerPlayer>, T> createFunction, Supplier<? extends GameScreen> screenSupplier) {
 		this.name = name;
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
-		this.creationFunction = creationFunction;
+		this.createFunction = createFunction;
 		this.screenSupplier = screenSupplier;
 	}
 	
@@ -57,7 +57,9 @@ public class GameType<T extends Game> {
 	public T createNewGame(List<ServerPlayer> players) {
 		if (this.enoughPlayersToPlay(players)) {
 			LOGGER.info("Start game with players {}", players.stream().map(ServerPlayer::getGameProfile).map(GameProfile::getName).collect(Collectors.toList()));
-			return this.creationFunction.apply(players);
+			T game = this.createFunction.apply(players);
+			game.onStart();
+			return game;
 		}
 		LOGGER.warn("Fail to create new game of type {}, since the player count {} is out of bounds {} - {} ", this.name, players.size(), this.minPlayers, this.maxPlayers);
 		return null;

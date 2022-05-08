@@ -46,6 +46,7 @@
     "screen.lobby.ttt": "Tic Tac Toe",
     "window.logout.logout": "Abmelden",
     "server.window.player_admin": "Administrator: %1%",
+    "screen.tic_tac_toe.confirm_action": "Aktion bestätigen",
     "account.window.account_password": "Passwort: %1%",
     "client.constans.name": "Virtuelle Spielesammlung",
     "screen.loading.loading.text": "Wird geladen %1%%",

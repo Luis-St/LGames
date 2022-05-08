@@ -12,8 +12,8 @@ import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
-import net.vgc.game.GameType;
-import net.vgc.game.ttt.TTTGrid;
+import net.vgc.game.GameTypes;
+import net.vgc.game.ttt.TTTType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.player.GameProfile;
@@ -128,7 +128,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		LOGGER.info("Sync admins to value {}, should not be larger than 1", this.client.getPlayers().stream().filter(AbstractClientPlayer::isAdmin).collect(Collectors.toList()).size());
 	}
 	
-	public void handleStartGame(GameType<?> gameType, List<GameProfile> gameProfiles) {
+	public void handleStartTTTGame(TTTType playerType, GameProfile startPlayerGameProfile, List<GameProfile> gameProfiles) {
 		this.checkSide();
 		boolean flag = false;
 		for (AbstractClientPlayer player : this.client.getPlayers(gameProfiles)) {
@@ -138,9 +138,10 @@ public class ClientPacketListener extends AbstractPacketListener {
 			}
 		}
 		if (flag) {
-			gameType.openScreen();
+			GameTypes.TIC_TAC_TOE.openScreen();
+			LOGGER.info("Start game {}", GameTypes.TIC_TAC_TOE.getName().toLowerCase());
 		} else {
-			LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", gameType.getName());
+			LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", GameTypes.TIC_TAC_TOE.getName().toLowerCase());
 			this.client.setScreen(new LobbyScreen());
 		}
 	}
@@ -161,10 +162,6 @@ public class ClientPacketListener extends AbstractPacketListener {
 			player.setPlaying(false);
 		}
 		this.client.setScreen(new LobbyScreen());
-	}
-	
-	public void handleUpdateTTTGame(TTTGrid grid, GameProfile gameProfile) {
-		
 	}
 	
 	public void handleServerClosed() {

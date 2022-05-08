@@ -13,7 +13,7 @@ public class GameTypes {
 	
 	public static final List<GameType<?>> GAME_TYPES = Lists.newArrayList();
 	
-	public static final GameType<TTTGame> TIC_TAC_TOE = register(new GameType<>("TicTacToe", 2, 2, TTTGame::new, TTTScreen::new));
+	public static final GameType<TTTGame> TIC_TAC_TOE = register(new GameType<>("Tic Tac Toe", 2, 2, TTTGame::new, TTTScreen::new));
 	
 	protected static <T extends Game> GameType<T> register(GameType<T> gameType) {
 		GAME_TYPES.add(gameType);
