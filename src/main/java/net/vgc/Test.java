@@ -78,6 +78,7 @@ public class Test {
 			list.add(new Translation("server.window.player_name", "Name: %1%"));
 			list.add(new Translation("server.window.player_uuid", "Id: %1%"));
 			list.add(new Translation("server.window.player_admin", "Admin: %1%"));
+			list.add(new Translation("server.window.player_playing", "Playing: %1%"));
 			list.add(new Translation("screen.game.local_player", "%1% (You)"));
 			list.add(new Translation("screen.game.local_player_admin", "%1% (You) (Admin)"));
 			list.add(new Translation("screen.game.remote_player", "%1%"));
@@ -136,6 +137,7 @@ public class Test {
 			list.add(new Translation("server.window.player_name", "Name: %1%"));
 			list.add(new Translation("server.window.player_uuid", "Id: %1%"));
 			list.add(new Translation("server.window.player_admin", "Administrator: %1%"));
+			list.add(new Translation("server.window.player_playing", "Spielen: %1%"));
 			list.add(new Translation("screen.game.local_player", "%1% (Du)"));
 			list.add(new Translation("screen.game.local_player_admin", "%1% (Du) (Administrator)"));
 			list.add(new Translation("screen.game.remote_player", "%1%"));

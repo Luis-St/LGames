@@ -16,6 +16,7 @@
     "screen.menu.multiplayer": "Mehrspieler",
     "window.login.password": "Passwort",
     "account.window.create": "Konto erstellen",
+    "server.window.player_playing": "Spielen: %1%",
     "server.window.server_admin": "Server Administrator: %1%",
     "account.window.close": "Schließen",
     "window.login.register": "Registrieren",

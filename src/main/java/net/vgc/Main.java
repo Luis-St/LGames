@@ -16,12 +16,9 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
-	 *  - rename GameProfile varibles to profile
-	 *  - remove AbstractServer
 	 *  - sync Player#playing to client when player leaves game
 	 *  - PlayerRemovePacket has 29 extra bytes -> when last player on server
 	 *  - stage close -> send ExitGameRequestPacket
-	 *  - add playing property of Player to server window info
 	 *  - rework of Button Position in TTT Game -> Use enum for left/mid/right and top/center/bottom -> add better system for fields (ResultLine avoid 6 ints)
 	 *  - Packet to client -> account server disconnect and account logout (maybe)
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)

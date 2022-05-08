@@ -16,6 +16,7 @@
     "screen.menu.multiplayer": "Multiplayer",
     "window.login.password": "Password",
     "account.window.create": "Create account",
+    "server.window.player_playing": "Playing: %1%",
     "server.window.server_admin": "Server admin: %1%",
     "account.window.close": "Close",
     "window.login.register": "Register",

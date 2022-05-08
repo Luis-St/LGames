@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
@@ -11,7 +17,11 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -24,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.vgc.Constans;
 import net.vgc.client.fx.FxUtil;
+import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.game.Game;
@@ -32,44 +43,57 @@ import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
-import net.vgc.server.AbstractServer;
+import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketListener;
 import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.Tickable;
 
-public class DedicatedServer extends AbstractServer {
+public class DedicatedServer implements Tickable  {
 	
+	protected static final Logger LOGGER = LogManager.getLogger();
+	protected static final boolean NATIVE = Epoll.isAvailable();
+	
+	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+	protected final String host;
+	protected final int port;
+	protected final Path serverDirectory;
+	protected final DedicatedPlayerList playerList;
 	protected final List<Channel> channels = Lists.newArrayList();
 	protected final List<Connection> connections = Lists.newArrayList();
 	protected TreeItem<String> playersTreeItem;
+	protected UUID admin;
+	protected ServerPlayer adminPlayer;
 	protected Game game;
 	
 	public DedicatedServer(String host, int port, Path serverDirectory) throws Exception {
-		super(host, port, serverDirectory);
+		this.host = host;
+		this.port = port;
+		this.serverDirectory = serverDirectory;
+		this.playerList = new DedicatedPlayerList(this);
 		if (!Files.exists(serverDirectory)) {
 			Files.createDirectories(serverDirectory.getParent());
 			LOGGER.debug("Create server directory");
 		}
 	}
-
-	@Override
-	public boolean isDedicated() {
-		return true;
+	
+	public void init() throws IOException {
+		Path path = this.serverDirectory.resolve("server.data");
+		if (Files.exists(path)) {
+			Tag loadTag = Tag.load(path);
+			if (loadTag instanceof CompoundTag tag) {
+				this.load(tag);
+			} else {
+				LOGGER.warn("Fail to load server from {}, since tag {} is not a instance of CompoundTag but it is a tag of type {}", path, loadTag, loadTag.getClass().getSimpleName());
+			}
+		}
 	}
 	
-	@Override
-	public void init() throws IOException {
-		this.playerList = new DedicatedPlayerList(this);
-		super.init();
-	}
-
-	@Override
 	protected void load(CompoundTag tag) {
 		if (tag.contains("admin")) {
 			this.admin = TagUtil.readUUID(tag.getCompound("admin"));
 		}
 	}
-
-	@Override
+	
 	public void displayServer(Stage stage) {
 		stage.setScene(this.makeScene());
 		stage.setTitle(TranslationKey.createAndGet("server.constans.name"));
@@ -114,7 +138,6 @@ public class DedicatedServer extends AbstractServer {
 		}
 	}
 
-	@Override
 	public void startServer() {
 		new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
 			@Override
@@ -132,7 +155,20 @@ public class DedicatedServer extends AbstractServer {
 		LOGGER.info("Launch dedicated virtual game collection server on host {} with port {}", this.host, this.port);
 	}
 	
-	@Override
+	public void enterPlayer(Connection connection, GameProfile profile) {
+		ServerPlayer player = new ServerPlayer(profile, this);
+		this.playerList.addPlayer(connection, player);
+		if (this.admin != null && this.admin.equals(profile.getUUID())) {
+			if (this.adminPlayer == null) {
+				LOGGER.info("Server admin joined the server");
+				this.adminPlayer = player;
+			} else {
+				LOGGER.error("Unable to set admin player to {}, since he is already set {}", player, this.adminPlayer);
+				throw new IllegalStateException("Multiple server admins are not allowed");
+			}
+		}
+	}
+	
 	public void leavePlayer(Connection connection, ServerPlayer player) {
 		if (this.channels.contains(connection.getChannel()) && this.connections.contains(connection)) {
 			this.channels.remove(connection.getChannel());
@@ -140,8 +176,49 @@ public class DedicatedServer extends AbstractServer {
 			LOGGER.debug("Remove channel and connection for player {}", player != null ? player.getProfile().getName() : "");
 		}
 		if (player != null) {
-			super.leavePlayer(connection, player);
+			this.playerList.removePlayer(player);
+			if (this.admin != null && this.admin.equals(player.getProfile().getUUID()) && this.adminPlayer != null) {
+				LOGGER.info("Server admin left the server");
+				this.adminPlayer = null;
+			}
 		}
+	}
+	
+	@Override
+	public void tick() {
+		this.playerList.tick();
+	}
+	
+	public String getHost() {
+		return this.host;
+	}
+	
+	public int getPort() {
+		return this.port;
+	}
+	
+	public UUID getAdmin() {
+		return this.admin;
+	}
+	
+	public void setAdmin(UUID admin) {
+		this.admin = admin;
+	}
+	
+	public boolean isAdmin(ServerPlayer player) {
+		return player.getProfile().getUUID().equals(this.admin);
+	}
+	
+	@Nullable
+	public ServerPlayer getAdminPlayer() {
+		if (this.playerList != null && this.adminPlayer == null) {
+			this.adminPlayer = this.playerList.getPlayer(this.admin);
+		}
+		return this.adminPlayer;
+	}
+	
+	public DedicatedPlayerList getPlayerList() {
+		return this.playerList;
 	}
 	
 	public Game getGame() {
@@ -152,16 +229,17 @@ public class DedicatedServer extends AbstractServer {
 		this.game = game;
 	}
 	
-	@Override
 	public void stopServer() throws Exception {
-		super.stopServer();
+		this.adminPlayer = null;
+		this.playerList.removeAllPlayers();
+		Tag.save(this.serverDirectory.resolve("server.data"), this.save());
+		LOGGER.debug("Save server data");
 		this.connections.clear();
 		this.channels.forEach(Channel::close);
 		this.channels.clear();
 		this.group.shutdownGracefully();
 	}
-
-	@Override
+	
 	protected CompoundTag save() {
 		CompoundTag tag = new CompoundTag();
 		if (this.admin != null)  {
