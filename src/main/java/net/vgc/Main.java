@@ -16,25 +16,21 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
-	 *  - add new info system form server -> client
-	 *  - impl. singleplayer
-	 *  - create Loading Steps, which are load from 0 til 1
-	 *  - use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
-	 *  - create value chooser similar to DirectoryChooser (for primitive values)
-	 *  - layout and grafic rework
-	 *  - add super class for Windows
-	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
-	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
-	 *  - Packet to client -> account server disconnect and account logout
-	 *  - fix Logger
-	 *  - rework of Button Position in TTT Game -> Use enum for left/mid/right and top/center/bottom -> add better system for fields (WinnerLine avoid 6 ints)
-	 *  - add playing property of Player to server window info
-	 *  - PlayerRemovePacket has 29 extra bytes -> when last player on server
-	 *  - stage close -> send ExitGameRequestPacket
-	 *  - shadowed Cross/Circle to TTTButton when place -> check on server
-	 *  - rework of GameStartPacket -> add function in GameType which creates Packet
 	 *  - rename GameProfile varibles to profile
 	 *  - sync Player#playing to client when player leaves game
+	 *  - PlayerRemovePacket has 29 extra bytes -> when last player on server
+	 *  - stage close -> send ExitGameRequestPacket
+	 *  - add playing property of Player to server window info
+	 *  - rework of Button Position in TTT Game -> Use enum for left/mid/right and top/center/bottom -> add better system for fields (ResultLine avoid 6 ints)
+	 *  - Packet to client -> account server disconnect and account logout (maybe)
+	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
+	 *  - add super class for Windows
+	 *  - create Loading Steps, which are load from 0 til 1 -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
+	 *  - add new info system form server -> client
+	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
+	 *  - layout and grafic rework
+	 *  - impl. singleplayer
+	 *  - fix Logger
 	 */
 	
 	public static final Logger LOGGER = LogManager.getLogger(Main.class);
