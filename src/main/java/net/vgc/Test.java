@@ -86,6 +86,7 @@ public class Test {
 			list.add(new Translation("screen.lobby.leave", "Leave"));
 			list.add(new Translation("screen.lobby.ttt", "Tic Tac Toe"));
 			list.add(new Translation("screen.player_select.play", "Play"));
+			list.add(new Translation("screen.tic_tac_toe.confirm_action", "Confirm action"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -143,6 +144,7 @@ public class Test {
 			list.add(new Translation("screen.lobby.leave", "Verlassen"));
 			list.add(new Translation("screen.lobby.ttt", "Tic Tac Toe"));
 			list.add(new Translation("screen.player_select.play", "Play"));
+			list.add(new Translation("screen.tic_tac_toe.confirm_action", "Aktion bestätigen"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

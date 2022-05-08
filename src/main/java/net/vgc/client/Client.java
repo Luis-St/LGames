@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 
 import io.netty.channel.EventLoopGroup;
@@ -275,6 +277,16 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 		LOGGER.info("Remove all remote players");
 		this.players.clear();
 		this.serverHandler.close();
+	}
+	
+	@Nullable
+	public AbstractClientPlayer getPlayer(GameProfile gameProfile) {
+		for (AbstractClientPlayer player : this.players) {
+			if (player.getGameProfile().equals(gameProfile)) {
+				return player;
+			}
+		}
+		return null;
 	}
 	
 	public List<AbstractClientPlayer> getPlayers() {
