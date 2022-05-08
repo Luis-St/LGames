@@ -6,28 +6,28 @@ import net.vgc.server.network.ServerPacketListener;
 
 public class ExitGameRequestPacket implements ServerPacket {
 	
-	protected final GameProfile gameProfile;
+	protected final GameProfile profile;
 	
-	public ExitGameRequestPacket(GameProfile gameProfile) {
-		this.gameProfile = gameProfile;
+	public ExitGameRequestPacket(GameProfile profile) {
+		this.profile = profile;
 	}
 	
 	public ExitGameRequestPacket(FriendlyByteBuffer buffer) {
-		this.gameProfile = buffer.readGameProfile();
+		this.profile = buffer.readProfile();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeGameProfile(this.gameProfile);
+		buffer.writeProfile(this.profile);
 	}
 
 	@Override
 	public void handle(ServerPacketListener listener) {
-		listener.handleExitGameRequest(this.gameProfile);
+		listener.handleExitGameRequest(this.profile);
 	}
 	
-	public GameProfile getGameProfile() {
-		return this.gameProfile;
+	public GameProfile getProfile() {
+		return this.profile;
 	}
 
 }

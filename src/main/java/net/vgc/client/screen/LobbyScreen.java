@@ -64,15 +64,15 @@ public class LobbyScreen extends GameScreen {
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player instanceof LocalPlayer) {
 				if (player.isAdmin()) {
-					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.local_player_admin", player.getGameProfile().getName())));
+					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.local_player_admin", player.getProfile().getName())));
 				} else {
-					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.local_player", player.getGameProfile().getName())));
+					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.local_player", player.getProfile().getName())));
 				}
 			} else {
 				if (player.isAdmin()) {
-					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.remote_player_admin", player.getGameProfile().getName())));
+					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.remote_player_admin", player.getProfile().getName())));
 				} else {
-					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.remote_player", player.getGameProfile().getName())));
+					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.remote_player", player.getProfile().getName())));
 				}
 			}
 		}

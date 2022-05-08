@@ -9,22 +9,22 @@ import net.vgc.player.GameProfile;
 public class UpdateTTTGamePacket implements ClientPacket {
 	
 	protected final TTTMap map;
-	protected final GameProfile gameProfile;
+	protected final GameProfile profile;
 	
-	public UpdateTTTGamePacket(TTTMap map, GameProfile gameProfile) {
+	public UpdateTTTGamePacket(TTTMap map, GameProfile profile) {
 		this.map = map;
-		this.gameProfile = gameProfile;
+		this.profile = profile;
 	}
 	
 	public UpdateTTTGamePacket(FriendlyByteBuffer buffer) {
 		this.map = buffer.readTTTMap();
-		this.gameProfile = buffer.readGameProfile();
+		this.profile = buffer.readProfile();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeTTTMap(this.map);
-		buffer.writeGameProfile(this.gameProfile);
+		buffer.writeProfile(this.profile);
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class UpdateTTTGamePacket implements ClientPacket {
 		return this.map;
 	}
 	
-	public GameProfile getGameProfile() {
-		return this.gameProfile;
+	public GameProfile getProfile() {
+		return this.profile;
 	}
 
 }

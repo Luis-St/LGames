@@ -15,51 +15,51 @@ import net.vgc.server.player.ServerPlayer;
 public class StartTTTGamePacket implements ClientPacket {
 	
 	protected final TTTType playerType;
-	protected final GameProfile startPlayerGameProfile;
-	protected final List<GameProfile> gameProfiles;
+	protected final GameProfile startPlayerProfile;
+	protected final List<GameProfile> profiles;
 	
 	public StartTTTGamePacket(TTTType playerType, ServerPlayer startPlayer, List<ServerPlayer> players) {
 		this.playerType = playerType;
-		this.startPlayerGameProfile = startPlayer.getGameProfile();
-		this.gameProfiles = players.stream().map(ServerPlayer::getGameProfile).collect(Collectors.toList());
+		this.startPlayerProfile = startPlayer.getProfile();
+		this.profiles = players.stream().map(ServerPlayer::getProfile).collect(Collectors.toList());
 	}
 	
 	public StartTTTGamePacket(FriendlyByteBuffer buffer) {
 		this.playerType = TTTType.fromId(buffer.readInt());
-		this.startPlayerGameProfile = buffer.readGameProfile();
-		List<GameProfile> gameProfiles = Lists.newArrayList();
+		this.startPlayerProfile = buffer.readProfile();
+		List<GameProfile> profiles = Lists.newArrayList();
 		int index = buffer.readInt();
 		for (int i = 0; i < index; i++) {
-			gameProfiles.add(buffer.readGameProfile());
+			profiles.add(buffer.readProfile());
 		}
-		this.gameProfiles = gameProfiles;
+		this.profiles = profiles;
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeInt(this.playerType.getId());
-		buffer.writeGameProfile(this.startPlayerGameProfile);
-		buffer.writeInt(this.gameProfiles.size());
-		for (GameProfile gameProfile : this.gameProfiles) {
-			buffer.writeGameProfile(gameProfile);
+		buffer.writeProfile(this.startPlayerProfile);
+		buffer.writeInt(this.profiles.size());
+		for (GameProfile profile : this.profiles) {
+			buffer.writeProfile(profile);
 		}
 	}
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		listener.handleStartTTTGame(this.playerType, this.startPlayerGameProfile, this.gameProfiles);
+		listener.handleStartTTTGame(this.playerType, this.startPlayerProfile, this.profiles);
 	}
 	
 	public TTTType getPlayerType() {
 		return this.playerType;
 	}
 	
-	public GameProfile getStartPlayerGameProfile() {
-		return this.startPlayerGameProfile;
+	public GameProfile getStartPlayerProfile() {
+		return this.startPlayerProfile;
 	}
 	
-	public List<GameProfile> getGameProfiles() {
-		return this.gameProfiles;
+	public List<GameProfile> getProfiles() {
+		return this.profiles;
 	}
 	
 }

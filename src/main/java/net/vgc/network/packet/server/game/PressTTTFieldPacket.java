@@ -7,36 +7,36 @@ import net.vgc.server.network.ServerPacketListener;
 
 public class PressTTTFieldPacket implements ServerPacket {
 	
-	protected final GameProfile gameProfile;
+	protected final GameProfile profile;
 	protected final int vMap;
 	protected final int hMap;
 	
-	public PressTTTFieldPacket(GameProfile gameProfile, int vMap, int hMap) {
-		this.gameProfile = gameProfile;
+	public PressTTTFieldPacket(GameProfile profile, int vMap, int hMap) {
+		this.profile = profile;
 		this.vMap = vMap;
 		this.hMap = hMap;
 	}
 	
 	public PressTTTFieldPacket(FriendlyByteBuffer buffer) {
-		this.gameProfile = buffer.readGameProfile();
+		this.profile = buffer.readProfile();
 		this.vMap = buffer.readInt();
 		this.hMap = buffer.readInt();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeGameProfile(this.gameProfile);
+		buffer.writeProfile(this.profile);
 		buffer.writeInt(this.vMap);
 		buffer.writeInt(this.hMap);
 	}
 
 	@Override
 	public void handle(ServerPacketListener listener) {
-		listener.handlePressTTTField(this.gameProfile, this.vMap, this.hMap);
+		listener.handlePressTTTField(this.profile, this.vMap, this.hMap);
 	}
 	
-	public GameProfile getGameProfile() {
-		return this.gameProfile;
+	public GameProfile getProfile() {
+		return this.profile;
 	}
 	
 	public int getVMap() {

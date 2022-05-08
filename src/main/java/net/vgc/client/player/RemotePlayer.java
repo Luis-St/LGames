@@ -4,8 +4,8 @@ import net.vgc.player.GameProfile;
 
 public class RemotePlayer extends AbstractClientPlayer {
 
-	public RemotePlayer(GameProfile gameProfile) {
-		super(gameProfile);
+	public RemotePlayer(GameProfile profile) {
+		super(profile);
 	}
 
 }

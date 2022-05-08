@@ -7,8 +7,8 @@ public abstract class AbstractClientPlayer extends Player {
 	
 	protected boolean admin = false;
 	
-	public AbstractClientPlayer(GameProfile gameProfile) {
-		super(gameProfile);
+	public AbstractClientPlayer(GameProfile profile) {
+		super(profile);
 	}
 	
 	@Override

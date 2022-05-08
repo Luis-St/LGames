@@ -4,11 +4,11 @@ import net.vgc.util.Tickable;
 
 public abstract class Player implements Tickable {
 	
-	protected final GameProfile gameProfile;
+	protected final GameProfile profile;
 	protected boolean playing;
 	
-	public Player(GameProfile gameProfile) {
-		this.gameProfile = gameProfile;
+	public Player(GameProfile profile) {
+		this.profile = profile;
 	}
 	
 	@Override
@@ -18,8 +18,8 @@ public abstract class Player implements Tickable {
 	
 	public abstract boolean isClient();
 	
-	public GameProfile getGameProfile() {
-		return this.gameProfile;
+	public GameProfile getProfile() {
+		return this.profile;
 	}
 	
 	public boolean isPlaying() {
@@ -33,14 +33,14 @@ public abstract class Player implements Tickable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder(this.getClass().getSimpleName() + "{");
-		builder.append("gameProfile=").append(this.gameProfile).append("}");
+		builder.append("profile=").append(this.profile).append("}");
 		return builder.toString();
 	}
 	
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Player player) {
-			return this.gameProfile.equals(player.gameProfile);
+			return this.profile.equals(player.profile);
 		}
 		return false;
 	}

@@ -42,7 +42,7 @@ public interface Game {
 			}
 		}
 		if (enemies.isEmpty()) {
-			LOGGER.warn("Fail to get enemies for player {}", player.getGameProfile().getName());
+			LOGGER.warn("Fail to get enemies for player {}", player.getProfile().getName());
 		}
 		return enemies;
 	}
@@ -74,7 +74,7 @@ public interface Game {
 		if (this.getPlayers().remove(player)) {
 			player.connection.send(new ExitGamePacket());
 			player.setPlaying(false);
-			LOGGER.info("Remove player {} from game {}", player.getGameProfile().getName(), this.getType().getName().toLowerCase());
+			LOGGER.info("Remove player {} from game {}", player.getProfile().getName(), this.getType().getName().toLowerCase());
 			if (Objects.equals(this.getCurrentPlayer(), player)) {
 				this.nextPlayer();
 			}
@@ -97,7 +97,7 @@ public interface Game {
 				player.setPlaying(false);
 			} else if (player.isPlaying()) {
 				player.setPlaying(false);
-				LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getGameProfile().getName());
+				LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getProfile().getName());
 			}
 		}
 		this.getPlayers().clear();

@@ -41,7 +41,7 @@ public class PlayerSelectScreen extends Screen {
 		this.playerList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (!player.isPlaying()) {
-				this.playerList.getItems().add(player.getGameProfile().getName());
+				this.playerList.getItems().add(player.getProfile().getName());
 			}
 		}
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
@@ -63,7 +63,7 @@ public class PlayerSelectScreen extends Screen {
 			} else {
 				List<AbstractClientPlayer> players = Lists.newArrayList();
 				for (AbstractClientPlayer player : this.client.getPlayers()) {
-					if (selected.contains(player.getGameProfile().getName())) {
+					if (selected.contains(player.getProfile().getName())) {
 						players.add(player);
 					}
 				}
@@ -76,7 +76,7 @@ public class PlayerSelectScreen extends Screen {
 				}
 			}
 		} else {
-			LOGGER.warn("Player {} tried to start a game but the action was canceled, since he has not the permission", this.client.getPlayer().getGameProfile().getName());
+			LOGGER.warn("Player {} tried to start a game but the action was canceled, since he has not the permission", this.client.getPlayer().getProfile().getName());
 			this.handleBack();
 		}
 	}
@@ -95,7 +95,7 @@ public class PlayerSelectScreen extends Screen {
 		this.playerList.getItems().clear();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (!player.isPlaying()) {
-				this.playerList.getItems().add(player.getGameProfile().getName());
+				this.playerList.getItems().add(player.getProfile().getName());
 			}
 		}
 	}

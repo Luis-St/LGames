@@ -6,28 +6,28 @@ import net.vgc.player.GameProfile;
 
 public class PlayerAddPacket implements ClientPacket {
 	
-	protected final GameProfile gameProfile;
+	protected final GameProfile profile;
 	
-	public PlayerAddPacket(GameProfile gameProfile) {
-		this.gameProfile = gameProfile;
+	public PlayerAddPacket(GameProfile profile) {
+		this.profile = profile;
 	}
 	
 	public PlayerAddPacket(FriendlyByteBuffer buffer) {
-		this.gameProfile = buffer.readGameProfile();
+		this.profile = buffer.readProfile();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeGameProfile(this.gameProfile);
+		buffer.writeProfile(this.profile);
 	}
 	
 	@Override
 	public void handle(ClientPacketListener listener) {
-		listener.handlePlayerAdd(this.gameProfile);
+		listener.handlePlayerAdd(this.profile);
 	}
 	
-	public GameProfile getGameProfile() {
-		return this.gameProfile;
+	public GameProfile getProfile() {
+		return this.profile;
 	}
 	
 }

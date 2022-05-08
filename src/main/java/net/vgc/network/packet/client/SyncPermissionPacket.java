@@ -6,28 +6,28 @@ import net.vgc.player.GameProfile;
 
 public class SyncPermissionPacket implements ClientPacket {
 	
-	protected final GameProfile gameProfile;
+	protected final GameProfile profile;
 	
-	public SyncPermissionPacket(GameProfile gameProfile) {
-		this.gameProfile = gameProfile;
+	public SyncPermissionPacket(GameProfile profile) {
+		this.profile = profile;
 	}
 	
 	public SyncPermissionPacket(FriendlyByteBuffer buffer) {
-		this.gameProfile = buffer.readGameProfile();
+		this.profile = buffer.readProfile();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeGameProfile(this.gameProfile);
+		buffer.writeProfile(this.profile);
 	}
 	
 	@Override
 	public void handle(ClientPacketListener listener) {
-		listener.handleSyncPermission(this.gameProfile);
+		listener.handleSyncPermission(this.profile);
 	}
 	
-	public GameProfile getGameProfile() {
-		return this.gameProfile;
+	public GameProfile getProfile() {
+		return this.profile;
 	}
 
 }

@@ -47,17 +47,17 @@ public class ServerPacketListener extends AbstractPacketListener {
 		this.server.leavePlayer(this.connection, this.server.getPlayerList().getPlayer(uuid));
 	}
 	
-	public void handlePlayGameRequest(GameType<?> gameType, List<GameProfile> gameProfiles) {
+	public void handlePlayGameRequest(GameType<?> gameType, List<GameProfile> profiles) {
 		this.checkSide();
 		MutableBoolean mutable = new MutableBoolean(false);
-		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(gameProfiles).stream().filter((player) -> {
+		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(profiles).stream().filter((player) -> {
 			if (player.isPlaying()) {
 				mutable.setTrue();
 				return false;
 			}
 			return true;
 		}).collect(Collectors.toList());
-		if (players.size() == gameProfiles.size()) {
+		if (players.size() == profiles.size()) {
 			if (mutable.isFalse()) {
 				if (this.server.getGame() == null) {
 					Game game = gameType.createNewGame(players);
@@ -89,12 +89,12 @@ public class ServerPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public void handlePressTTTField(GameProfile gameProfile, int vMap, int hMap) {
+	public void handlePressTTTField(GameProfile profile, int vMap, int hMap) {
 		DedicatedPlayerList playerList = this.server.getPlayerList();
 		Game game = this.server.getGame();
 		if (game != null) {
 			if (game instanceof TTTGame tttGame) {
-				ServerPlayer currentPlayer = playerList.getPlayer(gameProfile);
+				ServerPlayer currentPlayer = playerList.getPlayer(profile);
 				if (tttGame.getCurrentPlayer() != null && tttGame.getCurrentPlayer().equals(currentPlayer)) {
 					if (currentPlayer.isPlaying()) {
 						TTTMap oldMap = tttGame.getMap();
@@ -102,7 +102,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 						if (!oldMap.equals(newMap)) {
 							if (newMap.hasResult()) {
 								LOGGER.info("Handle result of game {}", tttGame.getType().getName().toLowerCase());
-								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap, tttGame.getCurrentPlayer().getGameProfile()));
+								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap, tttGame.getCurrentPlayer().getProfile()));
 								Util.runDelayed("DelayedPacketSender", 250, () -> {
 									TTTResultLine resultLine = newMap.getResultLine();
 									for (ServerPlayer player : tttGame.getPlayers()) {
@@ -111,9 +111,9 @@ public class ServerPacketListener extends AbstractPacketListener {
 										if (result == GameResult.DRAW) {
 											player.connection.send(new TTTGameResultPacket(GameProfile.EMPTY, TTTType.NO, GameProfile.EMPTY, TTTType.NO, TTTResultLine.EMPTY));
 										} else if (result == GameResult.WIN) {
-											player.connection.send(new TTTGameResultPacket(player.getGameProfile(), tttGame.getPlayerType(player), enemyPlayer.getGameProfile(), tttGame.getPlayerType(enemyPlayer), resultLine));
+											player.connection.send(new TTTGameResultPacket(player.getProfile(), tttGame.getPlayerType(player), enemyPlayer.getProfile(), tttGame.getPlayerType(enemyPlayer), resultLine));
 										} else if (result == GameResult.LOSE) {
-											player.connection.send(new TTTGameResultPacket(enemyPlayer.getGameProfile(), tttGame.getPlayerType(enemyPlayer), player.getGameProfile(), tttGame.getPlayerType(player), resultLine));
+											player.connection.send(new TTTGameResultPacket(enemyPlayer.getProfile(), tttGame.getPlayerType(enemyPlayer), player.getProfile(), tttGame.getPlayerType(player), resultLine));
 										} else {
 											LOGGER.warn("Fail to handle result {} of game {}", result.getName(), tttGame.getType().getName().toLowerCase());
 										}
@@ -121,16 +121,16 @@ public class ServerPacketListener extends AbstractPacketListener {
 								});
 							} else {
 								tttGame.nextPlayer();
-								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap, tttGame.getCurrentPlayer().getGameProfile()));
+								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap, tttGame.getCurrentPlayer().getProfile()));
 							}
 						} else {
 							LOGGER.info("Field map will not be synced to the clients, since there are no changes");
 						}
 					} else {
-						LOGGER.warn("Fail to handle press {} field packet for player {}, since the player is not playing a game", tttGame.getType().getName().toLowerCase(), currentPlayer.getGameProfile().getName());
+						LOGGER.warn("Fail to handle press {} field packet for player {}, since the player is not playing a game", tttGame.getType().getName().toLowerCase(), currentPlayer.getProfile().getName());
 					}
 				} else {
-					LOGGER.warn("Player {} tries to change the {} field in map at pos {}:{} to {}, but it is not his turn", gameProfile.getName(), tttGame.getType().getName(), vMap, hMap, tttGame.getPlayerType(currentPlayer));
+					LOGGER.warn("Player {} tries to change the {} field in map at pos {}:{} to {}, but it is not his turn", profile.getName(), tttGame.getType().getName(), vMap, hMap, tttGame.getPlayerType(currentPlayer));
 				}
 			} else {
 				LOGGER.warn("Fail to handle press {} field packet, since the current game is {}", GameTypes.TIC_TAC_TOE.getName().toLowerCase(), game.getType().getName().toLowerCase());
@@ -140,15 +140,15 @@ public class ServerPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public void handleExitGameRequest(GameProfile gameProfile) {
+	public void handleExitGameRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {
-			game.removePlayer(this.server.getPlayerList().getPlayer(gameProfile.getUUID()));
+			game.removePlayer(this.server.getPlayerList().getPlayer(profile.getUUID()));
 		} else {
 			for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
 				if (player.isPlaying()) {
 					player.setPlaying(false);
-					LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getGameProfile().getName());
+					LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getProfile().getName());
 				}
 			}
 		}

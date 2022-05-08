@@ -56,7 +56,7 @@ public class GameType<T extends Game> {
 	@Nullable
 	public T createNewGame(List<ServerPlayer> players) {
 		if (this.enoughPlayersToPlay(players)) {
-			LOGGER.info("Start game with players {}", players.stream().map(ServerPlayer::getGameProfile).map(GameProfile::getName).collect(Collectors.toList()));
+			LOGGER.info("Start game with players {}", players.stream().map(ServerPlayer::getProfile).map(GameProfile::getName).collect(Collectors.toList()));
 			T game = this.createFunction.apply(players);
 			game.onStart();
 			return game;

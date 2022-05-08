@@ -62,10 +62,10 @@ public abstract class AbstractServer implements Tickable {
 	
 	public abstract void startServer();
 	
-	public void enterPlayer(Connection connection, GameProfile gameProfile) {
-		ServerPlayer player = new ServerPlayer(gameProfile);
+	public void enterPlayer(Connection connection, GameProfile profile) {
+		ServerPlayer player = new ServerPlayer(profile);
 		this.playerList.addPlayer(connection, player);
-		if (this.admin != null && this.admin.equals(gameProfile.getUUID())) {
+		if (this.admin != null && this.admin.equals(profile.getUUID())) {
 			if (this.adminPlayer == null) {
 				LOGGER.info("Server admin joined the server");
 				this.adminPlayer = player;
@@ -78,7 +78,7 @@ public abstract class AbstractServer implements Tickable {
 	
 	public void leavePlayer(Connection connection, ServerPlayer player) {
 		this.playerList.removePlayer(player);
-		if (this.admin != null && this.admin.equals(player.getGameProfile().getUUID()) && this.adminPlayer != null) {
+		if (this.admin != null && this.admin.equals(player.getProfile().getUUID()) && this.adminPlayer != null) {
 			LOGGER.info("Server admin left the server");
 			this.adminPlayer = null;
 		}
@@ -106,7 +106,7 @@ public abstract class AbstractServer implements Tickable {
 	}
 	
 	public boolean isAdmin(ServerPlayer player) {
-		return player.getGameProfile().getUUID().equals(this.admin);
+		return player.getProfile().getUUID().equals(this.admin);
 	}
 	
 	@Nullable

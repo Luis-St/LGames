@@ -134,7 +134,7 @@ public class TTTScreen extends GameScreen {
 	}
 	
 	protected void handleLeave() {
-		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getGameProfile()));
+		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
 	}
 	
 	protected void handleConfirmAction() {
@@ -143,10 +143,10 @@ public class TTTScreen extends GameScreen {
 			int vMap = button.getVMap();
 			int hMap = button.getHMap();
 			if (this.currentPlayer) {
-				this.client.getServerHandler().send(new PressTTTFieldPacket(this.getPlayer().getGameProfile(), vMap, hMap));
+				this.client.getServerHandler().send(new PressTTTFieldPacket(this.getPlayer().getProfile(), vMap, hMap));
 				this.group.selectToggle(null);
 			} else {
-				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getGameProfile().getName());
+				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());
 				this.group.selectToggle(null);
 			}
 		} else {
@@ -188,26 +188,26 @@ public class TTTScreen extends GameScreen {
 	@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof StartTTTGamePacket packet) {
-			GameProfile localGameProfile = this.client.getPlayer().getGameProfile();
-			this.currentPlayer = localGameProfile.equals(packet.getStartPlayerGameProfile());
+			GameProfile localProfile = this.client.getPlayer().getProfile();
+			this.currentPlayer = localProfile.equals(packet.getStartPlayerProfile());
 			this.playerType = packet.getPlayerType();
-			int localIndex = packet.getGameProfiles().indexOf(localGameProfile);
+			int localIndex = packet.getProfiles().indexOf(localProfile);
 			if (localIndex == 0) {
-				this.setOpponent(packet.getGameProfiles().get(1));
+				this.setOpponent(packet.getProfiles().get(1));
 			} else if (localIndex == 1) {
-				this.setOpponent(packet.getGameProfiles().get(0));
+				this.setOpponent(packet.getProfiles().get(0));
 			} else {
 				LOGGER.warn("Fail to set the opponent player");
 			}
 		} else if (clientPacket instanceof UpdateTTTGamePacket packet) {
-			this.currentPlayer = this.client.getPlayer().getGameProfile().equals(packet.getGameProfile());
+			this.currentPlayer = this.client.getPlayer().getProfile().equals(packet.getProfile());
 			this.applyMap(packet.getMap(), TTTState.DEFAULT);
 			this.group.selectToggle(null);
 		} else if (clientPacket instanceof TTTGameResultPacket packet) {
-			GameProfile winner = packet.getWinnerProfile();
-			GameProfile loser = packet.getLoserProfile();
+			GameProfile winnerProfile = packet.getWinnerProfile();
+			GameProfile loserProfile = packet.getLoserProfile();
 			TTTResultLine resultLine = packet.getResultLine();
-			if (winner == GameProfile.EMPTY && loser == GameProfile.EMPTY && packet.getResultLine() == TTTResultLine.EMPTY) {
+			if (winnerProfile == GameProfile.EMPTY && loserProfile == GameProfile.EMPTY && packet.getResultLine() == TTTResultLine.EMPTY) {
 				for (int v = 0; v < 3; v++) {
 					for (int h = 0; h < 3; h++) {
 						TTTButton button = this.getButton(v, h);
@@ -216,35 +216,35 @@ public class TTTScreen extends GameScreen {
 				}
 				LOGGER.info("Update field map to state {}", TTTState.DRAW);
 				// TODO: handle draw
-			} else if (winner != GameProfile.EMPTY && loser != GameProfile.EMPTY) {
+			} else if (winnerProfile != GameProfile.EMPTY && loserProfile != GameProfile.EMPTY) {
 				if (resultLine != TTTResultLine.EMPTY) {
-					if (winner.equals(this.getPlayer().getGameProfile())) {
+					if (winnerProfile.equals(this.getPlayer().getProfile())) {
 						this.applyResultLine(packet.getWinnerType(), resultLine, TTTState.WIN);
 						// TODO: handle win
-					} else if (loser.equals(this.getPlayer().getGameProfile())) {
+					} else if (loserProfile.equals(this.getPlayer().getProfile())) {
 						this.applyResultLine(packet.getLoserType(), resultLine, TTTState.LOSE);
 						// TODO: handle lose
 					} else {
-						LOGGER.warn("Fail to handle result, since the winner {} and the loser {} does not match with the local player {}", winner.getName(), loser.getName(), this.getPlayer().getGameProfile().getName());
+						LOGGER.warn("Fail to handle result, since the winner {} and the loser {} does not match with the local player {}", winnerProfile.getName(), loserProfile.getName(), this.getPlayer().getProfile().getName());
 					}
 				} else {
-					LOGGER.warn("Fail to handle game result, since the result line is empty but there is a winner {} and a loser", winner.getName(), loser.getName());
+					LOGGER.warn("Fail to handle game result, since the result line is empty but there is a winner {} and a loser", winnerProfile.getName(), loserProfile.getName());
 				}
 			} else {
-				LOGGER.warn("Fail to handle game result, since the winner {} and the loser {} must not be empty", winner.getName(), loser.getName());
+				LOGGER.warn("Fail to handle game result, since the winner {} and the loser {} must not be empty", winnerProfile.getName(), loserProfile.getName());
 			}
 		}
 	}
 	
-	protected void setOpponent(GameProfile gameProfile) {
-		AbstractClientPlayer player = this.client.getPlayer(gameProfile);
+	protected void setOpponent(GameProfile profile) {
+		AbstractClientPlayer player = this.client.getPlayer(profile);
 		if (player instanceof RemotePlayer opponentPlayer) {
 			this.opponentPlayer = opponentPlayer;
-			LOGGER.info("Set opponent player of {} to {}", this.getPlayer().getGameProfile().getName(), this.opponentPlayer.getGameProfile().getName());
+			LOGGER.info("Set opponent player of {} to {}", this.getPlayer().getProfile().getName(), this.opponentPlayer.getProfile().getName());
 			if (this.playerType != null) {
 				this.opponentPlayerType = this.playerType.getOpponent();
 			} else {
-				LOGGER.warn("Fail to set the type for the opponent player {}, since the type for the local player {} is not set", this.opponentPlayer.getGameProfile().getName(), this.getPlayer().getGameProfile().getName());
+				LOGGER.warn("Fail to set the type for the opponent player {}, since the type for the local player {} is not set", this.opponentPlayer.getProfile().getName(), this.getPlayer().getProfile().getName());
 			}
 		} else {
 			LOGGER.warn("Fail to set the opponent player to a player of type {}", (Object) Util.runIfNotNull(player, (clientPlayer) -> {

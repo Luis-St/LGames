@@ -41,42 +41,42 @@ public class DedicatedPlayerList implements Tickable {
 	}
 	
 	public void addPlayer(Connection connection, ServerPlayer player) {
-		if (this.getPlayer(player.getGameProfile().getUUID()) == null) {
+		if (this.getPlayer(player.getProfile().getUUID()) == null) {
 			player.connection = connection;
 			this.players.add(player);
-			this.broadcastAllExclude(new PlayerAddPacket(player.getGameProfile()), player);
+			this.broadcastAllExclude(new PlayerAddPacket(player.getProfile()), player);
 			if (this.server.isAdmin(player)) {
 				Util.runDelayed("PacketSendDelay", 250, () -> {
-					this.broadcastAll(new SyncPermissionPacket(player.getGameProfile()));
+					this.broadcastAll(new SyncPermissionPacket(player.getProfile()));
 				});
 			} else if (this.server.getAdminPlayer() != null) {
 				Util.runDelayed("DelayedPacketSender", 250, () -> {
-					player.connection.send(new SyncPermissionPacket(this.server.getAdminPlayer().getGameProfile()));
+					player.connection.send(new SyncPermissionPacket(this.server.getAdminPlayer().getProfile()));
 				});
 			}
 			this.server.refreshPlayers();
-			LOGGER.info("Add player {}", player.getGameProfile().getName());
+			LOGGER.info("Add player {}", player.getProfile().getName());
 		} else {
-			LOGGER.warn("Fail to add player {}, since the player already exists in the player list", player.getGameProfile().getName());
+			LOGGER.warn("Fail to add player {}, since the player already exists in the player list", player.getProfile().getName());
 		}
 	}
 	
 	public void removePlayer(ServerPlayer player) {
 		this.players.remove(player);
-		this.broadcastAll(new PlayerRemovePacket(player.getGameProfile()));
+		this.broadcastAll(new PlayerRemovePacket(player.getProfile()));
 		if (this.server.isAdmin(player)) {
 			this.broadcastAll(new SyncPermissionPacket(GameProfile.EMPTY));
 			LOGGER.info("Server admin left the server");
 		}
 		this.server.refreshPlayers();
-		LOGGER.info("Remove player {}", player.getGameProfile().getName());
+		LOGGER.info("Remove player {}", player.getProfile().getName());
 	}
 	
 	public void removeAllPlayers() {
 		this.broadcastAll(new ServerClosedPacket());
 		this.players.removeIf((player) -> {
-			LOGGER.info("Remove player {}", player.getGameProfile().getName());
-			if (Objects.equals(this.server.getAdmin(), player.getGameProfile().getUUID())) {
+			LOGGER.info("Remove player {}", player.getProfile().getName());
+			if (Objects.equals(this.server.getAdmin(), player.getProfile().getUUID())) {
 				LOGGER.info("Server admin left the server");
 			}
 			return true;
@@ -91,7 +91,7 @@ public class DedicatedPlayerList implements Tickable {
 	@Nullable
 	public ServerPlayer getPlayer(UUID uuid) {
 		for (ServerPlayer player : this.players) {
-			if (player.getGameProfile().getUUID().equals(uuid)) {
+			if (player.getProfile().getUUID().equals(uuid)) {
 				return player;
 			}
 		}
@@ -107,21 +107,21 @@ public class DedicatedPlayerList implements Tickable {
 		return this.players;
 	}
 	
-	public List<ServerPlayer> getPlayers(List<GameProfile> gameProfiles) {
+	public List<ServerPlayer> getPlayers(List<GameProfile> profiles) {
 		List<ServerPlayer> players = Lists.newArrayList();
-		for (GameProfile gameProfile : gameProfiles) {
-			ServerPlayer player = this.getPlayer(gameProfile);
+		for (GameProfile profile : profiles) {
+			ServerPlayer player = this.getPlayer(profile);
 			if (player != null) {
 				players.add(player);
 			} else {
-				LOGGER.warn("Fail to get player for game profile {}", gameProfile);
+				LOGGER.warn("Fail to get player for profile {}", profile);
 			}
 		}
 		return players;
 	}
 	
-	public List<GameProfile> getGameProfiles() {
-		return this.players.stream().map(ServerPlayer::getGameProfile).collect(Collectors.toList());
+	public List<GameProfile> getProfiles() {
+		return this.players.stream().map(ServerPlayer::getProfile).collect(Collectors.toList());
 	}
 	
 

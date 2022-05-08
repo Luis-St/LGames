@@ -4,8 +4,8 @@ import net.vgc.player.GameProfile;
 
 public class LocalPlayer extends AbstractClientPlayer {
 
-	public LocalPlayer(GameProfile gameProfile) {
-		super(gameProfile);
+	public LocalPlayer(GameProfile profile) {
+		super(profile);
 	}
 
 }

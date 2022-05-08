@@ -17,6 +17,7 @@ public class Main {
 	
 	/* TODO's:
 	 *  - rename GameProfile varibles to profile
+	 *  - remove AbstractServer
 	 *  - sync Player#playing to client when player leaves game
 	 *  - PlayerRemovePacket has 29 extra bytes -> when last player on server
 	 *  - stage close -> send ExitGameRequestPacket

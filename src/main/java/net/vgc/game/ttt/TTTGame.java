@@ -30,7 +30,7 @@ public class TTTGame implements Game {
 	
 	protected static Map<ServerPlayer, TTTType> createPlayerTypes(List<ServerPlayer> players) {
 		if (players.size() > 2) {
-			LOGGER.error("Fail to create player type map for player list {} with size {}, since since a player list with size 2 was expected", players.stream().map(ServerPlayer::getGameProfile).map(GameProfile::getName).collect(Collectors.toList()));
+			LOGGER.error("Fail to create player type map for player list {} with size {}, since since a player list with size 2 was expected", players.stream().map(ServerPlayer::getProfile).map(GameProfile::getName).collect(Collectors.toList()));
 			throw new IllegalStateException("Fail to create player type map for player list with size " + players.size() + ", since a player list with size 2 was expected");
 		}
 		Map<ServerPlayer, TTTType> playerTypes = Maps.newHashMap();
@@ -61,7 +61,7 @@ public class TTTGame implements Game {
 	}
 	
 	protected String getName(ServerPlayer player) {
-		return player.getGameProfile().getName();
+		return player.getProfile().getName();
 	}
 	
 	public TTTType getPlayerType(ServerPlayer player) {
@@ -70,9 +70,9 @@ public class TTTGame implements Game {
 			if (type != null) {
 				return type;
 			}
-			LOGGER.warn("Fail to get Tic Tac Toe player type for player {}", player.getGameProfile().getName());
+			LOGGER.warn("Fail to get Tic Tac Toe player type for player {}", player.getProfile().getName());
 		} else {
-			LOGGER.warn("Player {} is not playing game {}", player.getGameProfile().getName(), this.getType().getName().toLowerCase());
+			LOGGER.warn("Player {} is not playing game {}", player.getProfile().getName(), this.getType().getName().toLowerCase());
 		}
 		return TTTType.NO;
 	}
@@ -88,7 +88,7 @@ public class TTTGame implements Game {
 			if (playerType != TTTType.NO) {
 				this.mutableMap.setType(playerType, vMap, hMap);
 			} else {
-				LOGGER.warn("Fail to set field in map at pos {}:{}, since player {} has no {} type", vMap, hMap, this.currentPlayer.getGameProfile().getName(), this.getType().getName().toLowerCase());
+				LOGGER.warn("Fail to set field in map at pos {}:{}, since player {} has no {} type", vMap, hMap, this.currentPlayer.getProfile().getName(), this.getType().getName().toLowerCase());
 			}
 		} else {
 			LOGGER.warn("The field in map at pos {}:{} is already set to {}", vMap, hMap, type);

@@ -80,47 +80,47 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public void handleClientJoined(List<GameProfile> gameProfiles) {
+	public void handleClientJoined(List<GameProfile> profiles) {
 		this.checkSide();
-		for (GameProfile gameProfile : gameProfiles) {
-			if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
-				this.client.setPlayer(new LocalPlayer(gameProfile));
+		for (GameProfile profile : profiles) {
+			if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
+				this.client.setPlayer(new LocalPlayer(profile));
 			} else {
-				this.client.addRemotePlayer(new RemotePlayer(gameProfile));
+				this.client.addRemotePlayer(new RemotePlayer(profile));
 			}
 		}
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handlePlayerAdd(GameProfile gameProfile) {
+	public void handlePlayerAdd(GameProfile profile) {
 		this.checkSide();
-		if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
+		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			if (this.client.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
-				this.client.setPlayer(new LocalPlayer(gameProfile));
+				this.client.setPlayer(new LocalPlayer(profile));
 			} else {
-				LOGGER.warn("The local player is already set to {}, but there is another player with the same id {}", this.client.getPlayer().getGameProfile(), gameProfile);
+				LOGGER.warn("The local player is already set to {}, but there is another player with the same id {}", this.client.getPlayer().getProfile(), profile);
 			}
 		} else {
-			this.client.addRemotePlayer(new RemotePlayer(gameProfile));
+			this.client.addRemotePlayer(new RemotePlayer(profile));
 		}
 	}
 	
-	public void handlePlayerRemove(GameProfile gameProfile) {
+	public void handlePlayerRemove(GameProfile profile) {
 		this.checkSide();
-		if (this.client.getAccount().getUUID().equals(gameProfile.getUUID())) {
+		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			this.client.removePlayer();
 		} else {
-			this.client.removeRemotePlayer(new RemotePlayer(gameProfile));
+			this.client.removeRemotePlayer(new RemotePlayer(profile));
 		}
 	}
 	
-	public void handleSyncPermission(GameProfile gameProfile) {
+	public void handleSyncPermission(GameProfile profile) {
 		this.checkSide();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
-			if (player.getGameProfile().equals(gameProfile)) {
+			if (player.getProfile().equals(profile)) {
 				player.setAdmin(true);
-				LOGGER.debug("Player {} is now a admin", player.getGameProfile().getName());
+				LOGGER.debug("Player {} is now a admin", player.getProfile().getName());
 			} else {
 				player.setAdmin(false);
 			}
@@ -128,12 +128,12 @@ public class ClientPacketListener extends AbstractPacketListener {
 		LOGGER.info("Sync admins to value {}, should not be larger than 1", this.client.getPlayers().stream().filter(AbstractClientPlayer::isAdmin).collect(Collectors.toList()).size());
 	}
 	
-	public void handleStartTTTGame(TTTType playerType, GameProfile startPlayerGameProfile, List<GameProfile> gameProfiles) {
+	public void handleStartTTTGame(TTTType playerType, GameProfile startPlayerProfile, List<GameProfile> profiles) {
 		this.checkSide();
 		boolean flag = false;
-		for (AbstractClientPlayer player : this.client.getPlayers(gameProfiles)) {
+		for (AbstractClientPlayer player : this.client.getPlayers(profiles)) {
 			player.setPlaying(true);
-			if (this.client.getPlayer().getGameProfile().equals(player.getGameProfile())) {
+			if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
 				flag = true;
 			}
 		}

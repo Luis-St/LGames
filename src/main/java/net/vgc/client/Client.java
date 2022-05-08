@@ -261,7 +261,7 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	
 	public void setPlayer(LocalPlayer player) {
 		if (this.player == null && player != null) {
-			LOGGER.info("Add local player {}", player.getGameProfile().getName());
+			LOGGER.info("Add local player {}", player.getProfile().getName());
 			this.player = player;
 			this.players.add(player);
 		} else {
@@ -280,9 +280,9 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	}
 	
 	@Nullable
-	public AbstractClientPlayer getPlayer(GameProfile gameProfile) {
+	public AbstractClientPlayer getPlayer(GameProfile profile) {
 		for (AbstractClientPlayer player : this.players) {
-			if (player.getGameProfile().equals(gameProfile)) {
+			if (player.getProfile().equals(profile)) {
 				return player;
 			}
 		}
@@ -293,15 +293,15 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 		return this.players;
 	}
 	
-	public List<AbstractClientPlayer> getPlayers(List<GameProfile> gameProfiles) {
+	public List<AbstractClientPlayer> getPlayers(List<GameProfile> profiles) {
 		List<AbstractClientPlayer> players = Lists.newArrayList();
 		for (AbstractClientPlayer player : this.players) {
-			if (gameProfiles.contains(player.getGameProfile())) {
+			if (profiles.contains(player.getProfile())) {
 				players.add(player);
 			}
 		}
-		if (gameProfiles.size() > players.size()) {
-			int i = gameProfiles.size() - players.size();
+		if (profiles.size() > players.size()) {
+			int i = profiles.size() - players.size();
 			LOGGER.warn("Fail to get the player for {} game profile{}", i, i > 1 ? "s" : "");
 		}
 		return players;
@@ -309,12 +309,12 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	
 	public void addRemotePlayer(RemotePlayer player) {
 		this.players.add(player);
-		LOGGER.info("Add remote player {}", player.getGameProfile().getName());
+		LOGGER.info("Add remote player {}", player.getProfile().getName());
 	}
 	
 	public void removeRemotePlayer(RemotePlayer player) {
 		this.players.remove(player);
-		LOGGER.info("Remove remote player {}", player.getGameProfile().getName());
+		LOGGER.info("Remove remote player {}", player.getProfile().getName());
 	}
 	
 	public ClientSettings getSettings() {

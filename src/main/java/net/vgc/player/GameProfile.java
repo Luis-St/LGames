@@ -50,11 +50,11 @@ public class GameProfile implements Serializable {
 	
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof GameProfile gameProfile) {
-			if (!this.name.equals(gameProfile.name)) {
+		if (object instanceof GameProfile profile) {
+			if (!this.name.equals(profile.name)) {
 				return false;
 			} else {
-				return this.uuid.equals(gameProfile.uuid);
+				return this.uuid.equals(profile.uuid);
 			}
 		}
 		return false;

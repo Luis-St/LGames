@@ -123,16 +123,16 @@ public class FriendlyByteBuffer {
 		return account.equals(PlayerAccount.UNKNOWN) ? PlayerAccount.UNKNOWN : account;
 	}
 	
-	public void writeGameProfile(GameProfile value) {
+	public void writeProfile(GameProfile value) {
 		this.writeString(value.getName());
 		this.writeUUID(value.getUUID());
 	}
 	
-	public GameProfile readGameProfile() {
+	public GameProfile readProfile() {
 		String name = this.readString();
 		UUID uuid = this.readUUID();
-		GameProfile gameProfile = new GameProfile(name, uuid);
-		return gameProfile.equals(GameProfile.EMPTY) ? GameProfile.EMPTY : gameProfile;
+		GameProfile profile = new GameProfile(name, uuid);
+		return profile.equals(GameProfile.EMPTY) ? GameProfile.EMPTY : profile;
 	}
 	
 	public void writeTTTType(TTTType value) {

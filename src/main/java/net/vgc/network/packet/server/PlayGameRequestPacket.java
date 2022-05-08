@@ -15,43 +15,43 @@ import net.vgc.server.network.ServerPacketListener;
 public class PlayGameRequestPacket implements ServerPacket {
 	
 	protected final GameType<?> gameType;
-	protected final List<GameProfile> gameProfiles;
+	protected final List<GameProfile> profiles;
 	
 	public PlayGameRequestPacket(GameType<?> gameType, List<AbstractClientPlayer> players) {
 		this.gameType = gameType;
-		this.gameProfiles = players.stream().map(AbstractClientPlayer::getGameProfile).collect(Collectors.toList());
+		this.profiles = players.stream().map(AbstractClientPlayer::getProfile).collect(Collectors.toList());
 	}
 	
 	public PlayGameRequestPacket(FriendlyByteBuffer buffer) {
 		this.gameType = GameTypes.fromName(buffer.readString());
-		List<GameProfile> gameProfiles = Lists.newArrayList();
+		List<GameProfile> profiles = Lists.newArrayList();
 		int index = buffer.readInt();
 		for (int i = 0; i < index; i++) {
-			gameProfiles.add(buffer.readGameProfile());
+			profiles.add(buffer.readProfile());
 		}
-		this.gameProfiles = gameProfiles;
+		this.profiles = profiles;
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeString(this.gameType.getName());
-		buffer.writeInt(this.gameProfiles.size());
-		for (GameProfile gameProfile : this.gameProfiles) {
-			buffer.writeGameProfile(gameProfile);
+		buffer.writeInt(this.profiles.size());
+		for (GameProfile profile : this.profiles) {
+			buffer.writeProfile(profile);
 		}
 	}
 
 	@Override
 	public void handle(ServerPacketListener listener) {
-		listener.handlePlayGameRequest(this.gameType, this.gameProfiles);
+		listener.handlePlayGameRequest(this.gameType, this.profiles);
 	}
 	
 	public GameType<?> getGameType() {
 		return this.gameType;
 	}
 	
-	public List<GameProfile> getGameProfiles() {
-		return this.gameProfiles;
+	public List<GameProfile> getProfiles() {
+		return this.profiles;
 	}
 
 }
