@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
+import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.server.Server;
@@ -19,6 +20,10 @@ import net.vgc.server.player.ServerPlayer;
 public interface Game {
 	
 	public static final Logger LOGGER = LogManager.getLogger();
+	
+	default DedicatedServer getServer() {
+		return Server.getInstance().getServer();
+	}
 	
 	GameType<? extends Game> getType();
 	
@@ -81,6 +86,7 @@ public interface Game {
 			if (!this.getType().enoughPlayersToPlay(this.getPlayers())) {
 				this.stopGame();
 			}
+			this.getServer().getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying()), player);
 			return true;
 		}
 		return false;
@@ -88,11 +94,7 @@ public interface Game {
 	
 	default void stopGame() {
 		this.onStop();
-		DedicatedServer server = Server.getInstance().getServer();
-		for (ServerPlayer player : this.getPlayers()) {
-			player.connection.send(new StopGamePacket());
-		}
-		for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+		for (ServerPlayer player : this.getServer().getPlayerList().getPlayers()) {
 			if (this.getPlayers().contains(player) && player.isPlaying()) {
 				player.setPlaying(false);
 			} else if (player.isPlaying()) {
@@ -100,8 +102,12 @@ public interface Game {
 				LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getProfile().getName());
 			}
 		}
+		for (ServerPlayer player : this.getPlayers()) {
+			player.connection.send(new StopGamePacket());
+			this.getServer().getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying()), player);
+		}
 		this.getPlayers().clear();
-		server.setGame(null);
+		this.getServer().setGame(null);
 		LOGGER.info("Game {} was successfully stopped", this.getType().getName().toLowerCase());
 	}
 	

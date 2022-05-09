@@ -29,7 +29,7 @@ public class ServerPlayer extends Player {
 		String trueTranslation = TranslationKey.createAndGet("window.create_account.true");
 		String falseTranslation = TranslationKey.createAndGet("window.create_account.false");
 		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.player_admin", this.getServer().isAdmin(this) ? trueTranslation : falseTranslation)));
-		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.player_admin", this.isPlaying() ? trueTranslation : falseTranslation)));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.player_playing", this.isPlaying() ? trueTranslation : falseTranslation)));
 		return treeItem;
 	}
 	

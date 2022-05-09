@@ -128,6 +128,18 @@ public class ClientPacketListener extends AbstractPacketListener {
 		LOGGER.info("Sync admins to value {}, should not be larger than 1", this.client.getPlayers().stream().filter(AbstractClientPlayer::isAdmin).collect(Collectors.toList()).size());
 	}
 	
+	public void handleSyncPlayerData(GameProfile profile, boolean playing) {
+		AbstractClientPlayer player = this.client.getPlayer(profile);
+		if (player != null) {
+			Boolean isPlaying = player.isPlaying();
+			player.setPlaying(playing);
+			LOGGER.info("Synchronize data from server to player {}", profile.getName());
+			LOGGER.debug("Synchronize playing value of player {} from {} to {}, the current value is now {}", profile.getName(), isPlaying, playing, player.isPlaying());
+		} else {
+			LOGGER.warn("Fail to synchronize data from server to player {}, since the player does not exists", profile.getName());
+		}
+	}
+	
 	public void handleStartTTTGame(TTTType playerType, GameProfile startPlayerProfile, List<GameProfile> profiles) {
 		this.checkSide();
 		boolean flag = false;

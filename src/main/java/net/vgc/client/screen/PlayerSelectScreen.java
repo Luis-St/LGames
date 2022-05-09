@@ -96,6 +96,8 @@ public class PlayerSelectScreen extends Screen {
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (!player.isPlaying()) {
 				this.playerList.getItems().add(player.getProfile().getName());
+			} else {
+				LOGGER.debug("Ignore player {}, since the player is already playing a game", player.getProfile().getName());
 			}
 		}
 	}
