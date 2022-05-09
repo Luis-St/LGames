@@ -1,7 +1,7 @@
 package net.vgc.client.screen;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -14,15 +14,14 @@ import net.vgc.language.TranslationKey;
 
 public class MenuScreen extends Screen {
 	
-	protected ButtonBox loginButtonBox;
+	protected Button loginButton;
 	protected ButtonBox multiplayerButtonBox;
 	protected ButtonBox settingsButtonBox;
 	protected VBox centerBox;
 	
 	@Override
 	public void init() {
-		this.loginButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.login"), Pos.CENTER_RIGHT, this::handleLogin);
-		this.loginButtonBox.setPadding(new Insets(20.0));
+		this.loginButton = FxUtil.makeButton(TranslationKey.createAndGet("screen.menu.login"), this::handleLogin);
 		this.multiplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.multiplayer"), this::handleMultiplayer);
 		this.settingsButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.settings"), this::handleSettings);
 		this.centerBox = FxUtil.makeVerticalBox(Pos.CENTER, 0.0);
@@ -31,9 +30,9 @@ public class MenuScreen extends Screen {
 	@Override
 	public void tick() {
 		if (this.client.isLoggedIn()) {
-			this.loginButtonBox.getNode().setText(TranslationKey.createAndGet("screen.menu.profile"));
-		} else if (this.loginButtonBox.getNode().getText().equals(TranslationKey.createAndGet("screen.menu.profile"))) {
-			this.loginButtonBox.getNode().setText(TranslationKey.createAndGet("screen.menu.login"));
+			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.profile"));
+		} else if (this.loginButton.getText().equals(TranslationKey.createAndGet("screen.menu.profile"))) {
+			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.login"));
 		}
 	}
 	
@@ -58,8 +57,8 @@ public class MenuScreen extends Screen {
 		GridPane grid = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		grid.addColumn(0, this.multiplayerButtonBox, this.settingsButtonBox);
 		this.centerBox.getChildren().add(grid);
-		BorderPane.setAlignment(this.loginButtonBox, Pos.CENTER_RIGHT);
-		border.setTop(this.loginButtonBox);
+		BorderPane.setAlignment(this.loginButton, Pos.CENTER_RIGHT);
+		border.setTop(FxUtil.makeVerticalBox(Pos.CENTER_RIGHT, 20.0, this.loginButton));
 		BorderPane.setAlignment(this.centerBox, Pos.CENTER);
 		border.setCenter(this.centerBox);
 		return border;

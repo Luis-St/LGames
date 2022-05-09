@@ -1,5 +1,6 @@
 package net.vgc.client.fx;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 
@@ -12,7 +13,21 @@ public class ButtonBox extends Box<Button> {
 	}
 	
 	public ButtonBox(String text, Pos pos, Runnable action) {
-		super(new Button(text), pos);
+		this(text, Pos.CENTER, 0.0, 0.0, 0.0, 0.0, action);
+	}
+	
+	public ButtonBox(String text, Pos pos, double padding, Runnable action) {
+		super(new Button(text), pos, new Insets(padding, padding, padding, padding));
+		this.action = action;
+	}
+	
+	public ButtonBox(String text, Pos pos, double top, double right, double bottom, double left, Runnable action) {
+		super(new Button(text), pos, new Insets(top, right, bottom, left));
+		this.action = action;
+	}
+	
+	public ButtonBox(String text, Pos pos, Insets padding, Runnable action) {
+		super(new Button(text), pos, padding);
 		this.action = action;
 	}
 	
