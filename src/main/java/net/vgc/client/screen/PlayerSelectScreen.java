@@ -19,7 +19,7 @@ import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
-import net.vgc.network.packet.server.PlayGameRequestPacket;
+import net.vgc.network.packet.server.game.PlayGameRequestPacket;
 import net.vgc.util.Util;
 
 public class PlayerSelectScreen extends Screen {
