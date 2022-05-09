@@ -10,9 +10,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.epoll.EpollEventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import joptsimple.OptionParser;
@@ -54,8 +51,6 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	}
 	
 	protected final Timeline ticker = Util.createTicker("ClientTicker", this);
-	protected final EventLoopGroup serverGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-	protected final EventLoopGroup accountGroup = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	protected final List<AbstractClientPlayer> players = Lists.newArrayList();
 	protected final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", () -> new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
 		connection.send(new ClientLeavePacket(this.account));

@@ -22,6 +22,7 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.PacketListener;
+import net.vgc.util.ExceptionHandler;
 
 public abstract class GameApplication<T extends PacketListener> extends Application implements DataHandler, PacketHandler<Packet<T>> {
 	
@@ -48,9 +49,7 @@ public abstract class GameApplication<T extends PacketListener> extends Applicat
 	protected final void initThread() {
 		Thread currentThread = Thread.currentThread();
 		currentThread.setName(this.getThreadName().toLowerCase());
-		currentThread.setUncaughtExceptionHandler((Thread thread, Throwable throwable) -> {
-			LOGGER.warn("Error in thread " + thread.getName(), throwable);
-		});
+		currentThread.setUncaughtExceptionHandler(new ExceptionHandler());
 	}
 	
 	@Override

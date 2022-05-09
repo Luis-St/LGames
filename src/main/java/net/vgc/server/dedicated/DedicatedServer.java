@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -46,6 +47,7 @@ import net.vgc.network.PacketEncoder;
 import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketListener;
 import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.ExceptionHandler;
 import net.vgc.util.Tickable;
 
 public class DedicatedServer implements Tickable  {
@@ -53,7 +55,8 @@ public class DedicatedServer implements Tickable  {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	protected static final boolean NATIVE = Epoll.isAvailable();
 	
-	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
+		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
 	protected final String host;
 	protected final int port;
 	protected final Path serverDirectory;

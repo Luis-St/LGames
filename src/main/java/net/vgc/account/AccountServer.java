@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -48,6 +49,7 @@ import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
+import net.vgc.util.ExceptionHandler;
 
 public class AccountServer extends GameApplication<AccountServerPacketListener> {
 	
@@ -58,7 +60,8 @@ public class AccountServer extends GameApplication<AccountServerPacketListener> 
 		throw new InvalidNetworkSideException(NetworkSide.ACCOUNT_SERVER);
 	}
 	
-	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
+		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
 	protected final List<Connection> connections = Lists.newArrayList();
 	protected final List<Channel> channels = Lists.newArrayList();
 	protected TreeView<String> accountView;

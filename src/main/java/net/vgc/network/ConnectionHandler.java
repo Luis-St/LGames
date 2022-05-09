@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -20,6 +22,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketListener;
+import net.vgc.util.ExceptionHandler;
 
 public class ConnectionHandler {
 	
@@ -41,7 +44,8 @@ public class ConnectionHandler {
 	
 	public void connect(String host, int port) {
 		try {
-			this.group = NATIVE ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+			this.group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("client network").setUncaughtExceptionHandler(new ExceptionHandler()).build())
+				: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("client network").setUncaughtExceptionHandler(new ExceptionHandler()).build());
 			this.connection = new Connection(this.listenerFactory.get());
 			this.channel = new Bootstrap().group(this.group).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
 				@Override
