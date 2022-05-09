@@ -1,5 +1,6 @@
 package net.vgc.network.packet.client;
 
+import net.vgc.Main;
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
@@ -13,12 +14,18 @@ public class PlayerRemovePacket implements ClientPacket {
 	}
 	
 	public PlayerRemovePacket(FriendlyByteBuffer buffer) {
+		Main.LOGGER.debug("decode before {}b", buffer.readableBytes());
 		this.profile = buffer.readProfile();
+		Main.LOGGER.debug("profile {}", this.profile);
+		Main.LOGGER.debug("decode after {}b", buffer.readableBytes());
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
+		Main.LOGGER.debug("encode before {}b", buffer.readableBytes());
 		buffer.writeProfile(this.profile);
+		Main.LOGGER.debug("profile {}", this.profile);
+		Main.LOGGER.debug("encode after {}b", buffer.readableBytes());
 	}
 	
 	@Override
