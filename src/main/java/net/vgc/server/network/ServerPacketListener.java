@@ -143,7 +143,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 	public void handleExitGameRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {
-			game.removePlayer(this.server.getPlayerList().getPlayer(profile.getUUID()));
+			game.removePlayer(this.server.getPlayerList().getPlayer(profile.getUUID()), true);
 		} else {
 			for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
 				if (player.isPlaying()) {

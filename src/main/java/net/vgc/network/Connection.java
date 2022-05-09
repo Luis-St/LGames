@@ -96,7 +96,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 			this.flush();
 			this.sendPacket(packet, listener, false);
 		} else {
-			LOGGER.info("Unable to send packet, since the connection is not open");
+			LOGGER.info("Unable to send packet of type {}, since the connection is closed", packet.getClass().getSimpleName());
 			this.waitingPackets.add(new Connection.PacketHolder(packet, listener));
 		}
 	}

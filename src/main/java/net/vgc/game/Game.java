@@ -75,9 +75,11 @@ public interface Game {
 		}
 	}
 	
-	default boolean removePlayer(ServerPlayer player) {
+	default boolean removePlayer(ServerPlayer player, boolean sendExit) {
 		if (this.getPlayers().remove(player)) {
-			player.connection.send(new ExitGamePacket());
+			if (sendExit) {
+				player.connection.send(new ExitGamePacket());
+			}
 			player.setPlaying(false);
 			LOGGER.info("Remove player {} from game {}", player.getProfile().getName(), this.getType().getName().toLowerCase());
 			if (Objects.equals(this.getCurrentPlayer(), player)) {
@@ -88,6 +90,13 @@ public interface Game {
 			}
 			this.getServer().getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying()), player);
 			return true;
+		}
+		if (player != null) {
+			LOGGER.warn("Fail to remove player {}, since the player does not playing game {}", player.getProfile().getName(), this.getType().getName().toLowerCase());
+			if (player.isPlaying()) {
+				player.setPlaying(false);
+				LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getProfile().getName());
+			}
 		}
 		return false;
 	}

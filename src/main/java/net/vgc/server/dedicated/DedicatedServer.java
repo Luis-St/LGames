@@ -181,6 +181,11 @@ public class DedicatedServer implements Tickable  {
 				LOGGER.info("Server admin left the server");
 				this.adminPlayer = null;
 			}
+			if (this.game != null) {
+				if (this.game.getPlayers().contains(player)) {
+					this.game.removePlayer(player, false);
+				}
+			}
 		}
 	}
 	

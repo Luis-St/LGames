@@ -127,7 +127,13 @@ public class DedicatedPlayerList implements Tickable {
 
 	
 	protected void broadcast(Packet<?> packet, ServerPlayer player) {
-		player.connection.send(packet);
+		if (player.connection.isConnected()) {
+			player.connection.send(packet);
+		} else if (this.players.contains(player)) {
+			LOGGER.info("Fail to send packet of type {} to player {}, since the connection is closed", packet.getClass().getSimpleName(), player.getProfile().getName());
+		} else {
+			LOGGER.debug("Cancel sending packet of type {} to player {}, since the player leaves the server a few seconds ago", packet.getClass().getSimpleName(), player.getProfile().getName());
+		}
 	}
 	
 	public void broadcastAll(Packet<?> packet) {
