@@ -163,7 +163,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		if (this.client.getPlayer().isPlaying()) {
 			this.client.getPlayer().setPlaying(false);
 		} else {
-			LOGGER.warn("Received a ExitGamePacket, but the local player is not playing a game");
+			LOGGER.info("Received a ExitGamePacket, but the local player is not playing a game");
 		}
 		this.client.setScreen(new LobbyScreen());
 	}

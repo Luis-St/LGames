@@ -1,9 +1,11 @@
 package net.vgc.client.fx.game;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import net.vgc.Constans;
+import net.vgc.client.fx.Box;
 import net.vgc.game.ttt.TTTState;
 import net.vgc.game.ttt.TTTType;
 
@@ -56,7 +58,7 @@ public class TTTButton extends ToggleButton {
 		if (type != TTTType.NO) {
 			ImageView image = this.type.getImage(state, this.getWidth() * 0.9, this.getHeight() * 0.9);
 			if (image != null) {
-				this.setGraphic(image);
+				this.setGraphic(new Box<>(image, Pos.CENTER));
 			}
 		} else {
 			this.setGraphic(null);

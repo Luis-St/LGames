@@ -18,6 +18,7 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
+import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StartTTTGamePacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
@@ -143,13 +144,22 @@ public class ServerPacketListener extends AbstractPacketListener {
 	public void handleExitGameRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {
-			game.removePlayer(this.server.getPlayerList().getPlayer(profile.getUUID()), true);
+			ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
+			if(!game.removePlayer(player, true)) {
+				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getName().toLowerCase());
+			}
 		} else {
 			for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
 				if (player.isPlaying()) {
 					player.setPlaying(false);
 					LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getProfile().getName());
 				}
+			}
+			ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
+			if (player != null) {
+				player.connection.send(new ExitGamePacket());
+			} else {
+				LOGGER.warn("Fail to remove player {} from game, since there is no active game", profile.getName());
 			}
 		}
 	}
