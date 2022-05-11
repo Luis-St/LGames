@@ -2,6 +2,7 @@ package net.vgc.util;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -77,6 +78,10 @@ public class Util {
 			return function.apply(value);
 		}
 		return null;
+	}
+	
+	public static Random systemRandom() {
+		return new Random(System.currentTimeMillis());
 	}
 	
 	public static void warpStreams(boolean debugMode) {

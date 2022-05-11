@@ -1,4 +1,4 @@
-package net.vgc.util;
+package net.vgc.util.factory;
 
 public interface Builder<T> {
 	
