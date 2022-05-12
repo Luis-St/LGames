@@ -1,11 +1,17 @@
 package net.vgc.network;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
+
+import com.google.common.collect.Maps;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.vgc.account.PlayerAccount;
+import net.vgc.game.score.GameScore;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.game.ttt.TTTType;
 import net.vgc.game.ttt.map.TTTMap;
 import net.vgc.game.ttt.map.TTTResultLine;
@@ -189,6 +195,41 @@ public class FriendlyByteBuffer {
 		int hMap2 = this.readInt();
 		TTTResultLine resultLine = new TTTResultLine(state, vMap0, hMap0, vMap1, hMap1, vMap2, hMap2);
 		return resultLine.equals(TTTResultLine.EMPTY) ? TTTResultLine.EMPTY : resultLine;
+	}
+	
+	public void writePlayerScore(PlayerScore value) {
+		this.writeProfile(value.getProfile());
+		this.writeInt(value.getWins());
+		this.writeInt(value.getLoses());
+		this.writeInt(value.getDraws());
+	}
+	
+	public PlayerScore readPlayerScore() {
+		GameProfile profile = this.readProfile();
+		int wins = this.readInt();
+		int loses = this.readInt();
+		int draws = this.readInt();
+		return new PlayerScore(profile, wins, loses, draws);
+	}
+	
+	public void writeGameScore(GameScore value) {
+		Map<GameProfile, PlayerScore> scores = value.getScores();
+		this.writeInt(scores.size());
+		for (Entry<GameProfile, PlayerScore> entry : scores.entrySet()) {
+			this.writeProfile(entry.getKey());
+			this.writePlayerScore(entry.getValue());
+		}
+	}
+	
+	public GameScore readGameScore() {
+		Map<GameProfile, PlayerScore> scores = Maps.newHashMap();
+		int size = this.readInt();
+		for (int i = 0; i < size; i++) {
+			GameProfile profile = this.readProfile();
+			PlayerScore score = this.readPlayerScore();
+			scores.put(profile, score);
+		}
+		return new GameScore(scores);
 	}
 	
 	public ByteBuf toBuffer() {

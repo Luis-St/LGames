@@ -29,9 +29,19 @@ public class PacketDecoder extends ByteToMessageDecoder {
 			} else {
 				int readableBytes = buffer.readableBytes();
 				if (readableBytes > 0) {
-					LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading packet {} with id: {}", readableBytes, Packets.byId(id).getSimpleName(), id);
-//					LOGGER.error("Packet {} was to larger then expected", Packets.byId(id).getSimpleName());
-//					throw new IOException("Packet was to larger then expected, found " + readableBytes + " extra bytes whilst reading Packet: " + Packets.byId(id).getSimpleName() + " with id: " + id);
+					LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading packet {} with id {}", readableBytes, Packets.byId(id).getSimpleName(), id);
+					try {
+						output.add(packet);
+						LOGGER.info("Handle packet of type {} sensitively, since there could be a handle issue");
+					} catch (Exception e) {
+						if (packet.skippable()) {
+							throw new SkipPacketException();
+						} else {
+							LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading packet {} with id {}", readableBytes, Packets.byId(id).getSimpleName(), id);
+							LOGGER.error("Catch an error while handle a packet with too much bytes sensitively");
+							throw new RuntimeException(e);
+						}
+					}
 				} else {
 					output.add(packet);
 				}
