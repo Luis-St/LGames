@@ -1,14 +1,16 @@
 package net.vgc.client.screen.game;
 
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -16,20 +18,30 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.TTTButton;
+import net.vgc.client.game.ClientTTTGameData;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.RemotePlayer;
+import net.vgc.client.screen.LobbyScreen;
+import net.vgc.game.GameTypes;
+import net.vgc.game.score.GameScore;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.game.ttt.TTTState;
 import net.vgc.game.ttt.TTTType;
 import net.vgc.game.ttt.map.TTTMap;
 import net.vgc.game.ttt.map.TTTResultLine;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
+import net.vgc.network.packet.client.game.GameScoreUpdatePacket;
 import net.vgc.network.packet.client.game.StartTTTGamePacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
-import net.vgc.network.packet.server.ExitGameRequestPacket;
+import net.vgc.network.packet.server.game.ExitGameRequestPacket;
+import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.PressTTTFieldPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
@@ -38,9 +50,8 @@ public class TTTScreen extends GameScreen {
 	
 	protected final List<TTTButton> buttons = Lists.newArrayList();
 	
-	protected TTTType playerType;
-	protected TTTType opponentPlayerType;
-	protected RemotePlayer opponentPlayer;
+	protected ClientTTTGameData playerData;
+	protected ClientTTTGameData opponentData;
 	
 	protected ToggleGroup group;
 	protected TTTButton topLeftButton;
@@ -64,11 +75,15 @@ public class TTTScreen extends GameScreen {
 	protected Rectangle bottomRightHBorder;
 	protected Rectangle bottomLeftVBorder;
 	protected Rectangle bottomRightVBorder;
-	protected Button leaveButton;
-	protected Button confirmActionButton;
+	protected ButtonBox leaveButton;
+	protected ButtonBox confirmActionButton;
+	protected ButtonBox playAgainButton;
+	protected Text playerInfo;
+	protected Text opponentInfo;
 	
 	public TTTScreen() {
-		
+		this.width = 900;
+		this.height = 650;
 	}
 	
 	@Override
@@ -96,7 +111,7 @@ public class TTTScreen extends GameScreen {
 		this.bottomLeftButton = this.makeButton(0, 2);
 		this.bottomCenterButton = this.makeButton(1, 2);
 		this.bottomRightButton = this.makeButton(2, 2);
-		double bigBorderSize = 155.0;
+		double bigBorderSize = 160.0;
 		double smallBorderSize = 10.0;
 		this.topLeftVBorder = this.makeBorder(smallBorderSize, bigBorderSize);
 		this.topRightVBorder = this.makeBorder(smallBorderSize, bigBorderSize);
@@ -110,8 +125,12 @@ public class TTTScreen extends GameScreen {
 		this.bottomRightHBorder = this.makeBorder(bigBorderSize, smallBorderSize);
 		this.bottomLeftVBorder = this.makeBorder(smallBorderSize, bigBorderSize);
 		this.bottomRightVBorder = this.makeBorder(smallBorderSize, bigBorderSize);
-		this.leaveButton = FxUtil.makeButton(TranslationKey.createAndGet("screen.lobby.leave"), this::handleLeave);
-		this.confirmActionButton = FxUtil.makeButton(TranslationKey.createAndGet("screen.tic_tac_toe.confirm_action"), this::handleConfirmAction);
+		this.leaveButton = new ButtonBox(TranslationKey.createAndGet("screen.lobby.leave"), Pos.CENTER, 20.0, this::handleLeave);
+		this.playAgainButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.play_again"), Pos.CENTER, 20.0, this::handlePlayAgain);
+		this.playAgainButton.getNode().setDisable(true);
+		this.confirmActionButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.confirm_action"), Pos.CENTER, 20.0, this::handleConfirmAction);
+		this.playerInfo = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.no_data"));
+		this.opponentInfo = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.no_data"));
 	}
 	
 	protected TTTButton makeButton(int vMap, int hMap) {
@@ -119,7 +138,7 @@ public class TTTScreen extends GameScreen {
 		button.setOnAction((event) -> {
 			if (this.currentPlayer) {
 				if (button.getType() == TTTType.NO) {
-					button.setType(this.playerType, TTTState.SHADOW);
+					button.setType(this.playerData.getType(), TTTState.SHADOW);
 					LOGGER.info("Update state of field with map pos {}:{} to {}", vMap, hMap, TTTState.SHADOW);
 				}
 			} else {
@@ -151,6 +170,12 @@ public class TTTScreen extends GameScreen {
 			}
 		} else {
 			LOGGER.info("No field selected");
+		}
+	}
+	
+	protected void handlePlayAgain() {
+		if (this.client.getPlayer().isAdmin()) {
+			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
 		}
 	}
 	
@@ -190,7 +215,8 @@ public class TTTScreen extends GameScreen {
 		if (clientPacket instanceof StartTTTGamePacket packet) {
 			GameProfile localProfile = this.client.getPlayer().getProfile();
 			this.currentPlayer = localProfile.equals(packet.getStartPlayerProfile());
-			this.playerType = packet.getPlayerType();
+			this.playerData = new ClientTTTGameData(this.getPlayer());
+			this.playerData.setType(packet.getPlayerType());
 			int localIndex = packet.getProfiles().indexOf(localProfile);
 			if (localIndex == 0) {
 				this.setOpponent(packet.getProfiles().get(1));
@@ -203,6 +229,9 @@ public class TTTScreen extends GameScreen {
 			this.currentPlayer = this.client.getPlayer().getProfile().equals(packet.getProfile());
 			this.applyMap(packet.getMap(), TTTState.DEFAULT);
 			this.group.selectToggle(null);
+			if (!this.playAgainButton.getNode().isDisabled()) {
+				this.playAgainButton.getNode().setDisable(true);
+			}
 		} else if (clientPacket instanceof TTTGameResultPacket packet) {
 			GameProfile winnerProfile = packet.getWinnerProfile();
 			GameProfile loserProfile = packet.getLoserProfile();
@@ -215,15 +244,12 @@ public class TTTScreen extends GameScreen {
 					}
 				}
 				LOGGER.info("Update field map to state {}", TTTState.DRAW);
-				// TODO: handle draw
 			} else if (winnerProfile != GameProfile.EMPTY && loserProfile != GameProfile.EMPTY) {
 				if (resultLine != TTTResultLine.EMPTY) {
 					if (winnerProfile.equals(this.getPlayer().getProfile())) {
 						this.applyResultLine(resultLine, TTTState.WIN);
-						// TODO: handle win
 					} else if (loserProfile.equals(this.getPlayer().getProfile())) {
 						this.applyResultLine(resultLine, TTTState.LOSE);
-						// TODO: handle lose
 					} else {
 						LOGGER.warn("Fail to handle result, since the winner {} and the loser {} does not match with the local player {}", winnerProfile.getName(), loserProfile.getName(), this.getPlayer().getProfile().getName());
 					}
@@ -233,19 +259,42 @@ public class TTTScreen extends GameScreen {
 			} else {
 				LOGGER.warn("Fail to handle game result, since the winner {} and the loser {} must not be empty", winnerProfile.getName(), loserProfile.getName());
 			}
+			this.playAgainButton.getNode().setDisable(!this.client.getPlayer().isAdmin());
+		} else if (clientPacket instanceof GameScoreUpdatePacket packet) {
+			GameScore score = packet.getScore();
+			for (Entry<GameProfile, PlayerScore> entry : score.getScores().entrySet()) {
+				PlayerScore playerScore = entry.getValue();
+				if (this.playerData.getPlayer().getProfile().equals(entry.getKey())) {
+					this.playerData.setWins(playerScore.getWins());
+					this.playerData.setLoses(playerScore.getLoses());
+					this.playerData.setDraws(playerScore.getDraws());
+				} else if (this.opponentData.getPlayer().getProfile().equals(entry.getKey())) {
+					this.opponentData.setWins(playerScore.getWins());
+					this.opponentData.setLoses(playerScore.getLoses());
+					this.opponentData.setDraws(playerScore.getDraws());
+				} else {
+					LOGGER.warn("Fail to display score of player {}, since the player is not playing the game {}", entry.getKey().getName(), GameTypes.TIC_TAC_TOE.getName().toLowerCase());
+				}
+				this.updateScore();
+			}
+			LOGGER.info("Update game score");
+		} else if (clientPacket instanceof CancelPlayAgainGameRequestPacket packet) {
+			this.showScreen(new LobbyScreen());
+			LOGGER.warn("The request to play again was canceled by the server");
 		}
 	}
 	
 	protected void setOpponent(GameProfile profile) {
 		AbstractClientPlayer player = this.client.getPlayer(profile);
 		if (player instanceof RemotePlayer opponentPlayer) {
-			this.opponentPlayer = opponentPlayer;
-			LOGGER.info("Set opponent player of {} to {}", this.getPlayer().getProfile().getName(), this.opponentPlayer.getProfile().getName());
-			if (this.playerType != null) {
-				this.opponentPlayerType = this.playerType.getOpponent();
+			this.opponentData = new ClientTTTGameData(opponentPlayer);
+			LOGGER.info("Set opponent player of {} to {}", this.getPlayer().getProfile().getName(), opponentPlayer.getProfile().getName());
+			if (this.playerData != null && this.playerData.getType() != null) {
+				this.opponentData.setType(this.playerData.getType().getOpponent());
 			} else {
-				LOGGER.warn("Fail to set the type for the opponent player {}, since the type for the local player {} is not set", this.opponentPlayer.getProfile().getName(), this.getPlayer().getProfile().getName());
+				LOGGER.warn("Fail to set the type for the opponent player {}, since the type for the local player {} is not set", opponentPlayer.getProfile().getName(), this.getPlayer().getProfile().getName());
 			}
+			this.updateScore();
 		} else {
 			LOGGER.warn("Fail to set the opponent player to a player of type {}", (Object) Util.runIfNotNull(player, (clientPlayer) -> {
 				return clientPlayer.getClass().getSimpleName();
@@ -278,6 +327,22 @@ public class TTTScreen extends GameScreen {
 		}
 	}
 	
+	protected void updateScore() {
+		if (this.playerData.isRequiredDataLoad()) {
+			this.playerInfo.setText(this.playerData.getPlayer().getProfile().getName() + " (" + this.playerData.getType().getCharacter() + "): " + this.playerData.getWins());
+		} else {
+			this.playerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.fail_data"));
+			LOGGER.warn("Fail to load score of player {}", this.playerData.getPlayer().getProfile().getName());
+		}
+		if (this.opponentData.isRequiredDataLoad()) {
+			this.opponentInfo.setText(this.opponentData.getPlayer().getProfile().getName() + " (" + this.opponentData.getType().getCharacter() + "): " + this.opponentData.getWins());
+		} else {
+			this.opponentInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.fail_data"));
+			LOGGER.warn("Fail to load score of player {}", this.opponentData.getPlayer().getProfile().getName());
+		}
+		LOGGER.info("Update score of players");
+	}
+	
 	@Override
 	protected Pane createPane() {
 		BorderPane pane = new BorderPane();
@@ -287,8 +352,10 @@ public class TTTScreen extends GameScreen {
 		return pane;
 	}
 	
-	protected Pane createInfoPane() { // TODO
-		return new Pane();
+	protected Pane createInfoPane() {
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		pane.addColumn(0, this.playerInfo, this.opponentInfo);
+		return FxUtil.makeVerticalBox(Pos.CENTER, 10.0, new Text(TranslationKey.createAndGet("screen.tic_tac_toe.score")), new Separator(Orientation.HORIZONTAL), pane);
 	}
 	
 	protected Pane createGamePane() {
@@ -310,12 +377,10 @@ public class TTTScreen extends GameScreen {
 		pane.add(Objects.requireNonNull(this.getButton(hMap, vMap)), 0, 0);
 		return pane;
 	}
-
 	
 	protected Pane createActionPane() {
-		BorderPane pane = new BorderPane();
-		pane.setLeft(this.leaveButton);
-		pane.setRight(this.confirmActionButton);
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 30.0);
+		pane.addRow(0, this.leaveButton, this.playAgainButton, this.confirmActionButton);
 		return pane;
 	}
 	

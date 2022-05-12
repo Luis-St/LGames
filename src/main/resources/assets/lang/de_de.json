@@ -12,6 +12,7 @@
     "screen.menu.settings": "Einstellungen",
     "server.window.player_name": "Name: %1%",
     "settings.language.description": "Sprache für die Benutzeroberfläche",
+    "screen.tic_tac_toe.fail_data": "Daten konnten nicht geladen werden",
     "screen.menu.profile": "Profil",
     "screen.menu.multiplayer": "Mehrspieler",
     "window.login.password": "Passwort",
@@ -41,7 +42,9 @@
     "window.login.confirm_password": "Passwort bestätigen",
     "settings.language.name": "Sprache",
     "screen.player_select.play": "Play",
+    "screen.tic_tac_toe.score": "Punktestand",
     "server.window.player": "%1%\u0027s spieler",
+    "screen.tic_tac_toe.no_data": "Noch keine Daten verfügbar",
     "window.error.continue": "Weiter",
     "account.window.account_taken": "Verwendet: %1%",
     "screen.lobby.ttt": "Tic Tac Toe",
@@ -60,6 +63,7 @@
     "account.window.refresh": "Aktualisieren",
     "server.window.players": "Spieler",
     "account.window.account": "%1%\u0027s Konto",
-    "window.login.name": "Name"
+    "window.login.name": "Name",
+    "screen.tic_tac_toe.play_again": "Nochmal abspielen"
   }
 }

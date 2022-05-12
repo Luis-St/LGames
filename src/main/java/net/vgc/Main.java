@@ -16,15 +16,19 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
+	 *  - rework of FriendlyByteBuffer add method to write/read NetworkSerializable Objects -> remove all other methods -> move to constructor and interface
+	 *  - try remove language part of language file
 	 *  - PlayerRemovePacket has 29 extra bytes -> when last player on server (debuging) StopGamePacket has 32 extra bytes (no bytes writen in packet) -> try other port -> handle packet inside try-catch
 	 *  - handle else case in ServerPacketListener#handleExitGameRequest game is null -> lobby screen for client
 	 *  - rework of Button Position in TTT Game -> Use enum for left/mid/right and top/center/bottom -> add better system for fields (ResultLine avoid 6 ints)
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
 	 *  - add super class for Windows
+	 *  - add way to display score in server window
 	 *  - create Loading Steps, which are load from 0% til 100% -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
 	 *  - add new info system form server -> client
 	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
 	 *  - layout and grafic rework
+	 *  - account server close -> packet to client which skip loggout (without sync to account server)
 	 *  - fix Logger
 	 *  - impl. singleplayer
 	 */

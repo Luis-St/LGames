@@ -1,5 +1,6 @@
 package net.vgc.game;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,12 +11,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
+import net.vgc.game.score.GameScore;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.server.Server;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.Util;
 
 public interface Game {
 	
@@ -28,6 +31,8 @@ public interface Game {
 	GameType<? extends Game> getType();
 	
 	List<ServerPlayer> getPlayers();
+	
+	GameScore getScore();
 	
 	@Nullable
 	ServerPlayer getCurrentPlayer();
@@ -75,6 +80,16 @@ public interface Game {
 		}
 	}
 	
+	default void randomNextPlayer() {
+		List<ServerPlayer> players = this.getPlayers();
+		if (!players.isEmpty()) {
+			Collections.shuffle(players, Util.systemRandom());
+			this.setCurrentPlayer(players.get(0));
+		} else {
+			LOGGER.warn("Unable to change player, since there is no player present");
+		}
+	}
+	
 	default boolean removePlayer(ServerPlayer player, boolean sendExit) {
 		if (this.getPlayers().remove(player)) {
 			if (sendExit) {
@@ -100,6 +115,8 @@ public interface Game {
 		}
 		return false;
 	}
+	
+	boolean nextMatch();
 	
 	default void stopGame() {
 		this.onStop();

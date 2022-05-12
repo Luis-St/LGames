@@ -9,21 +9,26 @@ import com.google.common.collect.Maps;
 import net.vgc.game.Game;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
+import net.vgc.game.score.GameScore;
 import net.vgc.game.ttt.map.MutableTTTMap;
 import net.vgc.game.ttt.map.TTTMap;
+import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
 import net.vgc.player.GameProfile;
+import net.vgc.server.dedicated.DedicatedPlayerList;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
 public class TTTGame implements Game {
 	
 	protected final List<ServerPlayer> players;
+	protected final GameScore score;
 	protected final Map<ServerPlayer, TTTType> playerTypes;
 	protected final MutableTTTMap mutableMap;
 	protected ServerPlayer currentPlayer;
 	
 	public TTTGame(List<ServerPlayer> players) {
 		this.players = players;
+		this.score = new GameScore(this);
 		this.playerTypes = createPlayerTypes(this.players);
 		this.mutableMap = new MutableTTTMap();
 	}
@@ -43,10 +48,15 @@ public class TTTGame implements Game {
 	public GameType<TTTGame> getType() {
 		return GameTypes.TIC_TAC_TOE;
 	}
-
+	
 	@Override
 	public List<ServerPlayer> getPlayers() {
 		return this.players;
+	}
+	
+	@Override
+	public GameScore getScore() {
+		return this.score;
 	}
 	
 	@Override
@@ -58,10 +68,25 @@ public class TTTGame implements Game {
 	public void setCurrentPlayer(ServerPlayer currentPlayer) {
 		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.currentPlayer, this::getName), Util.runIfNotNull(currentPlayer, this::getName));
 		this.currentPlayer = currentPlayer;
+		// TODO: send current player packet
 	}
 	
 	protected String getName(ServerPlayer player) {
 		return player.getProfile().getName();
+	}
+	
+	@Override
+	public boolean nextMatch() {
+		DedicatedPlayerList playerList = this.getServer().getPlayerList();
+		if (this.getType().enoughPlayersToPlay(this.players)) {
+			this.mutableMap.reset();
+			this.randomNextPlayer();
+			playerList.broadcastAll(this.players, new UpdateTTTGamePacket(this.mutableMap.immutable(), this.currentPlayer.getProfile()));
+			LOGGER.info("Start a new match of game {} with players {}", this.getType().getName().toLowerCase(), this.players.stream().map(ServerPlayer::getProfile).map(GameProfile::getName).collect(Collectors.toList()));
+			return true;
+		}
+		LOGGER.warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.players.size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
+		return false;
 	}
 	
 	public TTTType getPlayerType(ServerPlayer player) {

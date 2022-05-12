@@ -93,6 +93,19 @@ public class MutableTTTMap extends TTTMap {
 		}
 	}
 	
+	public void reset() {
+		this.topLeftType = TTTType.NO;
+		this.topCenterType = TTTType.NO;
+		this.topRightType = TTTType.NO;
+		this.midLeftType = TTTType.NO;
+		this.midCenterType = TTTType.NO;
+		this.midRightType = TTTType.NO;
+		this.bottomLeftType = TTTType.NO;
+		this.bottomCenterType = TTTType.NO;
+		this.bottomRightType = TTTType.NO;
+		LOGGER.info("Reset the field map to it's default");
+	}
+	
 	public TTTMap immutable() {
 		return new TTTMap(this.topLeftType, this.topCenterType, this.topRightType, this.midLeftType, this.midCenterType, this.midRightType, this.bottomLeftType, this.bottomCenterType, this.bottomRightType);
 	}

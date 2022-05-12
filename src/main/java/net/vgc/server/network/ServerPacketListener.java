@@ -14,11 +14,14 @@ import net.vgc.game.ttt.TTTGame;
 import net.vgc.game.ttt.TTTType;
 import net.vgc.game.ttt.map.TTTMap;
 import net.vgc.game.ttt.map.TTTResultLine;
+import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientJoinedPacket;
+import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
+import net.vgc.network.packet.client.game.GameScoreUpdatePacket;
 import net.vgc.network.packet.client.game.StartTTTGamePacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
@@ -84,9 +87,33 @@ public class ServerPacketListener extends AbstractPacketListener {
 			if (mutable.isTrue()) {
 				LOGGER.warn("Fail to start game {}, since on player is already playing a game", gameType.getName());
 			} else {
-				LOGGER.warn("Fail to start game {}, since there was an error in a game profile", gameType.getName());
+				LOGGER.warn("Fail to start game {}, since there was an error in a player profile", gameType.getName());
 			}
 			this.connection.send(new CancelPlayGameRequestPacket());
+		}
+	}
+	
+	public void handlePlayAgainGameRequest(GameProfile profile) {
+		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
+		if (player != null) {
+			if (this.server.isAdmin(player)) {
+				Game game = this.server.getGame();
+				if (game != null) {
+					if (!game.nextMatch()) {
+						LOGGER.warn("Fail to start new match of game {}", game.getType().getName().toLowerCase());
+						this.connection.send(new CancelPlayAgainGameRequestPacket());
+					}
+				} else {
+					LOGGER.warn("Fail to start new match, since there is no game running");
+					this.connection.send(new CancelPlayAgainGameRequestPacket());
+				}
+			} else {
+				LOGGER.warn("Cancel request to start a new match, since the player {} has not the required permission");
+				this.connection.send(new CancelPlayAgainGameRequestPacket());
+			}
+		} else {
+			LOGGER.warn("Fail to start a new match, since there was an error in a player profile {}", profile.getName());
+			this.connection.send(new CancelPlayAgainGameRequestPacket());
 		}
 	}
 	
@@ -109,12 +136,19 @@ public class ServerPacketListener extends AbstractPacketListener {
 									for (ServerPlayer player : tttGame.getPlayers()) {
 										ServerPlayer enemyPlayer = tttGame.getEnemiesFor(player).get(0);
 										GameResult result = newMap.getResult(tttGame.getPlayerType(player));
+										Connection connection = player.connection;
 										if (result == GameResult.DRAW) {
-											player.connection.send(new TTTGameResultPacket(GameProfile.EMPTY, TTTType.NO, GameProfile.EMPTY, TTTType.NO, TTTResultLine.EMPTY));
+											connection.send(new TTTGameResultPacket(GameProfile.EMPTY, TTTType.NO, GameProfile.EMPTY, TTTType.NO, TTTResultLine.EMPTY));
+											tttGame.getScore().getScore(player.getProfile()).increaseDraw();
+											connection.send(new GameScoreUpdatePacket(tttGame.getScore()));
 										} else if (result == GameResult.WIN) {
-											player.connection.send(new TTTGameResultPacket(player.getProfile(), tttGame.getPlayerType(player), enemyPlayer.getProfile(), tttGame.getPlayerType(enemyPlayer), resultLine));
+											connection.send(new TTTGameResultPacket(player.getProfile(), tttGame.getPlayerType(player), enemyPlayer.getProfile(), tttGame.getPlayerType(enemyPlayer), resultLine));
+											tttGame.getScore().getScore(player.getProfile()).increaseWin();
+											connection.send(new GameScoreUpdatePacket(tttGame.getScore()));
 										} else if (result == GameResult.LOSE) {
-											player.connection.send(new TTTGameResultPacket(enemyPlayer.getProfile(), tttGame.getPlayerType(enemyPlayer), player.getProfile(), tttGame.getPlayerType(player), resultLine));
+											connection.send(new TTTGameResultPacket(enemyPlayer.getProfile(), tttGame.getPlayerType(enemyPlayer), player.getProfile(), tttGame.getPlayerType(player), resultLine));
+											tttGame.getScore().getScore(player.getProfile()).increaseLose();
+											connection.send(new GameScoreUpdatePacket(tttGame.getScore()));
 										} else {
 											LOGGER.warn("Fail to handle result {} of game {}", result.getName(), tttGame.getType().getName().toLowerCase());
 										}
@@ -137,7 +171,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 				LOGGER.warn("Fail to handle press {} field packet, since the current game is {}", GameTypes.TIC_TAC_TOE.getName().toLowerCase(), game.getType().getName().toLowerCase());
 			}
 		} else {
-			LOGGER.warn("Fail to handle press {} field packet, since there is no active game", GameTypes.TIC_TAC_TOE.getName().toLowerCase());
+			LOGGER.warn("Fail to handle press {} field packet, since there is no running game", GameTypes.TIC_TAC_TOE.getName().toLowerCase());
 		}
 	}
 	
@@ -159,7 +193,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 			if (player != null) {
 				player.connection.send(new ExitGamePacket());
 			} else {
-				LOGGER.warn("Fail to remove player {} from game, since there is no active game", profile.getName());
+				LOGGER.warn("Fail to remove player {} from game, since there is no running game", profile.getName());
 			}
 		}
 	}

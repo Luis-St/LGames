@@ -8,22 +8,28 @@ import net.vgc.client.fx.FxUtil;
 
 public enum TTTType {
 	
-	CROSS("cross", 0, "textures/cross"),
-	CIRCLE("circle", 1, "textures/circle"),
-	NO("no", -1, null);
+	CROSS("cross", 'X', 0, "textures/cross"),
+	CIRCLE("circle", 'O', 1, "textures/circle"),
+	NO("no", 'N', -1, null);
 	
 	private final String name;
+	private final char character;
 	private final int id;
 	private final String path;
 	
-	private TTTType(String name, int id, String path) {
+	private TTTType(String name, char character, int id, String path) {
 		this.name = name;
+		this.character = character;
 		this.id = id;
 		this.path = path;
 	}
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public char getCharacter() {
+		return this.character;
 	}
 	
 	public int getId() {
@@ -55,10 +61,6 @@ public enum TTTType {
 		}
 		Main.LOGGER.warn("Fail to get tic tac toe type from id {}", id);
 		return NO;
-	}
-	
-	public static enum State {
-		
 	}
 	
 }

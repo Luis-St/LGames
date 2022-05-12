@@ -76,7 +76,7 @@ public class PlayerSelectScreen extends Screen {
 				}
 			}
 		} else {
-			LOGGER.warn("Player {} tried to start a game but the action was canceled, since he has not the permission", this.client.getPlayer().getProfile().getName());
+			LOGGER.warn("Tried to start a game {} but the action was canceled from server, since he has not the permission", this.gameType.getName().toLowerCase());
 			this.handleBack();
 		}
 	}
