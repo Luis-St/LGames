@@ -18,15 +18,15 @@ public class ClientLoggedInPacket implements ClientPacket {
 	}
 	
 	public ClientLoggedInPacket(FriendlyByteBuffer buffer) {
-		this.loginType = LoginType.fromName(buffer.readString());
-		this.account = buffer.readAccount();
+		this.loginType = buffer.readEnum(LoginType.class);
+		this.account = buffer.read(PlayerAccount.class);
 		this.successful = buffer.readBoolean();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeString(this.loginType.getName());
-		buffer.writeAccount(this.account);
+		buffer.writeEnum(this.loginType);
+		buffer.write(this.account);
 		buffer.writeBoolean(this.successful);
 	}
 

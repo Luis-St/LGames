@@ -15,13 +15,13 @@ public class SyncPlayerDataPacket implements ClientPacket {
 	}
 	
 	public SyncPlayerDataPacket(FriendlyByteBuffer buffer) {
-		this.profile = buffer.readProfile();
+		this.profile = buffer.read(GameProfile.class);
 		this.playing = buffer.readBoolean();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeProfile(this.profile);
+		buffer.write(this.profile);
 		buffer.writeBoolean(this.playing);
 	}
 

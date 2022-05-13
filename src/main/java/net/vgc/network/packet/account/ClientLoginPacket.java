@@ -17,14 +17,14 @@ public class ClientLoginPacket implements AccountPacket {
 	}
 	
 	public ClientLoginPacket(FriendlyByteBuffer buffer) {
-		this.loginType = LoginType.fromName(buffer.readString());
+		this.loginType = buffer.readEnum(LoginType.class);
 		this.name = buffer.readString();
 		this.password = buffer.readString();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeString(this.loginType.getName());
+		buffer.writeEnum(this.loginType);
 		buffer.writeString(this.name);
 		buffer.writeString(this.password);
 	}

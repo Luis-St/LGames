@@ -18,14 +18,14 @@ public class PressTTTFieldPacket implements ServerPacket {
 	}
 	
 	public PressTTTFieldPacket(FriendlyByteBuffer buffer) {
-		this.profile = buffer.readProfile();
+		this.profile = buffer.read(GameProfile.class);
 		this.vMap = buffer.readInt();
 		this.hMap = buffer.readInt();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeProfile(this.profile);
+		buffer.write(this.profile);
 		buffer.writeInt(this.vMap);
 		buffer.writeInt(this.hMap);
 	}

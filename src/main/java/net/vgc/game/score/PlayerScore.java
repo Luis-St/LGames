@@ -4,9 +4,12 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.vgc.network.buffer.Encodable;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
+import net.vgc.util.annotation.DecodingConstructor;
 
-public class PlayerScore {
+public class PlayerScore implements Encodable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
@@ -24,6 +27,14 @@ public class PlayerScore {
 		this.win = new MutableInt(win);
 		this.lose = new MutableInt(lose);
 		this.draw = new MutableInt(draw);
+	}
+	
+	@DecodingConstructor
+	public PlayerScore(FriendlyByteBuffer buffer) {
+		this.profile = buffer.read(GameProfile.class);
+		this.win = new MutableInt(buffer.readInt());
+		this.lose = new MutableInt(buffer.readInt());
+		this.draw = new MutableInt(buffer.readInt());
 	}
 	
 	public GameProfile getProfile() {
@@ -91,6 +102,14 @@ public class PlayerScore {
 		this.resetWins();
 		this.resetLoses();
 		this.resetDraws();
+	}
+	
+	@Override
+	public void encode(FriendlyByteBuffer buffer) {
+		buffer.write(this.profile);
+		buffer.writeInt(this.win.getValue());
+		buffer.writeInt(this.lose.getValue());
+		buffer.writeInt(this.draw.getValue());
 	}
 	
 	@Override

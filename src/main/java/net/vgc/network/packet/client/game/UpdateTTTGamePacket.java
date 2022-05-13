@@ -17,14 +17,14 @@ public class UpdateTTTGamePacket implements ClientPacket {
 	}
 	
 	public UpdateTTTGamePacket(FriendlyByteBuffer buffer) {
-		this.map = buffer.readTTTMap();
-		this.profile = buffer.readProfile();
+		this.map = buffer.read(TTTMap.class);
+		this.profile = buffer.read(GameProfile.class);
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeTTTMap(this.map);
-		buffer.writeProfile(this.profile);
+		buffer.write(this.map);
+		buffer.write(this.profile);
 	}
 
 	@Override

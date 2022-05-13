@@ -3,8 +3,6 @@ package net.vgc.network.packet.client.game;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
-
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.game.ttt.TTTType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
@@ -25,24 +23,20 @@ public class StartTTTGamePacket implements ClientPacket {
 	}
 	
 	public StartTTTGamePacket(FriendlyByteBuffer buffer) {
-		this.playerType = TTTType.fromId(buffer.readInt());
-		this.startPlayerProfile = buffer.readProfile();
-		List<GameProfile> profiles = Lists.newArrayList();
-		int index = buffer.readInt();
-		for (int i = 0; i < index; i++) {
-			profiles.add(buffer.readProfile());
-		}
-		this.profiles = profiles;
+		this.playerType = buffer.readEnum(TTTType.class);
+		this.startPlayerProfile = buffer.read(GameProfile.class);
+		this.profiles = buffer.readList(buffer, (buf) -> {
+			return buf.read(GameProfile.class);
+		});
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeInt(this.playerType.getId());
-		buffer.writeProfile(this.startPlayerProfile);
-		buffer.writeInt(this.profiles.size());
-		for (GameProfile profile : this.profiles) {
-			buffer.writeProfile(profile);
-		}
+		buffer.write(this.startPlayerProfile);
+		buffer.writeList(buffer, this.profiles, (buf, profile) -> {
+			buf.write(profile);
+		});
 	}
 
 	@Override

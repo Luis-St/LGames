@@ -6,10 +6,13 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import net.vgc.game.Game;
+import net.vgc.network.buffer.Encodable;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.annotation.DecodingConstructor;
 
-public class GameScore {
+public class GameScore implements Encodable {
 	
 	protected final Map<GameProfile, PlayerScore> scores;
 	
@@ -23,6 +26,15 @@ public class GameScore {
 	
 	public GameScore(Map<GameProfile, PlayerScore> scores) {
 		this.scores = scores;
+	}
+	
+	@DecodingConstructor
+	public GameScore(FriendlyByteBuffer buffer) {
+		this.scores = buffer.readMap(buffer, (buf) -> {
+			return buf.read(GameProfile.class);
+		}, (buf) -> {
+			return buf.read(PlayerScore.class);
+		});
 	}
 	
 	protected static Map<GameProfile, PlayerScore> createScoreMap(List<ServerPlayer> players) {
@@ -72,6 +84,30 @@ public class GameScore {
 		for (GameProfile profile : this.scores.keySet()) {
 			this.resetScore(profile);
 		}
+	}
+	
+	@Override
+	public void encode(FriendlyByteBuffer buffer) {
+		buffer.writeMap(buffer, this.scores, (buf, key) -> {
+			buf.write(key);
+		}, (buf, value) -> {
+			buf.write(value);
+		});
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof GameScore score) {
+			return this.scores.equals(score.scores);
+		}
+		return false;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder("GameScore{");
+		builder.append("scores=").append(this.scores).append("}");
+		return builder.toString();
 	}
 	
 }

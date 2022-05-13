@@ -3,8 +3,6 @@ package net.vgc.network.packet.client;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
-
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
@@ -19,20 +17,16 @@ public class ClientJoinedPacket implements ClientPacket {
 	}
 
 	public ClientJoinedPacket(FriendlyByteBuffer buffer) {
-		List<GameProfile> profiles = Lists.newArrayList();
-		int index = buffer.readInt();
-		for (int i = 0; i < index; i++) {
-			profiles.add(buffer.readProfile());
-		}
-		this.profiles = profiles;
+		this.profiles = buffer.readList(buffer, (buf) -> {
+			return buf.read(GameProfile.class);
+		});
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeInt(this.profiles.size());
-		for (GameProfile profile : this.profiles) {
-			buffer.writeProfile(profile);
-		}
+		buffer.writeList(buffer, this.profiles, (buf, profile) -> {
+			buf.write(profile);
+		});
 	}
 
 	@Override

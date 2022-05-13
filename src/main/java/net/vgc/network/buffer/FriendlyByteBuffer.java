@@ -1,24 +1,29 @@
 package net.vgc.network.buffer;
 
+import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.vgc.account.PlayerAccount;
-import net.vgc.game.score.GameScore;
-import net.vgc.game.score.PlayerScore;
-import net.vgc.game.ttt.TTTType;
-import net.vgc.game.ttt.map.TTTMap;
-import net.vgc.game.ttt.map.TTTResultLine;
-import net.vgc.player.GameProfile;
+import net.vgc.util.EnumRepresentable;
+import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
+import net.vgc.util.annotation.DecodingConstructor;
 
 public class FriendlyByteBuffer {
+	
+	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	protected final ByteBuf buffer;
 	
@@ -116,120 +121,71 @@ public class FriendlyByteBuffer {
 		return uuid.equals(Util.EMPTY_UUID) ? Util.EMPTY_UUID : uuid;
 	}
 	
-	public void writeAccount(PlayerAccount value) {
-		value.write(this);
+	public <T extends Encodable> void write(T value) {
+		value.encode(this);
 	}
 	
-	public PlayerAccount readAccount() {
-		String name = this.readString();
-		String password = this.readString();
-		UUID uuid = this.readUUID();
-		boolean guest = this.readBoolean();
-		PlayerAccount account = new PlayerAccount(name, password, uuid, guest);
-		return account.equals(PlayerAccount.UNKNOWN) ? PlayerAccount.UNKNOWN : account;
+	public <T extends Encodable> T read(Class<T> clazz) {
+		if (ReflectionHelper.hasConstructor(clazz, FriendlyByteBuffer.class)) {
+			Constructor<T> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
+			if (constructor.isAnnotationPresent(DecodingConstructor.class)) {
+				T value = ReflectionHelper.newInstance(constructor, this);
+				if (value != null) {
+					return value;
+				} else {
+					LOGGER.warn("Fail to read object of type {} from buffer, since there was an error in creating a new instance of the class {}", clazz.getSimpleName(), clazz.getName());
+				}
+			} else {
+				LOGGER.warn("Fail to read object of type {} from buffer, since the decode constructor is not annotated with @DecodingConstructor", clazz.getSimpleName());
+			}
+		} else {
+			LOGGER.warn("Fail to read object of type {} from buffer, since there is no FriendlyByteBuffer constructor", clazz.getSimpleName());
+		}
+		return null;
 	}
 	
-	public void writeProfile(GameProfile value) {
-		this.writeString(value.getName());
-		this.writeUUID(value.getUUID());
-	}
-	
-	public GameProfile readProfile() {
-		String name = this.readString();
-		UUID uuid = this.readUUID();
-		GameProfile profile = new GameProfile(name, uuid);
-		return profile.equals(GameProfile.EMPTY) ? GameProfile.EMPTY : profile;
-	}
-	
-	public void writeTTTType(TTTType value) {
+	public <T extends Enum<T> & EnumRepresentable> void writeEnum(T value) {
 		this.writeInt(value.getId());
 	}
 	
-	public TTTType readTTTType() {
+	public <T extends Enum<T> & EnumRepresentable> T readEnum(Class<T> clazz) {
 		int id = this.readInt();
-		return TTTType.fromId(id);
+		return EnumRepresentable.fromId(clazz, id);
 	}
 	
-	public void writeTTTMap(TTTMap value) {
-		this.writeTTTType(value.getTopLeftType());
-		this.writeTTTType(value.getTopCenterType());
-		this.writeTTTType(value.getTopRightType());
-		this.writeTTTType(value.getMidLeftType());
-		this.writeTTTType(value.getMidCenterType());
-		this.writeTTTType(value.getMidRightType());
-		this.writeTTTType(value.getBottomLeftType());
-		this.writeTTTType(value.getBottomCenterType());
-		this.writeTTTType(value.getBottomRightType());
-	}
-	
-	public TTTMap readTTTMap() {
-		TTTType topLeftType = this.readTTTType();
-		TTTType topCenterType = this.readTTTType();
-		TTTType topRightType = this.readTTTType();
-		TTTType midLeftType = this.readTTTType();
-		TTTType midCenterType = this.readTTTType();
-		TTTType midRightType = this.readTTTType();
-		TTTType bottomLeftType = this.readTTTType();
-		TTTType bottomCenterType = this.readTTTType();
-		TTTType bottomRightType = this.readTTTType();
-		return new TTTMap(topLeftType, topCenterType, topRightType, midLeftType, midCenterType, midRightType, bottomLeftType, bottomCenterType, bottomRightType);
-	}
-	
-	public void writeTTTResultLine(TTTResultLine value) {
-		this.writeInt(value.getType().getId());
-		this.writeInt(value.getVMap0());
-		this.writeInt(value.getHMap0());
-		this.writeInt(value.getVMap1());
-		this.writeInt(value.getHMap1());
-		this.writeInt(value.getVMap2());
-		this.writeInt(value.getHMap2());
-	}
-	
-	public TTTResultLine readTTTResultLine() {
-		TTTType state = TTTType.fromId(this.readInt());
-		int vMap0 = this.readInt();
-		int hMap0 = this.readInt();
-		int vMap1 = this.readInt();
-		int hMap1 = this.readInt();
-		int vMap2 = this.readInt();
-		int hMap2 = this.readInt();
-		TTTResultLine resultLine = new TTTResultLine(state, vMap0, hMap0, vMap1, hMap1, vMap2, hMap2);
-		return resultLine.equals(TTTResultLine.EMPTY) ? TTTResultLine.EMPTY : resultLine;
-	}
-	
-	public void writePlayerScore(PlayerScore value) {
-		this.writeProfile(value.getProfile());
-		this.writeInt(value.getWins());
-		this.writeInt(value.getLoses());
-		this.writeInt(value.getDraws());
-	}
-	
-	public PlayerScore readPlayerScore() {
-		GameProfile profile = this.readProfile();
-		int wins = this.readInt();
-		int loses = this.readInt();
-		int draws = this.readInt();
-		return new PlayerScore(profile, wins, loses, draws);
-	}
-	
-	public void writeGameScore(GameScore value) {
-		Map<GameProfile, PlayerScore> scores = value.getScores();
-		this.writeInt(scores.size());
-		for (Entry<GameProfile, PlayerScore> entry : scores.entrySet()) {
-			this.writeProfile(entry.getKey());
-			this.writePlayerScore(entry.getValue());
+	public <T> void writeList(FriendlyByteBuffer buffer, List<T> list, BiConsumer<FriendlyByteBuffer, T> consumer) {
+		buffer.writeInt(list.size());
+		for (T t : list) {
+			consumer.accept(buffer, t);
 		}
 	}
 	
-	public GameScore readGameScore() {
-		Map<GameProfile, PlayerScore> scores = Maps.newHashMap();
-		int size = this.readInt();
+	public <T> List<T> readList(FriendlyByteBuffer buffer, Function<FriendlyByteBuffer, T> function) {
+		List<T> list = Lists.newArrayList();
+		int size = buffer.readInt();
 		for (int i = 0; i < size; i++) {
-			GameProfile profile = this.readProfile();
-			PlayerScore score = this.readPlayerScore();
-			scores.put(profile, score);
+			list.add(function.apply(buffer));
 		}
-		return new GameScore(scores);
+		return list;
+	}
+	
+	public <K, V> void writeMap(FriendlyByteBuffer buffer, Map<K, V> map, BiConsumer<FriendlyByteBuffer, K> keyConsumer, BiConsumer<FriendlyByteBuffer, V> valueConsumer) {
+		buffer.writeInt(map.size());
+		for (Map.Entry<K, V> entry : map.entrySet()) {
+			keyConsumer.accept(buffer, entry.getKey());
+			valueConsumer.accept(buffer, entry.getValue());
+		}
+	}
+	
+	public <K, V> Map<K, V> readMap(FriendlyByteBuffer buffer, Function<FriendlyByteBuffer, K> keyFunction, Function<FriendlyByteBuffer, V> valueFunction) {
+		Map<K, V> map = Maps.newHashMap();
+		int size = buffer.readInt();
+		for (int i = 0; i < size; i++) {
+			K key = keyFunction.apply(buffer);
+			V value = valueFunction.apply(buffer);
+			map.put(key, value);
+		}
+		return map;
 	}
 	
 	public ByteBuf toBuffer() {

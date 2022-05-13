@@ -24,20 +24,20 @@ public class TTTGameResultPacket implements ClientPacket {
 	}
 	
 	public TTTGameResultPacket(FriendlyByteBuffer buffer) {
-		this.winnerProfile = buffer.readProfile();
-		this.winnerType = TTTType.fromId(buffer.readInt());
-		this.loserProfile = buffer.readProfile();
-		this.loserType = TTTType.fromId(buffer.readInt());
-		this.resultLine = buffer.readTTTResultLine();
+		this.winnerProfile = buffer.read(GameProfile.class);
+		this.winnerType = buffer.readEnum(TTTType.class);
+		this.loserProfile = buffer.read(GameProfile.class);
+		this.loserType = buffer.readEnum(TTTType.class);
+		this.resultLine = buffer.read(TTTResultLine.class);
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeProfile(this.winnerProfile);
-		buffer.writeInt(this.winnerType.getId());
-		buffer.writeProfile(this.loserProfile);
-		buffer.writeInt(this.loserType.getId());
-		buffer.writeTTTResultLine(this.resultLine);
+		buffer.write(this.winnerProfile);
+		buffer.writeEnum(this.winnerType);
+		buffer.write(this.loserProfile);
+		buffer.writeEnum(this.loserType);
+		buffer.write(this.resultLine);
 	}
 
 	@Override

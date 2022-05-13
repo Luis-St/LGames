@@ -14,12 +14,12 @@ public class ExitGameRequestPacket implements ServerPacket {
 	}
 	
 	public ExitGameRequestPacket(FriendlyByteBuffer buffer) {
-		this.profile = buffer.readProfile();
+		this.profile = buffer.read(GameProfile.class);
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeProfile(this.profile);
+		buffer.write(this.profile);
 	}
 
 	@Override

@@ -1,8 +1,11 @@
 package net.vgc.game.ttt.map;
 
 import net.vgc.game.ttt.TTTType;
+import net.vgc.network.buffer.Encodable;
+import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.annotation.DecodingConstructor;
 
-public class TTTResultLine {
+public class TTTResultLine implements Encodable {
 	
 	public static final TTTResultLine EMPTY = new TTTResultLine(TTTType.NO, -1, -1, -1, -1, -1, -1);
 	
@@ -22,6 +25,17 @@ public class TTTResultLine {
 		this.hMap1 = hMap1;
 		this.vMap2 = vMap2;
 		this.hMap2 = hMap2;
+	}
+	
+	@DecodingConstructor
+	public TTTResultLine(FriendlyByteBuffer buffer) {
+		this.type = buffer.readEnum(TTTType.class);
+		this.vMap0 = buffer.readInt();
+		this.hMap0 = buffer.readInt();
+		this.vMap1 = buffer.readInt();
+		this.hMap1 = buffer.readInt();
+		this.vMap2 = buffer.readInt();
+		this.hMap2 = buffer.readInt();
 	}
 	
 	public TTTType getType() {
@@ -50,6 +64,17 @@ public class TTTResultLine {
 	
 	public int getHMap2() {
 		return this.hMap2;
+	}
+	
+	@Override
+	public void encode(FriendlyByteBuffer buffer) {
+		buffer.writeEnum(this.type);
+		buffer.writeInt(this.vMap0);
+		buffer.writeInt(this.hMap0);
+		buffer.writeInt(this.vMap1);
+		buffer.writeInt(this.hMap1);
+		buffer.writeInt(this.vMap2);
+		buffer.writeInt(this.hMap2);
 	}
 	
 	@Override

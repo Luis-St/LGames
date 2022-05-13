@@ -14,10 +14,12 @@ import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.NetworkSide;
+import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
+import net.vgc.util.annotation.DecodingConstructor;
 
-public final class PlayerAccount implements Serializable {
+public final class PlayerAccount implements Encodable, Serializable  {
 	
 	public static final PlayerAccount UNKNOWN = new PlayerAccount("Unknown", "unknown", Util.EMPTY_UUID, false);
 	
@@ -32,6 +34,14 @@ public final class PlayerAccount implements Serializable {
 		this.password = password;
 		this.uuid = uuid;
 		this.guest = guest;
+	}
+	
+	@DecodingConstructor
+	public PlayerAccount(FriendlyByteBuffer buffer) {
+		this.name = buffer.readString();
+		this.password = buffer.readString();
+		this.uuid = buffer.readUUID();
+		this.guest = buffer.readBoolean();
 	}
 	
 	public PlayerAccount(CompoundTag tag) {
@@ -66,18 +76,18 @@ public final class PlayerAccount implements Serializable {
 	}
 	
 	public String getPassword() {
-		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this == UNKNOWN) {
+		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this.equals(UNKNOWN)) {
 			return this.password;
 		}
 		return this.obfuscated();
 	}
 	
 	public boolean isObfuscated() {
-		return !(NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this == UNKNOWN);
+		return !(NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this.equals(UNKNOWN));
 	}
 	
 	public void displayPassword(GridPane pane) {
-		if (NetworkSide.CLIENT.isOn() || Constans.IDE || this == UNKNOWN) {
+		if (NetworkSide.CLIENT.isOn() || Constans.IDE || this.equals(UNKNOWN)) {
 			Text text = new Text(this.obfuscated());
 			ToggleButton button = new ToggleButton();
 			button.setToggleGroup(new ToggleGroup());
@@ -126,7 +136,8 @@ public final class PlayerAccount implements Serializable {
 		return this.name.equals(name) && this.password.equals(password) && this.uuid.equals(uuid) && this.guest == guest;
 	}
 	
-	public void write(FriendlyByteBuffer buffer) {
+	@Override
+	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeString(this.name);
 		buffer.writeString(this.password);
 		buffer.writeUUID(this.uuid);
@@ -155,7 +166,7 @@ public final class PlayerAccount implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder("PlayerAccount{");
 		builder.append("name=").append(this.name).append(",");
-		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this == UNKNOWN) {
+		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this.equals(UNKNOWN)) {
 			builder.append("password=").append(this.password).append(",");
 		} else {
 			builder.append("password=").append(this.obfuscated()).append(",");

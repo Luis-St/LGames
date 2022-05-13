@@ -17,7 +17,7 @@ public interface EnumRepresentable {
 	
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public static <T extends Enum<T> & EnumRepresentable> Enum<T> fromName(Class<T> clazz, String name) {
+	public static <T extends Enum<T> & EnumRepresentable> T fromName(Class<T> clazz, String name) {
 		if (clazz.isEnum()) {
 			T[] values = clazz.getEnumConstants();
 			for (T value : values) {
@@ -26,7 +26,7 @@ public interface EnumRepresentable {
 				}
 			}
 			if (values.length != 0) {
-				return (Enum<T>) values[0].getDefault();
+				return (T) values[0].getDefault();
 			}
 		} else {
 			Main.LOGGER.warn("Fail to get enum value from name {}, since the class {} is not a enum", name, clazz.getSimpleName());
@@ -36,7 +36,7 @@ public interface EnumRepresentable {
 	
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public static <T extends Enum<T> & EnumRepresentable> Enum<T> fromId(Class<T> clazz, int id) {
+	public static <T extends Enum<T> & EnumRepresentable> T fromId(Class<T> clazz, int id) {
 		if (clazz.isEnum()) {
 			T[] values = clazz.getEnumConstants();
 			for (T value : values) {
@@ -45,7 +45,7 @@ public interface EnumRepresentable {
 				}
 			}
 			if (values.length != 0) {
-				return (Enum<T>) values[0].getDefault();
+				return (T) values[0].getDefault();
 			}
 		} else {
 			Main.LOGGER.warn("Fail to get enum value from id {}, since the class {} is not a enum", id, clazz.getSimpleName());

@@ -14,12 +14,12 @@ public class GameScoreUpdatePacket implements ClientPacket {
 	}
 	
 	public GameScoreUpdatePacket(FriendlyByteBuffer buffer) {
-		this.score = buffer.readGameScore();
+		this.score = buffer.read(GameScore.class);
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeGameScore(this.score);
+		buffer.write(this.score);
 	}
 
 	@Override

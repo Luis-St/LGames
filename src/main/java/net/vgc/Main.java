@@ -16,7 +16,6 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
-	 *  - rework of FriendlyByteBuffer add method to write/read NetworkSerializable Objects -> remove all other methods -> move to constructor and interface
 	 *  - try remove language part of language file
 	 *  - PlayerRemovePacket has 29 extra bytes -> when last player on server (debuging) StopGamePacket has 32 extra bytes (no bytes writen in packet)
 	 *  - handle else case in ServerPacketListener#handleExitGameRequest game is null -> lobby screen for client

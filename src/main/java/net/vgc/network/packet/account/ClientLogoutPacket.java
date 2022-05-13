@@ -13,12 +13,12 @@ public class ClientLogoutPacket implements AccountPacket {
 	}
 	
 	public ClientLogoutPacket(FriendlyByteBuffer buffer) {
-		this.account = buffer.readAccount();
+		this.account = buffer.read(PlayerAccount.class);
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeAccount(this.account);
+		buffer.write(this.account);
 	}
 
 	@Override

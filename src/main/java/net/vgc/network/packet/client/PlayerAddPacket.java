@@ -13,12 +13,12 @@ public class PlayerAddPacket implements ClientPacket {
 	}
 	
 	public PlayerAddPacket(FriendlyByteBuffer buffer) {
-		this.profile = buffer.readProfile();
+		this.profile = buffer.read(GameProfile.class);
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeProfile(this.profile);
+		buffer.write(this.profile);
 	}
 	
 	@Override

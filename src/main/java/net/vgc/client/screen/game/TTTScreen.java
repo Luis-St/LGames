@@ -236,7 +236,7 @@ public class TTTScreen extends GameScreen {
 			GameProfile winnerProfile = packet.getWinnerProfile();
 			GameProfile loserProfile = packet.getLoserProfile();
 			TTTResultLine resultLine = packet.getResultLine();
-			if (winnerProfile == GameProfile.EMPTY && loserProfile == GameProfile.EMPTY && packet.getResultLine() == TTTResultLine.EMPTY) {
+			if (winnerProfile.equals(GameProfile.EMPTY) && loserProfile.equals(GameProfile.EMPTY) && packet.getResultLine().equals(TTTResultLine.EMPTY)) {
 				for (int v = 0; v < 3; v++) {
 					for (int h = 0; h < 3; h++) {
 						TTTButton button = this.getButton(v, h);
@@ -244,8 +244,8 @@ public class TTTScreen extends GameScreen {
 					}
 				}
 				LOGGER.info("Update field map to state {}", TTTState.DRAW);
-			} else if (winnerProfile != GameProfile.EMPTY && loserProfile != GameProfile.EMPTY) {
-				if (resultLine != TTTResultLine.EMPTY) {
+			} else if (!winnerProfile.equals(GameProfile.EMPTY) && !loserProfile.equals(GameProfile.EMPTY)) {
+				if (!resultLine.equals(TTTResultLine.EMPTY)) {
 					if (winnerProfile.equals(this.getPlayer().getProfile())) {
 						this.applyResultLine(resultLine, TTTState.WIN);
 					} else if (loserProfile.equals(this.getPlayer().getProfile())) {

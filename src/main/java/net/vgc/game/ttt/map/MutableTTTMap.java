@@ -1,6 +1,8 @@
 package net.vgc.game.ttt.map;
 
 import net.vgc.game.ttt.TTTType;
+import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.annotation.DecodingConstructor;
 
 public class MutableTTTMap extends TTTMap {
 	
@@ -10,6 +12,11 @@ public class MutableTTTMap extends TTTMap {
 	
 	public MutableTTTMap(TTTType topLeftType, TTTType topCenterType, TTTType topRightType, TTTType midLeftType, TTTType midCenterType, TTTType midRightType, TTTType bottomLeftType, TTTType bottomCenterType, TTTType bottomRightType) {
 		super(topLeftType, topCenterType, topRightType, midLeftType, midCenterType, midRightType, bottomLeftType, bottomCenterType, bottomRightType);
+	}
+	
+	@DecodingConstructor
+	public MutableTTTMap(FriendlyByteBuffer buffer) {
+		super(buffer);
 	}
 	
 	public void setTopLeftType(TTTType topLeftType) {

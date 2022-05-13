@@ -5,8 +5,11 @@ import org.apache.logging.log4j.Logger;
 
 import net.vgc.game.GameResult;
 import net.vgc.game.ttt.TTTType;
+import net.vgc.network.buffer.Encodable;
+import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.annotation.DecodingConstructor;
 
-public class TTTMap {
+public class TTTMap implements Encodable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
@@ -34,6 +37,19 @@ public class TTTMap {
 		this.bottomLeftType = bottomLeftType;
 		this.bottomCenterType = bottomCenterType;
 		this.bottomRightType = bottomRightType;
+	}
+	
+	@DecodingConstructor
+	public TTTMap(FriendlyByteBuffer buffer) {
+		this.topLeftType = buffer.readEnum(TTTType.class);
+		this.topCenterType = buffer.readEnum(TTTType.class);
+		this.topRightType = buffer.readEnum(TTTType.class);
+		this.midLeftType = buffer.readEnum(TTTType.class);
+		this.midCenterType = buffer.readEnum(TTTType.class);
+		this.midRightType = buffer.readEnum(TTTType.class);
+		this.bottomLeftType = buffer.readEnum(TTTType.class);
+		this.bottomCenterType = buffer.readEnum(TTTType.class);
+		this.bottomRightType = buffer.readEnum(TTTType.class);
 	}
 	
 	public TTTType getTopLeftType() {
@@ -108,18 +124,18 @@ public class TTTMap {
 		TTTResultLine resultLine = TTTResultLine.EMPTY;
 		for (int v = 0; v < 3; v++) {
 			resultLine = this.getLine(v, 0, v, 1, v, 2);
-			if (resultLine != TTTResultLine.EMPTY) {
+			if (!resultLine.equals(TTTResultLine.EMPTY)) {
 				return resultLine;
 			}
 		}
 		for (int h = 0; h < 3; h++) {
 			resultLine = this.getLine(0, h, 1, h, 2, h);
-			if (resultLine != TTTResultLine.EMPTY) {
+			if (!resultLine.equals(TTTResultLine.EMPTY)) {
 				return resultLine;
 			}
 		}
 		resultLine = this.getLine(0, 0, 1, 1, 2, 2);
-		if (resultLine == TTTResultLine.EMPTY) {
+		if (resultLine.equals(TTTResultLine.EMPTY)) {
 			resultLine = this.getLine(2, 0, 1, 1, 0, 2);
 		}
 		return resultLine;
@@ -148,11 +164,11 @@ public class TTTMap {
 	}
 	
 	public boolean isDraw() {
-		return !this.hasSpace() && this.getResultLine() == TTTResultLine.EMPTY;
+		return !this.hasSpace() && this.getResultLine().equals(TTTResultLine.EMPTY);
 	}
 	
 	public boolean hasResult() {
-		return this.getResultLine() != TTTResultLine.EMPTY || this.isDraw();
+		return !this.getResultLine().equals(TTTResultLine.EMPTY) || this.isDraw();
 	}
 	
 	public GameResult getResult(TTTType type) {
@@ -171,6 +187,19 @@ public class TTTMap {
 	
 	public TTTType getLoser() {
 		return this.getWinner().getOpponent();
+	}
+	
+	@Override
+	public void encode(FriendlyByteBuffer buffer) {
+		buffer.writeEnum(this.topLeftType);
+		buffer.writeEnum(this.topCenterType);
+		buffer.writeEnum(this.topRightType);
+		buffer.writeEnum(this.midLeftType);
+		buffer.writeEnum(this.midCenterType);
+		buffer.writeEnum(this.midRightType);
+		buffer.writeEnum(this.bottomLeftType);
+		buffer.writeEnum(this.bottomCenterType);
+		buffer.writeEnum(this.bottomRightType);
 	}
 	
 	@Override
