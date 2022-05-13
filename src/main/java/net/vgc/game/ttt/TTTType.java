@@ -3,37 +3,39 @@ package net.vgc.game.ttt;
 import javax.annotation.Nullable;
 
 import javafx.scene.image.ImageView;
-import net.vgc.Main;
 import net.vgc.client.fx.FxUtil;
+import net.vgc.util.EnumRepresentable;
 
-public enum TTTType {
+public enum TTTType implements EnumRepresentable {
 	
-	CROSS("cross", 'X', 0, "textures/cross"),
-	CIRCLE("circle", 'O', 1, "textures/circle"),
-	NO("no", 'N', -1, null);
+	CROSS("cross", 0, 'X', "textures/cross"),
+	CIRCLE("circle", 1, 'O', "textures/circle"),
+	NO("no", 2, 'N', null);
 	
 	private final String name;
-	private final char character;
 	private final int id;
+	private final char character;
 	private final String path;
 	
-	private TTTType(String name, char character, int id, String path) {
+	private TTTType(String name, int id, char character, String path) {
 		this.name = name;
-		this.character = character;
 		this.id = id;
+		this.character = character;
 		this.path = path;
 	}
 	
+	@Override
 	public String getName() {
 		return this.name;
 	}
 	
-	public char getCharacter() {
-		return this.character;
-	}
-	
+	@Override
 	public int getId() {
 		return this.id;
+	}
+	
+	public char getCharacter() {
+		return this.character;
 	}
 	
 	@Nullable
@@ -49,18 +51,13 @@ public enum TTTType {
 	}
 	
 	@Override
-	public String toString() {
-		return this.name;
+	public Enum<TTTType> getDefault() {
+		return NO;
 	}
 	
-	public static TTTType fromId(int id) {
-		for (TTTType type : values()) {
-			if (type.getId() == id) {
-				return type;
-			}
-		}
-		Main.LOGGER.warn("Fail to get tic tac toe type from id {}", id);
-		return NO;
+	@Override
+	public String toString() {
+		return this.name;
 	}
 	
 }

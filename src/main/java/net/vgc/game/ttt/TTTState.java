@@ -1,6 +1,8 @@
 package net.vgc.game.ttt;
 
-public enum TTTState {
+import net.vgc.util.EnumRepresentable;
+
+public enum TTTState implements EnumRepresentable {
 	
 	DEFAULT("default", 0, ""),
 	SHADOW("shadow", 1, "shadow"),
@@ -17,17 +19,24 @@ public enum TTTState {
 		this.id = id;
 		this.state = state;
 	}
-
+	
+	@Override
 	public String getName() {
 		return this.name;
 	}
 	
+	@Override
 	public int getId() {
 		return this.id;
 	}
 	
 	public String getState() {
 		return this.state;
+	}
+	
+	@Override
+	public Enum<TTTState> getDefault() {
+		return DEFAULT;
 	}
 	
 	@Override

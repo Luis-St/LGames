@@ -1,28 +1,42 @@
 package net.vgc.common;
 
 import javafx.scene.paint.Color;
+import net.vgc.util.EnumRepresentable;
 
-public enum ErrorLevel {
+public enum ErrorLevel implements EnumRepresentable {
 	
-	NON("non", Color.BLACK),
-	WARN("warn", Color.YELLOW),
-	ERROR("error", Color.ORANGE),
-	CRITICAL("critical", Color.RED);
+	NO("no", 0, Color.BLACK),
+	WARN("warn", 1, Color.YELLOW),
+	ERROR("error", 2, Color.ORANGE),
+	CRITICAL("critical", 3, Color.RED);
 	
 	private final String name;
+	private final int id;
 	private final Color color;
 	
-	private ErrorLevel(String name, Color color) {
+	private ErrorLevel(String name, int id, Color color) {
 		this.name = name;
+		this.id = id;
 		this.color = color;
 	}
 	
+	@Override
 	public String getName() {
 		return this.name;
 	}
 	
+	@Override
+	public int getId() {
+		return this.id;
+	}
+	
 	public Color getColor() {
 		return this.color;
+	}
+	
+	@Override
+	public Enum<ErrorLevel> getDefault() {
+		return NO;
 	}
 	
 	@Override

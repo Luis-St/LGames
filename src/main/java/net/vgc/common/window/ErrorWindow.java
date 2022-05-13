@@ -27,7 +27,7 @@ public class ErrorWindow {
 	protected final String title;
 	protected final String errorMessage;
 	protected final Runnable action;
-	protected ErrorLevel errorLevel = ErrorLevel.NON;
+	protected ErrorLevel errorLevel = ErrorLevel.NO;
 	
 	protected ErrorWindow(String title, String errorMessage, Runnable action) {
 		this.title = title;

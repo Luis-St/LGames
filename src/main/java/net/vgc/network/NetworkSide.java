@@ -8,10 +8,11 @@ import net.vgc.network.packet.account.AccountPacket;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.Server;
+import net.vgc.util.EnumRepresentable;
 
-public enum NetworkSide implements PacketHandler<Packet<?>> {
+public enum NetworkSide implements EnumRepresentable, PacketHandler<Packet<?>> {
 	
-	CLIENT("client") {
+	CLIENT("client", 0) {
 		@Override
 		public void handlePacket(Packet<?> packet) {
 			if (this.isOn() && packet instanceof ClientPacket clientPacket) {
@@ -19,7 +20,7 @@ public enum NetworkSide implements PacketHandler<Packet<?>> {
 			}
 		}
 	},
-	SERVER("server") {
+	SERVER("server", 1) {
 		@Override
 		public void handlePacket(Packet<?> packet) {
 			if (this.isOn() && packet instanceof ServerPacket serverPacket) {
@@ -27,7 +28,7 @@ public enum NetworkSide implements PacketHandler<Packet<?>> {
 			}
 		}
 	},
-	ACCOUNT_SERVER("account") {
+	ACCOUNT_SERVER("account", 2) {
 		@Override
 		public void handlePacket(Packet<?> packet) {
 			if (this.isOn() && packet instanceof AccountPacket accountPacket) {
@@ -37,13 +38,21 @@ public enum NetworkSide implements PacketHandler<Packet<?>> {
 	};
 	
 	private final String name;
+	private final int id;
 	
-	private NetworkSide(String name) {
+	private NetworkSide(String name, int id) {
 		this.name = name;
+		this.id = id;
 	}
 	
+	@Override
 	public String getName() {
 		return this.name;
+	}
+	
+	@Override
+	public int getId() {
+		return this.id;
 	}
 	
 	public boolean isOn() {
