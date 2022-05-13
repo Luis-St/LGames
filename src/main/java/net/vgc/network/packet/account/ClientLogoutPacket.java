@@ -2,7 +2,7 @@ package net.vgc.network.packet.account;
 
 import net.vgc.account.PlayerAccount;
 import net.vgc.account.network.AccountServerPacketListener;
-import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLogoutPacket implements AccountPacket {
 	

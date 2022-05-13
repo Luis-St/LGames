@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Maps;
 
-import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;

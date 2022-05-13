@@ -1,8 +1,8 @@
 package net.vgc.network.packet;
 
 import javafx.application.Platform;
-import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.Network;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public interface Packet<T extends PacketListener> {
 	

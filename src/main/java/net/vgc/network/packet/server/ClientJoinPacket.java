@@ -2,7 +2,7 @@ package net.vgc.network.packet.server;
 
 import java.util.UUID;
 
-import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.server.network.ServerPacketListener;
 
 public class ClientJoinPacket implements ServerPacket {

@@ -1,7 +1,7 @@
 package net.vgc.network.packet.server.game;
 
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.server.ServerPacket;
-import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketListener;
 

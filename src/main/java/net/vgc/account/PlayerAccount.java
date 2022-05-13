@@ -13,8 +13,8 @@ import net.vgc.data.serialization.Serializable;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.FriendlyByteBuffer;
 import net.vgc.network.NetworkSide;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
 
 public final class PlayerAccount implements Serializable {

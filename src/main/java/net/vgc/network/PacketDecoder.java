@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.Packets;
 
@@ -29,16 +30,15 @@ public class PacketDecoder extends ByteToMessageDecoder {
 			} else {
 				int readableBytes = buffer.readableBytes();
 				if (readableBytes > 0) {
-					LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading packet {} with id {}", readableBytes, Packets.byId(id).getSimpleName(), id);
 					try {
 						output.add(packet);
-						LOGGER.info("Handle packet of type {} sensitively, since there could be a handle issue");
+						LOGGER.info("Handle packet of type {} sensitively, since there could be a decode issue");
 					} catch (Exception e) {
 						if (packet.skippable()) {
 							throw new SkipPacketException();
 						} else {
 							LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading packet {} with id {}", readableBytes, Packets.byId(id).getSimpleName(), id);
-							LOGGER.error("Catch an error while handle a packet with too much bytes sensitively");
+							LOGGER.error("Catch an error while handle a packet sensitively with too much bytes");
 							throw new RuntimeException(e);
 						}
 					}

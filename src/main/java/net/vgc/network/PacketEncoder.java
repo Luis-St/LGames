@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.Packets;
 

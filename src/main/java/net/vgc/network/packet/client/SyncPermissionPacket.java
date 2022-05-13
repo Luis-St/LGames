@@ -1,7 +1,7 @@
 package net.vgc.network.packet.client;
 
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 
 public class SyncPermissionPacket implements ClientPacket {

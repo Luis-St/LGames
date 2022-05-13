@@ -1,4 +1,4 @@
-package net.vgc.network;
+package net.vgc.network.buffer;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;

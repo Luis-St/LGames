@@ -3,7 +3,7 @@ package net.vgc.network.packet.client;
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLoggedInPacket implements ClientPacket {
 	

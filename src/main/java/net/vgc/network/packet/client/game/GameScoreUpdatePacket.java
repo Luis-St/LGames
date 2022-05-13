@@ -2,7 +2,7 @@ package net.vgc.network.packet.client.game;
 
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.game.score.GameScore;
-import net.vgc.network.FriendlyByteBuffer;
+import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
 
 public class GameScoreUpdatePacket implements ClientPacket {
