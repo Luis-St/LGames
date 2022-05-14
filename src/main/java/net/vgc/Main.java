@@ -16,6 +16,8 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
+	 *  - use add TriFunction into GameType for GameStartPacket 
+	 *  - new registry for Packets
 	 *  - Packet has x extra bytes 
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
 	 *  - add super class for Windows

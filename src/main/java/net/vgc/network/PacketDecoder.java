@@ -32,12 +32,12 @@ public class PacketDecoder extends ByteToMessageDecoder {
 				if (readableBytes > 0) {
 					try {
 						output.add(packet);
-						LOGGER.info("Handle packet of type {} sensitively, since there could be a decode issue");
+						LOGGER.info("Handle packet of type {} sensitively, since there could be a decode issue", packet.getClass().getSimpleName());
 					} catch (Exception e) {
 						if (packet.skippable()) {
 							throw new SkipPacketException();
 						} else {
-							LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading packet {} with id {}", readableBytes, Packets.byId(id).getSimpleName(), id);
+							LOGGER.warn("Packet was to larger then expected, found {} extra bytes whilst reading packet {} with id {}", readableBytes, packet.getClass().getSimpleName(), id);
 							LOGGER.error("Catch an error while handle a packet sensitively with too much bytes");
 							throw new RuntimeException(e);
 						}

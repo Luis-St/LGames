@@ -12,6 +12,7 @@ import net.vgc.game.GameTypes;
 import net.vgc.game.score.GameScore;
 import net.vgc.game.ttt.map.MutableTTTMap;
 import net.vgc.game.ttt.map.TTTMap;
+import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedPlayerList;
@@ -68,7 +69,9 @@ public class TTTGame implements Game {
 	public void setCurrentPlayer(ServerPlayer currentPlayer) {
 		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.currentPlayer, this::getName), Util.runIfNotNull(currentPlayer, this::getName));
 		this.currentPlayer = currentPlayer;
-		// TODO: send current player packet
+		if (this.currentPlayer != null) {
+			this.getServer().getPlayerList().broadcastAll(this.players, new CurrentPlayerUpdatePacket(this.currentPlayer.getProfile()));
+		}
 	}
 	
 	protected String getName(ServerPlayer player) {
@@ -81,7 +84,7 @@ public class TTTGame implements Game {
 		if (this.getType().enoughPlayersToPlay(this.players)) {
 			this.mutableMap.reset();
 			this.randomNextPlayer();
-			playerList.broadcastAll(this.players, new UpdateTTTGamePacket(this.mutableMap.immutable(), this.currentPlayer.getProfile()));
+			playerList.broadcastAll(this.players, new UpdateTTTGamePacket(this.mutableMap.immutable()));
 			LOGGER.info("Start a new match of game {} with players {}", this.getType().getName().toLowerCase(), this.players.stream().map(ServerPlayer::getProfile).map(GameProfile::getName).collect(Collectors.toList()));
 			return true;
 		}

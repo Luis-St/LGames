@@ -25,6 +25,7 @@ import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
+import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.GameScoreUpdatePacket;
 import net.vgc.network.packet.client.game.StartTTTGamePacket;
@@ -65,6 +66,7 @@ public class Packets {
 		map.put(i++, StartTTTGamePacket.class);
 		map.put(i++, PressTTTFieldPacket.class);
 		map.put(i++, UpdateTTTGamePacket.class);
+		map.put(i++, CurrentPlayerUpdatePacket.class);
 		map.put(i++, TTTGameResultPacket.class);
 		map.put(i++, GameScoreUpdatePacket.class);
 		map.put(i++, ExitGameRequestPacket.class);

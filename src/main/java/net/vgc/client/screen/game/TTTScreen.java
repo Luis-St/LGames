@@ -36,6 +36,7 @@ import net.vgc.game.ttt.map.TTTResultLine;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
+import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.GameScoreUpdatePacket;
 import net.vgc.network.packet.client.game.StartTTTGamePacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
@@ -50,8 +51,8 @@ public class TTTScreen extends GameScreen {
 	
 	protected final List<TTTButton> buttons = Lists.newArrayList();
 	
-	protected ClientTTTGameData playerData;
-	protected ClientTTTGameData opponentData;
+	protected final ClientTTTGameData playerData = new ClientTTTGameData();
+	protected final ClientTTTGameData opponentData = new ClientTTTGameData();
 	
 	protected ToggleGroup group;
 	protected TTTButton topLeftButton;
@@ -80,9 +81,10 @@ public class TTTScreen extends GameScreen {
 	protected ButtonBox playAgainButton;
 	protected Text playerInfo;
 	protected Text opponentInfo;
+	protected Text currentPlayerInfo;
 	
 	public TTTScreen() {
-		this.width = 900;
+		this.width = 750;
 		this.height = 650;
 	}
 	
@@ -131,15 +133,16 @@ public class TTTScreen extends GameScreen {
 		this.confirmActionButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.confirm_action"), Pos.CENTER, 20.0, this::handleConfirmAction);
 		this.playerInfo = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.no_data"));
 		this.opponentInfo = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.no_data"));
+		this.currentPlayerInfo = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.no_current_player"));
 	}
 	
 	protected TTTButton makeButton(int vMap, int hMap) {
 		TTTButton button = new TTTButton(this.group, 150.0, vMap, hMap);
 		button.setOnAction((event) -> {
-			if (this.currentPlayer) {
+			if (this.playerData.isCurrent()) {
 				if (button.getType() == TTTType.NO) {
 					button.setType(this.playerData.getType(), TTTState.SHADOW);
-					LOGGER.info("Update state of field with map pos {}:{} to {}", vMap, hMap, TTTState.SHADOW);
+					LOGGER.debug("Update state of field with map pos {}:{} to {}", vMap, hMap, TTTState.SHADOW);
 				}
 			} else {
 				this.group.selectToggle(null);
@@ -156,12 +159,18 @@ public class TTTScreen extends GameScreen {
 		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
 	}
 	
+	protected void handlePlayAgain() {
+		if (this.client.getPlayer().isAdmin()) {
+			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
+		}
+	}
+	
 	protected void handleConfirmAction() {
 		Toggle toggle = this.group.getSelectedToggle();
 		if (toggle instanceof TTTButton button) {
 			int vMap = button.getVMap();
 			int hMap = button.getHMap();
-			if (this.currentPlayer) {
+			if (this.playerData.isCurrent()) {
 				this.client.getServerHandler().send(new PressTTTFieldPacket(this.getPlayer().getProfile(), vMap, hMap));
 				this.group.selectToggle(null);
 			} else {
@@ -170,12 +179,6 @@ public class TTTScreen extends GameScreen {
 			}
 		} else {
 			LOGGER.info("No field selected");
-		}
-	}
-	
-	protected void handlePlayAgain() {
-		if (this.client.getPlayer().isAdmin()) {
-			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
 		}
 	}
 	
@@ -214,8 +217,7 @@ public class TTTScreen extends GameScreen {
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof StartTTTGamePacket packet) {
 			GameProfile localProfile = this.client.getPlayer().getProfile();
-			this.currentPlayer = localProfile.equals(packet.getStartPlayerProfile());
-			this.playerData = new ClientTTTGameData(this.getPlayer());
+			this.playerData.setPlayer(this.getPlayer());
 			this.playerData.setType(packet.getPlayerType());
 			int localIndex = packet.getProfiles().indexOf(localProfile);
 			if (localIndex == 0) {
@@ -225,13 +227,15 @@ public class TTTScreen extends GameScreen {
 			} else {
 				LOGGER.warn("Fail to set the opponent player");
 			}
+			this.setCurrentPlayer(packet.getProfile());
 		} else if (clientPacket instanceof UpdateTTTGamePacket packet) {
-			this.currentPlayer = this.client.getPlayer().getProfile().equals(packet.getProfile());
 			this.applyMap(packet.getMap(), TTTState.DEFAULT);
 			this.group.selectToggle(null);
 			if (!this.playAgainButton.getNode().isDisabled()) {
 				this.playAgainButton.getNode().setDisable(true);
 			}
+		} else if (clientPacket instanceof CurrentPlayerUpdatePacket packet) {
+			this.setCurrentPlayer(packet.getProfile());
 		} else if (clientPacket instanceof TTTGameResultPacket packet) {
 			GameProfile winnerProfile = packet.getWinnerProfile();
 			GameProfile loserProfile = packet.getLoserProfile();
@@ -275,7 +279,7 @@ public class TTTScreen extends GameScreen {
 				} else {
 					LOGGER.warn("Fail to display score of player {}, since the player is not playing the game {}", entry.getKey().getName(), GameTypes.TIC_TAC_TOE.getName().toLowerCase());
 				}
-				this.updateScore();
+				this.updatePlayerInfo();
 			}
 			LOGGER.info("Update game score");
 		} else if (clientPacket instanceof CancelPlayAgainGameRequestPacket packet) {
@@ -287,19 +291,38 @@ public class TTTScreen extends GameScreen {
 	protected void setOpponent(GameProfile profile) {
 		AbstractClientPlayer player = this.client.getPlayer(profile);
 		if (player instanceof RemotePlayer opponentPlayer) {
-			this.opponentData = new ClientTTTGameData(opponentPlayer);
+			this.opponentData.setPlayer(opponentPlayer);
 			LOGGER.info("Set opponent player of {} to {}", this.getPlayer().getProfile().getName(), opponentPlayer.getProfile().getName());
 			if (this.playerData != null && this.playerData.getType() != null) {
 				this.opponentData.setType(this.playerData.getType().getOpponent());
 			} else {
 				LOGGER.warn("Fail to set the type for the opponent player {}, since the type for the local player {} is not set", opponentPlayer.getProfile().getName(), this.getPlayer().getProfile().getName());
 			}
-			this.updateScore();
+			this.updatePlayerInfo();
 		} else {
 			LOGGER.warn("Fail to set the opponent player to a player of type {}", (Object) Util.runIfNotNull(player, (clientPlayer) -> {
 				return clientPlayer.getClass().getSimpleName();
 			}));
 		}
+	}
+	
+	protected void setCurrentPlayer(GameProfile profile) {
+		if (this.playerData.getPlayer() != null && this.opponentData.getPlayer() != null) {
+			if (this.playerData.getPlayer().getProfile().equals(profile)) {
+				this.playerData.setCurrent(true);
+				this.opponentData.setCurrent(false);
+				LOGGER.debug("Update current player to {}", this.playerData.getPlayer().getProfile().getName());
+			} else if (this.opponentData.getPlayer().getProfile().equals(profile)) {
+				this.playerData.setCurrent(false);
+				this.opponentData.setCurrent(true);
+				LOGGER.debug("Update current player to {}", this.opponentData.getPlayer().getProfile().getName());
+			} else {
+				LOGGER.warn("Fail to set current player to {}", profile.getName());
+			}
+		} else {
+			LOGGER.info("Fail to set current player to {}, since the client players are not load yet", profile.getName());
+		}
+		this.updatePlayerInfo();
 	}
 	
 	protected void applyMap(TTTMap map, TTTState state) {
@@ -327,7 +350,7 @@ public class TTTScreen extends GameScreen {
 		}
 	}
 	
-	protected void updateScore() {
+	protected void updatePlayerInfo() {
 		if (this.playerData.isRequiredDataLoad()) {
 			this.playerInfo.setText(this.playerData.getPlayer().getProfile().getName() + " (" + this.playerData.getType().getCharacter() + "): " + this.playerData.getWins());
 		} else {
@@ -340,7 +363,14 @@ public class TTTScreen extends GameScreen {
 			this.opponentInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.fail_data"));
 			LOGGER.warn("Fail to load score of player {}", this.opponentData.getPlayer().getProfile().getName());
 		}
-		LOGGER.info("Update score of players");
+		if (this.playerData.isCurrent()) {
+			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.playerData.getPlayer().getProfile().getName()));
+		} else if (this.opponentData.isCurrent()) {
+			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.opponentData.getPlayer().getProfile().getName()));
+		} else {
+			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.no_current_player"));
+		}
+		LOGGER.info("Update player info");
 	}
 	
 	@Override
@@ -353,9 +383,11 @@ public class TTTScreen extends GameScreen {
 	}
 	
 	protected Pane createInfoPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		pane.addColumn(0, this.playerInfo, this.opponentInfo);
-		return FxUtil.makeVerticalBox(Pos.CENTER, 10.0, new Text(TranslationKey.createAndGet("screen.tic_tac_toe.score")), new Separator(Orientation.HORIZONTAL), pane);
+		GridPane playerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 10.0);
+		playerPane.addColumn(0, this.currentPlayerInfo);
+		GridPane scorePane = FxUtil.makeGrid(Pos.CENTER, 10.0, 10.0);
+		scorePane.addColumn(0, this.playerInfo, this.opponentInfo);
+		return FxUtil.makeVerticalBox(Pos.CENTER, 10.0, new Text(TranslationKey.createAndGet("screen.tic_tac_toe.score")), new Separator(Orientation.HORIZONTAL), playerPane, new Separator(Orientation.HORIZONTAL), scorePane);
 	}
 	
 	protected Pane createGamePane() {

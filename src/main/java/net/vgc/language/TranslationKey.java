@@ -1,6 +1,10 @@
 package net.vgc.language;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
+import net.vgc.Main;
 
 public class TranslationKey {
 	
@@ -27,15 +31,17 @@ public class TranslationKey {
 	}
 	
 	public String getValue(Language language, Object... objects) {
+		List<Object> objectList = Lists.newArrayList(objects);
 		String translation = LanguageProvider.INSTANCE.getTranslation(language, this);
-		for (int i = 0; i < Lists.newArrayList(objects).size(); i++) {
+		for (int i = 0; i < objectList.size(); i++) {
 			String s = "%" + (i + 1) + "%";
 			if (translation.contains(s)) {
-				Object object = Lists.newArrayList(objects).get(i);
+				Object object = objectList.get(i);
 				if (object != null) {
 					translation = translation.replace(s, object.toString());
 				} else {
 					translation = translation.replace(s, "null");
+					Main.LOGGER.warn("Translation key {} requires object insertion for insertion key {}, but there is no object for this key", this.key, s);
 				}
 			}
 		}

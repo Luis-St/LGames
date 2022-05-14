@@ -91,7 +91,8 @@ public class Test {
 			list.add(new Translation("screen.tic_tac_toe.play_again", "Play again"));
 			list.add(new Translation("screen.tic_tac_toe.score", "Score"));
 			list.add(new Translation("screen.tic_tac_toe.no_data", "No data available yet"));
-			list.add(new Translation("screen.tic_tac_toe.fail_data", "Fail to load data"));
+			list.add(new Translation("screen.tic_tac_toe.current_player", "Current player: %1%"));
+			list.add(new Translation("screen.tic_tac_toe.no_current_player", "Current player: No"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -155,6 +156,8 @@ public class Test {
 			list.add(new Translation("screen.tic_tac_toe.score", "Punktestand"));
 			list.add(new Translation("screen.tic_tac_toe.no_data", "Noch keine Daten verfügbar"));
 			list.add(new Translation("screen.tic_tac_toe.fail_data", "Daten konnten nicht geladen werden"));
+			list.add(new Translation("screen.tic_tac_toe.current_player", "Aktueller spieler: %1%"));
+			list.add(new Translation("screen.tic_tac_toe.no_current_player", "Aktueller spieler: Keiner"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

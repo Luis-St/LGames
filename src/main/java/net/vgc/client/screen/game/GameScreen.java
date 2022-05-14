@@ -6,8 +6,6 @@ import net.vgc.network.packet.client.ClientPacket;
 
 public abstract class GameScreen extends Screen {
 	
-	protected boolean currentPlayer = false;
-	
 	public GameScreen() {
 		
 	}

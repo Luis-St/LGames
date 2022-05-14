@@ -130,7 +130,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 						if (!oldMap.equals(newMap)) {
 							if (newMap.hasResult()) {
 								LOGGER.info("Handle result of game {}", tttGame.getType().getName().toLowerCase());
-								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap, tttGame.getCurrentPlayer().getProfile()));
+								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap));
 								Util.runDelayed("DelayedPacketSender", 250, () -> {
 									TTTResultLine resultLine = newMap.getResultLine();
 									for (ServerPlayer player : tttGame.getPlayers()) {
@@ -156,7 +156,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 								});
 							} else {
 								tttGame.nextPlayer();
-								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap, tttGame.getCurrentPlayer().getProfile()));
+								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap));
 							}
 						} else {
 							LOGGER.info("Field map will not be synced to the clients, since there are no changes");
