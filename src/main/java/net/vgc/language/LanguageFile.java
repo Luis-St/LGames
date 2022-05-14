@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -15,30 +14,24 @@ import net.vgc.util.annotation.CodecGetter;
 public class LanguageFile {
 	
 	public static final Codec<LanguageFile> CODEC = RecordCodecBuilder.create((instance) -> {
-		return instance.group(Language.CODEC.fieldOf("language").forGetter(LanguageFile::getLanguage), Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("keys").forGetter(LanguageFile::getLanguageKeyMap)).apply(instance, LanguageFile::new);
+		return instance.group(Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("keys").forGetter(LanguageFile::getLanguageKeyMap)).apply(instance, LanguageFile::new);
 	});
 	
-	protected final Language language;
 	protected final List<Translation> translations;
+	protected Language language;
 	
-	public LanguageFile(Language language, Translation... translations) {
-		this(language, Lists.newArrayList(translations));
-	}
-	
-	public LanguageFile(Language language, List<Translation> translations) {
-		this.language = language;
+	public LanguageFile(List<Translation> translations) {
 		this.translations = translations;
 	}
 	
-	@CodecConstructor
-	private LanguageFile(Language language, Map<String, String> languageTranslations) {
+	public LanguageFile(List<Translation> translations, Language language) {
+		this.translations = translations;
 		this.language = language;
-		this.translations = Util.mapList(languageTranslations, Translation::new);
 	}
 	
-	@CodecGetter
-	public Language getLanguage() {
-		return this.language;
+	@CodecConstructor
+	private LanguageFile(Map<String, String> languageTranslations) {
+		this.translations = Util.mapList(languageTranslations, Translation::new);
 	}
 	
 	@CodecGetter
@@ -52,6 +45,14 @@ public class LanguageFile {
 	
 	public boolean isEmpty() {
 		return this.translations.isEmpty();
+	}
+	
+	public Language getLanguage() {
+		return this.language;
+	}
+	
+	public void setLanguage(Language language) {
+		this.language = language;
 	}
 	
 }

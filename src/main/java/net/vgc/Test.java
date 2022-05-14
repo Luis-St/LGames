@@ -161,7 +161,7 @@ public class Test {
 	}
 	
 	protected static void saveLanguageFile(Language language, List<Translation> translations) {
-		LanguageFile languageFile = new LanguageFile(language, translations);
+		LanguageFile languageFile = new LanguageFile(translations, language);
 		Function<LanguageFile, DataResult<JsonElement>> function = JsonOps.INSTANCE.withEncoder(LanguageFile.CODEC);
 		Optional<JsonElement> optional = function.apply(languageFile).result();
 		if (optional.isPresent()) {

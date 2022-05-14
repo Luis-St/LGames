@@ -1,8 +1,4 @@
 {
-  "language": {
-    "name": "American English",
-    "file_name": "en_us"
-  },
   "keys": {
     "account.constans.name": "Account Server",
     "window.login.login": "Login",

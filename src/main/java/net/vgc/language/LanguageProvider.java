@@ -35,6 +35,7 @@ public class LanguageProvider {
 				LanguageFile languageFile = this.loadLanguage(language);
 				if (languageFile != null) {
 					if (!languageFile.isEmpty()) {
+						languageFile.setLanguage(language);
 						languageFiles.add(languageFile);
 						LOGGER.debug("Load language {}", language.getName());
 					} else {
