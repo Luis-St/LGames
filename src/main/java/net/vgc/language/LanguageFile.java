@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.vgc.data.codec.CodecConstructor;
+import net.vgc.data.codec.CodecGetter;
 import net.vgc.util.Util;
-import net.vgc.util.annotation.CodecConstructor;
-import net.vgc.util.annotation.CodecGetter;
 
 public class LanguageFile {
 	

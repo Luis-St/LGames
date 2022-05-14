@@ -1,4 +1,4 @@
-package net.vgc.util.annotation;
+package net.vgc.data.codec;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
