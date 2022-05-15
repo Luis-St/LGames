@@ -4,9 +4,9 @@ import javax.annotation.Nullable;
 
 import javafx.scene.image.ImageView;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.util.EnumRepresentable;
+import net.vgc.game.GamePlayerType;
 
-public enum TTTType implements EnumRepresentable {
+public enum TTTType implements GamePlayerType {
 	
 	CROSS("cross", 0, 'X', "textures/cross"),
 	CIRCLE("circle", 1, 'O', "textures/circle"),

@@ -116,6 +116,8 @@ public interface Game {
 		return false;
 	}
 	
+	GamePlayerType getPlayerType(ServerPlayer player);
+	
 	boolean nextMatch();
 	
 	default void stopGame() {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import net.vgc.client.network.ClientPacketListener;
+import net.vgc.game.GamePlayerType;
 import net.vgc.game.ttt.TTTType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
@@ -16,8 +17,8 @@ public class StartTTTGamePacket implements ClientPacket {
 	protected final GameProfile profile;
 	protected final List<GameProfile> profiles;
 	
-	public StartTTTGamePacket(TTTType playerType, ServerPlayer player, List<ServerPlayer> players) {
-		this.playerType = playerType;
+	public StartTTTGamePacket(GamePlayerType playerType, ServerPlayer player, List<ServerPlayer> players) {
+		this.playerType = (TTTType) playerType;
 		this.profile = player.getProfile();
 		this.profiles = players.stream().map(ServerPlayer::getProfile).collect(Collectors.toList());
 	}

@@ -22,7 +22,6 @@ import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.GameScoreUpdatePacket;
-import net.vgc.network.packet.client.game.StartTTTGamePacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
 import net.vgc.player.GameProfile;
@@ -70,9 +69,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 						ServerPlayer startPlayer = game.getStartPlayer();
 						for (ServerPlayer player : players) {
 							player.setPlaying(true);
-							if (gameType == GameTypes.TIC_TAC_TOE && game instanceof TTTGame tttGame) {
-								player.connection.send(new StartTTTGamePacket(tttGame.getPlayerType(player), startPlayer, players));
-							}
+							player.connection.send(gameType.getStartPacket(game.getPlayerType(player), startPlayer, players));
 						}
 					}
 				} else {

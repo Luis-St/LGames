@@ -78,6 +78,19 @@ public class TTTGame implements Game {
 		return player.getProfile().getName();
 	}
 	
+	public TTTType getPlayerType(ServerPlayer player) {
+		if (this.players.contains(player)) {
+			TTTType type = this.playerTypes.get(player);
+			if (type != null) {
+				return type;
+			}
+			LOGGER.warn("Fail to get Tic Tac Toe player type for player {}", player.getProfile().getName());
+		} else {
+			LOGGER.warn("Player {} is not playing game {}", player.getProfile().getName(), this.getType().getName().toLowerCase());
+		}
+		return TTTType.NO;
+	}
+	
 	@Override
 	public boolean nextMatch() {
 		DedicatedPlayerList playerList = this.getServer().getPlayerList();
@@ -90,19 +103,6 @@ public class TTTGame implements Game {
 		}
 		LOGGER.warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.players.size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
 		return false;
-	}
-	
-	public TTTType getPlayerType(ServerPlayer player) {
-		if (this.players.contains(player)) {
-			TTTType type = this.playerTypes.get(player);
-			if (type != null) {
-				return type;
-			}
-			LOGGER.warn("Fail to get Tic Tac Toe player type for player {}", player.getProfile().getName());
-		} else {
-			LOGGER.warn("Player {} is not playing game {}", player.getProfile().getName(), this.getType().getName().toLowerCase());
-		}
-		return TTTType.NO;
 	}
 	
 	public TTTMap getMap() {

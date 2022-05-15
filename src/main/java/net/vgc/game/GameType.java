@@ -13,8 +13,10 @@ import org.apache.logging.log4j.Logger;
 import net.vgc.client.Client;
 import net.vgc.client.screen.game.GameScreen;
 import net.vgc.network.NetworkSide;
+import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.function.TriFunction;
 
 public class GameType<T extends Game> {
 	
@@ -23,15 +25,17 @@ public class GameType<T extends Game> {
 	protected final String name;
 	protected final int minPlayers;
 	protected final int maxPlayers;
-	protected final Function<List<ServerPlayer>, T> createFunction;
-	protected final Supplier<? extends GameScreen> screenSupplier;
+	protected final Function<List<ServerPlayer>, T> createGame;
+	protected final TriFunction<GamePlayerType, ServerPlayer, List<ServerPlayer>, ClientPacket> startPacket;
+	protected final Supplier<? extends GameScreen> openScreen;
 	
-	public GameType(String name, int minPlayers, int maxPlayers, Function<List<ServerPlayer>, T> createFunction, Supplier<? extends GameScreen> screenSupplier) {
+	public GameType(String name, int minPlayers, int maxPlayers, Function<List<ServerPlayer>, T> createGame, TriFunction<GamePlayerType, ServerPlayer, List<ServerPlayer>, ClientPacket> startPacket, Supplier<? extends GameScreen> openScreen) {
 		this.name = name;
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
-		this.createFunction = createFunction;
-		this.screenSupplier = screenSupplier;
+		this.createGame = createGame;
+		this.startPacket = startPacket;
+		this.openScreen = openScreen;
 	}
 	
 	public String getName() {
@@ -57,7 +61,7 @@ public class GameType<T extends Game> {
 	public T createNewGame(List<ServerPlayer> players) {
 		if (this.enoughPlayersToPlay(players)) {
 			LOGGER.info("Start game with players {}", players.stream().map(ServerPlayer::getProfile).map(GameProfile::getName).collect(Collectors.toList()));
-			T game = this.createFunction.apply(players);
+			T game = this.createGame.apply(players);
 			game.onStart();
 			return game;
 		}
@@ -65,9 +69,13 @@ public class GameType<T extends Game> {
 		return null;
 	}
 	
+	public ClientPacket getStartPacket(GamePlayerType type, ServerPlayer player, List<ServerPlayer> players) {
+		return this.startPacket.apply(type, player, players);
+	}
+	
 	public void openScreen() {
 		if (NetworkSide.CLIENT.isOn()) {
-			Client.getInstance().setScreen(this.screenSupplier.get());
+			Client.getInstance().setScreen(this.openScreen.get());
 		}
 	}
 	
