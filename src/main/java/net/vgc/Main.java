@@ -16,9 +16,10 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
+	 *  - use com.google.common.collect.Table for TTT game field & add Client side Map -> summarize/order methods in TTTScreen
 	 *  - new registry for Packets
-	 *  - Packet has x extra bytes 
-	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances)
+	 *  - add server settings
+	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
 	 *  - add super class for Windows
 	 *  - add way to display score in server window
 	 *  - create Loading Steps, which are load from 0% til 100% -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose

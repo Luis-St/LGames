@@ -16,6 +16,7 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.Mth;
 import net.vgc.util.function.TriFunction;
 
 public class GameType<T extends Game> {
@@ -51,10 +52,7 @@ public class GameType<T extends Game> {
 	}
 	
 	public boolean enoughPlayersToPlay(List<ServerPlayer> players) {
-		if (this.maxPlayers >= players.size() && players.size() >= this.minPlayers) {
-			return true;
-		}
-		return false;
+		return Mth.isInBounds(players.size(), this.minPlayers, this.maxPlayers);
 	}
 	
 	@Nullable

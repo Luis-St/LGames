@@ -57,4 +57,26 @@ public class Mth {
 		return d / roundValue;
 	}
 	
+	public static boolean isInBounds(int value, int min, int max) {
+		if (max >= value && value >= min) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean sameValues(Number... numbers) {
+		if (numbers.length == 0) {
+			return false;
+		} else if (numbers.length == 1) {
+			return true;
+		}
+		Number number = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			if (!number.equals(numbers[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }

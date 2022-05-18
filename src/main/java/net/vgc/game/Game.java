@@ -116,6 +116,7 @@ public interface Game {
 		return false;
 	}
 	
+	@Nullable
 	GamePlayerType getPlayerType(ServerPlayer player);
 	
 	boolean nextMatch();

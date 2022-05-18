@@ -84,6 +84,15 @@ public class Util {
 		return new Random(System.currentTimeMillis());
 	}
 	
+	@SafeVarargs
+	public static <T> List<T> concatLists(List<T>... lists) {
+		List<T> list = Lists.newArrayList();
+		for (List<T> t : lists) {
+			list.addAll(t);
+		}
+		return list;
+	}
+	
 	public static void warpStreams(boolean debugMode) {
 		LOGGER.info("Warp System PrintStreams to type {}", debugMode ? "DEBUG" : "INFO");
 		Constans.DEBUG = debugMode;
