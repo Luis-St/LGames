@@ -52,7 +52,7 @@ public class TTTButton extends ToggleButton {
 		return this.state;
 	}
 	
-	public void setType(TTTType type, TTTState state) {
+	public void setTypeAndState(TTTType type, TTTState state) {
 		this.type = type;
 		this.state = state;
 		if (type != TTTType.NO) {

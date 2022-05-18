@@ -12,8 +12,8 @@ import net.vgc.game.GamePlayerType;
 
 public enum TTTType implements GamePlayerType {
 	
-	CROSS("cross", 0, 'X', "textures/cross"),
-	CIRCLE("circle", 1, 'O', "textures/circle"),
+	CROSS("cross", 0, 'X', "textures/tic_tac_toe/cross"),
+	CIRCLE("circle", 1, 'O', "textures/tic_tac_toe/circle"),
 	NO("no", 2, 'N', null);
 	
 	private final String name;
@@ -44,6 +44,9 @@ public enum TTTType implements GamePlayerType {
 	
 	@Nullable
 	public ImageView getImage(TTTState state, double width, double height) {
+		if (this.path == null) {
+			return null;
+		}
 		return FxUtil.makeImageView(this.path + (state.getState().isEmpty() ? "" : "_") + state.getState() + ".png", width, height);
 	}
 	

@@ -96,7 +96,7 @@ public class TTTScreen extends GameScreen {
 					TTTType oldType = oldButton.getType();
 					TTTState oldState = oldButton.getState();
 					if (oldType != TTTType.NO && oldState == TTTState.SHADOW) {
-						oldButton.setType(TTTType.NO, TTTState.DEFAULT);
+						oldButton.setTypeAndState(TTTType.NO, TTTState.DEFAULT);
 					}
 				} else {
 					oldButton.setSelected(true);
@@ -140,7 +140,7 @@ public class TTTScreen extends GameScreen {
 		button.setOnAction((event) -> {
 			if (this.player.isCurrent()) {
 				if (button.getType() == TTTType.NO) {
-					button.setType((TTTType) this.player.getType(), TTTState.SHADOW);
+					button.setTypeAndState((TTTType) this.player.getType(), TTTState.SHADOW);
 					LOGGER.debug("Update state of field with map pos {}:{} to {}", vMap, hMap, TTTState.SHADOW);
 				}
 			} else {
@@ -243,7 +243,7 @@ public class TTTScreen extends GameScreen {
 				for (int v = 0; v < 3; v++) {
 					for (int h = 0; h < 3; h++) {
 						TTTButton button = this.getButton(v, h);
-						button.setType(button.getType(), TTTState.DRAW);
+						button.setTypeAndState(button.getType(), TTTState.DRAW);
 					}
 				}
 				LOGGER.info("Update field map to state {}", TTTState.DRAW);
@@ -327,7 +327,7 @@ public class TTTScreen extends GameScreen {
 	protected void applyMap(TTTMap map, TTTState state) {
 		for (int v = 0; v < 3; v++) {
 			for (int h = 0; h < 3; h++) {
-				this.getButton(v, h).setType(map.getType(v, h), state);
+				this.getButton(v, h).setTypeAndState(map.getType(v, h), state);
 			}
 		}
 		LOGGER.info("Update field map to state {}", state);
@@ -343,7 +343,7 @@ public class TTTScreen extends GameScreen {
 	protected void applyResult(int vMap, int hMap, TTTState state) {
 		TTTButton button = this.getButton(vMap, hMap);
 		if (button != null) {
-			button.setType(button.getType(), state);
+			button.setTypeAndState(button.getType(), state);
 		} else {
 			LOGGER.warn("Fail to apply result to field at map pos {}:{}, since \"button\" is null", vMap, hMap);
 		}
