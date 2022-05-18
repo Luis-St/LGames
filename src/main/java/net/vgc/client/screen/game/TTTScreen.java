@@ -22,7 +22,6 @@ import javafx.scene.text.Text;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.TTTButton;
-import net.vgc.client.game.ClientTTTGameData;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
@@ -51,8 +50,8 @@ public class TTTScreen extends GameScreen {
 	
 	protected final List<TTTButton> buttons = Lists.newArrayList();
 	
-	protected final ClientTTTGameData playerData = new ClientTTTGameData();
-	protected final ClientTTTGameData opponentData = new ClientTTTGameData();
+	protected AbstractClientPlayer player;
+	protected AbstractClientPlayer opponent;
 	
 	protected ToggleGroup group;
 	protected TTTButton topLeftButton;
@@ -139,9 +138,9 @@ public class TTTScreen extends GameScreen {
 	protected TTTButton makeButton(int vMap, int hMap) {
 		TTTButton button = new TTTButton(this.group, 150.0, vMap, hMap);
 		button.setOnAction((event) -> {
-			if (this.playerData.isCurrent()) {
+			if (this.player.isCurrent()) {
 				if (button.getType() == TTTType.NO) {
-					button.setType(this.playerData.getType(), TTTState.SHADOW);
+					button.setType((TTTType) this.player.getType(), TTTState.SHADOW);
 					LOGGER.debug("Update state of field with map pos {}:{} to {}", vMap, hMap, TTTState.SHADOW);
 				}
 			} else {
@@ -170,7 +169,7 @@ public class TTTScreen extends GameScreen {
 		if (toggle instanceof TTTButton button) {
 			int vMap = button.getVMap();
 			int hMap = button.getHMap();
-			if (this.playerData.isCurrent()) {
+			if (this.player.isCurrent()) {
 				this.client.getServerHandler().send(new PressTTTFieldPacket(this.getPlayer().getProfile(), vMap, hMap));
 				this.group.selectToggle(null);
 			} else {
@@ -217,8 +216,8 @@ public class TTTScreen extends GameScreen {
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof StartTTTGamePacket packet) {
 			GameProfile localProfile = this.client.getPlayer().getProfile();
-			this.playerData.setPlayer(this.getPlayer());
-			this.playerData.setType(packet.getPlayerType());
+			this.player = this.client.getPlayer();
+			this.player.setType(packet.getPlayerType());
 			int localIndex = packet.getProfiles().indexOf(localProfile);
 			if (localIndex == 0) {
 				this.setOpponent(packet.getProfiles().get(1));
@@ -268,14 +267,14 @@ public class TTTScreen extends GameScreen {
 			GameScore score = packet.getScore();
 			for (Entry<GameProfile, PlayerScore> entry : score.getScores().entrySet()) {
 				PlayerScore playerScore = entry.getValue();
-				if (this.playerData.getPlayer().getProfile().equals(entry.getKey())) {
-					this.playerData.setWins(playerScore.getWins());
-					this.playerData.setLoses(playerScore.getLoses());
-					this.playerData.setDraws(playerScore.getDraws());
-				} else if (this.opponentData.getPlayer().getProfile().equals(entry.getKey())) {
-					this.opponentData.setWins(playerScore.getWins());
-					this.opponentData.setLoses(playerScore.getLoses());
-					this.opponentData.setDraws(playerScore.getDraws());
+				if (this.player.getProfile().equals(entry.getKey())) {
+					this.player.setWins(playerScore.getWins());
+					this.player.setLoses(playerScore.getLoses());
+					this.player.setDraws(playerScore.getDraws());
+				} else if (this.opponent.getProfile().equals(entry.getKey())) {
+					this.opponent.setWins(playerScore.getWins());
+					this.opponent.setLoses(playerScore.getLoses());
+					this.opponent.setDraws(playerScore.getDraws());
 				} else {
 					LOGGER.warn("Fail to display score of player {}, since the player is not playing the game {}", entry.getKey().getName(), GameTypes.TIC_TAC_TOE.getName().toLowerCase());
 				}
@@ -291,10 +290,10 @@ public class TTTScreen extends GameScreen {
 	protected void setOpponent(GameProfile profile) {
 		AbstractClientPlayer player = this.client.getPlayer(profile);
 		if (player instanceof RemotePlayer opponentPlayer) {
-			this.opponentData.setPlayer(opponentPlayer);
+			this.opponent = opponentPlayer;
 			LOGGER.info("Set opponent player of {} to {}", this.getPlayer().getProfile().getName(), opponentPlayer.getProfile().getName());
-			if (this.playerData != null && this.playerData.getType() != null) {
-				this.opponentData.setType(this.playerData.getType().getOpponent());
+			if (this.player != null && this.player.getType() != null) {
+				this.opponent.setType(this.player.getType().getOpponents().get(0));
 			} else {
 				LOGGER.warn("Fail to set the type for the opponent player {}, since the type for the local player {} is not set", opponentPlayer.getProfile().getName(), this.getPlayer().getProfile().getName());
 			}
@@ -307,15 +306,15 @@ public class TTTScreen extends GameScreen {
 	}
 	
 	protected void setCurrentPlayer(GameProfile profile) {
-		if (this.playerData.getPlayer() != null && this.opponentData.getPlayer() != null) {
-			if (this.playerData.getPlayer().getProfile().equals(profile)) {
-				this.playerData.setCurrent(true);
-				this.opponentData.setCurrent(false);
-				LOGGER.debug("Update current player to {}", this.playerData.getPlayer().getProfile().getName());
-			} else if (this.opponentData.getPlayer().getProfile().equals(profile)) {
-				this.playerData.setCurrent(false);
-				this.opponentData.setCurrent(true);
-				LOGGER.debug("Update current player to {}", this.opponentData.getPlayer().getProfile().getName());
+		if (this.player != null) {
+			if (this.player.getProfile().equals(profile)) {
+				this.player.setCurrent(true);
+				this.opponent.setCurrent(false);
+				LOGGER.debug("Update current player to {}", this.player.getProfile().getName());
+			} else if (this.opponent.getProfile().equals(profile)) {
+				this.player.setCurrent(false);
+				this.opponent.setCurrent(true);
+				LOGGER.debug("Update current player to {}", this.opponent.getProfile().getName());
 			} else {
 				LOGGER.warn("Fail to set current player to {}", profile.getName());
 			}
@@ -351,22 +350,22 @@ public class TTTScreen extends GameScreen {
 	}
 	
 	protected void updatePlayerInfo() {
-		if (this.playerData.isRequiredDataLoad()) {
-			this.playerInfo.setText(this.playerData.getPlayer().getProfile().getName() + " (" + this.playerData.getType().getCharacter() + "): " + this.playerData.getWins());
+		if (this.player.getType() != null) {
+			this.playerInfo.setText(this.player.getProfile().getName() + " (" + ((TTTType) this.player.getType()).getCharacter() + "): " + this.player.getWins());
 		} else {
 			this.playerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.fail_data"));
-			LOGGER.warn("Fail to load score of player {}", this.playerData.getPlayer().getProfile().getName());
+			LOGGER.warn("Fail to load score of player {}", this.player.getProfile().getName());
 		}
-		if (this.opponentData.isRequiredDataLoad()) {
-			this.opponentInfo.setText(this.opponentData.getPlayer().getProfile().getName() + " (" + this.opponentData.getType().getCharacter() + "): " + this.opponentData.getWins());
+		if (this.opponent.getType() != null) {
+			this.opponentInfo.setText(this.opponent.getProfile().getName() + " (" + ((TTTType) this.opponent.getType()).getCharacter() + "): " + this.opponent.getWins());
 		} else {
 			this.opponentInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.fail_data"));
-			LOGGER.warn("Fail to load score of player {}", this.opponentData.getPlayer().getProfile().getName());
+			LOGGER.warn("Fail to load score of player {}", this.opponent.getProfile().getName());
 		}
-		if (this.playerData.isCurrent()) {
-			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.playerData.getPlayer().getProfile().getName()));
-		} else if (this.opponentData.isCurrent()) {
-			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.opponentData.getPlayer().getProfile().getName()));
+		if (this.player.isCurrent()) {
+			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.player.getProfile().getName()));
+		} else if (this.opponent.isCurrent()) {
+			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.opponent.getProfile().getName()));
 		} else {
 			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.no_current_player"));
 		}

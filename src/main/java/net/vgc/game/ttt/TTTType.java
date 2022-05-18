@@ -1,6 +1,10 @@
 package net.vgc.game.ttt;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
+
+import com.google.common.collect.Lists;
 
 import javafx.scene.image.ImageView;
 import net.vgc.client.fx.FxUtil;
@@ -43,11 +47,12 @@ public enum TTTType implements GamePlayerType {
 		return FxUtil.makeImageView(this.path + (state.getState().isEmpty() ? "" : "_") + state.getState() + ".png", width, height);
 	}
 	
-	public TTTType getOpponent() {
+	@Override
+	public List<TTTType> getOpponents() {
 		if (this == NO) {
-			return NO;
+			return Lists.newArrayList(NO);
 		}
-		return this == CROSS ? CIRCLE : CROSS;
+		return this == CROSS ? Lists.newArrayList(CIRCLE) : Lists.newArrayList(CROSS);
 	}
 	
 	@Override

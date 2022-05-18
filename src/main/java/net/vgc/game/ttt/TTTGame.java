@@ -36,7 +36,7 @@ public class TTTGame implements Game {
 	
 	protected static Map<ServerPlayer, TTTType> createPlayerTypes(List<ServerPlayer> players) {
 		if (players.size() > 2) {
-			LOGGER.error("Fail to create player type map for player list {} with size {}, since since a player list with size 2 was expected", players.stream().map(ServerPlayer::getProfile).map(GameProfile::getName).collect(Collectors.toList()));
+			LOGGER.error("Fail to create player type map for player list {} with size {}, since since a player list with size 2 was expected", players.stream().map(TTTGame::getName).collect(Collectors.toList()));
 			throw new IllegalStateException("Fail to create player type map for player list with size " + players.size() + ", since a player list with size 2 was expected");
 		}
 		Map<ServerPlayer, TTTType> playerTypes = Maps.newHashMap();
@@ -67,14 +67,14 @@ public class TTTGame implements Game {
 
 	@Override
 	public void setCurrentPlayer(ServerPlayer currentPlayer) {
-		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.currentPlayer, this::getName), Util.runIfNotNull(currentPlayer, this::getName));
+		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.currentPlayer, TTTGame::getName), Util.runIfNotNull(currentPlayer, TTTGame::getName));
 		this.currentPlayer = currentPlayer;
 		if (this.currentPlayer != null) {
 			this.getServer().getPlayerList().broadcastAll(this.players, new CurrentPlayerUpdatePacket(this.currentPlayer.getProfile()));
 		}
 	}
 	
-	protected String getName(ServerPlayer player) {
+	protected static String getName(ServerPlayer player) {
 		return player.getProfile().getName();
 	}
 	

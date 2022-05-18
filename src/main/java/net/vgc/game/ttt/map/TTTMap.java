@@ -186,7 +186,7 @@ public class TTTMap implements Encodable {
 	}
 	
 	public TTTType getLoser() {
-		return this.getWinner().getOpponent();
+		return this.getWinner().getOpponents().get(0);
 	}
 	
 	@Override
