@@ -1,6 +1,7 @@
 package net.vgc.game;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -17,7 +18,6 @@ import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Mth;
-import net.vgc.util.function.TriFunction;
 
 public class GameType<T extends Game> {
 	
@@ -27,10 +27,10 @@ public class GameType<T extends Game> {
 	protected final int minPlayers;
 	protected final int maxPlayers;
 	protected final Function<List<ServerPlayer>, T> createGame;
-	protected final TriFunction<GamePlayerType, ServerPlayer, List<ServerPlayer>, ClientPacket> startPacket;
+	protected final BiFunction<T, ServerPlayer, ClientPacket> startPacket;
 	protected final Supplier<? extends GameScreen> openScreen;
 	
-	public GameType(String name, int minPlayers, int maxPlayers, Function<List<ServerPlayer>, T> createGame, TriFunction<GamePlayerType, ServerPlayer, List<ServerPlayer>, ClientPacket> startPacket, Supplier<? extends GameScreen> openScreen) {
+	public GameType(String name, int minPlayers, int maxPlayers, Function<List<ServerPlayer>, T> createGame, BiFunction<T, ServerPlayer, ClientPacket> startPacket, Supplier<? extends GameScreen> openScreen) {
 		this.name = name;
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
@@ -67,8 +67,9 @@ public class GameType<T extends Game> {
 		return null;
 	}
 	
-	public ClientPacket getStartPacket(GamePlayerType type, ServerPlayer player, List<ServerPlayer> players) {
-		return this.startPacket.apply(type, player, players);
+	@SuppressWarnings("unchecked")
+	public ClientPacket getStartPacket(Game game, ServerPlayer player) {
+		return this.startPacket.apply((T) game, player);
 	}
 	
 	public void openScreen() {

@@ -226,7 +226,6 @@ public class TTTScreen extends GameScreen {
 			} else {
 				LOGGER.warn("Fail to set the opponent player");
 			}
-			this.setCurrentPlayer(packet.getProfile());
 		} else if (clientPacket instanceof UpdateTTTGamePacket packet) {
 			this.applyMap(packet.getMap(), TTTState.DEFAULT);
 			this.group.selectToggle(null);

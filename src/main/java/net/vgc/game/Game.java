@@ -40,7 +40,7 @@ public interface Game {
 	void setCurrentPlayer(ServerPlayer currentPlayer);
 	
 	default ServerPlayer getStartPlayer() {
-		this.nextPlayer();
+		this.randomNextPlayer();
 		return this.getCurrentPlayer();
 	}
 	
@@ -120,6 +120,14 @@ public interface Game {
 	GamePlayerType getPlayerType(ServerPlayer player);
 	
 	boolean nextMatch();
+	
+	default boolean isDiceGame() {
+		return false;
+	}
+	
+	default Dice getDice() {
+		return null;
+	}
 	
 	default void stopGame() {
 		this.onStop();

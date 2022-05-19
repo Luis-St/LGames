@@ -20,8 +20,10 @@ import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
+import net.vgc.network.packet.client.game.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.GameScoreUpdatePacket;
+import net.vgc.network.packet.client.game.RolledDicePacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
 import net.vgc.player.GameProfile;
@@ -66,11 +68,11 @@ public class ServerPacketListener extends AbstractPacketListener {
 					Game game = gameType.createNewGame(players);
 					if (game != null) {
 						this.server.setGame(game);
-						ServerPlayer startPlayer = game.getStartPlayer();
 						for (ServerPlayer player : players) {
 							player.setPlaying(true);
-							player.connection.send(gameType.getStartPacket(game.getPlayerType(player), startPlayer, players));
+							player.connection.send(gameType.getStartPacket(game, player));
 						}
+						Util.runDelayed("DelayedSetStartPlayer", 250, game::getStartPlayer);
 					}
 				} else {
 					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getName().toLowerCase(), this.server.getGame().getType().getName());
@@ -91,6 +93,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handlePlayAgainGameRequest(GameProfile profile) {
+		this.checkSide();
 		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (player != null) {
 			if (this.server.isAdmin(player)) {
@@ -114,7 +117,31 @@ public class ServerPacketListener extends AbstractPacketListener {
 		}
 	}
 	
+	public void handleRollDiceRequest(GameProfile profile) {
+		this.checkSide();
+		Game game = this.server.getGame();
+		if (game != null) {
+			if (game.getCurrentPlayer() != null && game.getCurrentPlayer().getProfile().equals(profile)) {
+				if (game.isDiceGame()) {
+					int count = game.getDice().roll();
+					LOGGER.info("Player {} rolled a {}", profile.getName(), count);
+					this.connection.send(new RolledDicePacket(count));
+				} else {
+					LOGGER.warn("Fail to roll dice, since game {} is not a dice game", game.getType().getName().toLowerCase());
+					this.connection.send(new CancelRollDiceRequestPacket());
+				}
+			} else {
+				LOGGER.warn("Player {} tries to roll the dice, but it is not his turn", profile.getName());
+				this.connection.send(new CancelRollDiceRequestPacket());
+			}
+		} else {
+			LOGGER.warn("Fail to roll dice, since there is no running game");
+			this.connection.send(new CancelRollDiceRequestPacket());
+		}
+	}
+	
 	public void handlePressTTTField(GameProfile profile, int vMap, int hMap) {
+		this.checkSide();
 		DedicatedPlayerList playerList = this.server.getPlayerList();
 		Game game = this.server.getGame();
 		if (game != null) {
@@ -173,6 +200,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleExitGameRequest(GameProfile profile) {
+		this.checkSide();
 		Game game = this.server.getGame();
 		if (game != null) {
 			ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
