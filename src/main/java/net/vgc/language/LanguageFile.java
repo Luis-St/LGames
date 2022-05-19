@@ -31,7 +31,7 @@ public class LanguageFile {
 	
 	@CodecConstructor
 	private LanguageFile(Map<String, String> languageTranslations) {
-		this.translations = Util.mapList(languageTranslations, Translation::new);
+		this.translations = Util.mapToList(languageTranslations, Translation::new);
 	}
 	
 	@CodecGetter

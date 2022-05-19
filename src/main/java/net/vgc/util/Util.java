@@ -2,6 +2,7 @@ package net.vgc.util;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -64,12 +66,37 @@ public class Util {
 		timeline.play();
 	}
 	
-	public static <K, V, T> List<T> mapList(Map<K, V> map, BiFunction<K, V, T> function) {
+	public static <K, V, T> List<T> mapToList(Map<K, V> map, BiFunction<K, V, T> function) {
 		List<T> list = Lists.newArrayList();
 		for (Map.Entry<K, V> entry : map.entrySet()) {
 			list.add(function.apply(entry.getKey(), entry.getValue()));
 		}
 		return list;
+	}
+	
+	public static <T, K, V> Map<K, V> listToMap(List<T> list, Function<T, Entry<K, V>> function) {
+		Map<K, V> map = Maps.newHashMap();
+		for (T t : list) {
+			Entry<K, V> entry = function.apply(t);
+			map.put(entry.getKey(), entry.getValue());
+		}
+		return map;
+	}
+	
+	public static <K, T, V> Map<T, V> mapKey(Map<K, V> map, Function<K, T> function) {
+		Map<T, V> mapped = Maps.newHashMap();
+		for (Entry<K, V> entry : map.entrySet()) {
+			mapped.put(function.apply(entry.getKey()), entry.getValue());
+		}
+		return mapped;
+	}
+	
+	public static <K, V, T> Map<K, T> mapValue(Map<K, V> map, Function<V, T> function) {
+		Map<K, T> mapped = Maps.newHashMap();
+		for (Entry<K, V> entry : map.entrySet()) {
+			mapped.put(entry.getKey(), function.apply(entry.getValue()));
+		}
+		return mapped;
 	}
 	
 	@Nullable
