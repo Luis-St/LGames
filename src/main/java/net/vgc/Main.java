@@ -29,6 +29,8 @@ public class Main {
 	 *  - account server close -> packet to client which skip loggout (without sync to account server)
 	 *  - fix Logger
 	 *  - impl. singleplayer
+	 *  
+	 *  https://codetabs.com/count-loc/count-loc-online.html -> Luis-st/School-Project
 	 */
 	
 	public static final Logger LOGGER = LogManager.getLogger(Main.class);
