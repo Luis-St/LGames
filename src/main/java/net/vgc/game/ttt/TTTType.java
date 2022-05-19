@@ -12,8 +12,8 @@ import net.vgc.game.GamePlayerType;
 
 public enum TTTType implements GamePlayerType {
 	
-	CROSS("cross", 0, 'X', "textures/tic_tac_toe/cross"),
-	CIRCLE("circle", 1, 'O', "textures/tic_tac_toe/circle"),
+	CROSS("cross", 0, 'X', "textures/tic_tac_toe/cross/cross"),
+	CIRCLE("circle", 1, 'O', "textures/tic_tac_toe/circle/circle"),
 	NO("no", 2, 'N', null);
 	
 	private final String name;
