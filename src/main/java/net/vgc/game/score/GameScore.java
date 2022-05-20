@@ -29,7 +29,7 @@ public class GameScore implements Encodable {
 	}
 	
 	@DecodingConstructor
-	public GameScore(FriendlyByteBuffer buffer) {
+	private GameScore(FriendlyByteBuffer buffer) {
 		this.scores = buffer.readMap(buffer, (buf) -> {
 			return buf.read(GameProfile.class);
 		}, (buf) -> {

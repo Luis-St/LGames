@@ -15,8 +15,17 @@ public class MutableTTTMap extends TTTMap {
 	}
 	
 	@DecodingConstructor
-	public MutableTTTMap(FriendlyByteBuffer buffer) {
-		super(buffer);
+	private MutableTTTMap(FriendlyByteBuffer buffer) {
+		super();
+		this.topLeftType = buffer.readEnum(TTTType.class);
+		this.topCenterType = buffer.readEnum(TTTType.class);
+		this.topRightType = buffer.readEnum(TTTType.class);
+		this.midLeftType = buffer.readEnum(TTTType.class);
+		this.midCenterType = buffer.readEnum(TTTType.class);
+		this.midRightType = buffer.readEnum(TTTType.class);
+		this.bottomLeftType = buffer.readEnum(TTTType.class);
+		this.bottomCenterType = buffer.readEnum(TTTType.class);
+		this.bottomRightType = buffer.readEnum(TTTType.class);
 	}
 	
 	public void setTopLeftType(TTTType topLeftType) {

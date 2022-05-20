@@ -40,7 +40,7 @@ public class TTTMap implements Encodable {
 	}
 	
 	@DecodingConstructor
-	public TTTMap(FriendlyByteBuffer buffer) {
+	private TTTMap(FriendlyByteBuffer buffer) {
 		this.topLeftType = buffer.readEnum(TTTType.class);
 		this.topCenterType = buffer.readEnum(TTTType.class);
 		this.topRightType = buffer.readEnum(TTTType.class);

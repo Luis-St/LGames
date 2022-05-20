@@ -92,7 +92,17 @@ public class Test {
 			list.add(new Translation("screen.tic_tac_toe.score", "Score"));
 			list.add(new Translation("screen.tic_tac_toe.no_data", "No data available yet"));
 			list.add(new Translation("screen.tic_tac_toe.current_player", "Current player: %1%"));
-			list.add(new Translation("screen.tic_tac_toe.no_current_player", "Current player: No"));
+			list.add(new Translation("screen.tic_tac_toe.no_current_player", "Current player: no"));
+			list.add(new Translation("screen.lobby.ludo", "Ludo"));
+			list.add(new Translation("screen.ludo.players", "Players"));
+			list.add(new Translation("screen.ludo.green_player", "Green player: %1%"));
+			list.add(new Translation("screen.ludo.no_green_player", "Green player: no"));
+			list.add(new Translation("screen.ludo.yellow_player", "Yellow player: %1%"));
+			list.add(new Translation("screen.ludo.no_yellow_player", "Yellow player: no"));
+			list.add(new Translation("screen.ludo.blue_player", "Blue player: %1%"));
+			list.add(new Translation("screen.ludo.no_blue_player", "Blue player: no"));
+			list.add(new Translation("screen.ludo.red_player", "Red player: %1%"));
+			list.add(new Translation("screen.ludo.no_red_player", "Red player: no"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -157,7 +167,17 @@ public class Test {
 			list.add(new Translation("screen.tic_tac_toe.no_data", "Noch keine Daten verfügbar"));
 			list.add(new Translation("screen.tic_tac_toe.fail_data", "Daten konnten nicht geladen werden"));
 			list.add(new Translation("screen.tic_tac_toe.current_player", "Aktueller spieler: %1%"));
-			list.add(new Translation("screen.tic_tac_toe.no_current_player", "Aktueller spieler: Keiner"));
+			list.add(new Translation("screen.tic_tac_toe.no_current_player", "Aktueller spieler: keiner"));
+			list.add(new Translation("screen.lobby.ludo", "Mensch ärgere dich nicht"));
+			list.add(new Translation("screen.ludo.players", "Spieler"));
+			list.add(new Translation("screen.ludo.green_player", "Grüner spieler: %1%"));
+			list.add(new Translation("screen.ludo.no_green_player", "Grüner spieler: keiner"));
+			list.add(new Translation("screen.ludo.yellow_player", "Gelber spieler: %1%"));
+			list.add(new Translation("screen.ludo.no_yellow_player", "Gelber spieler: keiner"));
+			list.add(new Translation("screen.ludo.blue_player", "Blauer spieler: %1%"));
+			list.add(new Translation("screen.ludo.no_blue_player", "Blauer spieler: keiner"));
+			list.add(new Translation("screen.ludo.red_player", "Roter spieler: %1%"));
+			list.add(new Translation("screen.ludo.no_red_player", "Roter spieler: keiner"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

@@ -28,7 +28,7 @@ public class TTTResultLine implements Encodable {
 	}
 	
 	@DecodingConstructor
-	public TTTResultLine(FriendlyByteBuffer buffer) {
+	private TTTResultLine(FriendlyByteBuffer buffer) {
 		this.type = buffer.readEnum(TTTType.class);
 		this.vMap0 = buffer.readInt();
 		this.hMap0 = buffer.readInt();

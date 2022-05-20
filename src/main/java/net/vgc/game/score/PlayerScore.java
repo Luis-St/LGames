@@ -30,7 +30,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	@DecodingConstructor
-	public PlayerScore(FriendlyByteBuffer buffer) {
+	private PlayerScore(FriendlyByteBuffer buffer) {
 		this.profile = buffer.read(GameProfile.class);
 		this.win = new MutableInt(buffer.readInt());
 		this.lose = new MutableInt(buffer.readInt());

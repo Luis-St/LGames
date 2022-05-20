@@ -37,7 +37,7 @@ public final class PlayerAccount implements Encodable, Serializable  {
 	}
 	
 	@DecodingConstructor
-	public PlayerAccount(FriendlyByteBuffer buffer) {
+	private PlayerAccount(FriendlyByteBuffer buffer) {
 		this.name = buffer.readString();
 		this.password = buffer.readString();
 		this.uuid = buffer.readUUID();

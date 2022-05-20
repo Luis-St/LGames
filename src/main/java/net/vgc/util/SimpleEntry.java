@@ -56,5 +56,19 @@ public class SimpleEntry<K, V> implements Map.Entry<K, V> {
 	public void setMuted() {
 		this.muted = true;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof SimpleEntry<?, ?> entry) {
+			if (!this.key.equals(entry.getKey())) {
+				return false;
+			} else if (!this.value.equals(entry.getValue())) {
+				return false;
+			} else {
+				return this.muted == entry.isMuted();
+			}
+		}
+		return false;
+	}
 
 }

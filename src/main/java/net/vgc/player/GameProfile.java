@@ -23,7 +23,7 @@ public class GameProfile implements Encodable, Serializable {
 	}
 	
 	@DecodingConstructor
-	public GameProfile(FriendlyByteBuffer buffer) {
+	private GameProfile(FriendlyByteBuffer buffer) {
 		this.name = buffer.readString();
 		this.uuid = buffer.readUUID();
 	}
