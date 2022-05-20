@@ -19,6 +19,8 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -175,7 +177,9 @@ public class AccountServer extends GameApplication<AccountServerPacketListener> 
 			protected void initChannel(Channel channel) throws Exception {
 				ChannelPipeline pipeline = channel.pipeline();
 				Connection connection = new Connection(new AccountServerPacketListener(AccountServer.this, NetworkSide.ACCOUNT_SERVER));
+				pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
 				pipeline.addLast("decoder", new PacketDecoder());
+				pipeline.addLast("prepender", new ProtobufVarint32LengthFieldPrepender());
 				pipeline.addLast("encoder", new PacketEncoder());
 				pipeline.addLast("handler", connection);
 				AccountServer.this.channels.add(channel);

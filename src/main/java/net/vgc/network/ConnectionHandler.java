@@ -20,6 +20,8 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketListener;
 import net.vgc.util.ExceptionHandler;
@@ -51,7 +53,9 @@ public class ConnectionHandler {
 				@Override
 				protected void initChannel(Channel channel) throws Exception {
 					ChannelPipeline pipeline = channel.pipeline();
+					pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
 					pipeline.addLast("decoder", new PacketDecoder());
+					pipeline.addLast("prepender", new ProtobufVarint32LengthFieldPrepender());
 					pipeline.addLast("encoder", new PacketEncoder());
 					pipeline.addLast("handler", ConnectionHandler.this.connection);
 				}

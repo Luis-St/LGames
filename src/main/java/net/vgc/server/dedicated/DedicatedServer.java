@@ -24,6 +24,8 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -147,7 +149,9 @@ public class DedicatedServer implements Tickable  {
 			protected void initChannel(Channel channel) throws Exception {
 				ChannelPipeline pipeline = channel.pipeline();
 				Connection connection = new Connection(new ServerPacketListener(DedicatedServer.this, NetworkSide.SERVER));
+				pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
 				pipeline.addLast("decoder", new PacketDecoder());
+				pipeline.addLast("prepender", new ProtobufVarint32LengthFieldPrepender());
 				pipeline.addLast("encoder", new PacketEncoder());
 				pipeline.addLast("handler", connection);
 				DedicatedServer.this.channels.add(channel);
