@@ -1,4 +1,4 @@
-package net.vgc.game;
+package net.vgc.game.dice;
 
 import javax.annotation.Nullable;
 

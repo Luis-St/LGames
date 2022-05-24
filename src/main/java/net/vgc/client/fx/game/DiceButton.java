@@ -1,58 +1,59 @@
 package net.vgc.client.fx.game;
 
+import java.util.function.Supplier;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
-import net.vgc.game.DiceState;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.CancelRollDiceRequestPacket;
-import net.vgc.network.packet.client.game.RolledDicePacket;
+import net.vgc.game.dice.DiceState;
 import net.vgc.network.packet.server.game.RollDiceRequestPacket;
 
-public class DiceButton extends Button implements PacketHandler<ClientPacket> {
+public class DiceButton extends Button {
 	
 	protected final Client client;
 	protected final double prefSize;
-	protected DiceState state;
+	protected final Supplier<Boolean> canRoll;
+	protected int count = 0;
 	
-	public DiceButton(Client client, double prefSize) {
+	public DiceButton(Client client, double prefSize, Supplier<Boolean> canRoll) {
 		this.client = client;
 		this.prefSize = prefSize;
+		this.canRoll = canRoll;
 		this.init();
 	}
 	
 	protected void init() {
 		this.setPrefSize(this.prefSize, this.prefSize);
-		this.setState(DiceState.ZERO);
+		this.updateState();
 		if (!Constans.DEBUG) {
 			this.setBackground(null);
 		}
 		this.setOnAction((event) -> {
-			this.client.getServerHandler().send(new RollDiceRequestPacket(this.client.getPlayer().getProfile()));
+			if (this.canRoll.get()) {
+				this.client.getServerHandler().send(new RollDiceRequestPacket(this.client.getPlayer().getProfile()));
+			}
 		});
 	}
 	
-	public void setState(DiceState state) {
-		this.state = state;
-		ImageView image = this.state.getImage(this.prefSize * 0.9, this.prefSize * 0.9);
+	protected void updateState() {
+		ImageView image = DiceState.fromCount(this.count).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
 		if (image != null) {
 			this.setGraphic(new Box<>(image, Pos.CENTER));
 		} else {
 			this.setGraphic(null);
 		}
 	}
-
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		if (clientPacket instanceof CancelRollDiceRequestPacket packet) {
-			this.setState(DiceState.ZERO);
-		} else if (clientPacket instanceof RolledDicePacket packet) {
-			this.setState(DiceState.fromCount(packet.getCount()));
-		}
+	
+	public int getCount() {
+		return this.count;
+	}
+	
+	public void update(int count) {
+		this.count = count;
+		this.updateState();
 	}
 	
 }

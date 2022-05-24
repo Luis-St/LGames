@@ -18,6 +18,7 @@ public class Main {
 	/* TODO's:
 	 *  - use com.google.common.collect.Table for TTT game field & add Client side Map -> summarize/order methods in TTTScreen
 	 *  - issue in TTT game screen -> current player changes moves the hole game grid
+	 *  - add dice animation
 	 *  - new registry for Packets
 	 *  - add server settings
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
