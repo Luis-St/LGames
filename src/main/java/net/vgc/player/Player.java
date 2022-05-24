@@ -40,7 +40,11 @@ public abstract class Player implements Tickable {
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Player player) {
-			return this.profile.equals(player.profile);
+			if (!this.profile.equals(player.profile)) {
+				return false;
+			} else {
+				return this.playing == player.playing;
+			}
 		}
 		return false;
 	}

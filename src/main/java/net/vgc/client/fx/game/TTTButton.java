@@ -56,7 +56,7 @@ public class TTTButton extends ToggleButton {
 		this.type = type;
 		this.state = state;
 		if (this.type != TTTType.NO) {
-			ImageView image = this.type.getImage(state, this.prefSize * 0.9, this.prefSize * 0.9);
+			ImageView image = this.type.getImage(state, this.prefSize * 0.95, this.prefSize * 0.95);
 			if (image != null) {
 				this.setGraphic(new Box<>(image, Pos.CENTER));
 			} else {

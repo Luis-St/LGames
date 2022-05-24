@@ -15,6 +15,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class FxTest extends Application {
@@ -27,12 +28,24 @@ public class FxTest extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		ToggleButton button = new ToggleButton("Test");
-		button.setToggleGroup(new ToggleGroup());
-		button.setOnAction((event) -> {
-			LOGGER.info("Test");
+		ToggleGroup group = new ToggleGroup();
+		group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+			LOGGER.info("Trigger");
+			if (oldValue != null && newValue == null) {
+				oldValue.setSelected(true);
+			}
 		});
-		stage.setScene(new Scene(button, 200.0, 200.0));
+		ToggleButton button1 = new ToggleButton("Test 1");
+		button1.setToggleGroup(group);
+		button1.setOnAction((event) -> {
+			LOGGER.info("Test 1");
+		});
+		ToggleButton button2 = new ToggleButton("Test 2");
+		button2.setToggleGroup(group);
+		button2.setOnAction((event) -> {
+			LOGGER.info("Test 2");
+		});
+		stage.setScene(new Scene(new HBox(button1, button2), 200.0, 200.0));
 		stage.show();
 	}
 	

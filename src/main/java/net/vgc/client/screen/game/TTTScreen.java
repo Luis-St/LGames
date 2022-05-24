@@ -76,8 +76,8 @@ public class TTTScreen extends GameScreen {
 	protected Rectangle bottomLeftVBorder;
 	protected Rectangle bottomRightVBorder;
 	protected ButtonBox leaveButton;
-	protected ButtonBox confirmActionButton;
 	protected ButtonBox playAgainButton;
+	protected ButtonBox confirmActionButton;
 	protected Text playerInfo;
 	protected Text opponentInfo;
 	protected Text currentPlayerInfo;

@@ -99,6 +99,14 @@ public class Util {
 		return mapped;
 	}
 	
+	public static <T> List<T> reverseList(List<T> list) {
+		List<T> reversedList = Lists.newArrayList();
+		for (int i = list.size(); i-- > 0;) {
+			reversedList.add(list.get(i));
+		}
+		return reversedList;
+	}
+	
 	@Nullable
 	public static <T, R> R runIfNotNull(T value, Function<T, R> function) {
 		if (value != null) {

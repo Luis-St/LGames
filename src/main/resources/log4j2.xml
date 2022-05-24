@@ -3,7 +3,7 @@
   <ThresholdFilter onMatch="ACCEPT" onMismatch="NEUTRAL" level="DEBUG"/>
   <Appenders>
     <CONSOLE name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg%n%throwable"/>
+      <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%c/%level]: %msg%n%throwable"/>
       <MarkerFilter onMatch="DENY" onMismatch="NEUTRAL" marker="FLOW"/>
     </CONSOLE>
   </Appenders>
