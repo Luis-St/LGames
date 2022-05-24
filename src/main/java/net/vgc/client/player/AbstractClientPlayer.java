@@ -2,6 +2,8 @@ package net.vgc.client.player;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Objects;
+
 import net.vgc.game.GamePlayerType;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
@@ -11,6 +13,7 @@ public abstract class AbstractClientPlayer extends Player {
 	protected boolean admin = false;
 	protected GamePlayerType type;
 	protected boolean current = false;
+	protected boolean canSelect;
 	protected int wins = 0;
 	protected int loses = 0;
 	protected int draws = 0;
@@ -49,6 +52,14 @@ public abstract class AbstractClientPlayer extends Player {
 		this.current = current;
 	}
 	
+	public boolean canSelect() {
+		return this.canSelect;
+	}
+	
+	public void setCanSelect(boolean canSelect) {
+		this.canSelect = canSelect;
+	}
+	
 	public int getWins() {
 		return this.wins;
 	}
@@ -71,6 +82,28 @@ public abstract class AbstractClientPlayer extends Player {
 	
 	public void setDraws(int draws) {
 		this.draws = draws;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof AbstractClientPlayer player) {
+			if (!super.equals(player)) {
+				return false;
+			} else if (this.admin != player.admin) {
+				return false;
+			} else if (!Objects.equal(this.type, player.type)) {
+				return false;
+			} else if (this.current != player.current) {
+				return false;
+			} else if (this.wins != player.wins) {
+				return false;
+			} else if (this.loses != player.loses) {
+				return false;
+			} else {
+				return this.draws == player.loses;
+			}
+		}
+		return false;
 	}
 	
 }

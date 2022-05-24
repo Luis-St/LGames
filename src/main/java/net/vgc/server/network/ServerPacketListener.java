@@ -6,10 +6,18 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import com.google.common.collect.Table.Cell;
+
 import net.vgc.game.Game;
 import net.vgc.game.GameResult;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
+import net.vgc.game.dice.DiceHandler;
+import net.vgc.game.ludo.LudoGame;
+import net.vgc.game.ludo.dice.LudoDiceHandler;
+import net.vgc.game.ludo.map.field.LudoFieldPos;
+import net.vgc.game.ludo.map.field.LudoFieldType;
+import net.vgc.game.ludo.player.LudoFigure;
 import net.vgc.game.ttt.TTTGame;
 import net.vgc.game.ttt.TTTType;
 import net.vgc.game.ttt.map.TTTMap;
@@ -18,6 +26,7 @@ import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientJoinedPacket;
+import net.vgc.network.packet.client.game.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelRollDiceRequestPacket;
@@ -25,6 +34,7 @@ import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.GameScoreUpdatePacket;
 import net.vgc.network.packet.client.game.RolledDicePacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
+import net.vgc.network.packet.client.game.UpdateLudoGamePacket;
 import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedPlayerList;
@@ -72,7 +82,10 @@ public class ServerPacketListener extends AbstractPacketListener {
 							player.setPlaying(true);
 							player.connection.send(gameType.getStartPacket(game, player));
 						}
-						Util.runDelayed("DelayedSetStartPlayer", 250, game::getStartPlayer);
+						Util.runDelayed("DelayedSetStartPlayer", 250, () -> {
+							game.getStartPlayer();
+							game.onStarted();
+						});
 					}
 				} else {
 					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getName().toLowerCase(), this.server.getGame().getType().getName());
@@ -120,18 +133,28 @@ public class ServerPacketListener extends AbstractPacketListener {
 	public void handleRollDiceRequest(GameProfile profile) {
 		this.checkSide();
 		Game game = this.server.getGame();
+		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (game != null) {
-			if (game.getCurrentPlayer() != null && game.getCurrentPlayer().getProfile().equals(profile)) {
-				if (game.isDiceGame()) {
-					int count = game.getDice().roll();
+			if (game.isDiceGame()) {
+				DiceHandler diceHandler = game.getDiceHandler();
+				if (diceHandler.canRoll(player)) {
+					int count = diceHandler.roll(player);
 					LOGGER.info("Player {} rolled a {}", profile.getName(), count);
 					this.connection.send(new RolledDicePacket(count));
+					if (diceHandler.handleAfterRoll(player, count)) {
+						LOGGER.debug("#handleAfterRoll -> true");
+					} else if (diceHandler.canRollAgain(player, count)) {
+						LOGGER.debug("#canRollAgain -> true");
+						this.connection.send(new CanRollDiceAgainPacket());
+					} else {
+						game.nextPlayer();
+					}
 				} else {
-					LOGGER.warn("Fail to roll dice, since game {} is not a dice game", game.getType().getName().toLowerCase());
+					LOGGER.warn("Player {} tries to roll the dice, but it is not his turn", profile.getName());
 					this.connection.send(new CancelRollDiceRequestPacket());
 				}
 			} else {
-				LOGGER.warn("Player {} tries to roll the dice, but it is not his turn", profile.getName());
+				LOGGER.warn("Fail to roll dice, since game {} is not a dice game", game.getType().getName().toLowerCase());
 				this.connection.send(new CancelRollDiceRequestPacket());
 			}
 		} else {
@@ -196,6 +219,41 @@ public class ServerPacketListener extends AbstractPacketListener {
 			}
 		} else {
 			LOGGER.warn("Fail to handle press {} field packet, since there is no running game", GameTypes.TIC_TAC_TOE.getName().toLowerCase());
+		}
+	}
+	
+	public void handleSelectLudoFigure(GameProfile profile, LudoFieldPos pos) {
+		this.checkSide();
+		DedicatedPlayerList playerList = this.server.getPlayerList();
+		Game game = this.server.getGame();
+		if (game != null) {
+			if (game instanceof LudoGame ludoGame) {
+				ServerPlayer currentPlayer = playerList.getPlayer(profile);
+				if (ludoGame.getCurrentPlayer() != null && ludoGame.getCurrentPlayer().equals(currentPlayer)) {
+					if (currentPlayer.isPlaying()) {
+						List<Cell<LudoFieldType, LudoFieldPos, LudoFigure>> oldFigurePositions = ludoGame.getMap().getFigurePositions(ludoGame.getFigures());
+						List<Cell<LudoFieldType, LudoFieldPos, LudoFigure>> newFigurePositions = ludoGame.handle(pos);
+						if (!oldFigurePositions.equals(newFigurePositions)) {
+							playerList.broadcastAll(ludoGame.getPlayers(), new UpdateLudoGamePacket(newFigurePositions));
+							LudoDiceHandler diceHandler = ludoGame.getDiceHandler();
+							if (diceHandler.canRollAfterMove(currentPlayer, diceHandler.getLastCount(currentPlayer))) {
+								diceHandler.setRollCount(currentPlayer, 1);
+								currentPlayer.connection.send(new CanRollDiceAgainPacket());
+							}
+						} else {
+							LOGGER.info("Field map will not be synced to the clients, since there are no changes");
+						}
+					} else {
+						LOGGER.warn("Fail to handle select {} figure packet for player {}, since the player is not playing a game", ludoGame.getType().getName().toLowerCase(), currentPlayer.getProfile().getName());
+					}
+				} else {
+					LOGGER.warn("Player {} tries to move figure on field {}, but it is not his turn", profile.getName(), pos.getGreen());
+				}
+			} else {
+				LOGGER.warn("Fail to handle select {} figure packet, since the current game is {}", GameTypes.LUDO.getName().toLowerCase(), game.getType().getName().toLowerCase());
+			}
+		} else {
+			LOGGER.warn("Fail to handle select {} figure packet, since there is no running game", GameTypes.LUDO.getName().toLowerCase());
 		}
 	}
 	

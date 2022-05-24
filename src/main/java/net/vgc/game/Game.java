@@ -11,7 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
+import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.score.GameScore;
+import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
@@ -26,6 +28,10 @@ public interface Game {
 	
 	default DedicatedServer getServer() {
 		return Server.getInstance().getServer();
+	}
+	
+	default void broadcastPlayers(Packet<?> packet) {
+		this.getServer().getPlayerList().broadcastAll(this.getPlayers(), packet);
 	}
 	
 	GameType<? extends Game> getType();
@@ -125,7 +131,8 @@ public interface Game {
 		return false;
 	}
 	
-	default Dice getDice() {
+	@Nullable
+	default DiceHandler getDiceHandler() {
 		return null;
 	}
 	
@@ -149,6 +156,10 @@ public interface Game {
 	}
 	
 	default void onStart() {
+		
+	}
+	
+	default void onStarted() {
 		
 	}
 	

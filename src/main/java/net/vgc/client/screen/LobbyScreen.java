@@ -26,6 +26,7 @@ public class LobbyScreen extends GameScreen {
 	protected Menu playerMenu;
 	protected Menu gameMenu;
 	protected ButtonBox tttButtonBox;
+	protected ButtonBox ludoButtonBox;
 	
 	public LobbyScreen() {
 		
@@ -43,6 +44,8 @@ public class LobbyScreen extends GameScreen {
 		this.gameMenu.getItems().add(leaveItem);
 		this.tttButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.ttt"), this::handleTTT);
 		this.tttButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
+		this.ludoButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.ludo"), this::handleLudo);
+		this.ludoButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 	}
 	
 	protected void handleTTT() {
@@ -51,11 +54,18 @@ public class LobbyScreen extends GameScreen {
 		}
 	}
 	
+	protected void handleLudo() {
+		if (this.client.getPlayer().isAdmin()) {
+			this.showScreen(new PlayerSelectScreen(GameTypes.LUDO, this));
+		}
+	}
+	
 	@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
 			this.tttButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
+			this.ludoButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 		}
 	}
 	
@@ -81,7 +91,7 @@ public class LobbyScreen extends GameScreen {
 	@Override
 	protected Pane createPane() {
 		GridPane gridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		gridPane.addRow(0, this.tttButtonBox);
+		gridPane.addRow(0, this.tttButtonBox, this.ludoButtonBox);
 		this.refreshPlayers();
 		return new VBox(new MenuBar(this.playerMenu, this.gameMenu), gridPane);
 	}

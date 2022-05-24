@@ -1,7 +1,10 @@
 package net.vgc.client.network;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Lists;
 
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
@@ -13,6 +16,7 @@ import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.game.GameTypes;
+import net.vgc.game.ludo.LudoType;
 import net.vgc.game.ttt.TTTType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
@@ -129,6 +133,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleSyncPlayerData(GameProfile profile, boolean playing) {
+		this.checkSide();
 		AbstractClientPlayer player = this.client.getPlayer(profile);
 		if (player != null) {
 			Boolean isPlaying = player.isPlaying();
@@ -140,7 +145,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public void handleStartTTTGame(TTTType playerType, GameProfile startPlayerProfile, List<GameProfile> profiles) {
+	public void handleStartTTTGame(TTTType type, List<GameProfile> profiles) {
 		this.checkSide();
 		boolean flag = false;
 		for (AbstractClientPlayer player : this.client.getPlayers(profiles)) {
@@ -158,7 +163,26 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
+	public void handleStartLudoGame(LudoType playerType, Map<GameProfile, LudoType> playerTypes) {
+		this.checkSide();
+		boolean flag = false;
+		for (AbstractClientPlayer player : this.client.getPlayers(Lists.newArrayList(playerTypes.keySet()))) {
+			player.setPlaying(true);
+			if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
+				flag = true;
+			}
+		}
+		if (flag) {
+			GameTypes.LUDO.openScreen();
+			LOGGER.info("Start game {}", GameTypes.LUDO.getName().toLowerCase());
+		} else {
+			LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", GameTypes.LUDO.getName().toLowerCase());
+			this.client.setScreen(new LobbyScreen());
+		}
+	}
+	
 	public void handleExitGame() {
+		this.checkSide();
 		LOGGER.info("Exit the current game");
 		if (this.client.getPlayer().isPlaying()) {
 			this.client.getPlayer().setPlaying(false);
@@ -169,6 +193,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleStopGame() {
+		this.checkSide();
 		LOGGER.info("Stopping the current game");
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			player.setPlaying(false);
