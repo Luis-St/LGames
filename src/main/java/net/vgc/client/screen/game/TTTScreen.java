@@ -265,15 +265,10 @@ public class TTTScreen extends GameScreen {
 		} else if (clientPacket instanceof GameScoreUpdatePacket packet) {
 			GameScore score = packet.getScore();
 			for (Entry<GameProfile, PlayerScore> entry : score.getScores().entrySet()) {
-				PlayerScore playerScore = entry.getValue();
 				if (this.player.getProfile().equals(entry.getKey())) {
-					this.player.setWins(playerScore.getWins());
-					this.player.setLoses(playerScore.getLoses());
-					this.player.setDraws(playerScore.getDraws());
+					this.player.syncScore(entry.getValue());
 				} else if (this.opponent.getProfile().equals(entry.getKey())) {
-					this.opponent.setWins(playerScore.getWins());
-					this.opponent.setLoses(playerScore.getLoses());
-					this.opponent.setDraws(playerScore.getDraws());
+					this.opponent.syncScore(entry.getValue());
 				} else {
 					LOGGER.warn("Fail to display score of player {}, since the player is not playing the game {}", entry.getKey().getName(), GameTypes.TIC_TAC_TOE.getName().toLowerCase());
 				}
@@ -350,13 +345,13 @@ public class TTTScreen extends GameScreen {
 	
 	protected void updatePlayerInfo() {
 		if (this.player.getType() != null) {
-			this.playerInfo.setText(this.player.getProfile().getName() + " (" + ((TTTType) this.player.getType()).getCharacter() + "): " + this.player.getWins());
+			this.playerInfo.setText(this.player.getProfile().getName() + " (" + ((TTTType) this.player.getType()).getCharacter() + "): " + this.player.getScore().getWins());
 		} else {
 			this.playerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.fail_data"));
 			LOGGER.warn("Fail to load score of player {}", this.player.getProfile().getName());
 		}
 		if (this.opponent.getType() != null) {
-			this.opponentInfo.setText(this.opponent.getProfile().getName() + " (" + ((TTTType) this.opponent.getType()).getCharacter() + "): " + this.opponent.getWins());
+			this.opponentInfo.setText(this.opponent.getProfile().getName() + " (" + ((TTTType) this.opponent.getType()).getCharacter() + "): " + this.opponent.getScore().getWins());
 		} else {
 			this.opponentInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.fail_data"));
 			LOGGER.warn("Fail to load score of player {}", this.opponent.getProfile().getName());

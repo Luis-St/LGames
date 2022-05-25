@@ -67,6 +67,7 @@ public class Test {
 			list.add(new Translation("screen.multiplayer.server_host", "Server host"));
 			list.add(new Translation("screen.multiplayer.server_port", "Server port"));
 			list.add(new Translation("screen.multiplayer.connect", "Connect"));
+			list.add(new Translation("screen.multiplayer.connect_local", "Connect local"));
 			list.add(new Translation("settings.language.name", "Language"));
 			list.add(new Translation("settings.language.description", "Language for the user interface"));
 			list.add(new Translation("server.window.server", "Server"));
@@ -141,6 +142,7 @@ public class Test {
 			list.add(new Translation("screen.multiplayer.server_host", "Server host"));
 			list.add(new Translation("screen.multiplayer.server_port", "Server port"));
 			list.add(new Translation("screen.multiplayer.connect", "Verbinden"));
+			list.add(new Translation("screen.multiplayer.connect_local", "Lokal verbinden"));
 			list.add(new Translation("settings.language.name", "Sprache"));
 			list.add(new Translation("settings.language.description", "Sprache für die Benutzeroberfläche"));
 			list.add(new Translation("server.window.server", "Server"));

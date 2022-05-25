@@ -24,6 +24,7 @@ public class MultiplayerScreen extends Screen {
 	protected InputPane hostInputPane;
 	protected InputPane portInputPane;
 	protected ButtonBox connectButtonBox;
+	protected ButtonBox connectLocalButtonBox;
 	protected ButtonBox backButtonBox;
 	
 	public MultiplayerScreen(Screen backScreen) {
@@ -35,11 +36,24 @@ public class MultiplayerScreen extends Screen {
 		this.hostInputPane = new InputPane(TranslationKey.createAndGet("screen.multiplayer.server_host"));
 		this.portInputPane = new InputPane(TranslationKey.createAndGet("screen.multiplayer.server_port"));
 		this.connectButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.multiplayer.connect"), this::handleConnect);
+		this.connectLocalButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.multiplayer.connect_local"), this::handleConnectLocal);
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
 	
-	protected void handleConnect() {
+	protected boolean canConnect() {
 		if (this.client.isLoggedIn()) {
+			return true;
+		} else {
+			if (this.client.getLoginWindow() == null)  {
+				LoginWindow window = new LoginWindow(this.client, new Stage());
+				window.show();
+			}
+			return false;
+		}
+	}
+	
+	protected void handleConnect() {
+		if (this.canConnect()) {
 			String host = StringUtils.trimToEmpty(this.hostInputPane.getText());
 			String port = StringUtils.trimToEmpty(this.portInputPane.getText());
 			if (host.isEmpty() && port.isEmpty()) {
@@ -53,11 +67,15 @@ public class MultiplayerScreen extends Screen {
 				PlayerAccount account = this.client.getAccount();
 				this.connectAndSend(host, Integer.valueOf(port), new ClientJoinPacket(account.getName(), account.getUUID()));
 			}
-		} else {
-			if (this.client.getLoginWindow() == null)  {
-				LoginWindow window = new LoginWindow(this.client, new Stage());
-				window.show();
-			}
+		}
+	}
+	
+	protected void handleConnectLocal() {
+		if (this.canConnect()) {
+			this.hostInputPane.setText("127.0.0.1");
+			this.portInputPane.setText("8080");
+			PlayerAccount account = this.client.getAccount();
+			this.connectAndSend("127.0.0.1", 8080, new ClientJoinPacket(account.getName(), account.getUUID()));
 		}
 	}
 	
@@ -85,7 +103,7 @@ public class MultiplayerScreen extends Screen {
 	protected Pane createPane() {
 		GridPane outerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		GridPane innerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		innerPane.addColumn(0, this.connectButtonBox, this.backButtonBox);
+		innerPane.addColumn(0, this.connectButtonBox, this.connectLocalButtonBox, this.backButtonBox);
 		outerPane.addColumn(0, this.hostInputPane, this.portInputPane, innerPane);
 		return outerPane;
 	}
