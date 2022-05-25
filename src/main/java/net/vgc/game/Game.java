@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.score.GameScore;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
@@ -109,7 +110,7 @@ public interface Game {
 			if (!this.getType().enoughPlayersToPlay(this.getPlayers())) {
 				this.stopGame();
 			}
-			this.getServer().getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying()), player);
+			this.getServer().getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying(), new PlayerScore(player.getProfile())), player);
 			return true;
 		}
 		if (player != null) {
@@ -148,7 +149,7 @@ public interface Game {
 		}
 		for (ServerPlayer player : this.getPlayers()) {
 			player.connection.send(new StopGamePacket());
-			this.getServer().getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying()), player);
+			this.getServer().getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying(), new PlayerScore(player.getProfile())), player);
 		}
 		this.getPlayers().clear();
 		this.getServer().setGame(null);

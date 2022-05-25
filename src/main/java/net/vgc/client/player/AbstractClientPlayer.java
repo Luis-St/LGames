@@ -5,26 +5,36 @@ import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 
 import net.vgc.game.GamePlayerType;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 
 public abstract class AbstractClientPlayer extends Player {
 	
+	protected final PlayerScore score;
 	protected boolean admin = false;
 	protected GamePlayerType type;
 	protected boolean current = false;
 	protected boolean canSelect;
-	protected int wins = 0;
-	protected int loses = 0;
-	protected int draws = 0;
 	
-	public AbstractClientPlayer(GameProfile profile) {
+	public AbstractClientPlayer(GameProfile profile, PlayerScore score) {
 		super(profile);
+		this.score = score;
 	}
 	
 	@Override
 	public boolean isClient() {
 		return true;
+	}
+	
+	public PlayerScore getScore() {
+		return this.score;
+	}
+	
+	public void syncScore(PlayerScore score) {
+		this.getScore().setWins(score.getWins());
+		this.getScore().setLoses(score.getLoses());
+		this.getScore().setDraws(score.getDraws());
 	}
 	
 	public boolean isAdmin() {
@@ -60,30 +70,6 @@ public abstract class AbstractClientPlayer extends Player {
 		this.canSelect = canSelect;
 	}
 	
-	public int getWins() {
-		return this.wins;
-	}
-	
-	public void setWins(int wins) {
-		this.wins = wins;
-	}
-	
-	public int getLoses() {
-		return this.loses;
-	}
-	
-	public void setLoses(int loses) {
-		this.loses = loses;
-	}
-	
-	public int getDraws() {
-		return this.draws;
-	}
-	
-	public void setDraws(int draws) {
-		this.draws = draws;
-	}
-	
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof AbstractClientPlayer player) {
@@ -95,12 +81,8 @@ public abstract class AbstractClientPlayer extends Player {
 				return false;
 			} else if (this.current != player.current) {
 				return false;
-			} else if (this.wins != player.wins) {
-				return false;
-			} else if (this.loses != player.loses) {
-				return false;
 			} else {
-				return this.draws == player.loses;
+				return this.score.equals(player.score);
 			}
 		}
 		return false;

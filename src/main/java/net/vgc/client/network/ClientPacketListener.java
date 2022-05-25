@@ -17,6 +17,7 @@ import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.game.GameTypes;
 import net.vgc.game.ludo.LudoType;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.game.ttt.TTTType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
@@ -132,14 +133,13 @@ public class ClientPacketListener extends AbstractPacketListener {
 		LOGGER.info("Sync admins to value {}, should not be larger than 1", this.client.getPlayers().stream().filter(AbstractClientPlayer::isAdmin).collect(Collectors.toList()).size());
 	}
 	
-	public void handleSyncPlayerData(GameProfile profile, boolean playing) {
+	public void handleSyncPlayerData(GameProfile profile, boolean playing, PlayerScore score) {
 		this.checkSide();
 		AbstractClientPlayer player = this.client.getPlayer(profile);
 		if (player != null) {
-			Boolean isPlaying = player.isPlaying();
 			player.setPlaying(playing);
+			player.syncScore(score);
 			LOGGER.info("Synchronize data from server to player {}", profile.getName());
-			LOGGER.debug("Synchronize playing value of player {} from {} to {}, the current value is now {}", profile.getName(), isPlaying, playing, player.isPlaying());
 		} else {
 			LOGGER.warn("Fail to synchronize data from server to player {}, since the player does not exists", profile.getName());
 		}
@@ -186,8 +186,9 @@ public class ClientPacketListener extends AbstractPacketListener {
 		LOGGER.info("Exit the current game");
 		if (this.client.getPlayer().isPlaying()) {
 			this.client.getPlayer().setPlaying(false);
+			this.client.getPlayer().getScore().reset();
 		} else {
-			LOGGER.info("Received a ExitGamePacket, but the local player is not playing a game");
+			LOGGER.info("Received a exit game packet, but the local player is not playing a game");
 		}
 		this.client.setScreen(new LobbyScreen());
 	}
@@ -197,6 +198,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		LOGGER.info("Stopping the current game");
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			player.setPlaying(false);
+			player.getScore().reset();
 		}
 		this.client.setScreen(new LobbyScreen());
 	}
