@@ -20,14 +20,14 @@ import javafx.scene.layout.GridPane;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.LudoButton;
-import net.vgc.game.ludo.LudoState;
-import net.vgc.game.ludo.LudoType;
-import net.vgc.game.ludo.map.field.LudoFieldPos;
-import net.vgc.game.ludo.map.field.LudoFieldType;
-import net.vgc.game.ludo.player.LudoFigure;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.ludo.UpdateLudoGamePacket;
+import net.vgc.oldgame.ludo.LudoState;
+import net.vgc.oldgame.ludo.LudoType;
+import net.vgc.oldgame.ludo.map.field.LudoFieldPos;
+import net.vgc.oldgame.ludo.map.field.LudoFieldType;
+import net.vgc.oldgame.ludo.player.LudoFigure;
 
 public class ClientLudoMap extends GridPane implements PacketHandler<ClientPacket> {
 	

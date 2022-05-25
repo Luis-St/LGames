@@ -1,6 +1,6 @@
 package net.vgc.client.player;
 
-import net.vgc.game.score.PlayerScore;
+import net.vgc.oldgame.score.PlayerScore;
 import net.vgc.player.GameProfile;
 
 public class RemotePlayer extends AbstractClientPlayer {

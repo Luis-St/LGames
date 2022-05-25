@@ -10,10 +10,10 @@ import javafx.scene.layout.StackPane;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.game.ludo.LudoState;
-import net.vgc.game.ludo.LudoType;
-import net.vgc.game.ludo.map.field.LudoFieldPos;
-import net.vgc.game.ludo.map.field.LudoFieldType;
+import net.vgc.oldgame.ludo.LudoState;
+import net.vgc.oldgame.ludo.LudoType;
+import net.vgc.oldgame.ludo.map.field.LudoFieldPos;
+import net.vgc.oldgame.ludo.map.field.LudoFieldType;
 
 public class LudoButton extends ToggleButton {
 	

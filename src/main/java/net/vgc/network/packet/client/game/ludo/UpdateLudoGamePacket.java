@@ -5,11 +5,11 @@ import java.util.List;
 import com.google.common.collect.Table.Cell;
 
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.game.ludo.map.field.LudoFieldPos;
-import net.vgc.game.ludo.map.field.LudoFieldType;
-import net.vgc.game.ludo.player.LudoFigure;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.oldgame.ludo.map.field.LudoFieldPos;
+import net.vgc.oldgame.ludo.map.field.LudoFieldType;
+import net.vgc.oldgame.ludo.player.LudoFigure;
 import net.vgc.util.SimpleCell;
 
 public class UpdateLudoGamePacket implements ClientPacket {

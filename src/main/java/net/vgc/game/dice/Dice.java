@@ -1,38 +1,16 @@
 package net.vgc.game.dice;
 
-import java.util.Random;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import net.vgc.Main;
-import net.vgc.util.Mth;
-import net.vgc.util.Util;
-import net.vgc.util.exception.InvalidValueException;
-
-public class Dice {
+public interface Dice {
 	
-	protected final Random rng;
-	protected final int min;
-	protected final int max;
+	public static final Logger LOGGER = LogManager.getLogger();
 	
-	public Dice(int min, int max) {
-		this(Util.systemRandom(), min, max);
-	}
+	int roll();
 	
-	public Dice(Random rng, int min, int max) {
-		this.rng = rng;
-		this.min = min;
-		this.max = max;
-	}
+	int rollExclude(int value);
 	
-	public int roll() {
-		if (this.min > this.max) {
-			Main.LOGGER.error("The min value {} of the dice can not be larger than the max value {}", this.min, this.max);
-			throw new InvalidValueException("The min value " + this.min + "of the dice can not be larger than the max value " + this.max);
-		} else if (this.min == this.max) {
-			return this.min;
-		} else if (this.min == 0) {
-			return this.rng.nextInt(this.max) + 1;
-		}
-		return Mth.randomInt(this.rng, this.min, this.max);
-	}
+	int rollPreferred(int value);
 	
 }

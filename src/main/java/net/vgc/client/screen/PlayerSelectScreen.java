@@ -12,7 +12,6 @@ import javafx.scene.layout.Pane;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.game.GameType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
@@ -20,6 +19,7 @@ import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayGameRequestPacket;
+import net.vgc.oldgame.GameType;
 import net.vgc.util.Util;
 
 public class PlayerSelectScreen extends Screen {

@@ -15,8 +15,6 @@ import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.DiceButton;
 import net.vgc.client.fx.game.map.ClientLudoMap;
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.game.ludo.LudoType;
-import net.vgc.game.ludo.map.field.LudoFieldPos;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
@@ -29,6 +27,8 @@ import net.vgc.network.packet.client.game.ludo.UpdateLudoGamePacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.ludo.SelectLudoFigurePacket;
+import net.vgc.oldgame.ludo.LudoType;
+import net.vgc.oldgame.ludo.map.field.LudoFieldPos;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Mth;
 

@@ -3,12 +3,18 @@ package net.vgc.game.dice;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import net.vgc.game.Game;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.player.GameProfile;
-import net.vgc.server.player.ServerPlayer;
 
 public interface DiceHandler {
+	
+	public static final Logger LOGGER = LogManager.getLogger();
+	
+	Game getGame();
 	
 	int getMin();
 	
@@ -16,25 +22,15 @@ public interface DiceHandler {
 	
 	Dice getDice();
 	
-	default int roll(ServerPlayer player) {
-		return this.getDice().roll();
-	}
+	boolean canRoll(GamePlayer player);
 	
-	boolean canRoll(ServerPlayer player);
+	int roll(GamePlayer player);
 	
-	boolean canRollAgain(ServerPlayer player, int count);
+	boolean canRollAgain(GamePlayer player);
 	
-	boolean handleAfterRoll(ServerPlayer player, int count);
+	boolean canRollAgainWithResult(GamePlayer player, int count);
 	
-	int getRollCount(ServerPlayer player);
-	
-	void setRollCount(@Nullable ServerPlayer player, int rollCount);
-	
-	default void resetRollCount() {
-		this.setRollCount(null, 0);
-	}
-	
-	int getLastCount(ServerPlayer player);
+	int getLastCount(GamePlayer player);
 	
 	List<Entry<GameProfile, Integer>> getCountHistory();
 	

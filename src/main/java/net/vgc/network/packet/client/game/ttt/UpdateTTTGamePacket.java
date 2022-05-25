@@ -1,9 +1,9 @@
 package net.vgc.network.packet.client.game.ttt;
 
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.game.ttt.map.TTTMap;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.oldgame.ttt.map.TTTMap;
 
 public class UpdateTTTGamePacket implements ClientPacket {
 	

@@ -15,12 +15,12 @@ import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
-import net.vgc.game.GameTypes;
-import net.vgc.game.ludo.LudoType;
-import net.vgc.game.score.PlayerScore;
-import net.vgc.game.ttt.TTTType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
+import net.vgc.oldgame.GameTypes;
+import net.vgc.oldgame.ludo.LudoType;
+import net.vgc.oldgame.score.PlayerScore;
+import net.vgc.oldgame.ttt.TTTType;
 import net.vgc.player.GameProfile;
 
 public class ClientPacketListener extends AbstractPacketListener {

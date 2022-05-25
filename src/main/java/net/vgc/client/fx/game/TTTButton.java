@@ -6,8 +6,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import net.vgc.Constans;
 import net.vgc.client.fx.Box;
-import net.vgc.game.ttt.TTTState;
-import net.vgc.game.ttt.TTTType;
+import net.vgc.oldgame.ttt.TTTState;
+import net.vgc.oldgame.ttt.TTTType;
 
 public class TTTButton extends ToggleButton {
 	

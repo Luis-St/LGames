@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.game.GameType;
-import net.vgc.game.GameTypes;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.oldgame.GameType;
+import net.vgc.oldgame.GameTypes;
 import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketListener;
 

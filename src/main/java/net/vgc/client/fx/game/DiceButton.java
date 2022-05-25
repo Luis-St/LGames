@@ -8,8 +8,8 @@ import javafx.scene.image.ImageView;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
-import net.vgc.game.dice.DiceState;
 import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
+import net.vgc.oldgame.dice.DiceState;
 
 public class DiceButton extends Button {
 	
