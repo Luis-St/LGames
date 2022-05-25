@@ -1,4 +1,4 @@
-package net.vgc.network.packet.server.game;
+package net.vgc.network.packet.server.game.ttt;
 
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.server.ServerPacket;

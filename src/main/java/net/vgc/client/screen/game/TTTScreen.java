@@ -42,7 +42,7 @@ import net.vgc.network.packet.client.game.ttt.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.ttt.UpdateTTTGamePacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
-import net.vgc.network.packet.server.game.PressTTTFieldPacket;
+import net.vgc.network.packet.server.game.ttt.PressTTTFieldPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
 

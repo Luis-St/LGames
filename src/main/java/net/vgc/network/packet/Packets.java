@@ -43,9 +43,9 @@ import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayGameRequestPacket;
-import net.vgc.network.packet.server.game.PressTTTFieldPacket;
-import net.vgc.network.packet.server.game.RollDiceRequestPacket;
-import net.vgc.network.packet.server.game.SelectLudoFigurePacket;
+import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
+import net.vgc.network.packet.server.game.ludo.SelectLudoFigurePacket;
+import net.vgc.network.packet.server.game.ttt.PressTTTFieldPacket;
 import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 

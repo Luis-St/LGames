@@ -9,7 +9,7 @@ import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
 import net.vgc.game.dice.DiceState;
-import net.vgc.network.packet.server.game.RollDiceRequestPacket;
+import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
 
 public class DiceButton extends Button {
 	

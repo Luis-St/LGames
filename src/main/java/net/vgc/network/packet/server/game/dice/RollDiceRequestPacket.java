@@ -1,43 +1,34 @@
-package net.vgc.network.packet.server.game;
+package net.vgc.network.packet.server.game.dice;
 
-import net.vgc.game.ludo.map.field.LudoFieldPos;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketListener;
 
-public class SelectLudoFigurePacket implements ServerPacket {
+public class RollDiceRequestPacket implements ServerPacket {
 	
 	protected final GameProfile profile;
-	protected final LudoFieldPos pos;
 	
-	public SelectLudoFigurePacket(GameProfile profile, LudoFieldPos pos) {
+	public RollDiceRequestPacket(GameProfile profile) {
 		this.profile = profile;
-		this.pos = pos;
 	}
 	
-	public SelectLudoFigurePacket(FriendlyByteBuffer buffer) {
+	public RollDiceRequestPacket(FriendlyByteBuffer buffer) {
 		this.profile = buffer.read(GameProfile.class);
-		this.pos = buffer.read(LudoFieldPos.class);
 	}
-	
+
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
-		buffer.write(this.pos);
 	}
 
 	@Override
 	public void handle(ServerPacketListener listener) {
-		listener.handleSelectLudoFigure(this.profile, this.pos);
+		listener.handleRollDiceRequest(this.profile);
 	}
 	
 	public GameProfile getProfile() {
 		return this.profile;
 	}
 	
-	public LudoFieldPos getPos() {
-		return this.pos;
-	}
-
 }

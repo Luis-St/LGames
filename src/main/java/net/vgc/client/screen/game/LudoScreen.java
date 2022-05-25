@@ -28,7 +28,7 @@ import net.vgc.network.packet.client.game.ludo.StartLudoGamePacket;
 import net.vgc.network.packet.client.game.ludo.UpdateLudoGamePacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
-import net.vgc.network.packet.server.game.SelectLudoFigurePacket;
+import net.vgc.network.packet.server.game.ludo.SelectLudoFigurePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Mth;
 
