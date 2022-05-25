@@ -3,6 +3,7 @@ package net.vgc.game.ludo.player;
 import java.util.UUID;
 
 import net.vgc.game.ludo.LudoType;
+import net.vgc.game.ludo.map.field.LudoFieldPos;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
@@ -53,6 +54,10 @@ public class LudoFigure implements Encodable {
 			return false;
 		}
 		return !this.uuid.equals(figure.uuid);
+	}
+	
+	public LudoFieldPos getHomeFieldPos() {
+		return LudoFieldPos.of(this.count);
 	}
 	
 	@Override

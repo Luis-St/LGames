@@ -144,7 +144,7 @@ public class LudoGame implements Game {
 			if (count > 0) {
 				LudoField field = this.map.getNextField(figure, count);
 				if (this.map.canMoveFigure(player, figure, count)) {
-					if (this.map.moveFigure(figure, count)) {
+					if (!this.map.moveFigure(figure, count)) {
 						LOGGER.warn("Fail to move figure {} of player {} to field {}", figure.getCount(), figure.getProfile().getName(), field != null ? field.getPos().getGreen() : "null");
 					}
 				} else {

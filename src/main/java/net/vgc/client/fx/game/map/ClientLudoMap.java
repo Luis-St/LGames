@@ -2,6 +2,7 @@ package net.vgc.client.fx.game.map;
 
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -59,110 +60,8 @@ public class ClientLudoMap extends GridPane implements PacketHandler<ClientPacke
 			if (!this.canSelectField.get()) {
 				this.group.selectToggle(null);
 			}
-//			if (oldValue != null && newValue == null) {
-//				if (!Objects.equal(oldValue.getUserData(), "selecting-error")) {
-//					oldValue.setSelected(true);
-//				}
-//			} else if (oldValue == null && newValue != null) {
-//				if (newValue instanceof LudoButton newButton) {
-//					if (this.canSelectField.get() && this.canSelect(newButton)) {
-//
-//					} else {
-//						this.clearShadow();
-//						newValue.setUserData("selecting-error");
-//					}
-//				} else {
-//					this.clearShadow();
-//					newValue.setUserData("selecting-error");
-//				}
-//			} else if (oldValue != null && newValue != null) {
-//				if (!Objects.equal(oldValue.getUserData(), "selecting-error")) {
-//					if (oldValue instanceof LudoButton oldButton && newValue instanceof LudoButton newButton) {
-//						if (this.canSelectField.get() && this.canSelect(newButton)) {
-//							if (oldButton.getType() == LudoType.NO && oldButton.getState() == LudoState.SHADOW) {
-//								oldButton.reset();
-//							} else {
-//								this.clearShadow();
-//								newValue.setUserData("selecting-error");
-//							}
-//						} else {
-//							this.clearShadow();
-//							newValue.setUserData("selecting-error");
-//						}
-//					} else {
-//						this.clearShadow();
-//						newValue.setUserData("selecting-error");
-//					}
-//				}
-//			}
-//			if (this.canSelectField.get()) {
-//				if (oldValue instanceof LudoButton oldButton) {
-//					if (newValue instanceof LudoButton newButton) {
-//						if (this.canSelect(newButton)) {
-//							LudoType oldType = oldButton.getType();
-//							LudoState oldState = oldButton.getState();
-//							if (oldType == LudoType.NO && oldState == LudoState.SHADOW) {
-//								LOGGER.debug("reset old");
-//								oldButton.reset();
-//							}
-//						} else {
-//							LOGGER.debug("reset all, since can not select the new field");
-//							this.clearShadow();
-//							this.group.selectToggle(null);
-//						}
-//					} else {
-//						LOGGER.debug("reset all, since the new field is null");
-//						this.clearShadow();
-//						this.group.selectToggle(null);
-//					}
-//				} else {
-//					if (oldValue == null) {
-//						if (newValue instanceof LudoButton newButton) {
-//							if (newButton.canSelect()) {
-//								
-//							} else {
-//								LOGGER.debug("reset all, since the new field is not selectable");
-//								this.clearShadow();
-//								this.group.selectToggle(null);
-//							}
-//						} else {
-//							LOGGER.debug("reset all, since the new field is null");
-//							this.clearShadow();
-//							this.group.selectToggle(null);
-//						}
-//					} else {
-//						LOGGER.debug("reset all, since the old value is not a field");
-//						this.clearShadow();
-//						this.group.selectToggle(null);
-//					}
-//				}
-//			} else {
-//				LOGGER.debug("reset all, since the player can not select a field");
-//				this.clearShadow();
-//				this.group.selectToggle(null);
-//			}
+			this.clearShadow();
 		});
-	}
-	
-	protected boolean canSelect(LudoButton button) {
-		if (button.canSelect()) {
-			LOGGER.debug("LudoButton#canSelect");
-			LudoButton nextButton = this.getNextField(button, this.diceCountGetter.get());
-			if (nextButton != null) {
-				LOGGER.debug("has next field");
-				if (!nextButton.hasFigure()) {
-					LOGGER.debug("empty field");
-					return true;
-				} else if (nextButton.getType() == LudoType.NO && nextButton.getState() == LudoState.SHADOW) {
-					LOGGER.debug("field is shadowed");
-					return true;
-				} else {
-					LOGGER.debug("field type {} != {} player type -> {}", nextButton.getType(), this.client.getPlayer().getType(), (nextButton.getType() != this.client.getPlayer().getType()));
-					return nextButton.getType() != this.client.getPlayer().getType();
-				}
-			}
-		}
-		return false;
 	}
 	
 	protected void createFields() {
@@ -265,7 +164,7 @@ public class ClientLudoMap extends GridPane implements PacketHandler<ClientPacke
 		button.setOnAction((event) -> {
 			if (this.canSelectField.get()) {
 				if (button.canSelect()) {
-					this.clearAndSetShadow(this.getNextField(button, this.diceCountGetter.get()));
+					this.clearAndSetShadow(this.getNextField(button, this.diceCountGetter.get(), false));
 				}
 			}
 		});
@@ -288,27 +187,97 @@ public class ClientLudoMap extends GridPane implements PacketHandler<ClientPacke
 	}
 	
 	@Nullable
-	protected LudoButton getNextField(LudoButton fieldButton, int count) {
+	protected LudoButton getNextField(LudoButton fieldButton, int count, boolean returnCall) {
 		LudoType type = fieldButton.getType();
 		LudoFieldType fieldType = fieldButton.getFieldType();
-		if (fieldType == LudoFieldType.HOME && count == 6) {
+		if (fieldType == LudoFieldType.HOME) {
 			if (count == 6) {
-				return this.getButton(LudoFieldType.DEFAULT, LudoFieldPos.of(type, 0), null);
+				return this.checkField(this.getButton(LudoFieldType.DEFAULT, LudoFieldPos.of(type, 0), null));
 			} else {
 				return null;
 			}
+		} else if (fieldType == LudoFieldType.WIN) {
+			int position = fieldButton.getPos().getFieldForType(type) + count;
+			if (position > 3) {
+				LOGGER.warn("The next field for count {}, is out of map", count);
+				return null;
+			}
+			return this.checkField(this.getButton(LudoFieldType.WIN, LudoFieldPos.of(position), type));
 		} else {
+			if (this.hasFigureAtHome() && !returnCall) {
+				if (count == 6 && !this.hasFigureAtStart()) {
+					if (fieldType == LudoFieldType.HOME) {
+						return this.checkField(this.getButton(LudoFieldType.DEFAULT, LudoFieldPos.of(type, 0), null));
+					} else {
+						return null;
+					}
+				} else if (this.hasFigureAtStart()) {
+					if (fieldType == LudoFieldType.DEFAULT) {
+						LudoButton nextStartFieldButton = this.getButton(LudoFieldType.DEFAULT, LudoFieldPos.of(type, count), null);
+						if (fieldButton.getPos().isStart() && !nextStartFieldButton.hasFigure()) {
+							return nextStartFieldButton;
+						} else if (nextStartFieldButton.hasFigure() && nextStartFieldButton.getType() == this.client.getPlayer().getType()) {
+							return this.getNextField(fieldButton, count, true);
+						} else {
+							return null;
+						}
+					} else {
+						return null;
+					}
+				}
+			}
 			int position = fieldButton.getPos().getFieldForType(type) + count;
 			if (position > 39) {
 				if (position > 43) {
-					LOGGER.info("The next field for count {}, is out of map", count);
+					LOGGER.warn("The next field for count {}, is out of map", count);
 					return null;
 				}
-				return this.getButton(LudoFieldType.WIN, LudoFieldPos.of(type, position - 40), type);
+				return this.checkField(this.getButton(LudoFieldType.WIN, LudoFieldPos.of(position - 40), type));
 			} else {
-				return this.getButton(LudoFieldType.DEFAULT, LudoFieldPos.of(type, position), null);
+				return this.checkField(this.getButton(LudoFieldType.DEFAULT, LudoFieldPos.of(type, position), null));
 			}
 		}
+	}
+	
+	protected LudoButton checkField(LudoButton fieldButton) {
+		if (fieldButton == null) {
+			return null;
+		} else if (this.hasFigureAtHome() && fieldButton.getFieldType() == LudoFieldType.HOME && fieldButton.getPos().isHomeOrWin()) {
+			return null;
+		} else if (fieldButton.hasFigure()) {
+			LudoType type = fieldButton.getType();
+			if (type == this.client.getPlayer().getType()) {
+				return null;
+			} else {
+				return fieldButton;
+			}
+		}
+		return fieldButton;
+	}
+	
+	protected boolean hasFigureAtHome() {
+		for (LudoButton fieldButton : this.getFiguresForType((LudoType) this.client.getPlayer().getType())) {
+			if (fieldButton.getFieldType() == LudoFieldType.HOME) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	protected boolean hasFigureAtStart() {
+		LudoType type = (LudoType) this.client.getPlayer().getType();
+		for (LudoButton fieldButton : this.getFiguresForType(type)) {
+			if (fieldButton.getFieldType() == LudoFieldType.DEFAULT && fieldButton.getPos().isStart() && fieldButton.getPos().getFieldForType(type) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	protected List<LudoButton> getFiguresForType(LudoType type) {
+		return this.getAllFieldButtons().stream().filter((fieldButton) -> {
+			return fieldButton.getType() == type;
+		}).collect(Collectors.toList());
 	}
 	
 	protected void clearAndSetShadow(LudoButton fieldButton) {
@@ -316,7 +285,7 @@ public class ClientLudoMap extends GridPane implements PacketHandler<ClientPacke
 		if (fieldButton != null) {
 			fieldButton.setTypeAndState(LudoType.NO, LudoState.SHADOW);
 		} else {
-			LOGGER.warn("Fail to display shadow figure");
+			LOGGER.warn("Fail to display shadow figure, since there is no next field");
 		}
 	}
 	

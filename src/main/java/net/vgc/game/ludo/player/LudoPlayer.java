@@ -102,11 +102,25 @@ public class LudoPlayer {
 		}).findAny().isEmpty();
 	}
 	
+	public boolean hasFigureAtHome(LudoMap map) {
+		for (LudoFigure figure : this.figures) {
+			LudoField field = map.getField(figure);
+			if (field != null) {
+				if (field.isHome()) {
+					return true;
+				}
+			} else {
+				LOGGER.warn("Fail to get field for figure {} of player {}", figure.getCount(), this.player.getProfile().getName());
+			}
+		}
+		return false;
+	}
+	
 	public boolean hasFigureAtStart(LudoMap map) {
 		for (LudoFigure figure : this.figures) {
 			LudoField field = map.getField(figure);
 			if (field != null) {
-				if (field.isStart()) {
+				if (field.isStartFor(figure)) {
 					return true;
 				}
 			} else {

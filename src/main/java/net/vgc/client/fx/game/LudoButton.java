@@ -7,7 +7,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import net.vgc.Main;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxUtil;
@@ -25,7 +24,9 @@ public class LudoButton extends ToggleButton {
 	protected final LudoFieldPos pos;
 	protected final double prefSize;
 	protected LudoType type;
+	protected LudoType lastType = LudoType.NO;
 	protected LudoState state;
+	protected LudoState lastState = LudoState.DEFAULT;
 	
 	public LudoButton(Client client, ToggleGroup group, String fieldPath, LudoFieldType fieldType, LudoFieldPos pos, double prefSize) {
 		this.client = client;
@@ -72,15 +73,21 @@ public class LudoButton extends ToggleButton {
 	}
 	
 	public void setTypeAndState(LudoType type, LudoState state) {
+		if (this.type != LudoType.NO) {
+			this.lastType = this.type;
+		}
+		if (this.state != LudoState.SHADOW) {
+			this.lastState = this.state;
+		}
 		this.type = type;
 		this.state = state;
 		this.updateGraphic(this.type.getImage(state, this.prefSize * 0.95, this.prefSize * 0.95));
 	}
 	
 	public void reset() {
-		this.type = LudoType.NO;
-		this.state = LudoState.DEFAULT;
-		this.updateGraphic(null);
+		this.type = this.lastType;
+		this.state = this.lastState;
+		this.updateGraphic(this.type.getImage(this.state, this.prefSize * 0.95, this.prefSize * 0.95));
 	}
 	
 	public boolean hasFigure() {
@@ -88,10 +95,6 @@ public class LudoButton extends ToggleButton {
 	}
 	
 	public boolean canSelect() {
-		Main.LOGGER.debug("#canSelect type {}, {} != {}", this.type != LudoType.NO, this.type, LudoType.NO);
-		Main.LOGGER.debug("#canSelect state {}, {} != {}", this.state == LudoState.DEFAULT, this.state, LudoState.DEFAULT);
-		Main.LOGGER.debug("#canSelect player {}, {} != {}", this.type == this.client.getPlayer().getType(), this.type, this.client.getPlayer().getType());
-		Main.LOGGER.debug("#canSelect all {}", (this.type != LudoType.NO && this.state == LudoState.DEFAULT && this.type == this.client.getPlayer().getType()));
 		return this.type != LudoType.NO && this.state == LudoState.DEFAULT && this.type == this.client.getPlayer().getType();
 	}
 	

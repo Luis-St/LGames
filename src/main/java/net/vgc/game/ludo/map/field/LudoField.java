@@ -42,6 +42,10 @@ public class LudoField {
 		return this.type == LudoFieldType.DEFAULT && this.pos.isStart();
 	}
 	
+	public boolean isStartFor(LudoFigure figure) {
+		return this.isStart() && this.pos.getFieldForType(figure.getType()) == 0;
+	}
+	
 	public boolean isWin() {
 		return this.type == LudoFieldType.WIN && this.pos.isHomeOrWin();
 	}
@@ -61,6 +65,13 @@ public class LudoField {
 	
 	public boolean isEmpty() {
 		return this.figure == null;
+	}
+	
+	public boolean canKickIfFigurePresent(LudoFigure figure) {
+		if (this.isEmpty()) {
+			return true;
+		}
+		return this.figure.canKick(figure);
 	}
 	
 	@Override

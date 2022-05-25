@@ -41,6 +41,7 @@
     "screen.multiplayer.server_host": "Server host",
     "screen.loading.title": "Virtuelle Spielesammlung wird geladen",
     "window.login.confirm_password": "Passwort bestätigen",
+    "screen.multiplayer.connect_local": "Lokal verbinden",
     "settings.language.name": "Sprache",
     "screen.player_select.play": "Play",
     "screen.tic_tac_toe.score": "Punktestand",

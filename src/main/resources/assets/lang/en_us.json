@@ -40,6 +40,7 @@
     "screen.multiplayer.server_host": "Server host",
     "screen.loading.title": "Loading Virtual Game Collection",
     "window.login.confirm_password": "Confirm Password",
+    "screen.multiplayer.connect_local": "Connect local",
     "settings.language.name": "Language",
     "screen.player_select.play": "Play",
     "screen.tic_tac_toe.score": "Score",

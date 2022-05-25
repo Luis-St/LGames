@@ -70,7 +70,7 @@ public class LudoDiceHandler implements DiceHandler {
 	}
 	
 	public boolean canRollAfterMove(ServerPlayer player, int count) {
-		return this.game.getLudoPlayer(player).hasFigureAtStart(this.game.getMap()) || count == 6;
+		return (this.game.getLudoPlayer(player).hasFigureAtStart(this.game.getMap()) && this.game.getLudoPlayer(player).hasFigureAtHome(this.game.getMap())) || count == 6;
 	}
 	
 	@Override

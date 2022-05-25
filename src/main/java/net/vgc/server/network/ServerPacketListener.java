@@ -142,9 +142,8 @@ public class ServerPacketListener extends AbstractPacketListener {
 					LOGGER.info("Player {} rolled a {}", profile.getName(), count);
 					this.connection.send(new RolledDicePacket(count));
 					if (diceHandler.handleAfterRoll(player, count)) {
-						LOGGER.debug("#handleAfterRoll -> true");
+						
 					} else if (diceHandler.canRollAgain(player, count)) {
-						LOGGER.debug("#canRollAgain -> true");
 						this.connection.send(new CanRollDiceAgainPacket());
 					} else {
 						game.nextPlayer();
@@ -239,6 +238,8 @@ public class ServerPacketListener extends AbstractPacketListener {
 							if (diceHandler.canRollAfterMove(currentPlayer, diceHandler.getLastCount(currentPlayer))) {
 								diceHandler.setRollCount(currentPlayer, 1);
 								currentPlayer.connection.send(new CanRollDiceAgainPacket());
+							} else {
+								ludoGame.nextPlayer();
 							}
 						} else {
 							LOGGER.info("Field map will not be synced to the clients, since there are no changes");
