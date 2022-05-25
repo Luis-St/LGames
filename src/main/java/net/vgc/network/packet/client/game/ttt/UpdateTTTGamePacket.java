@@ -1,4 +1,4 @@
-package net.vgc.network.packet.client.game;
+package net.vgc.network.packet.client.game.ttt;
 
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.game.ttt.map.TTTMap;

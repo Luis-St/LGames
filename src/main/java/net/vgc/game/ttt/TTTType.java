@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 
 import javafx.scene.image.ImageView;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.game.GamePlayerType;
+import net.vgc.newgame.player.GamePlayerType;
 
 public enum TTTType implements GamePlayerType {
 	

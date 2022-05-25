@@ -10,8 +10,8 @@ import net.vgc.client.screen.game.LudoScreen;
 import net.vgc.client.screen.game.TTTScreen;
 import net.vgc.game.ludo.LudoGame;
 import net.vgc.game.ttt.TTTGame;
-import net.vgc.network.packet.client.game.StartLudoGamePacket;
-import net.vgc.network.packet.client.game.StartTTTGamePacket;
+import net.vgc.network.packet.client.game.ludo.StartLudoGamePacket;
+import net.vgc.network.packet.client.game.ttt.StartTTTGamePacket;
 
 public class GameTypes {
 	

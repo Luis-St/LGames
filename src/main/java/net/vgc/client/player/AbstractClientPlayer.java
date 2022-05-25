@@ -4,8 +4,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
-import net.vgc.game.GamePlayerType;
 import net.vgc.game.score.PlayerScore;
+import net.vgc.newgame.player.GamePlayerType;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 

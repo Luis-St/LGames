@@ -18,6 +18,7 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
+import net.vgc.newgame.player.GamePlayerType;
 import net.vgc.server.Server;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;

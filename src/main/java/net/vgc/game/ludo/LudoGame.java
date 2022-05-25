@@ -23,7 +23,7 @@ import net.vgc.game.ludo.player.LudoFigure;
 import net.vgc.game.ludo.player.LudoPlayer;
 import net.vgc.game.score.GameScore;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.UpdateLudoGamePacket;
+import net.vgc.network.packet.client.game.ludo.UpdateLudoGamePacket;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;

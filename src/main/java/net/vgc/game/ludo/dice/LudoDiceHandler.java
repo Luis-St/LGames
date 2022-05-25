@@ -14,7 +14,7 @@ import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.ludo.LudoGame;
 import net.vgc.game.ludo.map.LudoMap;
 import net.vgc.game.ludo.player.LudoPlayer;
-import net.vgc.network.packet.client.game.CanSelectLudoFigurePacket;
+import net.vgc.network.packet.client.game.ludo.CanSelectLudoFigurePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.SimpleEntry;

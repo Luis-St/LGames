@@ -1,16 +1,16 @@
-package net.vgc.network.packet.client.game;
+package net.vgc.network.packet.client.game.dice;
 
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
 
-public class CancelRollDiceRequestPacket implements ClientPacket {
+public class CanRollDiceAgainPacket implements ClientPacket {
 	
-	public CancelRollDiceRequestPacket() {
+	public CanRollDiceAgainPacket() {
 		
 	}
 	
-	public CancelRollDiceRequestPacket(FriendlyByteBuffer buffer) {
+	public CanRollDiceAgainPacket(FriendlyByteBuffer buffer) {
 		
 	}
 

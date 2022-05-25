@@ -1,12 +1,12 @@
-package net.vgc.network.packet.client.game;
+package net.vgc.network.packet.client.game.ludo;
 
 import java.util.Map;
 
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.game.GamePlayerType;
 import net.vgc.game.ludo.LudoType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.newgame.player.GamePlayerType;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;

@@ -13,7 +13,7 @@ import net.vgc.game.score.GameScore;
 import net.vgc.game.ttt.map.MutableTTTMap;
 import net.vgc.game.ttt.map.TTTMap;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.UpdateTTTGamePacket;
+import net.vgc.network.packet.client.game.ttt.UpdateTTTGamePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedPlayerList;
 import net.vgc.server.player.ServerPlayer;

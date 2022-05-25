@@ -27,7 +27,7 @@ import net.vgc.game.ludo.map.field.LudoFieldType;
 import net.vgc.game.ludo.player.LudoFigure;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.UpdateLudoGamePacket;
+import net.vgc.network.packet.client.game.ludo.UpdateLudoGamePacket;
 
 public class ClientLudoMap extends GridPane implements PacketHandler<ClientPacket> {
 	
