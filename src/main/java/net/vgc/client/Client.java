@@ -19,6 +19,7 @@ import net.vgc.Constans;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
+import net.vgc.client.game.ClientGame;
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
@@ -33,7 +34,6 @@ import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.network.ConnectionHandler;
 import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
@@ -41,7 +41,7 @@ import net.vgc.player.GameProfile;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
-public class Client extends GameApplication<ClientPacketListener> implements Tickable, Screenable {
+public class Client extends GameApplication<ClientPacket> implements Tickable, Screenable {
 	
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
@@ -66,6 +66,7 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	protected ClientSettings settings;
 	protected String accountHost;
 	protected int accountPort;
+	protected ClientGame game;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -196,19 +197,18 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	}
 	
 	@Override
-	public void handlePacket(Packet<ClientPacketListener> packet) {
-		if (packet instanceof ClientPacket screenUpdate) {
-			Scene scene = this.stage.getScene();
-			if (scene != null && scene instanceof ScreenScene screenScene) {
-				Screen screen = screenScene.getScreen();
-				if (screen != null) {
-					screen.handlePacket(screenUpdate);
-				} else {
-					LOGGER.warn("Fail to handle packet of type {} in screen, since there is no screen set", packet.getClass().getSimpleName());
-				}
+	public void handlePacket(ClientPacket packet) {
+		Scene scene = this.stage.getScene();
+		if (scene != null && scene instanceof ScreenScene screenScene) {
+			Screen screen = screenScene.getScreen();
+			if (screen != null) {
+				screen.handlePacket(packet);
+			} else {
+				LOGGER.warn("Fail to handle packet of type {} in screen, since there is no screen set", packet.getClass().getSimpleName());
 			}
-		} else {
-			LOGGER.warn("Fail to handle packet {}, since it's a non client packet", packet.getClass().getSimpleName());
+		}
+		if (this.game != null) {
+			this.game.handlePacket(packet);
 		}
 	}
 	
@@ -330,6 +330,14 @@ public class Client extends GameApplication<ClientPacketListener> implements Tic
 	
 	public int getAccountPort() {
 		return this.accountPort;
+	}
+	
+	public ClientGame getGame() {
+		return this.game;
+	}
+	
+	public void setGame(ClientGame game) {
+		this.game = game;
 	}
 	
 	@Override

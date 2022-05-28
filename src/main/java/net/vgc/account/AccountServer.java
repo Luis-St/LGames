@@ -51,9 +51,10 @@ import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.PacketDecoder;
 import net.vgc.network.PacketEncoder;
+import net.vgc.network.packet.Packet;
 import net.vgc.util.ExceptionHandler;
 
-public class AccountServer extends GameApplication<AccountServerPacketListener> {
+public class AccountServer extends GameApplication<Packet<AccountServerPacketListener>> {
 	
 	public static AccountServer getInstance() {
 		if (NetworkSide.ACCOUNT_SERVER.isOn()) {
