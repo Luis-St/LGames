@@ -1,4 +1,4 @@
-package net.vgc.game.dice;
+package net.vgc.server.game.dice;
 
 import java.util.List;
 import java.util.Map.Entry;
@@ -7,8 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.vgc.game.Game;
+import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.player.GameProfile;
 
 public interface DiceHandler {
 	
@@ -26,12 +26,16 @@ public interface DiceHandler {
 	
 	int roll(GamePlayer player);
 	
-	boolean canRollAgain(GamePlayer player);
+	int rollExclude(GamePlayer player, int value);
 	
-	boolean canRollAgainWithResult(GamePlayer player, int count);
+	int rollPreferred(GamePlayer player, int value, int rolls);
+	
+	boolean canRollAgain(GamePlayer player, int count);
+	
+	boolean canRollAfterMove(GamePlayer player, GameField field, int count);
 	
 	int getLastCount(GamePlayer player);
 	
-	List<Entry<GameProfile, Integer>> getCountHistory();
+	List<Entry<GamePlayer, Integer>> getCountHistory();
 	
 }

@@ -1,16 +1,12 @@
-package net.vgc.game.dice;
+package net.vgc.game.map.field;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public interface Dice {
+import net.vgc.util.EnumRepresentable;
+
+public interface GameFieldType extends EnumRepresentable {
 	
 	public static final Logger LOGGER = LogManager.getLogger();
-	
-	int roll();
-	
-	int rollExclude(int value);
-	
-	int rollPreferred(int value);
 	
 }

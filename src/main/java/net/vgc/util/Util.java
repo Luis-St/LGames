@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -81,6 +82,14 @@ public class Util {
 			map.put(entry.getKey(), entry.getValue());
 		}
 		return map;
+	}
+	
+	public static <T, U> List<U> mapList(List<T> list, Function<T, U> function) {
+		return list.stream().map(function).collect(Collectors.toList());
+	}
+	
+	public static <T, U, V> List<V> mapList(List<T> list, Function<T, U> firstFunction, Function<U, V> secondFunction) {
+		return list.stream().map(firstFunction).map(secondFunction).collect(Collectors.toList());
 	}
 	
 	public static <K, T, V> Map<T, V> mapKey(Map<K, V> map, Function<K, T> function) {
