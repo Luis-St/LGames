@@ -1,6 +1,7 @@
 package net.vgc.server.player;
 
 import javafx.scene.control.TreeItem;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
 import net.vgc.player.GameProfile;
@@ -12,8 +13,8 @@ public class ServerPlayer extends Player {
 	protected final DedicatedServer server;
 	public Connection connection;
 	
-	public ServerPlayer(GameProfile profile, DedicatedServer server) {
-		super(profile);
+	public ServerPlayer(GameProfile profile, PlayerScore score, DedicatedServer server) {
+		super(profile, score);
 		this.server = server;
 	}
 	

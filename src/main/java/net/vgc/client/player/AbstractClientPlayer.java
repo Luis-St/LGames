@@ -5,36 +5,24 @@ import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.oldgame.score.PlayerScore;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 
 public abstract class AbstractClientPlayer extends Player {
 	
-	protected final PlayerScore score;
 	protected boolean admin = false;
 	protected GamePlayerType type;
 	protected boolean current = false;
 	protected boolean canSelect;
 	
 	public AbstractClientPlayer(GameProfile profile, PlayerScore score) {
-		super(profile);
-		this.score = score;
+		super(profile, score);
 	}
 	
 	@Override
 	public boolean isClient() {
 		return true;
-	}
-	
-	public PlayerScore getScore() {
-		return this.score;
-	}
-	
-	public void syncScore(PlayerScore score) {
-		this.getScore().setWins(score.getWins());
-		this.getScore().setLoses(score.getLoses());
-		this.getScore().setDraws(score.getDraws());
 	}
 	
 	public boolean isAdmin() {
