@@ -33,6 +33,12 @@ public interface ClientGameField extends GameField, PacketHandler<ClientPacket> 
 	
 	void setRenderState(FieldRenderState renderState);
 	
+	boolean canSelectField();
+	
+	boolean isShadowed();
+	
+	void setShadowed(boolean shadowed);
+	
 	void updateFieldGraphic();
 	
 }

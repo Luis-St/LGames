@@ -20,6 +20,8 @@ public interface ClientGameMap extends GameMap, PacketHandler<ClientPacket> {
 	
 	void init();
 	
+	void addFields();
+	
 	@Override
 	List<? extends ClientGameField> getFields();
 	
