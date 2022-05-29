@@ -23,13 +23,13 @@ import net.vgc.network.packet.client.game.ludo.UpdateLudoGamePacket;
 import net.vgc.network.packet.client.game.ttt.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.ttt.UpdateTTTGamePacket;
 import net.vgc.game.Game;
-import net.vgc.oldgame.GameResult;
+import net.vgc.game.GameResult;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
-import net.vgc.game.dice.DiceHandler;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedPlayerList;
 import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.game.dice.DiceHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
@@ -43,18 +43,15 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleClientJoin(String name, UUID uuid) {
-		this.checkSide();
 		this.server.enterPlayer(this.connection, new GameProfile(name, uuid));
 		this.connection.send(new ClientJoinedPacket(this.server.getPlayerList().getPlayers()));
 	}
 	
 	public void handleClientLeave(UUID uuid) {
-		this.checkSide();
 		this.server.leavePlayer(this.connection, this.server.getPlayerList().getPlayer(uuid));
 	}
 	
 	public void handlePlayGameRequest(GameType<?> gameType, List<GameProfile> profiles) {
-		this.checkSide();
 		MutableBoolean mutable = new MutableBoolean(false);
 		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(profiles).stream().filter((player) -> {
 			if (player.isPlaying()) {
@@ -75,7 +72,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 						}
 						Util.runDelayed("DelayedSetStartPlayer", 250, () -> {
 							game.getStartPlayer();
-							game.onStarted();
+							game.startGame();
 						});
 					}
 				} else {
@@ -97,7 +94,6 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handlePlayAgainGameRequest(GameProfile profile) {
-		this.checkSide();
 		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (player != null) {
 			if (this.server.isAdmin(player)) {
@@ -122,7 +118,6 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleRollDiceRequest(GameProfile profile) {
-		this.checkSide();
 		Game game = this.server.getGame();
 		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (game != null) {
@@ -154,7 +149,6 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handlePressTTTField(GameProfile profile, int vMap, int hMap) {
-		this.checkSide();
 		DedicatedPlayerList playerList = this.server.getPlayerList();
 		Game game = this.server.getGame();
 		if (game != null) {
@@ -213,7 +207,6 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleSelectLudoFigure(GameProfile profile, LudoFieldPos pos) {
-		this.checkSide();
 		DedicatedPlayerList playerList = this.server.getPlayerList();
 		Game game = this.server.getGame();
 		if (game != null) {
@@ -250,7 +243,6 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleExitGameRequest(GameProfile profile) {
-		this.checkSide();
 		Game game = this.server.getGame();
 		if (game != null) {
 			ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
