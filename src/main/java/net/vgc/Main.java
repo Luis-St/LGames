@@ -19,7 +19,7 @@ public class Main {
 	 *  - issue in TTT game screen -> current player changes moves the hole game grid
 	 *  - add dice animation
 	 *  - new registry for Packets
-	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure
+	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure (ActionGame)
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
 	 *  - add server settings
 	 *  - add super class for Windows

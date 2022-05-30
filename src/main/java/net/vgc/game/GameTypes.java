@@ -8,17 +8,23 @@ import com.google.common.collect.Lists;
 
 import net.vgc.client.game.ClientGame;
 import net.vgc.client.game.games.ludo.LudoClientGame;
+import net.vgc.client.game.games.ttt.TTTClientGame;
 import net.vgc.client.screen.game.LudoScreen;
+import net.vgc.client.screen.game.TTTScreen;
 import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.games.ludo.LudoServerGame;
+import net.vgc.server.game.games.ttt.TTTServerGame;
 
 public class GameTypes {
 	
 	public static final List<GameType<?, ?>> GAME_TYPES = Lists.newArrayList();
 	
-	public static final GameType<LudoServerGame, LudoClientGame> LUDO = register(new GameType<LudoServerGame, LudoClientGame>("Ludo", 2, 4, new GameFactory<LudoServerGame, LudoClientGame>(LudoServerGame::new, LudoClientGame::new), (game) -> {
+	public static final GameType<LudoServerGame, LudoClientGame> LUDO = register(new GameType<>("Ludo", 2, 4, new GameFactory<>(LudoServerGame::new, LudoClientGame::new), (game) -> {
 		return null;
 	}, LudoScreen::new));
+	public static final GameType<TTTServerGame, TTTClientGame> TIC_TAC_TOE = register(new GameType<>("Tic Tac Toe", 2, 2, new GameFactory<>(TTTServerGame::new, TTTClientGame::new), (game) -> {
+		return null;
+	}, TTTScreen::new));
 	
 	protected static <S extends ServerGame, C extends ClientGame> GameType<S, C> register(GameType<S, C> gameType) {
 		GAME_TYPES.add(gameType);

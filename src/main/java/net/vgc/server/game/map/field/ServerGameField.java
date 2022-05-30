@@ -37,4 +37,7 @@ public interface ServerGameField extends GameField, PacketHandler<ServerPacket> 
 	@Override
 	void clear();
 	
+	@Override
+	void handlePacket(ServerPacket packet);
+	
 }
