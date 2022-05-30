@@ -38,14 +38,6 @@ public enum LudoPlayerType implements GamePlayerType {
 		return this.id;
 	}
 	
-	@Nullable
-	public ImageView getImage( double width, double height) {
-		if (this.path == null) {
-			return null;
-		}
-		return FxUtil.makeImageView(this.path + ".png", width, height);
-	}
-	
 	@Override
 	public List<LudoPlayerType> getOpponents() {
 		switch (this) {
@@ -61,6 +53,14 @@ public enum LudoPlayerType implements GamePlayerType {
 	@Override
 	public Enum<LudoPlayerType> getDefault() {
 		return NO;
+	}
+	
+	@Nullable
+	public ImageView getImage( double width, double height) {
+		if (this.path == null) {
+			return null;
+		}
+		return FxUtil.makeImageView(this.path + ".png", width, height);
 	}
 	
 	@Override

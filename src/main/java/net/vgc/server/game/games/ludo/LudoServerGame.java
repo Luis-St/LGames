@@ -35,7 +35,6 @@ public class LudoServerGame implements ServerGame {
 	protected final LudoServerMap map;
 	protected final List<LudoServerPlayer> players;
 	protected final LudoDiceHandler diceHandler;
-
 	protected LudoServerPlayer player;
 	
 	public LudoServerGame(DedicatedServer server, List<ServerPlayer> players) {
@@ -47,8 +46,8 @@ public class LudoServerGame implements ServerGame {
 	
 	protected static List<LudoServerPlayer> createGamePlayers(LudoServerGame game, List<ServerPlayer> players, int figureCount) {
 		if (!Mth.isInBounds(players.size(), 2, 4)) {
-			LOGGER.error("Fail to create player type map for player list {} with size {}, since since a player list with size in bounds 2 - 4 was expected", players.stream().map(game::getName).collect(Collectors.toList()));
-			throw new IllegalStateException("Fail to create player type map for player list with size " + players.size() + ", since a player list with size 2 was expected");
+			LOGGER.error("Fail to create player type map for player list {} with size {}, since a player list with size in bounds 2 - 4 was expected", players.stream().map(game::getName).collect(Collectors.toList()));
+			throw new IllegalStateException("Fail to create player type map for player list with size " + players.size() + ", since a player list with size in bounds 2 - 4 was expected");
 		}
 		List<LudoServerPlayer> gamePlayers = Lists.newArrayList();
 		int i = 0;
@@ -109,7 +108,7 @@ public class LudoServerGame implements ServerGame {
 		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.player, this::getName), Util.runIfNotNull(player, this::getName));
 		this.player = (LudoServerPlayer) player;
 		if (this.player != null) {
-			this.server.getPlayerList().broadcastAll(Util.mapList(this.players, LudoServerPlayer::getPlayer), new CurrentPlayerUpdatePacket(this.player.getPlayer().getProfile()));
+			this.server.getPlayerList().broadcastAll(Util.mapList(this.players, LudoServerPlayer::getPlayer), new CurrentPlayerUpdatePacket(this.player));
 		}
 	}
 	
