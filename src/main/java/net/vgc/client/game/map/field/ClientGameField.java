@@ -61,4 +61,7 @@ public interface ClientGameField extends GameField, PacketHandler<ClientPacket> 
 	
 	void updateFieldGraphic();
 	
+	@Override
+	void handlePacket(ClientPacket packet);
+	
 }

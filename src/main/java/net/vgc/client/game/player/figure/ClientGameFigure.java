@@ -29,4 +29,7 @@ public interface ClientGameFigure extends GameFigure, PacketHandler<ClientPacket
 	@Override
 	GameFieldPos getStartPos();
 	
+	@Override
+	void handlePacket(ClientPacket packet);
+	
 }

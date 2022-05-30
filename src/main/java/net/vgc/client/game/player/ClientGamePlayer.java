@@ -38,11 +38,14 @@ public interface ClientGamePlayer extends GamePlayer, PacketHandler<ClientPacket
 	List<? extends GameFieldPos> getWinPoses();
 	
 	@Override
-	int getRollCount();
+	default int getRollCount() {
+		LOGGER.warn("Can not get the roll count of player {}, on client", this.getPlayer().getProfile().getName());
+		return -1;
+	}
 	
 	@Override
 	default void setRollCount(int rollCount) {
-		LOGGER.warn("Can not set the roll count of player, on client", this.getPlayer().getProfile().getName());
+		LOGGER.warn("Can not set the roll count of player {}, on client", this.getPlayer().getProfile().getName());
 	}
 	
 	@Override

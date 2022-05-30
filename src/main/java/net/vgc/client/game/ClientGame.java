@@ -72,7 +72,7 @@ public interface ClientGame extends Game, PacketHandler<ClientPacket> {
 	@Nullable
 	@Override
 	default GamePlayer getStartPlayer() {
-		LOGGER.warn("There is no start player on client");
+		LOGGER.warn("Can not get the start player on client");
 		return null;
 	}
 	
@@ -89,7 +89,7 @@ public interface ClientGame extends Game, PacketHandler<ClientPacket> {
 	
 	@Override
 	default DiceHandler getDiceHandler() {
-		LOGGER.warn("There is no dice handler on client, since dice handling is server only");
+		LOGGER.warn("Can not get the dice handler on client");
 		return null;
 	}
 	
