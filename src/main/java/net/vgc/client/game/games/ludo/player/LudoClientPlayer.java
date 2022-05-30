@@ -22,7 +22,6 @@ public class LudoClientPlayer implements ClientGamePlayer, PacketHandler<ClientP
 	protected final AbstractClientPlayer player;
 	protected final LudoPlayerType playerType;
 	protected final List<LudoClientFigure> figures;
-	protected int rollCount = 0;
 	
 	public LudoClientPlayer(LudoClientGame game, AbstractClientPlayer player, LudoPlayerType playerType, List<UUID> uuids) {
 		this.game = game;
@@ -68,11 +67,6 @@ public class LudoClientPlayer implements ClientGamePlayer, PacketHandler<ClientP
 	@Override
 	public List<LudoFieldPos> getWinPoses() {
 		return Lists.newArrayList(LudoFieldPos.of(0), LudoFieldPos.of(1), LudoFieldPos.of(2), LudoFieldPos.of(3));
-	}
-
-	@Override
-	public int getRollCount() {
-		return this.rollCount;
 	}
 	
 	@Override

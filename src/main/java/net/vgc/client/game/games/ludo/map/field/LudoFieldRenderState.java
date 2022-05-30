@@ -31,6 +31,11 @@ public enum LudoFieldRenderState implements FieldRenderState {
 	}
 	
 	@Override
+	public boolean canRenderWithFigure() {
+		return this == DEFAULT;
+	}
+	
+	@Override
 	public String toString() {
 		return this.name;
 	}

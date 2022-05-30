@@ -119,6 +119,7 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 	@Override
 	public void setRenderState(FieldRenderState renderState) {
 		this.renderState = (LudoFieldRenderState) renderState;
+		this.updateFieldGraphic();
 	}
 	
 	@Override

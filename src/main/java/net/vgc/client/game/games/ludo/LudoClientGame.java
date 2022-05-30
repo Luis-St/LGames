@@ -29,7 +29,7 @@ public class LudoClientGame implements ClientGame {
 	
 	public LudoClientGame(Client client, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
 		this.client = client;
-		this.map = new LudoClientMap();
+		this.map = new LudoClientMap(this.client);
 		this.players = createGamePlayers(this.client, this, playerInfos);
 	}
 	

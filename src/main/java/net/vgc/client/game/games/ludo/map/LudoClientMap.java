@@ -10,11 +10,11 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import net.vgc.Constans;
+import net.vgc.client.Client;
 import net.vgc.client.game.games.ludo.map.field.LudoClientField;
 import net.vgc.client.game.games.ludo.player.LudoClientPlayer;
 import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
 import net.vgc.client.game.map.ClientGameMap;
-import net.vgc.client.game.map.field.ClientGameField;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
@@ -29,24 +29,14 @@ import net.vgc.util.Util;
 
 public class LudoClientMap extends GridPane implements ClientGameMap, PacketHandler<ClientPacket> {
 	
-	protected final List<LudoClientField> fields = Util.make(Lists.newArrayList(), (fields) -> {
-		for (int i = 0; i < 40; i++) {
-			fields.add(new LudoClientField(null, LudoFieldType.DEFAULT, null, LudoFieldPos.ofGreen(i), 100.0));
-		}
-	});
-	protected final List<LudoClientField> homeFields = Util.make(Lists.newArrayList(), (fields) -> {
-		for (int i = 0; i < 16; i++) {
-			fields.add(new LudoClientField(null, LudoFieldType.HOME, null, LudoFieldPos.of(i % 4), 100.0));
-		}
-	});
-	protected final List<LudoClientField> winFields = Util.make(Lists.newArrayList(), (fields) -> {
-		for (int i = 0; i < 16; i++) {
-			fields.add(new LudoClientField(null, LudoFieldType.WIN, null, LudoFieldPos.of(i % 4), 100.0));
-		}
-	});
+	protected final Client client;
+	protected final List<LudoClientField> fields = Lists.newArrayList();
+	protected final List<LudoClientField> homeFields = Lists.newArrayList();
+	protected final List<LudoClientField> winFields = Lists.newArrayList();
 	protected final ToggleGroup group;
 	
-	public LudoClientMap() {
+	public LudoClientMap(Client client) {
+		this.client = client;
 		this.group = new ToggleGroup();
 		this.init();
 		this.addFields();
@@ -285,9 +275,9 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 	
 	@Override
-	public ClientGameField getSelectedField() {
+	public LudoClientField getSelectedField() {
 		Toggle toggle = this.group.getSelectedToggle();
-		if (toggle instanceof ClientGameField field) {
+		if (toggle instanceof LudoClientField field) {
 			if (!field.isEmpty()) {
 				return field;
 			} else {
