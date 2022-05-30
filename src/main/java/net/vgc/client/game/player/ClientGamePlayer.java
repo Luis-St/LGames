@@ -6,7 +6,9 @@ import net.vgc.client.game.ClientGame;
 import net.vgc.client.game.map.ClientGameMap;
 import net.vgc.client.game.player.figure.ClientGameFigure;
 import net.vgc.client.player.AbstractClientPlayer;
+import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientPacket;
 
@@ -19,6 +21,9 @@ public interface ClientGamePlayer extends GamePlayer, PacketHandler<ClientPacket
 	AbstractClientPlayer getPlayer();
 	
 	@Override
+	GamePlayerType getPlayerType();
+	
+	@Override
 	default ClientGameMap getMap() {
 		return this.getGame().getMap();
 	}
@@ -28,6 +33,12 @@ public interface ClientGamePlayer extends GamePlayer, PacketHandler<ClientPacket
 	
 	@Override
 	ClientGameFigure getFigure(int figure);
+	
+	@Override
+	List<? extends GameFieldPos> getWinPoses();
+	
+	@Override
+	int getRollCount();
 	
 	@Override
 	default void setRollCount(int rollCount) {

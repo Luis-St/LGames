@@ -10,15 +10,26 @@ import net.vgc.client.Client;
 import net.vgc.client.game.map.ClientGameMap;
 import net.vgc.client.game.player.ClientGamePlayer;
 import net.vgc.game.Game;
+import net.vgc.game.GameType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.Player;
+import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.dice.DiceHandler;
 
 public interface ClientGame extends Game, PacketHandler<ClientPacket> {
 
+	@Override
+	void initGame();
+	
+	@Override
+	void startGame();
+	
 	Client getClient();
+	
+	@Override
+	GameType<? extends ServerGame, ? extends ClientGame> getType();
 	
 	@Override
 	ClientGameMap getMap();
@@ -87,6 +98,9 @@ public interface ClientGame extends Game, PacketHandler<ClientPacket> {
 		LOGGER.warn("Can not create a new match of game {} on client", this.getType().getInfoName());
 		return false;
 	}
+	
+	@Override
+	void stopGame();
 	
 	@Override
 	default void handlePacket(ClientPacket packet) {

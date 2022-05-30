@@ -5,7 +5,9 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
+import net.vgc.client.game.ClientGame;
 import net.vgc.game.Game;
+import net.vgc.game.GameType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.packet.PacketHandler;
@@ -24,11 +26,20 @@ import net.vgc.util.Util;
 
 public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 	
+	@Override
+	void initGame();
+	
+	@Override
+	void startGame();
+	
 	DedicatedServer getServer();
 	
 	default DedicatedPlayerList getPlayerList() {
 		return this.getServer().getPlayerList();
 	}
+	
+	@Override
+	GameType<? extends ServerGame, ? extends ClientGame> getType();
 	
 	@Override
 	ServerGameMap getMap();
@@ -61,6 +72,9 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 	
 	@Override
 	ServerGamePlayer getCurrentPlayer();
+	
+	@Override
+	void setCurrentPlayer(GamePlayer player);
 	
 	@Override
 	default ServerGamePlayer getStartPlayer() {
@@ -98,6 +112,9 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 		}
 		return false;
 	}
+	
+	@Override
+	boolean nextMatch();
 	
 	@Override
 	default void stopGame() {

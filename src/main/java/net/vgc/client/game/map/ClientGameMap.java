@@ -23,6 +23,9 @@ public interface ClientGameMap extends GameMap, PacketHandler<ClientPacket> {
 	void addFields();
 	
 	@Override
+	void init(List<? extends GamePlayer> players);
+	
+	@Override
 	List<? extends ClientGameField> getFields();
 	
 	@Override

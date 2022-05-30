@@ -16,20 +16,19 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
-	 *  - use com.google.common.collect.Table for TTT game field & add Client side Map -> summarize/order methods in TTTScreen
 	 *  - issue in TTT game screen -> current player changes moves the hole game grid
 	 *  - add dice animation
 	 *  - new registry for Packets
-	 *  - add server settings
+	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
+	 *  - add server settings
 	 *  - add super class for Windows
 	 *  - add way to display score in server window
 	 *  - create Loading Steps, which are load from 0% til 100% -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
-	 *  - add new info system form server -> client
-	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
-	 *  - layout and grafic rework
+	 *  - add new info system form server -> client (add InfoInputPane)
+	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font) & rework of layout and grafic (use always InputPane)
 	 *  - account server close -> packet to client which skip loggout (without sync to account server)
-	 *  - fix Logger
+	 *  - fix Logger (testing)
 	 *  - impl. singleplayer
 	 *  
 	 *  https://codetabs.com/count-loc/count-loc-online.html -> Luis-st/School-Project
