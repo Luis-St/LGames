@@ -38,7 +38,6 @@ import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayGameRequestPacket;
 import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.vgc.network.packet.server.game.ttt.PressTTTFieldPacket;
 import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 
@@ -65,7 +64,6 @@ public class Packets {
 		map.put(i++, StartGamePacket.class);
 		map.put(i++, PlayAgainGameRequestPacket.class);
 		map.put(i++, CancelPlayAgainGameRequestPacket.class);
-		map.put(i++, PressTTTFieldPacket.class);
 		map.put(i++, CurrentPlayerUpdatePacket.class);
 		map.put(i++, RollDiceRequestPacket.class);
 		map.put(i++, CancelRollDiceRequestPacket.class);
