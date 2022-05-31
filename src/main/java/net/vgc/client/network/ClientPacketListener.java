@@ -25,6 +25,7 @@ import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.game.ServerGame;
+import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 public class ClientPacketListener extends AbstractPacketListener {
@@ -139,6 +140,29 @@ public class ClientPacketListener extends AbstractPacketListener {
 			LOGGER.info("Synchronize data from server to player {}", profile.getName());
 		} else {
 			LOGGER.warn("Fail to synchronize data from server to player {}, since the player does not exists", profile.getName());
+		}
+	}
+	
+	public void handleRolledDice(int count) {
+		if (Mth.isInBounds(count, 1, 6)) {
+			this.client.getPlayer().setCount(count);
+		} else {
+			this.client.getPlayer().setCount(-1);
+		}
+	}
+	
+	public void handleCurrentPlayerUpdate(GameProfile profile) {
+		boolean flag = false;
+		for (AbstractClientPlayer player : this.client.getPlayers()) {
+			if (player.getProfile().equals(profile)) {
+				player.setCurrent(true);
+				flag = true;
+			} else {
+				player.setCurrent(false);
+			}
+		}
+		if (flag) {
+			LOGGER.warn("Fail to update the current player to {}, since the player does not exists", profile.getName());
 		}
 	}
 	

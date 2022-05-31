@@ -19,12 +19,8 @@ public class GameTypes {
 	
 	public static final List<GameType<?, ?>> GAME_TYPES = Lists.newArrayList();
 	
-	public static final GameType<LudoServerGame, LudoClientGame> LUDO = register(new GameType<>("Ludo", 2, 4, new GameFactory<>(LudoServerGame::new, LudoClientGame::new), (game) -> {
-		return null;
-	}, LudoScreen::new));
-	public static final GameType<TTTServerGame, TTTClientGame> TIC_TAC_TOE = register(new GameType<>("Tic Tac Toe", 2, 2, new GameFactory<>(TTTServerGame::new, TTTClientGame::new), (game) -> {
-		return null;
-	}, TTTScreen::new));
+	public static final GameType<LudoServerGame, LudoClientGame> LUDO = register(new GameType<>("Ludo", 2, 4, new GameFactory<>(LudoServerGame::new, LudoClientGame::new), LudoScreen::new));
+	public static final GameType<TTTServerGame, TTTClientGame> TIC_TAC_TOE = register(new GameType<>("Tic Tac Toe", 2, 2, new GameFactory<>(TTTServerGame::new, TTTClientGame::new), TTTScreen::new));
 	
 	protected static <S extends ServerGame, C extends ClientGame> GameType<S, C> register(GameType<S, C> gameType) {
 		GAME_TYPES.add(gameType);

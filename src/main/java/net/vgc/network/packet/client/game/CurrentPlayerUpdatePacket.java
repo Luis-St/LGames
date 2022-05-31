@@ -25,7 +25,7 @@ public class CurrentPlayerUpdatePacket implements ClientPacket {
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		
+		listener.handleCurrentPlayerUpdate(this.profile);
 	}
 	
 	public GameProfile getProfile() {

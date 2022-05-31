@@ -81,6 +81,11 @@ public class LudoDiceHandler implements DiceHandler {
 	public boolean canRollAgain(GamePlayer player, int count) {
 		return this.canRoll(player) && player.hasAllFiguresAt(GameField::isHome) && count != 6;
 	}
+	
+	@Override
+	public boolean canPerformGameAction(GamePlayer player, int count) {
+		return player.canMoveAnyFigure(count);
+	}
 
 	@Override
 	public boolean canRollAfterMove(GamePlayer player, GameField field, int count) {

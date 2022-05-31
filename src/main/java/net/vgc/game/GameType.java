@@ -16,7 +16,6 @@ import net.vgc.client.game.ClientGame;
 import net.vgc.client.screen.game.GameScreen;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.ServerGame;
@@ -31,15 +30,13 @@ public class GameType<S extends ServerGame, C extends ClientGame> {
 	protected final int minPlayers;
 	protected final int maxPlayers;
 	protected final GameFactory<S, C> gameFactory;
-	protected final Function<S, ClientPacket> packetFactory;
 	protected final Function<C, ? extends GameScreen> screenFactory;
 	
-	public GameType(String name, int minPlayers, int maxPlayers, GameFactory<S, C> gameFactory, Function<S, ClientPacket> packetFactory, Function<C, ? extends GameScreen> screenFactory) {
+	public GameType(String name, int minPlayers, int maxPlayers, GameFactory<S, C> gameFactory, Function<C, ? extends GameScreen> screenFactory) {
 		this.name = name;
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
 		this.gameFactory = gameFactory;
-		this.packetFactory = packetFactory;
 		this.screenFactory = screenFactory;
 	}
 	
@@ -72,10 +69,6 @@ public class GameType<S extends ServerGame, C extends ClientGame> {
 			return this.gameFactory.createClientGame(client, playerInfos);
 		}
 		return null;
-	}
-	
-	public ClientPacket getStartPacket(S game) {
-		return this.packetFactory.apply(game);
 	}
 	
 	public void openScreen(Client client, C game) {

@@ -23,7 +23,7 @@ public class RolledDicePacket implements ClientPacket {
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		
+		listener.handleRolledDice(this.count);
 	}
 	
 	public int getCount() {

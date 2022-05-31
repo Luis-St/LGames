@@ -6,31 +6,30 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Table.Cell;
 
-import net.vgc.network.Connection;
+import net.vgc.client.game.ClientGame;
+import net.vgc.game.GameType;
+import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
-import net.vgc.network.packet.client.game.GameScoreUpdatePacket;
+import net.vgc.network.packet.client.game.StartGamePacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
-import net.vgc.network.packet.client.game.ludo.UpdateLudoGamePacket;
-import net.vgc.network.packet.client.game.ttt.TTTGameResultPacket;
-import net.vgc.network.packet.client.game.ttt.UpdateTTTGamePacket;
-import net.vgc.game.Game;
-import net.vgc.game.GameResult;
-import net.vgc.game.GameType;
-import net.vgc.game.GameTypes;
 import net.vgc.player.GameProfile;
-import net.vgc.server.dedicated.DedicatedPlayerList;
 import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.dice.DiceHandler;
+import net.vgc.server.game.player.ServerGamePlayer;
+import net.vgc.server.game.player.figure.ServerGameFigure;
 import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.SimpleCell;
 import net.vgc.util.Util;
 
 public class ServerPacketListener extends AbstractPacketListener {
@@ -51,7 +50,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 		this.server.leavePlayer(this.connection, this.server.getPlayerList().getPlayer(uuid));
 	}
 	
-	public void handlePlayGameRequest(GameType<?> gameType, List<GameProfile> profiles) {
+	public <S extends ServerGame, C extends ClientGame> void handlePlayGameRequest(GameType<S, C> gameType, List<GameProfile> profiles) {
 		MutableBoolean mutable = new MutableBoolean(false);
 		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(profiles).stream().filter((player) -> {
 			if (player.isPlaying()) {
@@ -63,20 +62,20 @@ public class ServerPacketListener extends AbstractPacketListener {
 		if (players.size() == profiles.size()) {
 			if (mutable.isFalse()) {
 				if (this.server.getGame() == null) {
-					Game game = gameType.createNewGame(players);
+					S game = gameType.createServerGame(this.server, players);
 					if (game != null) {
 						this.server.setGame(game);
+						game.startGame();
 						for (ServerPlayer player : players) {
 							player.setPlaying(true);
-							player.connection.send(gameType.getStartPacket(game, player));
+							player.connection.send(new StartGamePacket(gameType, this.createPlayerInfos(game.getPlayers())));
 						}
 						Util.runDelayed("DelayedSetStartPlayer", 250, () -> {
 							game.getStartPlayer();
-							game.startGame();
 						});
 					}
 				} else {
-					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getName().toLowerCase(), this.server.getGame().getType().getName());
+					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getInfoName(), this.server.getGame().getType().getInfoName());
 					this.connection.send(new CancelPlayGameRequestPacket());
 				}
 			} else {
@@ -85,22 +84,30 @@ public class ServerPacketListener extends AbstractPacketListener {
 			}
 		} else {
 			if (mutable.isTrue()) {
-				LOGGER.warn("Fail to start game {}, since on player is already playing a game", gameType.getName());
+				LOGGER.warn("Fail to start game {}, since on player is already playing a game", gameType.getInfoName());
 			} else {
-				LOGGER.warn("Fail to start game {}, since there was an error in a player profile", gameType.getName());
+				LOGGER.warn("Fail to start game {}, since there was an error in a player profile", gameType.getInfoName());
 			}
 			this.connection.send(new CancelPlayGameRequestPacket());
 		}
+	}
+	
+	protected List<Cell<GameProfile, GamePlayerType, List<UUID>>> createPlayerInfos(List<? extends ServerGamePlayer> players) {
+		List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos = Lists.newArrayList();
+		for (ServerGamePlayer player : players) {
+			playerInfos.add(new SimpleCell<>(player.getPlayer().getProfile(), player.getPlayerType(), Util.mapList(player.getFigures(), ServerGameFigure::getUUID)));
+		}
+		return playerInfos;
 	}
 	
 	public void handlePlayAgainGameRequest(GameProfile profile) {
 		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (player != null) {
 			if (this.server.isAdmin(player)) {
-				Game game = this.server.getGame();
+				ServerGame game = this.server.getGame();
 				if (game != null) {
 					if (!game.nextMatch()) {
-						LOGGER.warn("Fail to start new match of game {}", game.getType().getName().toLowerCase());
+						LOGGER.warn("Fail to start new match of game {}", game.getType().getInfoName());
 						this.connection.send(new CancelPlayAgainGameRequestPacket());
 					}
 				} else {
@@ -118,28 +125,34 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleRollDiceRequest(GameProfile profile) {
-		Game game = this.server.getGame();
-		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
+		ServerGame game = this.server.getGame();
 		if (game != null) {
-			if (game.isDiceGame()) {
-				DiceHandler diceHandler = game.getDiceHandler();
-				if (diceHandler.canRoll(player)) {
-					int count = diceHandler.roll(player);
-					LOGGER.info("Player {} rolled a {}", profile.getName(), count);
-					this.connection.send(new RolledDicePacket(count));
-					if (diceHandler.handleAfterRoll(player, count)) {
-						
-					} else if (diceHandler.canRollAgain(player, count)) {
-						this.connection.send(new CanRollDiceAgainPacket());
+			ServerGamePlayer player = game.getPlayerFor(this.server.getPlayerList().getPlayer(profile));
+			if (player != null) {
+				if (game.isDiceGame()) {
+					DiceHandler diceHandler = game.getDiceHandler();
+					if (diceHandler.canRoll(player)) {
+						int lastCount = diceHandler.getLastCount(player);
+						int count = lastCount > 0 ? diceHandler.rollExclude(player, lastCount) : diceHandler.roll(player);
+						LOGGER.info("Player {} rolled a {}", profile.getName(), count);
+						this.connection.send(new RolledDicePacket(count));
+						if (diceHandler.canRollAgain(player, count)) {
+							this.connection.send(new CanRollDiceAgainPacket());
+						} else if (diceHandler.canPerformGameAction(player, count)) {
+							// TODO: handle
+						} else {
+							game.nextPlayer(false);
+						}
 					} else {
-						game.nextPlayer();
+						LOGGER.warn("Player {} tries to roll the dice, but it is not his turn", profile.getName());
+						this.connection.send(new CancelRollDiceRequestPacket());
 					}
 				} else {
-					LOGGER.warn("Player {} tries to roll the dice, but it is not his turn", profile.getName());
+					LOGGER.warn("Fail to roll dice, since game {} is not a dice game", game.getType().getInfoName());
 					this.connection.send(new CancelRollDiceRequestPacket());
 				}
 			} else {
-				LOGGER.warn("Fail to roll dice, since game {} is not a dice game", game.getType().getName().toLowerCase());
+				LOGGER.warn("Fail to roll dice, since the player {} does not play game {}", profile.getName(), game.getType().getInfoName());
 				this.connection.send(new CancelRollDiceRequestPacket());
 			}
 		} else {
@@ -148,106 +161,11 @@ public class ServerPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public void handlePressTTTField(GameProfile profile, int vMap, int hMap) {
-		DedicatedPlayerList playerList = this.server.getPlayerList();
-		Game game = this.server.getGame();
-		if (game != null) {
-			if (game instanceof TTTGame tttGame) {
-				ServerPlayer currentPlayer = playerList.getPlayer(profile);
-				if (tttGame.getCurrentPlayer() != null && tttGame.getCurrentPlayer().equals(currentPlayer)) {
-					if (currentPlayer.isPlaying()) {
-						TTTMap oldMap = tttGame.getMap();
-						TTTMap newMap = tttGame.handle(vMap, hMap, false);
-						if (!oldMap.equals(newMap)) {
-							if (newMap.hasResult()) {
-								LOGGER.info("Handle result of game {}", tttGame.getType().getName().toLowerCase());
-								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap));
-								Util.runDelayed("DelayedPacketSender", 250, () -> {
-									TTTResultLine resultLine = newMap.getResultLine();
-									for (ServerPlayer player : tttGame.getPlayers()) {
-										ServerPlayer enemyPlayer = tttGame.getEnemiesFor(player).get(0);
-										GameResult result = newMap.getResult(tttGame.getPlayerType(player));
-										Connection connection = player.connection;
-										if (result == GameResult.DRAW) {
-											connection.send(new TTTGameResultPacket(GameProfile.EMPTY, TTTType.NO, GameProfile.EMPTY, TTTType.NO, TTTResultLine.EMPTY));
-											tttGame.getScore().getScore(player.getProfile()).increaseDraw();
-											connection.send(new GameScoreUpdatePacket(tttGame.getScore()));
-										} else if (result == GameResult.WIN) {
-											connection.send(new TTTGameResultPacket(player.getProfile(), tttGame.getPlayerType(player), enemyPlayer.getProfile(), tttGame.getPlayerType(enemyPlayer), resultLine));
-											tttGame.getScore().getScore(player.getProfile()).increaseWin();
-											connection.send(new GameScoreUpdatePacket(tttGame.getScore()));
-										} else if (result == GameResult.LOSE) {
-											connection.send(new TTTGameResultPacket(enemyPlayer.getProfile(), tttGame.getPlayerType(enemyPlayer), player.getProfile(), tttGame.getPlayerType(player), resultLine));
-											tttGame.getScore().getScore(player.getProfile()).increaseLose();
-											connection.send(new GameScoreUpdatePacket(tttGame.getScore()));
-										} else {
-											LOGGER.warn("Fail to handle result {} of game {}", result.getName(), tttGame.getType().getName().toLowerCase());
-										}
-									}
-								});
-							} else {
-								tttGame.nextPlayer();
-								playerList.broadcastAll(tttGame.getPlayers(), new UpdateTTTGamePacket(newMap));
-							}
-						} else {
-							LOGGER.info("Field map will not be synced to the clients, since there are no changes");
-						}
-					} else {
-						LOGGER.warn("Fail to handle press {} field packet for player {}, since the player is not playing a game", tttGame.getType().getName().toLowerCase(), currentPlayer.getProfile().getName());
-					}
-				} else {
-					LOGGER.warn("Player {} tries to change the {} field in map at pos {}:{} to {}, but it is not his turn", profile.getName(), tttGame.getType().getName(), vMap, hMap, tttGame.getPlayerType(currentPlayer));
-				}
-			} else {
-				LOGGER.warn("Fail to handle press {} field packet, since the current game is {}", GameTypes.TIC_TAC_TOE.getName().toLowerCase(), game.getType().getName().toLowerCase());
-			}
-		} else {
-			LOGGER.warn("Fail to handle press {} field packet, since there is no running game", GameTypes.TIC_TAC_TOE.getName().toLowerCase());
-		}
-	}
-	
-	public void handleSelectLudoFigure(GameProfile profile, LudoFieldPos pos) {
-		DedicatedPlayerList playerList = this.server.getPlayerList();
-		Game game = this.server.getGame();
-		if (game != null) {
-			if (game instanceof LudoGame ludoGame) {
-				ServerPlayer currentPlayer = playerList.getPlayer(profile);
-				if (ludoGame.getCurrentPlayer() != null && ludoGame.getCurrentPlayer().equals(currentPlayer)) {
-					if (currentPlayer.isPlaying()) {
-						List<Cell<LudoFieldType, LudoFieldPos, LudoFigure>> oldFigurePositions = ludoGame.getMap().getFigurePositions(ludoGame.getFigures());
-						List<Cell<LudoFieldType, LudoFieldPos, LudoFigure>> newFigurePositions = ludoGame.handle(pos);
-						if (!oldFigurePositions.equals(newFigurePositions)) {
-							playerList.broadcastAll(ludoGame.getPlayers(), new UpdateLudoGamePacket(newFigurePositions));
-							LudoDiceHandler diceHandler = ludoGame.getDiceHandler();
-							if (diceHandler.canRollAfterMove(currentPlayer, diceHandler.getLastCount(currentPlayer))) {
-								diceHandler.setRollCount(currentPlayer, 1);
-								currentPlayer.connection.send(new CanRollDiceAgainPacket());
-							} else {
-								ludoGame.nextPlayer();
-							}
-						} else {
-							LOGGER.info("Field map will not be synced to the clients, since there are no changes");
-						}
-					} else {
-						LOGGER.warn("Fail to handle select {} figure packet for player {}, since the player is not playing a game", ludoGame.getType().getName().toLowerCase(), currentPlayer.getProfile().getName());
-					}
-				} else {
-					LOGGER.warn("Player {} tries to move figure on field {}, but it is not his turn", profile.getName(), pos.getGreen());
-				}
-			} else {
-				LOGGER.warn("Fail to handle select {} figure packet, since the current game is {}", GameTypes.LUDO.getName().toLowerCase(), game.getType().getName().toLowerCase());
-			}
-		} else {
-			LOGGER.warn("Fail to handle select {} figure packet, since there is no running game", GameTypes.LUDO.getName().toLowerCase());
-		}
-	}
-	
 	public void handleExitGameRequest(GameProfile profile) {
-		Game game = this.server.getGame();
+		ServerGame game = this.server.getGame();
 		if (game != null) {
-			ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
-			if(!game.removePlayer(player, true)) {
-				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getName().toLowerCase());
+			if(!game.removePlayer(game.getPlayerFor(this.server.getPlayerList().getPlayer(profile)), true)) {
+				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getInfoName());
 			}
 		} else {
 			for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
