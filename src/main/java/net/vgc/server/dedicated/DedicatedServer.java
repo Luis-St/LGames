@@ -38,7 +38,6 @@ import javafx.stage.Stage;
 import net.vgc.Constans;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.data.tag.Tag;
-import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
@@ -98,9 +97,7 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 	}
 	
 	protected void load(CompoundTag tag) {
-		if (tag.contains("admin")) {
-			this.admin = TagUtil.readUUID(tag.getCompound("admin"));
-		}
+		
 	}
 	
 	public void displayServer(Stage stage) {
@@ -266,9 +263,6 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 	
 	protected CompoundTag save() {
 		CompoundTag tag = new CompoundTag();
-		if (this.admin != null)  {
-			tag.putCompound("admin", TagUtil.writeUUID(this.admin));
-		}
 		return tag;
 	}
 
