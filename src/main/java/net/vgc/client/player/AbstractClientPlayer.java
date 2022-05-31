@@ -50,14 +50,6 @@ public abstract class AbstractClientPlayer extends Player {
 		this.current = current;
 	}
 	
-	public boolean canSelect() {
-		return this.canSelect;
-	}
-	
-	public void setCanSelect(boolean canSelect) {
-		this.canSelect = canSelect;
-	}
-	
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof AbstractClientPlayer player) {
