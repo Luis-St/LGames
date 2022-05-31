@@ -29,7 +29,7 @@ public class TTTServerGame implements ServerGame {
 	
 	public TTTServerGame(DedicatedServer server, List<ServerPlayer> players) {
 		this.server = server;
-		this.map = new TTTServerMap();
+		this.map = new TTTServerMap(this.server, this);
 		this.players = createGamePlayers(this, players);
 	}
 	

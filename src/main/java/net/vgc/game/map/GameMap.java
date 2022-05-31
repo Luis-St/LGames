@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
@@ -19,6 +20,8 @@ public interface GameMap {
 	public static final Logger LOGGER = LogManager.getLogger();
 	
 	void init(List<? extends GamePlayer> players);
+	
+	Game getGame();
 	
 	List<? extends GameField> getFields();
 	

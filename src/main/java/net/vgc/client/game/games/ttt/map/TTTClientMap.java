@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import net.vgc.Constans;
 import net.vgc.client.Client;
+import net.vgc.client.game.games.ttt.TTTClientGame;
 import net.vgc.client.game.games.ttt.map.field.TTTClientField;
 import net.vgc.client.game.games.ttt.map.field.TTTFieldRenderState;
 import net.vgc.client.game.map.ClientGameMap;
@@ -29,11 +30,13 @@ import net.vgc.network.packet.client.ClientPacket;
 public class TTTClientMap extends GridPane implements ClientGameMap {
 	
 	protected final Client client;
+	protected final TTTClientGame game;
 	protected final List<TTTClientField> fields = Lists.newArrayList();
 	protected final ToggleGroup group;
 	
-	public TTTClientMap(Client client) {
+	public TTTClientMap(Client client, TTTClientGame game) {
 		this.client = client;
+		this.game = game;
 		this.group = new ToggleGroup();
 		this.init();
 		this.addFields();
@@ -74,7 +77,7 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 	}
 	
 	protected void addField(TTTFieldPos fieldPos, int column, int row) {
-		TTTClientField field = new TTTClientField(this.client, this.group, fieldPos, 150.0);
+		TTTClientField field = new TTTClientField(this.client, this.game, this.group, fieldPos, 150.0);
 		field.setOnAction((event) -> {
 			if (this.client.getPlayer().isCurrent()) {
 				if (field.getRenderState() == TTTFieldRenderState.NO) {
@@ -111,6 +114,11 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 	@Override
 	public void init(List<? extends GamePlayer> players) {
 		this.getFields().forEach(TTTClientField::clear);
+	}
+	
+	@Override
+	public TTTClientGame getGame() {
+		return this.game;
 	}
 
 	@Override

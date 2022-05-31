@@ -11,6 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import net.vgc.Constans;
 import net.vgc.client.Client;
+import net.vgc.client.game.games.ludo.LudoClientGame;
 import net.vgc.client.game.games.ludo.map.field.LudoClientField;
 import net.vgc.client.game.games.ludo.player.LudoClientPlayer;
 import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
@@ -32,13 +33,15 @@ import net.vgc.util.Util;
 public class LudoClientMap extends GridPane implements ClientGameMap, PacketHandler<ClientPacket> {
 	
 	protected final Client client;
+	protected final LudoClientGame game;
 	protected final List<LudoClientField> fields = Lists.newArrayList();
 	protected final List<LudoClientField> homeFields = Lists.newArrayList();
 	protected final List<LudoClientField> winFields = Lists.newArrayList();
 	protected final ToggleGroup group;
 	
-	public LudoClientMap(Client client) {
+	public LudoClientMap(Client client, LudoClientGame game) {
 		this.client = client;
+		this.game = game;
 		this.group = new ToggleGroup();
 		this.init();
 		this.addFields();
@@ -182,6 +185,11 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 				throw new RuntimeException("Can not add a game player of type " + gamePlayer.getClass().getSimpleName() + " to a ludo game");
 			}
 		}
+	}
+	
+	@Override
+	public LudoClientGame getGame() {
+		return this.game;
 	}
 
 	@Override

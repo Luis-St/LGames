@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.vgc.client.game.ClientGame;
 import net.vgc.client.game.map.field.ClientGameField;
 import net.vgc.client.game.player.figure.ClientGameFigure;
 import net.vgc.game.map.GameMap;
@@ -24,6 +25,9 @@ public interface ClientGameMap extends GameMap, PacketHandler<ClientPacket> {
 	
 	@Override
 	void init(List<? extends GamePlayer> players);
+	
+	@Override
+	ClientGame getGame();
 	
 	@Override
 	List<? extends ClientGameField> getFields();

@@ -10,7 +10,6 @@ import net.vgc.client.Client;
 import net.vgc.client.game.ClientGame;
 import net.vgc.client.game.games.ttt.map.TTTClientMap;
 import net.vgc.client.game.games.ttt.player.TTTClientPlayer;
-import net.vgc.client.game.map.ClientGameMap;
 import net.vgc.client.game.player.ClientGamePlayer;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.screen.LobbyScreen;
@@ -31,7 +30,7 @@ public class TTTClientGame implements ClientGame {
 	
 	public TTTClientGame(Client client, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
 		this.client = client;
-		this.map = new TTTClientMap(this.client);
+		this.map = new TTTClientMap(this.client, this);
 		this.players = createGamePlayers(this.client, this, playerInfos);
 	}
 	
@@ -69,7 +68,7 @@ public class TTTClientGame implements ClientGame {
 	}
 
 	@Override
-	public ClientGameMap getMap() {
+	public TTTClientMap getMap() {
 		return this.map;
 	}
 

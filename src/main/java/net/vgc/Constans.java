@@ -10,13 +10,13 @@ public class Constans {
 	
 	public static class Client {
 		
-		public static final String VERSION = "0.1.3v";
+		public static final String VERSION = "0.1.5v";
 		
 	}
 	
 	public static class Server {
 		
-		public static final String VERSION = "0.0.8v";
+		public static final String VERSION = "0.1.0v";
 		
 	}
 	

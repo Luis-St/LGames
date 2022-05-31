@@ -15,6 +15,8 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.game.games.ludo.LudoServerGame;
 import net.vgc.server.game.games.ludo.map.field.LudoServerField;
 import net.vgc.server.game.games.ludo.player.LudoServerPlayer;
 import net.vgc.server.game.games.ludo.player.figure.LudoServerFigure;
@@ -23,6 +25,8 @@ import net.vgc.util.Util;
 
 public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket> {
 	
+	protected final DedicatedServer server;
+	protected final LudoServerGame game;
 	protected final List<LudoServerField> fields = Util.make(Lists.newArrayList(), (fields) -> {
 		for (int i = 0; i < 40; i++) {
 			fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoFieldPos.ofGreen(i)));
@@ -39,6 +43,11 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 		}
 	});
 	
+	public LudoServerMap(DedicatedServer server, LudoServerGame game) {
+		this.server = server;
+		this.game = game;
+	}
+	
 	@Override
 	public void init(List<? extends GamePlayer> players) {
 		this.getFields().forEach(LudoServerField::clear);
@@ -52,6 +61,11 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 				throw new RuntimeException("Can not add a game player of type " + gamePlayer.getClass().getSimpleName() + " to a ludo game");
 			}
 		}
+	}
+	
+	@Override
+	public LudoServerGame getGame() {
+		return this.game;
 	}
 
 	@Override

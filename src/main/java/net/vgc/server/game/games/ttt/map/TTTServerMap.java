@@ -14,21 +14,35 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.game.games.ttt.TTTServerGame;
 import net.vgc.server.game.games.ttt.map.field.TTTServerField;
 import net.vgc.server.game.map.ServerGameMap;
 import net.vgc.util.Util;
 
 public class TTTServerMap implements ServerGameMap {
 	
+	protected final DedicatedServer server;
+	protected final TTTServerGame game;
 	protected final List<TTTServerField> fields = Util.make(Lists.newArrayList(), (list) -> {
 		for (int i = 0; i < 9; i++) {
 			list.add(new TTTServerField(TTTFieldPos.of(i)));
 		}
 	});
 	
+	public TTTServerMap(DedicatedServer server, TTTServerGame game) {
+		this.server = server;
+		this.game = game;
+	}
+	
 	@Override
 	public void init(List<? extends GamePlayer> players) {
 		this.getFields().forEach(TTTServerField::clear);
+	}
+	
+	@Override
+	public TTTServerGame getGame() {
+		return this.game;
 	}
 	
 	@Override
