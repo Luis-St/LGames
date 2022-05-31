@@ -9,22 +9,25 @@ import com.google.common.collect.Lists;
 import javafx.scene.image.ImageView;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.game.player.GamePlayerType;
+import net.vgc.language.TranslationKey;
 
 public enum LudoPlayerType implements GamePlayerType {
 	
-	GREEN("green", 0, "textures/ludo/figure/figure_green"),
-	YELLOW("yellow", 1, "textures/ludo/figure/figure_yellow"),
-	BLUE("blue", 2, "textures/ludo/figure/figure_blue"),
-	RED("red", 3, "textures/ludo/figure/figure_red"),
-	NO("no", 5, null);
+	GREEN("green", 0, new TranslationKey("screen.ludo.green_player"), "textures/ludo/figure/figure_green"),
+	YELLOW("yellow", 1, new TranslationKey("screen.ludo.yellow_player"), "textures/ludo/figure/figure_yellow"),
+	BLUE("blue", 2, new TranslationKey("screen.ludo.blue_player"), "textures/ludo/figure/figure_blue"),
+	RED("red", 3, new TranslationKey("screen.ludo.red_player"), "textures/ludo/figure/figure_red"),
+	NO("no", 4, new TranslationKey("screen.ludo.no_player"), null);
 	
 	private final String name;
 	private final int id;
+	private final TranslationKey translation;
 	private final String path;
 	
-	private LudoPlayerType(String name, int id, String path) {
+	private LudoPlayerType(String name, int id, TranslationKey translation, String path) {
 		this.name = name;
 		this.id = id;
+		this.translation = translation;
 		this.path = path;
 	}
 	
@@ -36,6 +39,11 @@ public enum LudoPlayerType implements GamePlayerType {
 	@Override
 	public int getId() {
 		return this.id;
+	}
+	
+	@Override
+	public TranslationKey getTranslation() {
+		return this.translation;
 	}
 	
 	@Override

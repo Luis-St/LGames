@@ -1,10 +1,5 @@
 package net.vgc.client.player;
 
-import javax.annotation.Nullable;
-
-import com.google.common.base.Objects;
-
-import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
@@ -12,9 +7,7 @@ import net.vgc.player.Player;
 public abstract class AbstractClientPlayer extends Player {
 	
 	protected boolean admin = false;
-	protected GamePlayerType type;
 	protected boolean current = false;
-	protected boolean canSelect;
 	
 	public AbstractClientPlayer(GameProfile profile, PlayerScore score) {
 		super(profile, score);
@@ -33,15 +26,6 @@ public abstract class AbstractClientPlayer extends Player {
 		this.admin = admin;
 	}
 	
-	@Nullable
-	public GamePlayerType getType() {
-		return this.type;
-	}
-	
-	public void setType(GamePlayerType type) {
-		this.type = type;
-	}
-	
 	public boolean isCurrent() {
 		return this.current;
 	}
@@ -56,8 +40,6 @@ public abstract class AbstractClientPlayer extends Player {
 			if (!super.equals(player)) {
 				return false;
 			} else if (this.admin != player.admin) {
-				return false;
-			} else if (!Objects.equal(this.type, player.type)) {
 				return false;
 			} else if (this.current != player.current) {
 				return false;

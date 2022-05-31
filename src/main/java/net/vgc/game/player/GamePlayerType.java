@@ -3,12 +3,15 @@ package net.vgc.game.player;
 import java.util.List;
 
 import net.vgc.Main;
+import net.vgc.language.TranslationKey;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.EnumRepresentable;
 
 public interface GamePlayerType extends EnumRepresentable, Encodable {
-
+	
+	TranslationKey getTranslation();
+	
 	List<? extends GamePlayerType> getOpponents();
 	
 	@Override
