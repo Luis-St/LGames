@@ -150,6 +150,11 @@ public class Server extends GameApplication<ServerPacket> implements Tickable {
 	}
 	
 	@Override
+	public void handlePacket(ServerPacket packet) {
+		this.server.handlePacket(packet);
+	}
+	
+	@Override
 	protected Timeline getTicker() {
 		return this.ticker;
 	}
