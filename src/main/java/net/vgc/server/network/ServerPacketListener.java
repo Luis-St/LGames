@@ -109,6 +109,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 					if (!game.nextMatch()) {
 						LOGGER.warn("Fail to start new match of game {}", game.getType().getInfoName());
 						this.connection.send(new CancelPlayAgainGameRequestPacket());
+						game.stopGame();
 					}
 				} else {
 					LOGGER.warn("Fail to start new match, since there is no game running");

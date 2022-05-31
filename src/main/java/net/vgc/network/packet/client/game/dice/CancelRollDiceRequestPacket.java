@@ -21,7 +21,7 @@ public class CancelRollDiceRequestPacket implements ClientPacket {
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		
+		listener.handleCancelRollDiceRequest();
 	}
 	
 }

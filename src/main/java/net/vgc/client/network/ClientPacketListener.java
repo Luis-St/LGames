@@ -143,12 +143,24 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
+	public void handleCancelRollDiceRequest() {
+		LOGGER.info("Roll dice request was canceled from the server");
+		this.client.getPlayer().setCanRollDice(false);
+	}
+	
 	public void handleRolledDice(int count) {
+		LocalPlayer player = this.client.getPlayer();
 		if (Mth.isInBounds(count, 1, 6)) {
-			this.client.getPlayer().setCount(count);
+			player.setCount(count);
+			player.setCanRollDice(false);
 		} else {
-			this.client.getPlayer().setCount(-1);
+			player.setCount(-1);
+			player.setCanRollDice(false);
 		}
+	}
+	
+	public void handleCanRollDiceAgain() {
+		this.client.getPlayer().setCanRollDice(true);
 	}
 	
 	public void handleCurrentPlayerUpdate(GameProfile profile) {
@@ -157,6 +169,9 @@ public class ClientPacketListener extends AbstractPacketListener {
 			if (player.getProfile().equals(profile)) {
 				player.setCurrent(true);
 				flag = true;
+				if (player instanceof LocalPlayer localPlayer) {
+					localPlayer.setCanRollDice(true);
+				}
 			} else {
 				player.setCurrent(false);
 			}
@@ -186,6 +201,10 @@ public class ClientPacketListener extends AbstractPacketListener {
 				this.client.setScreen(new LobbyScreen());
 			}
 		}
+	}
+	
+	public void handleCancelPlayAgainGameRequest() {
+		LOGGER.warn("The request to play again was canceled by the server");
 	}
 	
 	public void handleExitGame() {

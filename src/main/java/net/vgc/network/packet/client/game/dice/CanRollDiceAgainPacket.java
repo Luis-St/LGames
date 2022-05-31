@@ -21,7 +21,7 @@ public class CanRollDiceAgainPacket implements ClientPacket {
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		
+		listener.handleCanRollDiceAgain();
 	}
 	
 }
