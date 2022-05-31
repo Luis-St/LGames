@@ -32,6 +32,8 @@ public interface DiceHandler {
 	
 	boolean canRollAgain(GamePlayer player, int count);
 	
+	boolean canPerformGameAction(GamePlayer player, int count);
+	
 	boolean canRollAfterMove(GamePlayer player, GameField field, int count);
 	
 	int getLastCount(GamePlayer player);
