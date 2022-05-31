@@ -7,6 +7,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import net.vgc.Constans;
 import net.vgc.client.Client;
+import net.vgc.client.game.games.ttt.TTTClientGame;
 import net.vgc.client.game.games.ttt.player.figure.TTTClientFigure;
 import net.vgc.client.game.map.field.ClientGameField;
 import net.vgc.client.game.map.field.FieldRenderState;
@@ -19,14 +20,16 @@ import net.vgc.network.packet.client.ClientPacket;
 public class TTTClientField extends ToggleButton implements ClientGameField {
 	
 	protected final Client client;
+	protected final TTTClientGame game;
 	protected final ToggleGroup group;
 	protected final TTTFieldPos fieldPos;
 	protected final double imageSize;
 	protected TTTClientFigure figure;
 	protected TTTFieldRenderState renderState = TTTFieldRenderState.NO;
 	
-	public TTTClientField(Client client, ToggleGroup group, TTTFieldPos fieldPos, double imageSize) {
+	public TTTClientField(Client client, TTTClientGame game, ToggleGroup group, TTTFieldPos fieldPos, double imageSize) {
 		this.client = client;
+		this.game = game;
 		this.group = group;
 		this.fieldPos = fieldPos;
 		this.imageSize = imageSize;
@@ -130,7 +133,7 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 
 	@Override
 	public void updateFieldGraphic() {
-		TTTPlayerType playerType = (TTTPlayerType) this.client.getPlayer().getType();
+		TTTPlayerType playerType = (TTTPlayerType) this.game.getPlayerFor(this.client.getPlayer()).getPlayerType();
 		if (this.isEmpty()) {
 			if (!this.renderState.canRenderWithFigure()) {
 				this.setGraphic(playerType.getImage(this.renderState, this.imageSize * 0.95, this.imageSize * 0.95));

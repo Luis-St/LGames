@@ -142,7 +142,11 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 	public void updateFieldGraphic() {
 		Box<Node> fieldBackground = new Box<>(this.getFieldBackground());
 		if (this.isEmpty()) {
-			this.setGraphic(new StackPane(fieldBackground));
+			StackPane pane = new StackPane(fieldBackground);
+			if (this.isShadowed()) {
+				pane.getChildren().add(new Box<>(FxUtil.makeImageView("textures/ludo/figure/figure_shadow.png", this.imageSize * 0.95, this.imageSize * 0.95)));
+			}
+			this.setGraphic(pane);
 		} else if (this.renderState == LudoFieldRenderState.DEFAULT) {
 			StackPane pane = new StackPane(fieldBackground, new Box<>(this.getFigure().getPlayerType().getImage(this.imageSize * 0.95, this.imageSize * 0.95)));
 			if (this.isShadowed()) {

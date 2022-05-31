@@ -13,6 +13,7 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.map.field.ServerGameField;
 import net.vgc.server.game.player.figure.ServerGameFigure;
 
@@ -20,6 +21,9 @@ public interface ServerGameMap extends GameMap, PacketHandler<ServerPacket> {
 	
 	@Override
 	void init(List<? extends GamePlayer> players);
+	
+	@Override
+	ServerGame getGame();
 	
 	@Override
 	List<? extends ServerGameField> getFields();
