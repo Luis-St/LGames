@@ -1,27 +1,24 @@
 package net.vgc.client.fx.game;
 
-import java.util.function.Supplier;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
+import net.vgc.client.game.dice.DiceRenderState;
+import net.vgc.client.player.LocalPlayer;
 import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.vgc.oldgame.dice.DiceState;
 
 public class DiceButton extends Button {
 	
 	protected final Client client;
 	protected final double prefSize;
-	protected final Supplier<Boolean> canRoll;
 	protected int count = 0;
 	
-	public DiceButton(Client client, double prefSize, Supplier<Boolean> canRoll) {
+	public DiceButton(Client client, double prefSize) {
 		this.client = client;
 		this.prefSize = prefSize;
-		this.canRoll = canRoll;
 		this.init();
 	}
 	
@@ -32,14 +29,15 @@ public class DiceButton extends Button {
 			this.setBackground(null);
 		}
 		this.setOnAction((event) -> {
-			if (this.canRoll.get()) {
+			LocalPlayer player = this.client.getPlayer();
+			if (player.isCurrent() && player.canRollDice()) {
 				this.client.getServerHandler().send(new RollDiceRequestPacket(this.client.getPlayer().getProfile()));
 			}
 		});
 	}
 	
 	protected void updateState() {
-		ImageView image = DiceState.fromCount(this.count).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
+		ImageView image = DiceRenderState.fromCount(this.count).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
 		if (image != null) {
 			this.setGraphic(new Box<>(image, Pos.CENTER));
 		} else {
@@ -51,7 +49,7 @@ public class DiceButton extends Button {
 		return this.count;
 	}
 	
-	public void update(int count) {
+	public void setCount(int count) {
 		this.count = count;
 		this.updateState();
 	}
