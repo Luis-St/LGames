@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
+import net.vgc.game.GameType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
@@ -19,18 +20,17 @@ import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayGameRequestPacket;
-import net.vgc.oldgame.GameType;
 import net.vgc.util.Util;
 
 public class PlayerSelectScreen extends Screen {
 	
-	protected final GameType<?> gameType;
+	protected final GameType<?, ?> gameType;
 	protected final Screen backScreen;
 	protected ListView<String> playerList;
 	protected ButtonBox backButtonBox;
 	protected ButtonBox playButtonBox;
 	
-	public PlayerSelectScreen(GameType<?> gameType, Screen backScreen) {
+	public PlayerSelectScreen(GameType<?, ?> gameType, Screen backScreen) {
 		this.gameType = gameType;
 		this.backScreen = backScreen;
 	}
@@ -42,6 +42,8 @@ public class PlayerSelectScreen extends Screen {
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (!player.isPlaying()) {
 				this.playerList.getItems().add(player.getProfile().getName());
+			} else {
+				LOGGER.debug("Ignore player {}, since the player is already playing a game", player.getProfile().getName());
 			}
 		}
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
@@ -57,9 +59,9 @@ public class PlayerSelectScreen extends Screen {
 			List<String> selected = this.playerList.getSelectionModel().getSelectedItems();
 			int selectCount = selected.size();
 			if (selectCount > this.gameType.getMaxPlayers()) {
-				LOGGER.info("Unable to play game {}, since too many players {} were selected", this.gameType, selectCount);
+				LOGGER.info("Unable to play game {}, since too many players {} were selected", this.gameType.getInfoName(), selectCount);
 			} else if (this.gameType.getMinPlayers() > selectCount) {
-				LOGGER.info("Unable to play game {}, since too few players {} were selected", this.gameType, selectCount);
+				LOGGER.info("Unable to play game {}, since too few players {} were selected", this.gameType.getInfoName(), selectCount);
 			} else {
 				List<AbstractClientPlayer> players = Lists.newArrayList();
 				for (AbstractClientPlayer player : this.client.getPlayers()) {

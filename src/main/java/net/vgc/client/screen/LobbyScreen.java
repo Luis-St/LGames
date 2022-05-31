@@ -18,7 +18,7 @@ import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
-import net.vgc.oldgame.GameTypes;
+import net.vgc.game.GameTypes;
 import net.vgc.util.Util;
 
 public class LobbyScreen extends GameScreen {
