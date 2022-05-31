@@ -59,6 +59,10 @@ public interface ClientGameField extends GameField, PacketHandler<ClientPacket> 
 	
 	void setShadowed(boolean shadowed);
 	
+	default void resetShadow() {
+		this.setShadowed(false);
+	}
+	
 	void updateFieldGraphic();
 	
 	@Override

@@ -48,7 +48,7 @@ public class LudoClientGame implements ClientGame {
 
 	@Override
 	public void initGame() {
-		
+		this.map.init(this.players);
 	}
 
 	@Override

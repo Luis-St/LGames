@@ -46,7 +46,7 @@ public class TTTServerGame implements ServerGame {
 	
 	@Override
 	public void initGame() {
-		
+		this.map.init(this.players);
 	}
 
 	@Override

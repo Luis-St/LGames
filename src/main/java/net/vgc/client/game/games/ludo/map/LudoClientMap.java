@@ -15,6 +15,7 @@ import net.vgc.client.game.games.ludo.map.field.LudoClientField;
 import net.vgc.client.game.games.ludo.player.LudoClientPlayer;
 import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
 import net.vgc.client.game.map.ClientGameMap;
+import net.vgc.client.player.LocalPlayer;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
@@ -25,6 +26,7 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 public class LudoClientMap extends GridPane implements ClientGameMap, PacketHandler<ClientPacket> {
@@ -50,10 +52,13 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 		this.setPadding(new Insets(20.0));
 		this.setGridLinesVisible(Constans.DEBUG);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-//			if (!this.canSelectField.get()) {
-//				this.group.selectToggle(null);
-//			}
-//			this.clearShadow();
+			LocalPlayer player = this.client.getPlayer();
+			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
+				
+			} else {
+				this.group.selectToggle(null);
+			}
+			this.getFields().forEach(LudoClientField::resetShadow);
 		});
 	}
 	
@@ -136,9 +141,19 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	protected void addField(LudoFieldType fieldType, LudoPlayerType colorType, LudoFieldPos fieldPos, int column, int row) {
 		LudoClientField field = new LudoClientField(this.group, fieldType, colorType, fieldPos, 100.0);
 		field.setOnAction((event) -> {
-			if (/*this.canSelectField.get()*/true) {
+			LocalPlayer player = this.client.getPlayer();
+			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
 				if (field.canSelectField()) {
-//					this.clearAndSetShadow(this.getNextField(field, this.diceCountGetter.get(), false));
+					this.getFields().forEach(LudoClientField::resetShadow);
+					LudoClientFigure figure = field.getFigure();
+					if (figure != null) {
+						LudoClientField nextField = this.getNextField(figure, player.getCount());
+						if (nextField != null) {
+							nextField.setShadowed(true);
+						} else {
+							LOGGER.warn("Fail to display shadow figure, since there is no next field");
+						}
+					}
 				}
 			}
 		});

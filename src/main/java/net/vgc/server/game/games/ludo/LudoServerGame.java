@@ -61,12 +61,11 @@ public class LudoServerGame implements ServerGame {
 	
 	@Override
 	public void initGame() {
-		
+		this.map.init(this.players);
 	}
 
 	@Override
 	public void startGame() {
-		this.map.init(this.players);
 		this.getPlayerList().broadcastAll(Util.mapList(this.players, LudoServerPlayer::getPlayer), new StartGamePacket(this.getType(), this.getPlayerInfos()));
 	}
 	

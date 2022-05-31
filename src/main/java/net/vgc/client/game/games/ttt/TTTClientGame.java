@@ -50,7 +50,7 @@ public class TTTClientGame implements ClientGame {
 	
 	@Override
 	public void initGame() {
-		
+		this.map.init(this.players);
 	}
 
 	@Override
