@@ -60,11 +60,6 @@ public class LudoServerField implements ServerGameField, PacketHandler<ServerPac
 	public void setFigure(GameFigure figure) {
 		this.figure = (LudoServerFigure) figure;
 	}
-
-	@Override
-	public void clear() {
-		this.figure = null;
-	}
 	
 	@Override
 	public void handlePacket(ServerPacket packet) {

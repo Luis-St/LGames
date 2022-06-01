@@ -17,6 +17,7 @@ public class Main {
 	
 	/* TODO's:
 	 *  - issue in TTT game screen -> current player changes moves the hole game grid
+	 *  - check game casts via instance of
 	 *  - add getGame to GameMap
 	 *  - add dice animation
 	 *  - new registry for Packets

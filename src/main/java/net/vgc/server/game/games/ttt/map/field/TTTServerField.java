@@ -60,11 +60,6 @@ public class TTTServerField implements ServerGameField {
 	}
 
 	@Override
-	public void clear() {
-		this.figure = null;
-	}
-
-	@Override
 	public void handlePacket(ServerPacket packet) {
 		
 	}

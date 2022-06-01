@@ -32,7 +32,9 @@ public interface GameField {
 	
 	void setFigure(@Nullable GameFigure figure);
 	
-	void clear();
+	default void clear() {
+		this.setFigure(null);
+	}
 	
 	default boolean isEmpty() {
 		return this.getFigure() == null;
