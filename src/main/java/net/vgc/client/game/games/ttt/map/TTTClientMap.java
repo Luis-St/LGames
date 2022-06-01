@@ -20,6 +20,7 @@ import net.vgc.client.game.games.ttt.map.field.TTTClientField;
 import net.vgc.client.game.games.ttt.map.field.TTTFieldRenderState;
 import net.vgc.client.game.map.ClientGameMap;
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
+import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayer;
@@ -113,7 +114,7 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 
 	@Override
 	public void init(List<? extends GamePlayer> players) {
-		this.getFields().forEach(TTTClientField::clear);
+		
 	}
 	
 	@Override
@@ -161,6 +162,12 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 	@Override
 	public List<TTTClientField> getWinFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
+	}
+	
+	@Override
+	public boolean moveFigureTo(GameFigure figure, GameField field) {
+		LOGGER.warn("Fail to move figure {} of player {}, since tic tac toe figures are not moveable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
+		return false;
 	}
 
 	@Override

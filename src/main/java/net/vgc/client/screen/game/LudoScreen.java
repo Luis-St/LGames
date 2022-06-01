@@ -12,7 +12,6 @@ import net.vgc.client.game.games.ludo.LudoClientGame;
 import net.vgc.client.game.games.ludo.map.field.LudoClientField;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
@@ -35,7 +34,7 @@ public class LudoScreen extends GameScreen {
 	@Override
 	public void init() {
 		this.playerInfo = new PlayerInfoPane(this.game, 100.0);
-		this.diceButton = new DiceButton(this.client, 100.0);
+		this.diceButton = new DiceButton(this.client, 150.0);
 		this.leaveButton = new ButtonBox(TranslationKey.createAndGet("screen.lobby.leave"), Pos.CENTER, 20.0, this::handleLeave);
 		this.playAgainButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.play_again"), Pos.CENTER, 20.0, this::handlePlayAgain);
 		this.playAgainButton.getNode().setDisable(true);
@@ -69,10 +68,9 @@ public class LudoScreen extends GameScreen {
 	
 	@Override
 	public void handlePacket(ClientPacket clientPacket) {
+		this.playerInfo.update();
 		if (clientPacket instanceof RolledDicePacket packet) {
 			this.diceButton.setCount(packet.getCount());
-		} else if (clientPacket instanceof CurrentPlayerUpdatePacket packet) {
-			this.playerInfo.update();
 		}
 	}
 

@@ -165,19 +165,25 @@ public class ClientPacketListener extends AbstractPacketListener {
 	
 	public void handleCurrentPlayerUpdate(GameProfile profile) {
 		boolean flag = false;
-		for (AbstractClientPlayer player : this.client.getPlayers()) {
-			if (player.getProfile().equals(profile)) {
-				player.setCurrent(true);
-				flag = true;
-				if (player instanceof LocalPlayer localPlayer) {
-					localPlayer.setCanRollDice(true);
+		if (this.client.getGame() != null) {
+			ClientGame game = this.client.getGame();
+			for (AbstractClientPlayer player : this.client.getPlayers()) {
+				if (player.getProfile().equals(profile)) {
+					game.setCurrentPlayer(game.getPlayerFor(player));
+					player.setCurrent(true);
+					flag = true;
+					if (player instanceof LocalPlayer localPlayer) {
+						localPlayer.setCanRollDice(true);
+					}
+				} else {
+					player.setCurrent(false);
 				}
-			} else {
-				player.setCurrent(false);
 			}
-		}
-		if (flag) {
-			LOGGER.warn("Fail to update the current player to {}, since the player does not exists", profile.getName());
+			if (flag) {
+				LOGGER.warn("Fail to update the current player to {}, since the player does not exists", profile.getName());
+			}
+		} else {
+			LOGGER.warn("Fail to update the current player to {}, since there is no active game", profile.getName());
 		}
 	}
 	
@@ -212,6 +218,11 @@ public class ClientPacketListener extends AbstractPacketListener {
 		if (this.client.getPlayer().isPlaying()) {
 			this.client.getPlayer().setPlaying(false);
 			this.client.getPlayer().getScore().reset();
+			if (this.client.getGame() != null) {
+				this.client.setGame(null);
+			} else {
+				LOGGER.warn("Received a exit game packet, but there is no active game");
+			}
 		} else {
 			LOGGER.info("Received a exit game packet, but the local player is not playing a game");
 		}
@@ -223,6 +234,11 @@ public class ClientPacketListener extends AbstractPacketListener {
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			player.setPlaying(false);
 			player.getScore().reset();
+		}
+		if (this.client.getGame() != null) {
+			this.client.setGame(null);
+		} else {
+			LOGGER.warn("Received a stop game packet, but there is no active game");
 		}
 		this.client.setScreen(new LobbyScreen());
 	}

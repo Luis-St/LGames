@@ -91,6 +91,11 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 	}
 	
 	@Override
+	public void setFigure(GameFigure figure) {
+		this.figure = (LudoClientFigure) figure;
+	}
+	
+	@Override
 	public ImageView getFieldBackground() {
 		if (this.fieldType == LudoFieldType.DEFAULT && this.colorType == LudoPlayerType.NO) {
 			return this.makeImage("textures/ludo/field/field.png");

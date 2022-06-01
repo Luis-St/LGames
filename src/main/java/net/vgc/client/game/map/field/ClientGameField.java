@@ -37,14 +37,7 @@ public interface ClientGameField extends GameField, PacketHandler<ClientPacket> 
 	ClientGameFigure getFigure();
 	
 	@Override
-	default void setFigure(GameFigure figure) {
-		LOGGER.warn("Can not set the figure of field {} with type {} on client", this.getFieldPos().getPosition(), this.getFieldType());
-	}
-	
-	@Override
-	default void clear() {
-		LOGGER.warn("Can not clear the field {} with type {} on client", this.getFieldPos().getPosition(), this.getFieldType());
-	}
+	void setFigure(GameFigure figure);
 	
 	@Nullable
 	ImageView getFieldBackground();

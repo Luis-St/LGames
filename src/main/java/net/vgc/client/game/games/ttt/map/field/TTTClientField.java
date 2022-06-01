@@ -81,6 +81,11 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	public TTTClientFigure getFigure() {
 		return this.figure;
 	}
+	
+	@Override
+	public void setFigure(GameFigure figure) {
+		this.figure = (TTTClientFigure) figure;
+	}
 
 	@Override
 	public ImageView getFieldBackground() {

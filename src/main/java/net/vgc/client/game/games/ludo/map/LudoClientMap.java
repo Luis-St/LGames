@@ -13,7 +13,6 @@ import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.game.games.ludo.LudoClientGame;
 import net.vgc.client.game.games.ludo.map.field.LudoClientField;
-import net.vgc.client.game.games.ludo.player.LudoClientPlayer;
 import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
 import net.vgc.client.game.map.ClientGameMap;
 import net.vgc.client.player.LocalPlayer;
@@ -174,17 +173,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	
 	@Override
 	public void init(List<? extends GamePlayer> players) {
-		this.getFields().forEach(LudoClientField::clear);
-		for (GamePlayer gamePlayer : players) {
-			if (gamePlayer instanceof LudoClientPlayer player) {
-				for (LudoClientFigure figure : player.getFigures()) {
-					this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos()).setFigure(figure);
-				}
-			} else {
-				LOGGER.error("Can not add a game player of type {} to a ludo game", gamePlayer.getClass().getSimpleName());
-				throw new RuntimeException("Can not add a game player of type " + gamePlayer.getClass().getSimpleName() + " to a ludo game");
-			}
-		}
+		
 	}
 	
 	@Override

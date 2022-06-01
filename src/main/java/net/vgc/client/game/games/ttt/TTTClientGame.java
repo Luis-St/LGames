@@ -16,6 +16,7 @@ import net.vgc.client.screen.LobbyScreen;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
@@ -24,14 +25,14 @@ import net.vgc.server.game.games.ttt.TTTServerGame;
 public class TTTClientGame implements ClientGame {
 	
 	protected final Client client;
-	protected final TTTClientMap map;
 	protected final List<TTTClientPlayer> players;
+	protected final TTTClientMap map;
 	protected TTTClientPlayer player;
 	
 	public TTTClientGame(Client client, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
 		this.client = client;
-		this.map = new TTTClientMap(this.client, this);
 		this.players = createGamePlayers(this.client, this, playerInfos);
+		this.map = new TTTClientMap(this.client, this);
 	}
 	
 	protected static List<TTTClientPlayer> createGamePlayers(Client client, TTTClientGame game, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
@@ -80,6 +81,11 @@ public class TTTClientGame implements ClientGame {
 	@Override
 	public ClientGamePlayer getCurrentPlayer() {
 		return this.player;
+	}
+	
+	@Override
+	public void setCurrentPlayer(GamePlayer player) {
+		this.player = (TTTClientPlayer) player;
 	}
 
 	@Override

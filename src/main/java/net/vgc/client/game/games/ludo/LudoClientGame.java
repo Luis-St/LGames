@@ -15,6 +15,7 @@ import net.vgc.client.screen.LobbyScreen;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
@@ -23,14 +24,14 @@ import net.vgc.server.game.games.ludo.LudoServerGame;
 public class LudoClientGame implements ClientGame {
 	
 	protected final Client client;
-	protected final LudoClientMap map;
 	protected final List<LudoClientPlayer> players;
+	protected final LudoClientMap map;
 	protected LudoClientPlayer player;
 	
 	public LudoClientGame(Client client, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
 		this.client = client;
-		this.map = new LudoClientMap(this.client, this);
 		this.players = createGamePlayers(this.client, this, playerInfos);
+		this.map = new LudoClientMap(this.client, this);
 	}
 	
 	protected static List<LudoClientPlayer> createGamePlayers(Client client, LudoClientGame game, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
@@ -79,6 +80,11 @@ public class LudoClientGame implements ClientGame {
 	@Override
 	public LudoClientPlayer getCurrentPlayer() {
 		return this.player;
+	}
+	
+	@Override
+	public void setCurrentPlayer(GamePlayer player) {
+		this.player = (LudoClientPlayer) player;
 	}
 	
 	@Override

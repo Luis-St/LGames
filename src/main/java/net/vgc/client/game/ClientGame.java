@@ -64,11 +64,6 @@ public interface ClientGame extends Game, PacketHandler<ClientPacket> {
 	@Override
 	ClientGamePlayer getCurrentPlayer();
 	
-	@Override
-	default void setCurrentPlayer(GamePlayer player) {
-		LOGGER.warn("Can not set the current player to {} on client", player.getPlayer().getProfile().getName());
-	}
-	
 	@Nullable
 	@Override
 	default GamePlayer getStartPlayer() {
@@ -95,7 +90,6 @@ public interface ClientGame extends Game, PacketHandler<ClientPacket> {
 	
 	@Override
 	default boolean nextMatch() {
-		LOGGER.warn("Can not create a new match of game {} on client", this.getType().getInfoName());
 		return false;
 	}
 	

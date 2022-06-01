@@ -56,20 +56,9 @@ public interface ClientGameMap extends GameMap, PacketHandler<ClientPacket> {
 	}
 	
 	@Override
-	default boolean moveFigure(GameFigure figure, int count) {
-		LOGGER.warn("Can not move figure {} of player {} on client", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
-		return false;
-	}
-	
-	@Override
 	default boolean moveFigureTo(GameFigure figure, GameField field) {
 		LOGGER.warn("Can not move figure {} of player {} on client", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return false;
-	}
-	
-	@Override
-	default void reset() {
-		LOGGER.warn("Can not reset the game map on client");
 	}
 	
 	@Nullable
