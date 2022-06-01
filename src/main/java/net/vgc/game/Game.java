@@ -52,7 +52,7 @@ public interface Game {
 	
 	default void nextPlayer(boolean random) {
 		List<? extends GamePlayer> players = this.getPlayers();
-		if (players.isEmpty()) {
+		if (!players.isEmpty()) {
 			if (random) {
 				this.setCurrentPlayer(players.get(new Random().nextInt(players.size())));
 			} else {

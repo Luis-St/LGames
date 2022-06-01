@@ -31,7 +31,6 @@ public class PlayerInfoPane extends GridPane {
 		this.currentPlayerInfo = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.no_current_player"));
 		this.playerScoreInfos = Lists.newArrayList();
 		this.init();
-		this.update();
 	}
 	
 	protected void init() {
@@ -40,12 +39,12 @@ public class PlayerInfoPane extends GridPane {
 		this.setHgap(10.0);
 		this.setGridLinesVisible(Constans.DEBUG);
 		this.add(new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_info")), 0, 0);
-		this.add(this.makeSeparator(), 1, 0);
-		this.add(this.makeCurrentPlayerPane(), 2, 0);
-		this.add(this.makeSeparator(), 3, 0);
-		this.add(this.makePlayersPane(), 4, 0);
-		this.add(this.makeSeparator(), 5, 0);
-		this.add(this.makePlayerScorePane(), 4, 0);
+		this.add(this.makeSeparator(), 0, 1);
+		this.add(this.makeCurrentPlayerPane(), 0, 2);
+		this.add(this.makeSeparator(), 0, 3);
+		this.add(this.makePlayersPane(), 0, 4);
+		this.add(this.makeSeparator(), 0, 5);
+		this.add(this.makePlayerScorePane(), 0, 6);
 	}
 	
 	protected Separator makeSeparator() {

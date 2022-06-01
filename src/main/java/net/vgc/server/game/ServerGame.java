@@ -102,8 +102,7 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 			} else {
 				LOGGER.warn("Fail to remove player {}, since the player is not a server player", this.getName(gamePlayer));
 			}
-		}
-		if (gamePlayer != null) {
+		} else if (gamePlayer != null) {
 			LOGGER.warn("Fail to remove player {}, since the player does not playing game {}", this.getName(gamePlayer), this.getType().getInfoName());
 			if (gamePlayer.getPlayer().isPlaying()) {
 				gamePlayer.getPlayer().setPlaying(false);

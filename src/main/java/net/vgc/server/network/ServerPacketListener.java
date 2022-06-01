@@ -140,6 +140,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 						if (diceHandler.canRollAgain(player, count)) {
 							this.connection.send(new CanRollDiceAgainPacket());
 						} else if (diceHandler.canPerformGameAction(player, count)) {
+							
 							// TODO: handle
 						} else {
 							game.nextPlayer(false);
