@@ -120,6 +120,9 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 				this.safeLoading = set.valueOf(safeLoading);
 				LOGGER.info("Use safe loading");
 			}
+		} else if (set.has(safeLoading)) {
+			this.safeLoading = set.valueOf(safeLoading);
+			LOGGER.info("Use safe loading");
 		}
 	}
 	

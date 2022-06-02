@@ -12,6 +12,7 @@ import net.vgc.client.game.ClientGame;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
+import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.dice.DiceHandler;
@@ -42,6 +43,9 @@ public interface Game {
 	
 	@Nullable
 	GamePlayer getPlayerFor(Player player);
+	
+	@Nullable
+	GamePlayer getPlayerFor(GameProfile profile);
 	
 	@Nullable
 	GamePlayer getCurrentPlayer();

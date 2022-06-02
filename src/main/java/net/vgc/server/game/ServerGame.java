@@ -15,6 +15,7 @@ import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.dedicated.DedicatedPlayerList;
 import net.vgc.server.dedicated.DedicatedServer;
@@ -64,6 +65,16 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 	default ServerGamePlayer getPlayerFor(Player player) {
 		for (ServerGamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.getPlayer().equals(player)) {
+				return gamePlayer;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	default ServerGamePlayer getPlayerFor(GameProfile profile) {
+		for (ServerGamePlayer gamePlayer : this.getPlayers()) {
+			if (gamePlayer.getPlayer().getProfile().equals(profile)) {
 				return gamePlayer;
 			}
 		}
@@ -137,10 +148,10 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 	}
 	
 	@Override
-	default void handlePacket(ServerPacket packet) {
-		this.getMap().handlePacket(packet);
+	default void handlePacket(ServerPacket serverPacket) {
+		this.getMap().handlePacket(serverPacket);
 		for (ServerGamePlayer player : this.getPlayers()) {
-			player.handlePacket(packet);
+			player.handlePacket(serverPacket);
 		}
 	}
 	

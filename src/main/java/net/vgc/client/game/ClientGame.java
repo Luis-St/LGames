@@ -14,6 +14,7 @@ import net.vgc.game.GameType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.dice.DiceHandler;
@@ -55,6 +56,16 @@ public interface ClientGame extends Game, PacketHandler<ClientPacket> {
 	default ClientGamePlayer getPlayerFor(Player player) {
 		for (ClientGamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.getPlayer().equals(player)) {
+				return gamePlayer;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	default ClientGamePlayer getPlayerFor(GameProfile profile) {
+		for (ClientGamePlayer gamePlayer : this.getPlayers()) {
+			if (gamePlayer.getPlayer().getProfile().equals(profile)) {
 				return gamePlayer;
 			}
 		}

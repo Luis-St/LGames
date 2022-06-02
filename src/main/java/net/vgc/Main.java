@@ -16,8 +16,10 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
+	 *  - server settings button & Connect Local Button IDE only
 	 *  - issue in TTT game screen -> current player changes moves the hole game grid
 	 *  - check game casts via instance of
+	 *  - LobbyScreen does not update players correctly
 	 *  - add getGame to GameMap
 	 *  - add dice animation
 	 *  - new registry for Packets
