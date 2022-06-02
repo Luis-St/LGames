@@ -20,7 +20,7 @@ public class TTTFieldPos implements GameFieldPos {
 	}
 	
 	@DecodingConstructor
-	private TTTFieldPos(FriendlyByteBuffer buffer) {
+	public TTTFieldPos(FriendlyByteBuffer buffer) {
 		this.position = buffer.readInt();
 		this.row = buffer.readInt();
 		this.column = buffer.readInt();
@@ -69,7 +69,13 @@ public class TTTFieldPos implements GameFieldPos {
 	}
 	
 	@Override
+	public int getDecoderId() {
+		return TTT_FIELD_POS;
+	}
+	
+	@Override
 	public void encode(FriendlyByteBuffer buffer) {
+		GameFieldPos.super.encode(buffer);
 		buffer.writeInt(this.position);
 		buffer.writeInt(this.row);
 		buffer.writeInt(this.column);

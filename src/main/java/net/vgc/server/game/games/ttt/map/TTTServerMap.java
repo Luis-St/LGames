@@ -95,8 +95,8 @@ public class TTTServerMap implements ServerGameMap {
 	}
 
 	@Override
-	public void handlePacket(ServerPacket packet) {
-		ServerGameMap.super.handlePacket(packet);
+	public void handlePacket(ServerPacket serverPacket) {
+		ServerGameMap.super.handlePacket(serverPacket);
 		
 	}
 	

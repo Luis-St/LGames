@@ -76,8 +76,8 @@ public class TTTServerPlayer implements ServerGamePlayer {
 	}
 	
 	@Override
-	public void handlePacket(ServerPacket packet) {
-		ServerGamePlayer.super.handlePacket(packet);
+	public void handlePacket(ServerPacket serverPacket) {
+		ServerGamePlayer.super.handlePacket(serverPacket);
 		
 	}
 

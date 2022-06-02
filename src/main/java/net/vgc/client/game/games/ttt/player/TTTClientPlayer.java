@@ -66,8 +66,8 @@ public class TTTClientPlayer implements ClientGamePlayer {
 	}
 	
 	@Override
-	public void handlePacket(ClientPacket packet) {
-		ClientGamePlayer.super.handlePacket(packet);
+	public void handlePacket(ClientPacket clientPacket) {
+		ClientGamePlayer.super.handlePacket(clientPacket);
 		
 	}
 	

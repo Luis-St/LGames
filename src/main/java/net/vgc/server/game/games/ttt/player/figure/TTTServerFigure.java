@@ -51,7 +51,7 @@ public class TTTServerFigure implements ServerGameFigure {
 	}
 
 	@Override
-	public void handlePacket(ServerPacket packet) {
+	public void handlePacket(ServerPacket serverPacket) {
 		
 	}
 	

@@ -44,9 +44,9 @@ public interface ServerGamePlayer extends GamePlayer, PacketHandler<ServerPacket
 	void setRollCount(int rollCount);
 	
 	@Override
-	default void handlePacket(ServerPacket packet) {
+	default void handlePacket(ServerPacket serverPacket) {
 		for (ServerGameFigure figure : this.getFigures()) {
-			figure.handlePacket(packet);
+			figure.handlePacket(serverPacket);
 		}
 	}
 	

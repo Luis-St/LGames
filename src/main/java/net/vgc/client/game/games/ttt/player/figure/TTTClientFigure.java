@@ -51,7 +51,7 @@ public class TTTClientFigure implements ClientGameFigure {
 	}
 	
 	@Override
-	public void handlePacket(ClientPacket packet) {
+	public void handlePacket(ClientPacket clientPacket) {
 		
 	}
 	

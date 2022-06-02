@@ -35,6 +35,6 @@ public interface ServerGameField extends GameField, PacketHandler<ServerPacket> 
 	void setFigure(GameFigure figure);
 	
 	@Override
-	void handlePacket(ServerPacket packet);
+	void handlePacket(ServerPacket serverPacket);
 	
 }

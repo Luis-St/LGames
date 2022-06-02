@@ -128,8 +128,8 @@ public class LudoServerGame implements ServerGame {
 	}
 	
 	@Override
-	public void handlePacket(ServerPacket packet) {
-		ServerGame.super.handlePacket(packet);
+	public void handlePacket(ServerPacket serverPacket) {
+		ServerGame.super.handlePacket(serverPacket);
 		
 	}
 	

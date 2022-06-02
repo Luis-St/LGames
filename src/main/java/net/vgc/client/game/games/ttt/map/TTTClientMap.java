@@ -54,8 +54,8 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (oldValue instanceof TTTClientField oldField) {
 				if (newValue instanceof TTTClientField newField) {
-					if (!oldField.isEmpty() && oldField.getRenderState() == TTTFieldRenderState.SHADOW) {
-						oldField.setRenderState(TTTFieldRenderState.NO);
+					if (oldField.isShadowed()) {
+						oldField.setShadowed(false);
 					}
 				} else {
 					oldField.setSelected(true);
@@ -114,7 +114,7 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 
 	@Override
 	public void init(List<? extends GamePlayer> players) {
-		
+		this.getFields().forEach(TTTClientField::clear);
 	}
 	
 	@Override
@@ -174,10 +174,10 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 	public TTTClientField getSelectedField() {
 		Toggle toggle = this.group.getSelectedToggle();
 		if (toggle instanceof TTTClientField field) {
-			if (!field.isEmpty()) {
+			if (field.isEmpty()) {
 				return field;
 			} else {
-				LOGGER.warn("Fail to get the selected field, since the selected field does not have a figure on it");
+				LOGGER.warn("Fail to get the selected field, since the selected field can not have a figure on it");
 				return null;
 			}
 		}
@@ -186,8 +186,8 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 	}
 	
 	@Override
-	public void handlePacket(ClientPacket packet) {
-		ClientGameMap.super.handlePacket(packet);
+	public void handlePacket(ClientPacket clientPacket) {
+		ClientGameMap.super.handlePacket(clientPacket);
 		
 	}
 	

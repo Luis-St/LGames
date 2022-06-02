@@ -165,7 +165,7 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 	}
 	
 	@Override
-	public void handlePacket(ClientPacket packet) {
+	public void handlePacket(ClientPacket clientPacket) {
 		
 	}
 	

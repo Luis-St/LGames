@@ -21,6 +21,7 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.game.games.ttt.TTTServerGame;
+import net.vgc.util.Util;
 
 public class TTTClientGame implements ClientGame {
 	
@@ -85,6 +86,7 @@ public class TTTClientGame implements ClientGame {
 	
 	@Override
 	public void setCurrentPlayer(GamePlayer player) {
+		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.player, this::getName), Util.runIfNotNull(player, this::getName));
 		this.player = (TTTClientPlayer) player;
 	}
 

@@ -23,7 +23,7 @@ public class LudoFieldPos implements GameFieldPos {
 	}
 	
 	@DecodingConstructor
-	private LudoFieldPos(FriendlyByteBuffer buffer) {
+	public LudoFieldPos(FriendlyByteBuffer buffer) {
 		this.green = buffer.readInt();
 		this.yellow = buffer.readInt();
 		this.blue = buffer.readInt();
@@ -110,7 +110,13 @@ public class LudoFieldPos implements GameFieldPos {
 	}
 	
 	@Override
+	public int getDecoderId() {
+		return LUDO_FIELD_POS;
+	}
+	
+	@Override
 	public void encode(FriendlyByteBuffer buffer) {
+		GameFieldPos.super.encode(buffer);
 		buffer.writeInt(this.green);
 		buffer.writeInt(this.yellow);
 		buffer.writeInt(this.blue);

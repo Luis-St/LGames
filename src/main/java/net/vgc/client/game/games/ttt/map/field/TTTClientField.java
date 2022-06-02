@@ -156,7 +156,7 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	}
 	
 	@Override
-	public void handlePacket(ClientPacket packet) {
+	public void handlePacket(ClientPacket clientPacket) {
 		
 	}
 	

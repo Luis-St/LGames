@@ -2,7 +2,6 @@ package net.vgc.client.network;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Table.Cell;
 
@@ -129,7 +128,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 				player.setAdmin(false);
 			}
 		}
-		LOGGER.info("Sync admins to value {}, should not be larger than 1", this.client.getPlayers().stream().filter(AbstractClientPlayer::isAdmin).collect(Collectors.toList()).size());
+		LOGGER.info("Sync admins");
 	}
 	
 	public void handleSyncPlayerData(GameProfile profile, boolean playing, PlayerScore score) {

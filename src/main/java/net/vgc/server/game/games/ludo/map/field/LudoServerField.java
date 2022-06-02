@@ -62,7 +62,7 @@ public class LudoServerField implements ServerGameField, PacketHandler<ServerPac
 	}
 	
 	@Override
-	public void handlePacket(ServerPacket packet) {
+	public void handlePacket(ServerPacket serverPacket) {
 		
 	}
 	

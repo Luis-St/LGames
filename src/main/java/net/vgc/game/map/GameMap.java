@@ -43,7 +43,11 @@ public interface GameMap {
 	GameFigure getFigure(GamePlayer player, int figure);
 	
 	default boolean moveFigure(GameFigure figure, int count) {
-		return this.moveFigureTo(figure, this.getNextField(figure, count));
+		GameField field = this.getNextField(figure, count);
+		if (field != null) {
+			return this.moveFigureTo(figure, field);
+		}
+		return false;
 	}
 	
 	boolean moveFigureTo(GameFigure figure, GameField field);

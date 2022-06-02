@@ -55,9 +55,9 @@ public interface ServerGameMap extends GameMap, PacketHandler<ServerPacket> {
 	boolean moveFigureTo(GameFigure figure, GameField field);
 	
 	@Override
-	default void handlePacket(ServerPacket packet) {
+	default void handlePacket(ServerPacket serverPacket) {
 		for (ServerGameField field : this.getFields()) {
-			field.handlePacket(packet);
+			field.handlePacket(serverPacket);
 		}
 	}
 	

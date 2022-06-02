@@ -62,7 +62,7 @@ public class LudoClientFigure implements ClientGameFigure {
 	}
 	
 	@Override
-	public void handlePacket(ClientPacket packet) {
+	public void handlePacket(ClientPacket clientPacket) {
 		
 	}
 	

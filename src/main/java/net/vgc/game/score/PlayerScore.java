@@ -57,18 +57,18 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public void setWins(int wins) {
-		LOGGER.info("Update win value of player {} from {} to {}", this.profile.getName(), this.win.getValue(), wins);
+		LOGGER.debug("Update win value of player {} from {} to {}", this.profile.getName(), this.win.getValue(), wins);
 		this.win.setValue(wins);
 	}
 	
 	public void increaseWin() {
-		LOGGER.info("Increase win value of player {} from {} to {}", this.profile.getName(), this.win.getValue(), this.win.getValue() + 1);
+		LOGGER.debug("Increase win value of player {} from {} to {}", this.profile.getName(), this.win.getValue(), this.win.getValue() + 1);
 		this.win.increment();
 	}
 	
 	public void resetWins() {
 		this.setWins(0);
-		LOGGER.info("Reset win value of player {} to {}", this.profile.getName(), 0);
+		LOGGER.debug("Reset win value of player {} to {}", this.profile.getName(), 0);
 	}
 	
 	public int getLoses() {
@@ -76,12 +76,12 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public void setLoses(int loses) {
-		LOGGER.info("Update lose value of player {} from {} to {}", this.profile.getName(), this.lose.getValue(), loses);
+		LOGGER.debug("Update lose value of player {} from {} to {}", this.profile.getName(), this.lose.getValue(), loses);
 		this.lose.setValue(loses);
 	}
 	
 	public void increaseLose() {
-		LOGGER.info("Increase lose value of player {} from {} to {}", this.profile.getName(), this.lose.getValue(), this.lose.getValue() + 1);
+		LOGGER.debug("Increase lose value of player {} from {} to {}", this.profile.getName(), this.lose.getValue(), this.lose.getValue() + 1);
 		this.lose.increment();
 	}
 	
@@ -95,18 +95,18 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public void setDraws(int draws) {
-		LOGGER.info("Update draw value of player {} from {} to {}", this.profile.getName(), this.draw.getValue(), draws);
+		LOGGER.debug("Update draw value of player {} from {} to {}", this.profile.getName(), this.draw.getValue(), draws);
 		this.draw.setValue(draws);
 	}
 	
 	public void increaseDraw() {
-		LOGGER.info("Increase draw value of player {} from {} to {}", this.profile.getName(), this.draw.getValue(), this.draw.getValue() + 1);
+		LOGGER.debug("Increase draw value of player {} from {} to {}", this.profile.getName(), this.draw.getValue(), this.draw.getValue() + 1);
 		this.draw.increment();
 	}
 	
 	public void resetDraws() {
 		this.setDraws(0);
-		LOGGER.info("Reset draw value of player {} to {}", this.profile.getName(), 0);
+		LOGGER.debug("Reset draw value of player {} to {}", this.profile.getName(), 0);
 	}
 	
 	public void reset() {
