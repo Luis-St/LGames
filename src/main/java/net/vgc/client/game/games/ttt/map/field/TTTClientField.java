@@ -85,6 +85,7 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = (TTTClientFigure) figure;
+		this.updateFieldGraphic();
 	}
 
 	@Override

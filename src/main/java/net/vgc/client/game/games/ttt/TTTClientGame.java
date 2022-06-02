@@ -37,6 +37,7 @@ public class TTTClientGame implements ClientGame {
 	}
 	
 	protected static List<TTTClientPlayer> createGamePlayers(Client client, TTTClientGame game, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(playerInfos, Cell::getRowKey, GameProfile::getName));
 		List<TTTClientPlayer> gamePlayers = Lists.newArrayList();
 		for (Cell<GameProfile, GamePlayerType, List<UUID>> cell : playerInfos) {
 			AbstractClientPlayer player = client.getPlayer(cell.getRowKey());

@@ -33,8 +33,8 @@ public class LudoScreen extends GameScreen {
 	
 	@Override
 	public void init() {
-		this.playerInfo = new PlayerInfoPane(this.game, 100.0);
-		this.diceButton = new DiceButton(this.client, 150.0);
+		this.playerInfo = new PlayerInfoPane(this.game, 150.0);
+		this.diceButton = new DiceButton(this.client, 100.0);
 		this.leaveButton = new ButtonBox(TranslationKey.createAndGet("screen.lobby.leave"), Pos.CENTER, 20.0, this::handleLeave);
 		this.playAgainButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.play_again"), Pos.CENTER, 20.0, this::handlePlayAgain);
 		this.playAgainButton.getNode().setDisable(true);

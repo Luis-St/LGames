@@ -53,6 +53,7 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 		this.getFields().forEach(LudoServerField::clear);
 		for (GamePlayer gamePlayer : players) {
 			if (gamePlayer instanceof LudoServerPlayer player) {
+				LOGGER.debug("Add figures ({}) of player {}, to their home fields", player.getFigures().size(), player.getPlayer().getProfile().getName());
 				for (LudoServerFigure figure : player.getFigures()) {
 					this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos()).setFigure(figure);
 				}

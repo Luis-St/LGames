@@ -36,6 +36,7 @@ public class LudoClientGame implements ClientGame {
 	}
 	
 	protected static List<LudoClientPlayer> createGamePlayers(Client client, LudoClientGame game, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(playerInfos, Cell::getRowKey, GameProfile::getName));
 		List<LudoClientPlayer> gamePlayers = Lists.newArrayList();
 		for (Cell<GameProfile, GamePlayerType, List<UUID>> cell : playerInfos) {
 			AbstractClientPlayer player = client.getPlayer(cell.getRowKey());

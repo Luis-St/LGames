@@ -17,6 +17,7 @@ import net.vgc.client.game.player.ClientGamePlayer;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.SimpleEntry;
+import net.vgc.util.Util;
 
 public class PlayerInfoPane extends GridPane {
 	
@@ -38,7 +39,7 @@ public class PlayerInfoPane extends GridPane {
 		this.setVgap(10.0);
 		this.setHgap(10.0);
 		this.setGridLinesVisible(Constans.DEBUG);
-		this.add(new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_info")), 0, 0);
+		this.add(this.makePlayerInfoPane(), 0, 0);
 		this.add(this.makeSeparator(), 0, 1);
 		this.add(this.makeCurrentPlayerPane(), 0, 2);
 		this.add(this.makeSeparator(), 0, 3);
@@ -57,39 +58,47 @@ public class PlayerInfoPane extends GridPane {
 		return player.getPlayer().getProfile().getName();
 	}
 	
+	protected GridPane makePlayerInfoPane() {
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 0.0, 5.0);
+		pane.add(new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_info")), 0, 0);
+		return pane;
+	}
+	
 	protected GridPane makeCurrentPlayerPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 10.0);
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
 		pane.add(this.currentPlayerInfo, 0, 0);
 		return pane;
 	}
 	
 	protected GridPane makePlayersPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 10.0);
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
 		int i = 0;
 		for (ClientGamePlayer player : this.game.getPlayers()) {
-			pane.add(new Text(player.getPlayerType().getTranslation().getValue(this.getName(player))), i++, 0);
+			pane.add(new Text(player.getPlayerType().getTranslation().getValue(this.getName(player))), 0, i++);
 		}
 		return pane;
 	}
 	
 	protected GridPane makePlayerScorePane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 10.0);
+		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
 		int i = 0;
 		for (ClientGamePlayer gamePlayer : this.game.getPlayers()) {
 			AbstractClientPlayer player = gamePlayer.getPlayer();
 			Text text = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_score", player.getProfile().getName(), player.getScore().getWins()));
-			pane.add(text, i++, 0);
+			pane.add(text, 0, i++);
 			this.playerScoreInfos.add(new SimpleEntry<ClientGamePlayer, Text>(gamePlayer, text, true));
 		}
 		return pane;
 	}
 	
 	public void update() {
-		this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.getName(this.game.getCurrentPlayer())));
-		for (Entry<ClientGamePlayer, Text> entry : this.playerScoreInfos) {
-			AbstractClientPlayer player = entry.getKey().getPlayer();
-			entry.getValue().setText(TranslationKey.createAndGet("screen.tic_tac_toe.player_score", player.getProfile().getName(), player.getScore().getWins()));
-		}
+		Util.runDelayed("DelayedPlayerInfoUpdate", 500, () -> {
+			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.getName(this.game.getCurrentPlayer())));
+			for (Entry<ClientGamePlayer, Text> entry : this.playerScoreInfos) {
+				AbstractClientPlayer player = entry.getKey().getPlayer();
+				entry.getValue().setText(TranslationKey.createAndGet("screen.tic_tac_toe.player_score", player.getProfile().getName(), player.getScore().getWins()));
+			}
+		});
 	}
 	
 }

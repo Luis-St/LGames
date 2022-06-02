@@ -93,13 +93,14 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = (LudoClientFigure) figure;
+		this.updateFieldGraphic();
 	}
 	
 	@Override
 	public ImageView getFieldBackground() {
 		if (this.fieldType == LudoFieldType.DEFAULT && this.colorType == LudoPlayerType.NO) {
 			return this.makeImage("textures/ludo/field/field.png");
-		} else if (this.fieldType != LudoFieldType.DEFAULT && this.colorType != LudoPlayerType.NO) {
+		} else if (this.colorType != LudoPlayerType.NO) {
 			switch (this.colorType) {
 				case GREEN: return this.makeImage("textures/ludo/field/green_field.png");
 				case YELLOW: return this.makeImage("textures/ludo/field/yellow_field.png");
@@ -152,15 +153,12 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 				pane.getChildren().add(new Box<>(FxUtil.makeImageView("textures/ludo/figure/figure_shadow.png", this.imageSize * 0.95, this.imageSize * 0.95)));
 			}
 			this.setGraphic(pane);
-		} else if (this.renderState == LudoFieldRenderState.DEFAULT) {
+		} else {
 			StackPane pane = new StackPane(fieldBackground, new Box<>(this.getFigure().getPlayerType().getImage(this.imageSize * 0.95, this.imageSize * 0.95)));
 			if (this.isShadowed()) {
 				pane.getChildren().add(new Box<>(FxUtil.makeImageView("textures/ludo/figure/figure_shadow.png", this.imageSize * 0.95, this.imageSize * 0.95)));
 			}
 			this.setGraphic(pane);
-		} else {
-			LOGGER.warn("Fail to update field graphic of field {} with type {}, since the field has a figure on it but the render type is set to {}", this.fieldPos.getPosition(), this.fieldType, this.renderState);
-			this.setGraphic(new StackPane(fieldBackground));
 		}
 	}
 	

@@ -49,6 +49,7 @@ public class LudoServerGame implements ServerGame {
 			LOGGER.error("Fail to create player type map for player list {} with size {}, since a player list with size in bounds 2 - 4 was expected", players.stream().map(game::getName).collect(Collectors.toList()));
 			throw new IllegalStateException("Fail to create player type map for player list with size " + players.size() + ", since a player list with size in bounds 2 - 4 was expected");
 		}
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(players, ServerPlayer::getProfile, GameProfile::getName));
 		List<LudoServerPlayer> gamePlayers = Lists.newArrayList();
 		int i = 0;
 		for (ServerPlayer player : players) {
