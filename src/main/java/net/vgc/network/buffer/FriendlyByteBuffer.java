@@ -5,8 +5,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -153,36 +153,36 @@ public class FriendlyByteBuffer {
 		return EnumRepresentable.fromId(clazz, id);
 	}
 	
-	public <T> void writeList(FriendlyByteBuffer buffer, List<T> list, BiConsumer<FriendlyByteBuffer, T> consumer) {
-		buffer.writeInt(list.size());
+	public <T> void writeList(List<T> list, Consumer<T> consumer) {
+		this.writeInt(list.size());
 		for (T t : list) {
-			consumer.accept(buffer, t);
+			consumer.accept(t);
 		}
 	}
 	
-	public <T> List<T> readList(FriendlyByteBuffer buffer, Function<FriendlyByteBuffer, T> function) {
+	public <T> List<T> readList(Supplier<T> function) {
 		List<T> list = Lists.newArrayList();
-		int size = buffer.readInt();
+		int size = this.readInt();
 		for (int i = 0; i < size; i++) {
-			list.add(function.apply(buffer));
+			list.add(function.get());
 		}
 		return list;
 	}
 	
-	public <K, V> void writeMap(FriendlyByteBuffer buffer, Map<K, V> map, BiConsumer<FriendlyByteBuffer, K> keyConsumer, BiConsumer<FriendlyByteBuffer, V> valueConsumer) {
-		buffer.writeInt(map.size());
+	public <K, V> void writeMap(Map<K, V> map, Consumer<K> keyConsumer, Consumer<V> valueConsumer) {
+		this.writeInt(map.size());
 		for (Map.Entry<K, V> entry : map.entrySet()) {
-			keyConsumer.accept(buffer, entry.getKey());
-			valueConsumer.accept(buffer, entry.getValue());
+			keyConsumer.accept(entry.getKey());
+			valueConsumer.accept(entry.getValue());
 		}
 	}
 	
-	public <K, V> Map<K, V> readMap(FriendlyByteBuffer buffer, Function<FriendlyByteBuffer, K> keyFunction, Function<FriendlyByteBuffer, V> valueFunction) {
+	public <K, V> Map<K, V> readMap(Supplier<K> keyFunction, Supplier<V> valueFunction) {
 		Map<K, V> map = Maps.newHashMap();
 		int size = buffer.readInt();
 		for (int i = 0; i < size; i++) {
-			K key = keyFunction.apply(buffer);
-			V value = valueFunction.apply(buffer);
+			K key = keyFunction.get();
+			V value = valueFunction.get();
 			map.put(key, value);
 		}
 		return map;

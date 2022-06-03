@@ -23,16 +23,16 @@ public class PlayGameRequestPacket implements ServerPacket {
 	
 	public PlayGameRequestPacket(FriendlyByteBuffer buffer) {
 		this.gameType = GameTypes.fromName(buffer.readString());
-		this.profiles = buffer.readList(buffer, (buf) -> {
-			return buf.read(GameProfile.class);
+		this.profiles = buffer.readList(() -> {
+			return buffer.read(GameProfile.class);
 		});
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeString(this.gameType.getName());
-		buffer.writeList(buffer, this.profiles, (buf, profile) -> {
-			buf.write(profile);
+		buffer.writeList(this.profiles, (profile) -> {
+			buffer.write(profile);
 		});
 	}
 

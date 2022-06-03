@@ -26,10 +26,10 @@ public class StartGamePacket implements ClientPacket {
 	
 	public StartGamePacket(FriendlyByteBuffer buffer) {
 		this.gameType = GameTypes.fromName(buffer.readString());
-		this.playerInfos = buffer.readList(buffer, (buf) -> {
-			GameProfile profile = buf.read(GameProfile.class);
-			GamePlayerType playerType = GamePlayerType.decode(buf);
-			List<UUID> uuids = buf.readList(buffer, FriendlyByteBuffer::readUUID);
+		this.playerInfos = buffer.readList(() -> {
+			GameProfile profile = buffer.read(GameProfile.class);
+			GamePlayerType playerType = GamePlayerType.decode(buffer);
+			List<UUID> uuids = buffer.readList(buffer::readUUID);
 			return new SimpleCell<>(profile, playerType, uuids);
 		});
 	}
@@ -37,10 +37,10 @@ public class StartGamePacket implements ClientPacket {
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeString(this.gameType.getName());
-		buffer.writeList(buffer, this.playerInfos, (buf, playerInfo) -> {
-			buf.write(playerInfo.getRowKey());
-			playerInfo.getColumnKey().encode(buf);
-			buf.writeList(buf, playerInfo.getValue(), FriendlyByteBuffer::writeUUID);
+		buffer.writeList(this.playerInfos, (playerInfo) -> {
+			buffer.write(playerInfo.getRowKey());
+			playerInfo.getColumnKey().encode(buffer);
+			buffer.writeList(playerInfo.getValue(), buffer::writeUUID);
 		});
 	}
 

@@ -17,15 +17,15 @@ public class ClientJoinedPacket implements ClientPacket {
 	}
 
 	public ClientJoinedPacket(FriendlyByteBuffer buffer) {
-		this.profiles = buffer.readList(buffer, (buf) -> {
-			return buf.read(GameProfile.class);
+		this.profiles = buffer.readList(() -> {
+			return buffer.read(GameProfile.class);
 		});
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeList(buffer, this.profiles, (buf, profile) -> {
-			buf.write(profile);
+		buffer.writeList(this.profiles, (profile) -> {
+			buffer.write(profile);
 		});
 	}
 
