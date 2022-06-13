@@ -1,4 +1,4 @@
-package net.vgc.network;
+package net.vgc.network.packet;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,8 +10,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.network.packet.Packet;
-import net.vgc.network.packet.Packets;
 
 public class PacketDecoder extends ByteToMessageDecoder {
 
@@ -47,6 +45,11 @@ public class PacketDecoder extends ByteToMessageDecoder {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
+		LOGGER.warn("Caught an exception while decode a packet");
 	}
 
 }

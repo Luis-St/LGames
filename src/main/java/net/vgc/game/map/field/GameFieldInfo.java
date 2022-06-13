@@ -24,7 +24,8 @@ public class GameFieldInfo implements Encodable {
 	@DecodingConstructor
 	private GameFieldInfo(FriendlyByteBuffer buffer) {
 		this.fieldPos = GameFieldPos.decode(buffer);
-		this.profile = buffer.read(GameProfile.class);
+		GameProfile profile = buffer.read(GameProfile.class);
+		this.profile = profile.equals(GameProfile.EMPTY) ? GameProfile.EMPTY : profile;
 		this.figureCount = buffer.readInt();
 		this.figureUUID = buffer.readUUID();
 	}

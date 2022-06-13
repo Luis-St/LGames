@@ -69,13 +69,8 @@ public class TTTFieldPos implements GameFieldPos {
 	}
 	
 	@Override
-	public int getDecoderId() {
-		return TTT_FIELD_POS;
-	}
-	
-	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		GameFieldPos.super.encode(buffer);
+		buffer.writeString(this.getClass().getName());
 		buffer.writeInt(this.position);
 		buffer.writeInt(this.row);
 		buffer.writeInt(this.column);

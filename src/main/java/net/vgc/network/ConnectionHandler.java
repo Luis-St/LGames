@@ -23,6 +23,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import net.vgc.network.packet.Packet;
+import net.vgc.network.packet.PacketDecoder;
+import net.vgc.network.packet.PacketEncoder;
 import net.vgc.network.packet.PacketListener;
 import net.vgc.util.ExceptionHandler;
 

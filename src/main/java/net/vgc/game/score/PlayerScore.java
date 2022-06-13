@@ -42,7 +42,6 @@ public class PlayerScore implements Encodable {
 			this.win.setValue(score.getWins());
 			this.lose.setValue(score.getLoses());
 			this.draw.setValue(score.getDraws());
-			LOGGER.info("Sync player score");
 		} else {
 			LOGGER.warn("Fail to sync player score of player {} with player {}", this.profile, score.profile);
 		}

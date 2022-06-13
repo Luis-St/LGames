@@ -4,11 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.network.buffer.Decodable;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.ReflectionHelper;
 
-public interface GameFieldPos extends Encodable, Decodable {
+public interface GameFieldPos extends Encodable {
 	
 	public static final Logger LOGGER = LogManager.getLogger();
 	
@@ -18,14 +18,18 @@ public interface GameFieldPos extends Encodable, Decodable {
 	
 	boolean isStart();
 	
-	@Override
-	default void encode(FriendlyByteBuffer buffer) {
-		buffer.writeInt(this.getDecoderId());
-	}
-	
+	@SuppressWarnings("unchecked")
 	public static GameFieldPos decode(FriendlyByteBuffer buffer) {
-		int id = buffer.readInt();
-		return (GameFieldPos) Decodable.getDecoder(id).apply(buffer);
+		String className = buffer.readString();
+		try {
+			Class<? extends GameFieldPos> clazz = (Class<? extends GameFieldPos>) Class.forName(className);
+			if (ReflectionHelper.hasConstructor(clazz, FriendlyByteBuffer.class)) {
+				return ReflectionHelper.newInstance(clazz, buffer);
+			}
+		} catch (Exception e) {
+			LOGGER.warn("Fail to decode game field pos");
+		}
+		return null;
 	}
 	
 }

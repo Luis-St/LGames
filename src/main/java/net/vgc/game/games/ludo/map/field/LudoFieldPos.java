@@ -110,13 +110,8 @@ public class LudoFieldPos implements GameFieldPos {
 	}
 	
 	@Override
-	public int getDecoderId() {
-		return LUDO_FIELD_POS;
-	}
-	
-	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		GameFieldPos.super.encode(buffer);
+		buffer.writeString(this.getClass().getName());
 		buffer.writeInt(this.green);
 		buffer.writeInt(this.yellow);
 		buffer.writeInt(this.blue);
