@@ -10,6 +10,7 @@ import net.vgc.game.Game;
 import net.vgc.game.GameType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
+import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
@@ -21,6 +22,7 @@ import net.vgc.server.dedicated.DedicatedPlayerList;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.map.ServerGameMap;
 import net.vgc.server.game.player.ServerGamePlayer;
+import net.vgc.server.game.win.WinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
@@ -123,6 +125,8 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 		return false;
 	}
 	
+	WinHandler getWinHandler();
+	
 	@Override
 	boolean nextMatch();
 	
@@ -139,7 +143,7 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
 				player.connection.send(new StopGamePacket());
-				this.getServer().getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying(), new PlayerScore(player.getProfile())), player);
+				this.getPlayerList().broadcastAllExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying(), new PlayerScore(player.getProfile())), player);
 			}
 		}
 		this.getPlayers().clear();
@@ -153,6 +157,14 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 		for (ServerGamePlayer player : this.getPlayers()) {
 			player.handlePacket(serverPacket);
 		}
+	}
+	
+	default void broadcastPlayer(Packet<?> packet, ServerGamePlayer player) {
+		player.getPlayer().connection.send(packet);
+	}
+	
+	default void broadcastPlayers(Packet<?> packet) {
+		this.getPlayerList().broadcastAll(Util.mapList(this.getPlayers(), ServerGamePlayer::getPlayer), packet);
 	}
 	
 }

@@ -48,6 +48,16 @@ public interface Game {
 	GamePlayer getPlayerFor(GameProfile profile);
 	
 	@Nullable
+	default GamePlayerType getPlayerType(GamePlayer player) {
+		for (GamePlayer gamePlayer : this.getPlayers()) {
+			if (gamePlayer.equals(player)) {
+				return gamePlayer.getPlayerType();
+			}
+		}
+		return null;
+	}
+	
+	@Nullable
 	GamePlayer getCurrentPlayer();
 	
 	void setCurrentPlayer(GamePlayer player);
@@ -84,16 +94,6 @@ public interface Game {
 	}
 	
 	boolean removePlayer(GamePlayer player, boolean sendExit);
-	
-	@Nullable
-	default GamePlayerType getPlayerType(GamePlayer player) {
-		for (GamePlayer gamePlayer : this.getPlayers()) {
-			if (gamePlayer.equals(player)) {
-				return gamePlayer.getPlayerType();
-			}
-		}
-		return null;
-	}
 	
 	default boolean isDiceGame() {
 		return false;

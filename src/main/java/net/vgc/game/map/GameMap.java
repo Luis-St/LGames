@@ -40,6 +40,15 @@ public interface GameMap {
 	
 	List<? extends GameField> getWinFields(GamePlayerType playerType);
 	
+	default boolean hasEmptyField() {
+		for (GameField field : this.getFields()) {
+			if (field.isEmpty()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	GameFigure getFigure(GamePlayer player, int figure);
 	
 	default boolean moveFigure(GameFigure figure, int count) {

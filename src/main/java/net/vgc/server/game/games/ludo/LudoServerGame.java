@@ -24,6 +24,7 @@ import net.vgc.server.game.games.ludo.dice.LudoDiceHandler;
 import net.vgc.server.game.games.ludo.map.LudoServerMap;
 import net.vgc.server.game.games.ludo.player.LudoServerPlayer;
 import net.vgc.server.game.games.ludo.player.figure.LudoServerFigure;
+import net.vgc.server.game.games.ludo.win.LudoWinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Mth;
 import net.vgc.util.SimpleCell;
@@ -35,6 +36,7 @@ public class LudoServerGame implements ServerGame {
 	protected final LudoServerMap map;
 	protected final List<LudoServerPlayer> players;
 	protected final LudoDiceHandler diceHandler;
+	protected final LudoWinHandler winHandler;
 	protected LudoServerPlayer player;
 	
 	public LudoServerGame(DedicatedServer server, List<ServerPlayer> players) {
@@ -42,6 +44,7 @@ public class LudoServerGame implements ServerGame {
 		this.map = new LudoServerMap(this.server, this);
 		this.players = createGamePlayers(this, players, 4);
 		this.diceHandler = new LudoDiceHandler(this, 1, 6);
+		this.winHandler = new LudoWinHandler();
 	}
 	
 	protected static List<LudoServerPlayer> createGamePlayers(LudoServerGame game, List<ServerPlayer> players, int figureCount) {
@@ -120,6 +123,11 @@ public class LudoServerGame implements ServerGame {
 	@Override
 	public DiceHandler getDiceHandler() {
 		return this.diceHandler;
+	}
+	
+	@Override
+	public LudoWinHandler getWinHandler() {
+		return this.winHandler;
 	}
 	
 	@Override

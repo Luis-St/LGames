@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.vgc.game.player.field.GameFigure;
+import net.vgc.player.GameProfile;
+import net.vgc.util.Util;
 
 public interface GameField {
 	
@@ -38,6 +40,14 @@ public interface GameField {
 	
 	default boolean isEmpty() {
 		return this.getFigure() == null;
+	}
+	
+	default GameFieldInfo getFieldInfo() {
+		if (this.isEmpty()) {
+			return new GameFieldInfo(this.getFieldPos(), GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+		}
+		GameFigure figure = this.getFigure();
+		return new GameFieldInfo(this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	
 }

@@ -12,11 +12,7 @@ public class ClientLeavePacket implements ServerPacket {
 	protected final UUID uuid;
 	
 	public ClientLeavePacket(PlayerAccount account) {
-		this(account == null ? Util.EMPTY_UUID : account.getUUID());
-	}
-	
-	public ClientLeavePacket(UUID uuid) {
-		this.uuid = uuid;
+		this.uuid = account == null ? Util.EMPTY_UUID : account.getUUID();
 	}
 	
 	public ClientLeavePacket(FriendlyByteBuffer buffer) {
