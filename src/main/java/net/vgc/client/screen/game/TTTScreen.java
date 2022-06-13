@@ -12,8 +12,10 @@ import net.vgc.client.game.games.ttt.map.TTTClientMap;
 import net.vgc.client.game.games.ttt.map.field.TTTClientField;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.game.TTTGameResultPacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
+import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
 public class TTTScreen extends GameScreen {
 	
@@ -25,8 +27,8 @@ public class TTTScreen extends GameScreen {
 	
 	public TTTScreen(TTTClientGame game) {
 		this.game = game;
-		this.width = 750;
-		this.height = 650;
+		this.width = 850;
+		this.height = 700;
 	}
 	
 	@Override
@@ -45,6 +47,7 @@ public class TTTScreen extends GameScreen {
 	protected void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
+			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
 	
@@ -52,7 +55,8 @@ public class TTTScreen extends GameScreen {
 		TTTClientField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().isCurrent()) {
-//				this.client.getServerHandler().send(null); // TODO: add packet
+				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), field.getFieldPos()));
+				this.getPlayer().setCurrent(false);
 			} else {
 				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());
 			}
@@ -64,6 +68,9 @@ public class TTTScreen extends GameScreen {
 	@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
+		if (clientPacket instanceof TTTGameResultPacket packet) {
+			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
+		}
 	}
 	
 	@Override

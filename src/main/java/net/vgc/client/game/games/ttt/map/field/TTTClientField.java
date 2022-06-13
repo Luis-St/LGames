@@ -85,7 +85,14 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = (TTTClientFigure) figure;
-		this.updateFieldGraphic();
+	}
+	
+	@Override
+	public void clear() {
+		ClientGameField.super.clear();
+		if (this.renderState != TTTFieldRenderState.SHADOW) {
+			this.renderState = TTTFieldRenderState.NO;
+		}
 	}
 
 	@Override
@@ -150,7 +157,7 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 			if (this.renderState.canRenderWithFigure()) {
 				this.setGraphic(this.figure.getPlayerType().getImage(this.renderState, this.imageSize * 0.95, this.imageSize * 0.95));
 			} else {
-				LOGGER.warn("Fail to display figure {} of player {} on field {}, since the render state is {}", this.figure.getCount(), this.figure.getPlayer().getPlayer().getProfile().getName(), this.renderState);
+				LOGGER.warn("Fail to display figure {} of player {} on field {}, since the render state is {}", this.figure.getCount(), this.figure.getPlayer().getPlayer().getProfile().getName(), this.fieldPos.getPosition(), this.renderState);
 				this.setGraphic(null);
 			}
 		}

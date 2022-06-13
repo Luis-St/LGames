@@ -23,12 +23,17 @@ import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.ServerClosedPacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
+import net.vgc.network.packet.client.game.CanPerformGameActionPacket;
 import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
+import net.vgc.network.packet.client.game.GameActionFailedPacket;
 import net.vgc.network.packet.client.game.StartGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
+import net.vgc.network.packet.client.game.TTTGameResultPacket;
+import net.vgc.network.packet.client.game.UpdateGameFieldPacket;
+import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
@@ -37,10 +42,11 @@ import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayGameRequestPacket;
+import net.vgc.network.packet.server.game.RequestGameActionPacket;
+import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
 import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
-
 
 public class Packets {
 	
@@ -69,6 +75,13 @@ public class Packets {
 		map.put(i++, CancelRollDiceRequestPacket.class);
 		map.put(i++, RolledDicePacket.class);
 		map.put(i++, CanRollDiceAgainPacket.class);
+		map.put(i++, CanPerformGameActionPacket.class);
+		map.put(i++, RequestGameActionPacket.class);
+		map.put(i++, GameActionFailedPacket.class);
+		map.put(i++, SelectGameFieldPacket.class);
+		map.put(i++, UpdateGameFieldPacket.class);
+		map.put(i++, UpdateGameMapPacket.class);
+		map.put(i++, TTTGameResultPacket.class);
 		map.put(i++, ExitGameRequestPacket.class);
 		map.put(i++, ExitGamePacket.class);
 		map.put(i++, StopGamePacket.class);
@@ -81,7 +94,7 @@ public class Packets {
 		if (clazz != null) {
 			return clazz;
 		}
-		LOGGER.warn("Unable to get packet for id {}", id);
+		LOGGER.warn("Fail to get packet for id {}", id);
 		return null;
 	}
 	
@@ -91,7 +104,7 @@ public class Packets {
 				return entry.getKey();
 			}
 		}
-		LOGGER.warn("Unable to get packet id for packet {}", clazz.getSimpleName());
+		LOGGER.warn("Fail to get packet id for packet of type {}", clazz.getSimpleName());
 		return -1;
 	}
 	

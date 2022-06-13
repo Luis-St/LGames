@@ -84,7 +84,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 			}
 		} else {
 			if (mutable.isTrue()) {
-				LOGGER.warn("Fail to start game {}, since on player is already playing a game", gameType.getInfoName());
+				LOGGER.warn("Fail to start game {}, since at least one selected player is already playing a game", gameType.getInfoName());
 			} else {
 				LOGGER.warn("Fail to start game {}, since there was an error in a player profile", gameType.getInfoName());
 			}
@@ -128,7 +128,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 	public void handleRollDiceRequest(GameProfile profile) {
 		ServerGame game = this.server.getGame();
 		if (game != null) {
-			ServerGamePlayer player = game.getPlayerFor(this.server.getPlayerList().getPlayer(profile));
+			ServerGamePlayer player = game.getPlayerFor(profile);
 			if (player != null) {
 				if (game.isDiceGame()) {
 					DiceHandler diceHandler = game.getDiceHandler();
@@ -140,7 +140,6 @@ public class ServerPacketListener extends AbstractPacketListener {
 						if (diceHandler.canRollAgain(player, count)) {
 							this.connection.send(new CanRollDiceAgainPacket());
 						} else if (diceHandler.canPerformGameAction(player, count)) {
-							
 							// TODO: handle
 						} else {
 							game.nextPlayer(false);
@@ -166,7 +165,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 	public void handleExitGameRequest(GameProfile profile) {
 		ServerGame game = this.server.getGame();
 		if (game != null) {
-			if(!game.removePlayer(game.getPlayerFor(this.server.getPlayerList().getPlayer(profile)), true)) {
+			if(!game.removePlayer(game.getPlayerFor(profile), true)) {
 				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getInfoName());
 			}
 		} else {
