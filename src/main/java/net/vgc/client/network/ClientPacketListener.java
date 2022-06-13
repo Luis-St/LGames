@@ -178,7 +178,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 					player.setCurrent(false);
 				}
 			}
-			if (flag) {
+			if (!flag) {
 				LOGGER.warn("Fail to update the current player to {}, since the player does not exists", profile.getName());
 			}
 		} else {
@@ -206,6 +206,10 @@ public class ClientPacketListener extends AbstractPacketListener {
 				this.client.setScreen(new LobbyScreen());
 			}
 		}
+	}
+	
+	public void handleGameActionFailed() {
+		this.client.getPlayer().setCurrent(true);
 	}
 	
 	public void handleCancelPlayAgainGameRequest() {

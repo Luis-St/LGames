@@ -27,8 +27,8 @@ public class LudoScreen extends GameScreen {
 	
 	public LudoScreen(LudoClientGame game) {
 		this.game = game;
-		this.width = 1550;
-		this.height = 1150;
+		this.width = 1400;
+		this.height = 1100;
 	}
 	
 	@Override

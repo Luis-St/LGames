@@ -87,7 +87,7 @@ public class PlayerScore implements Encodable {
 	
 	public void resetLoses() {
 		this.setLoses(0);
-		LOGGER.info("Reset lose value of player {} to {}", this.profile.getName(), 0);
+		LOGGER.debug("Reset lose value of player {} to {}", this.profile.getName(), 0);
 	}
 	
 	public int getDraws() {
