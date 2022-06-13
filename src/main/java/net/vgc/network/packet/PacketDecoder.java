@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import net.vgc.network.SkipPacketException;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class PacketDecoder extends ByteToMessageDecoder {
