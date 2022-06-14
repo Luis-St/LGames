@@ -93,6 +93,7 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 				return this.getWinFields(playerType).get(fieldPos.getPositionFor(playerType));
 			}
 			LOGGER.warn("Fail to get a default field with type {} at position {}", fieldType, fieldPos.getPosition());
+			return null;
 		}
 		return this.fields.get(fieldPos.getPosition());
 	}
@@ -150,15 +151,13 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 
 	@Override
 	public List<LudoServerField> getStartFields(GamePlayerType playerType) {
-		switch ((LudoPlayerType) playerType) {
-			case GREEN: Lists.newArrayList(LudoFieldPos.ofGreen(0));
-			case YELLOW: Lists.newArrayList(LudoFieldPos.ofYellow(0));
-			case BLUE: Lists.newArrayList(LudoFieldPos.ofBlue(0));
-			case RED: Lists.newArrayList(LudoFieldPos.ofRed(0));
-			default: break;
-		}
-		LOGGER.warn("Fail to get start field for type {}", playerType);
-		return Lists.newArrayList();
+		return switch ((LudoPlayerType) playerType) {
+			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.fields.get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
+			default -> {
+				LOGGER.warn("Fail to get start field for type {}", playerType);
+				yield Lists.newArrayList();
+			}
+		};
 	}
 
 	@Override
