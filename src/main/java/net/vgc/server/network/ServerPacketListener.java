@@ -131,28 +131,35 @@ public class ServerPacketListener extends AbstractPacketListener {
 				if (game.isDiceGame()) {
 					DiceHandler diceHandler = game.getDiceHandler();
 					if (diceHandler.canRoll(player)) {
-						int lastCount = diceHandler.getLastCount(player);
-						int count = lastCount > 0 ? diceHandler.rollExclude(player, lastCount) : diceHandler.roll(player);
+						int count;
+						if (diceHandler.hasPlayerRolledDice(player)) {
+							count = diceHandler.rollExclude(player, diceHandler.getLastCount(player));
+						} else {
+							count = diceHandler.roll(player);
+						}
 						LOGGER.info("Player {} rolled a {}", profile.getName(), count);
 						this.connection.send(new RolledDicePacket(count));
 						if (diceHandler.canRollAgain(player, count)) {
 							this.connection.send(new CanRollDiceAgainPacket());
 						} else if (diceHandler.canPerformGameAction(player, count)) {
-							// TODO: handle
+							diceHandler.performGameAction(player, count);
 						} else {
 							game.nextPlayer(false);
 						}
 					} else {
-						LOGGER.warn("Player {} tries to roll the dice, but it is not his turn", profile.getName());
+						LOGGER.warn("Player {} tries to roll the dice, but he is not be able to roll it", profile.getName());
 						this.connection.send(new CancelRollDiceRequestPacket());
+						game.nextPlayer(false);
 					}
 				} else {
 					LOGGER.warn("Fail to roll dice, since game {} is not a dice game", game.getType().getInfoName());
 					this.connection.send(new CancelRollDiceRequestPacket());
+					game.stopGame();
 				}
 			} else {
 				LOGGER.warn("Fail to roll dice, since the player {} does not play game {}", profile.getName(), game.getType().getInfoName());
 				this.connection.send(new CancelRollDiceRequestPacket());
+				game.stopGame();
 			}
 		} else {
 			LOGGER.warn("Fail to roll dice, since there is no running game");

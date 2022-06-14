@@ -1,18 +1,18 @@
 package net.vgc.server.game.games.ludo.dice;
 
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
 import net.vgc.game.map.field.GameField;
-import net.vgc.game.player.GamePlayer;
 import net.vgc.server.game.dice.Dice;
 import net.vgc.server.game.dice.DiceHandler;
+import net.vgc.server.game.dice.PlayerDiceInfo;
 import net.vgc.server.game.dice.SimpleDice;
 import net.vgc.server.game.games.ludo.LudoServerGame;
-import net.vgc.util.SimpleEntry;
+import net.vgc.server.game.map.field.ServerGameField;
+import net.vgc.server.game.player.ServerGamePlayer;
 import net.vgc.util.Util;
 
 public class LudoDiceHandler implements DiceHandler {
@@ -21,7 +21,7 @@ public class LudoDiceHandler implements DiceHandler {
 	protected final int min;
 	protected final int max;
 	protected final Dice dice;
-	protected final List<Entry<GamePlayer, Integer>> countHistory;
+	protected final List<PlayerDiceInfo> countHistory;
 	
 	public LudoDiceHandler(LudoServerGame game, int min, int max) {
 		this.game = game;
@@ -52,51 +52,56 @@ public class LudoDiceHandler implements DiceHandler {
 	}
 
 	@Override
-	public boolean canRoll(GamePlayer player) {
+	public boolean canRoll(ServerGamePlayer player) {
 		return Objects.equals(this.game.getCurrentPlayer(), player) && player.getRollCount() > 0;
 	}
 
 	@Override
-	public int roll(GamePlayer player) {
+	public int roll(ServerGamePlayer player) {
 		return this.handleRolled(player, this.dice.roll());
 	}
 
 	@Override
-	public int rollExclude(GamePlayer player, int value) {
+	public int rollExclude(ServerGamePlayer player, int value) {
 		return this.handleRolled(player, this.dice.rollExclude(value));
 	}
 
 	@Override
-	public int rollPreferred(GamePlayer player, int value, int rolls) {
+	public int rollPreferred(ServerGamePlayer player, int value, int rolls) {
 		return this.handleRolled(player, this.dice.rollPreferred(value, rolls));
 	}
 	
-	protected int handleRolled(GamePlayer player, int count) {
-		this.countHistory.add(new SimpleEntry<>(player, count, true));
+	protected int handleRolled(ServerGamePlayer player, int count) {
+		this.countHistory.add(new PlayerDiceInfo(player, count));
 		player.setRollCount(player.getRollCount() - 1);
 		return count;
 	}
 
 	@Override
-	public boolean canRollAgain(GamePlayer player, int count) {
+	public boolean canRollAgain(ServerGamePlayer player, int count) {
 		return this.canRoll(player) && player.hasAllFiguresAt(GameField::isHome) && count != 6;
 	}
 	
 	@Override
-	public boolean canPerformGameAction(GamePlayer player, int count) {
+	public boolean canPerformGameAction(ServerGamePlayer player, int count) {
 		return player.canMoveAnyFigure(count);
+	}
+	
+	@Override
+	public void performGameAction(ServerGamePlayer player, int count) {
+		LOGGER.debug("Handle game action for player {} with dice count {}", player, count);
 	}
 
 	@Override
-	public boolean canRollAfterMove(GamePlayer player, GameField field, int count) {
+	public boolean canRollAfterMove(ServerGamePlayer player, ServerGameField field, int count) {
 		return Objects.equals(this.game.getCurrentPlayer(), player) && count == 6;
 	}
 
 	@Override
-	public int getLastCount(GamePlayer player) {
-		for (Entry<GamePlayer, Integer> entry : Util.reverseList(this.countHistory)) {
-			if (entry.getKey().equals(player)) {
-				return entry.getValue();
+	public int getLastCount(ServerGamePlayer player) {
+		for (PlayerDiceInfo diceInfo : Util.reverseList(this.countHistory)) {
+			if (diceInfo.getPlayer().equals(player)) {
+				return diceInfo.getCount();
 			}
 		}
 		LOGGER.warn("Player {} has not rolled the dice yet", player.getPlayer().getProfile().getName());
@@ -104,7 +109,7 @@ public class LudoDiceHandler implements DiceHandler {
 	}
 
 	@Override
-	public List<Entry<GamePlayer, Integer>> getCountHistory() {
+	public List<PlayerDiceInfo> getCountHistory() {
 		return this.countHistory;
 	}
 

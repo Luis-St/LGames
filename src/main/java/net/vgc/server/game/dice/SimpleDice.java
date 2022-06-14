@@ -36,7 +36,7 @@ public class SimpleDice implements Dice {
 
 	@Override
 	public int rollExclude(int value) {
-		if (Mth.isInBounds(value, this.min, this.max)) {
+		if (!Mth.isInBounds(value, this.min, this.max)) {
 			LOGGER.warn("The exclude value must be in bounds {} - {} but it is {}", this.min, this.max, value);
 			return this.roll();
 		}
