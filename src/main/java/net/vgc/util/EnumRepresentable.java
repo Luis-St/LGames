@@ -36,7 +36,7 @@ public interface EnumRepresentable {
 	
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public static <T extends Enum<T> & EnumRepresentable> T fromId(Class<T> clazz, int id) {
+	public static <T extends EnumRepresentable> T fromId(Class<T> clazz, int id) {
 		if (clazz.isEnum()) {
 			T[] values = clazz.getEnumConstants();
 			for (T value : values) {

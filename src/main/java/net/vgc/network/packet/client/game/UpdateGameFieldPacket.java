@@ -23,7 +23,7 @@ public class UpdateGameFieldPacket implements ClientPacket {
 	}
 	
 	public UpdateGameFieldPacket(FriendlyByteBuffer buffer) {
-		this.fieldPos = GameFieldPos.decode(buffer);
+		this.fieldPos = buffer.readInterface();
 		this.profile = buffer.read(GameProfile.class);
 		this.figureCount = buffer.readInt();
 		this.figureUUID = buffer.readUUID();
@@ -31,7 +31,7 @@ public class UpdateGameFieldPacket implements ClientPacket {
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.write(this.fieldPos);
+		buffer.writeInterface(this.fieldPos);
 		buffer.write(this.profile);
 		buffer.writeInt(this.figureCount);
 		buffer.writeUUID(this.figureUUID);

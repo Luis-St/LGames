@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
-import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
@@ -26,9 +25,9 @@ public class TTTResultLine implements Encodable {
 	
 	@DecodingConstructor
 	private TTTResultLine(FriendlyByteBuffer buffer) {
-		this.firstPos = (TTTFieldPos) GameFieldPos.decode(buffer);
-		this.secondPos = (TTTFieldPos) GameFieldPos.decode(buffer);
-		this.thirdPos = (TTTFieldPos) GameFieldPos.decode(buffer);
+		this.firstPos = buffer.read(TTTFieldPos.class);
+		this.secondPos = buffer.read(TTTFieldPos.class);
+		this.thirdPos = buffer.read(TTTFieldPos.class);
 	}
 	
 	public TTTFieldPos getFirstPos() {

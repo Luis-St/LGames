@@ -10,6 +10,7 @@ import net.vgc.client.fx.game.PlayerInfoPane;
 import net.vgc.client.game.games.ttt.TTTClientGame;
 import net.vgc.client.game.games.ttt.map.TTTClientMap;
 import net.vgc.client.game.games.ttt.map.field.TTTClientField;
+import net.vgc.game.games.ttt.map.field.TTTFieldType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
@@ -55,7 +56,7 @@ public class TTTScreen extends GameScreen {
 		TTTClientField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().isCurrent()) {
-				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), field.getFieldPos()));
+				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), TTTFieldType.DEFAULT, field.getFieldPos()));
 				this.getPlayer().setCurrent(false);
 			} else {
 				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());

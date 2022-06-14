@@ -3,7 +3,7 @@ package net.vgc.server.game.games.ttt.map.field;
 import java.util.Objects;
 
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
-import net.vgc.game.map.field.GameFieldType;
+import net.vgc.game.games.ttt.map.field.TTTFieldType;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.game.games.ttt.player.figure.TTTServerFigure;
@@ -19,9 +19,9 @@ public class TTTServerField implements ServerGameField {
 	}
 	
 	@Override
-	public GameFieldType getFieldType() {
+	public TTTFieldType getFieldType() {
 		LOGGER.warn("Fail to get field type of field {}, since tic tac toe fields does not have a field type", this.getFieldPos().getPosition());
-		return null;
+		return TTTFieldType.DEFAULT;
 	}
 
 	@Override

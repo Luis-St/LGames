@@ -12,8 +12,8 @@ import net.vgc.client.game.games.ttt.player.figure.TTTClientFigure;
 import net.vgc.client.game.map.field.ClientGameField;
 import net.vgc.client.game.map.field.FieldRenderState;
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
+import net.vgc.game.games.ttt.map.field.TTTFieldType;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
-import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.client.ClientPacket;
 
@@ -48,8 +48,9 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	}
 
 	@Override
-	public GameFieldType getFieldType() {
-		return null;
+	public TTTFieldType getFieldType() {
+		LOGGER.warn("Fail to get field type of field {}, since tic tac toe fields does not have a field type", this.getFieldPos().getPosition());
+		return TTTFieldType.DEFAULT;
 	}
 
 	@Override
