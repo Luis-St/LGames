@@ -125,10 +125,14 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 		Button settingsButton = FxUtil.makeButton(TranslationKey.createAndGet("screen.menu.settings"), this::openSettings);
 		settingsButton.setPrefWidth(150.0);
 		Button refreshButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshPlayers);
-		refreshButton.setPrefWidth(150.0);
+		refreshButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
 		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), Platform::exit);
-		closeButton.setPrefWidth(150.0);
-		pane.addRow(0, settingsButton, refreshButton, closeButton);
+		closeButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
+		if (Constans.IDE) {
+			pane.addRow(0, settingsButton, refreshButton, closeButton);
+		} else {
+			pane.addRow(0, refreshButton, closeButton);
+		}
 		box.getChildren().addAll(serverTree, pane);
 		return new Scene(box, 450.0, 400.0);
 	}

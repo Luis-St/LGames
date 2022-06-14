@@ -151,7 +151,17 @@ public class Server extends GameApplication<ServerPacket> implements Tickable {
 	
 	@Override
 	public void handlePacket(ServerPacket packet) {
-		this.server.handlePacket(packet);
+		if (this.server != null) {
+			this.server.handlePacket(packet);
+		} else {
+			String s = "Fail to handle packet of type " + packet.getClass().getSimpleName() + ", since {}";
+			switch (this.launchState) {
+				case UNKNOWN, STARTING -> LOGGER.warn(s, "the server has not been started yet");
+				case STOPPING -> LOGGER.debug(s, "the server is currently shutting down");
+				case STOPPED -> LOGGER.debug(s, "the server is already terminated");
+				default -> LOGGER.error(s, "a critical error occurred and the server has been terminated");
+			}
+		}
 	}
 	
 	@Override
