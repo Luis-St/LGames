@@ -72,7 +72,6 @@ public class TTTServerFigure implements ServerGameFigure {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder("TTTServerFigure{");
-		builder.append("player=").append(this.player).append(",");
 		builder.append("count=").append(this.count).append(",");
 		builder.append("uuid=").append(this.uuid).append("}");
 		return builder.toString();

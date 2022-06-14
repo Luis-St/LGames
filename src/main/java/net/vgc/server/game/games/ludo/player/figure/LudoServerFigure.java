@@ -83,7 +83,6 @@ public class LudoServerFigure implements ServerGameFigure {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder("LudoServerFigure{");
-		builder.append("player=").append(this.player).append(",");
 		builder.append("count=").append(this.count).append(",");
 		builder.append("uuid=").append(this.uuid).append("}");
 		return builder.toString();

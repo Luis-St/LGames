@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
-import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.games.ludo.LudoServerGame;
@@ -16,7 +15,7 @@ import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Mth;
 import net.vgc.util.exception.InvalidValueException;
 
-public class LudoServerPlayer implements ServerGamePlayer, PacketHandler<ServerPacket> {
+public class LudoServerPlayer implements ServerGamePlayer {
 	
 	protected final LudoServerGame game;
 	protected final ServerPlayer player;

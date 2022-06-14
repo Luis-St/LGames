@@ -32,7 +32,10 @@ public interface GameFigure {
 	}
 	
 	default boolean canMove(GameMap map, GameField currentField, GameField nextField) {
-		return nextField.isEmpty() || (nextField.getFigure().isKickable() && this.canKick(nextField.getFigure()));
+		if (nextField != null) {
+			return nextField.isEmpty() || (nextField.getFigure().isKickable() && this.canKick(nextField.getFigure()));
+		}
+		return false;
 	}
 	
 	default boolean isKickable() {
