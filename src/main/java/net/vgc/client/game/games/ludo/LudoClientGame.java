@@ -1,10 +1,8 @@
 package net.vgc.client.game.games.ludo;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Table.Cell;
 
 import net.vgc.client.Client;
 import net.vgc.client.game.ClientGame;
@@ -16,7 +14,7 @@ import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.game.games.ludo.LudoServerGame;
@@ -29,21 +27,21 @@ public class LudoClientGame implements ClientGame {
 	protected final LudoClientMap map;
 	protected LudoClientPlayer player;
 	
-	public LudoClientGame(Client client, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
+	public LudoClientGame(Client client, List<GamePlayerInfo> playerInfos) {
 		this.client = client;
 		this.players = createGamePlayers(this.client, this, playerInfos);
 		this.map = new LudoClientMap(this.client, this);
 	}
 	
-	protected static List<LudoClientPlayer> createGamePlayers(Client client, LudoClientGame game, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
-		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(playerInfos, Cell::getRowKey, GameProfile::getName));
+	protected static List<LudoClientPlayer> createGamePlayers(Client client, LudoClientGame game, List<GamePlayerInfo> playerInfos) {
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(playerInfos, GamePlayerInfo::getProfile, GameProfile::getName));
 		List<LudoClientPlayer> gamePlayers = Lists.newArrayList();
-		for (Cell<GameProfile, GamePlayerType, List<UUID>> cell : playerInfos) {
-			AbstractClientPlayer player = client.getPlayer(cell.getRowKey());
+		for (GamePlayerInfo playerInfo : playerInfos) {
+			AbstractClientPlayer player = client.getPlayer(playerInfo.getProfile());
 			if (player != null) {
-				gamePlayers.add(new LudoClientPlayer(game, player, (LudoPlayerType) cell.getColumnKey(), cell.getValue()));
+				gamePlayers.add(new LudoClientPlayer(game, player, (LudoPlayerType) playerInfo.getPlayerType(), playerInfo.getUUIDs()));
 			} else {
-				LOGGER.warn("Fail to create game player for player {}, since the player does not exists on the client", cell.getRowKey().getName());
+				LOGGER.warn("Fail to create game player for player {}, since the player does not exists on the client", playerInfo.getProfile().getName());
 			}
 		}
 		return gamePlayers;

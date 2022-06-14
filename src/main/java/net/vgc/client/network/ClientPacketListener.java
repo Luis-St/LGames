@@ -1,9 +1,6 @@
 package net.vgc.client.network;
 
 import java.util.List;
-import java.util.UUID;
-
-import com.google.common.collect.Table.Cell;
 
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
@@ -17,7 +14,7 @@ import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.game.GameType;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
@@ -186,7 +183,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public <S extends ServerGame, C extends ClientGame> void handleStartGame(GameType<S, C> gameType, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
+	public <S extends ServerGame, C extends ClientGame> void handleStartGame(GameType<S, C> gameType, List<GamePlayerInfo> playerInfos) {
 		if (this.client.getGame() == null) {
 			C game = gameType.createClientGame(this.client, playerInfos);
 			game.startGame();

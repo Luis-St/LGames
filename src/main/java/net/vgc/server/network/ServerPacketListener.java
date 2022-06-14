@@ -7,11 +7,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Table.Cell;
 
 import net.vgc.client.game.ClientGame;
 import net.vgc.game.GameType;
-import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientJoinedPacket;
@@ -29,7 +28,6 @@ import net.vgc.server.game.dice.DiceHandler;
 import net.vgc.server.game.player.ServerGamePlayer;
 import net.vgc.server.game.player.figure.ServerGameFigure;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.SimpleCell;
 import net.vgc.util.Util;
 
 public class ServerPacketListener extends AbstractPacketListener {
@@ -92,10 +90,10 @@ public class ServerPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	protected List<Cell<GameProfile, GamePlayerType, List<UUID>>> createPlayerInfos(List<? extends ServerGamePlayer> players) {
-		List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos = Lists.newArrayList();
+	protected List<GamePlayerInfo> createPlayerInfos(List<? extends ServerGamePlayer> players) {
+		List<GamePlayerInfo> playerInfos = Lists.newArrayList();
 		for (ServerGamePlayer player : players) {
-			playerInfos.add(new SimpleCell<>(player.getPlayer().getProfile(), player.getPlayerType(), Util.mapList(player.getFigures(), ServerGameFigure::getUUID)));
+			playerInfos.add(new GamePlayerInfo(player.getPlayer().getProfile(), player.getPlayerType(), Util.mapList(player.getFigures(), ServerGameFigure::getUUID)));
 		}
 		return playerInfos;
 	}

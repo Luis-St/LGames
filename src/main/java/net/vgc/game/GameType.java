@@ -1,7 +1,6 @@
 package net.vgc.game;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
@@ -9,14 +8,11 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Table.Cell;
-
 import net.vgc.client.Client;
 import net.vgc.client.game.ClientGame;
 import net.vgc.client.screen.game.GameScreen;
-import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.network.NetworkSide;
-import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.ServerGame;
 import net.vgc.server.player.ServerPlayer;
@@ -64,7 +60,7 @@ public class GameType<S extends ServerGame, C extends ClientGame> {
 		return null;
 	}
 	
-	public C createClientGame(Client client, List<Cell<GameProfile, GamePlayerType, List<UUID>>> playerInfos) {
+	public C createClientGame(Client client, List<GamePlayerInfo> playerInfos) {
 		if (Mth.isInBounds(playerInfos.size(), this.minPlayers, this.maxPlayers)) {
 			return this.gameFactory.createClientGame(client, playerInfos);
 		}
