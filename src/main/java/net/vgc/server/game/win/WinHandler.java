@@ -22,7 +22,7 @@ public interface WinHandler {
 	
 	List<? extends ServerGamePlayer> getWinningPlayers();
 	
-	boolean isPlayerFinished(ServerGamePlayer player);
+	boolean hasPlayerFinished(ServerGamePlayer player);
 	
 	boolean isDraw(ServerGameMap map);
 	

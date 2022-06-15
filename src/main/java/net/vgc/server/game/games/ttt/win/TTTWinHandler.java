@@ -34,7 +34,7 @@ public class TTTWinHandler extends AbstractWinHandler {
 	}
 	
 	@Override
-	public boolean isPlayerFinished(ServerGamePlayer gamePlayer) {
+	public boolean hasPlayerFinished(ServerGamePlayer gamePlayer) {
 		if (gamePlayer instanceof TTTServerPlayer player) {
 			return this.getWinType((TTTServerMap) player.getMap()) == player.getPlayerType();
 		}

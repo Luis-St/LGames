@@ -16,12 +16,9 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
-	 *  - server settings button & Connect Local Button IDE only
-	 *  - issue in TTT game screen -> current player changes moves the hole game grid
 	 *  - check game casts via instance of
+	 *  - use WinHandler#canPlayerWin and rework of hasPlayerFinished -> in Ludo and TTT game
 	 *  - LobbyScreen does not update players correctly
-	 *  - add getGame to GameMap
-	 *  - add dice animation
 	 *  - new registry for Packets
 	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure (ActionGame)
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
@@ -33,9 +30,8 @@ public class Main {
 	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font) & rework of layout and grafic (use always InputPane)
 	 *  - account server close -> packet to client which skip loggout (without sync to account server)
 	 *  - fix Logger (testing)
-	 *  - impl. singleplayer
 	 *  
-	 *  https://codetabs.com/count-loc/count-loc-online.html -> Luis-st/School-Project
+	 *  https://codetabs.com/count-loc/count-loc-online.html -> Luis-st/School-Project & game-api
 	 */
 	
 	public static final Logger LOGGER = LogManager.getLogger(Main.class);

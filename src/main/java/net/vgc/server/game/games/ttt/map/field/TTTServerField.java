@@ -4,10 +4,14 @@ import java.util.Objects;
 
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.map.field.TTTFieldType;
+import net.vgc.game.games.ttt.player.TTTPlayerType;
+import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.player.GameProfile;
 import net.vgc.server.game.games.ttt.player.figure.TTTServerFigure;
 import net.vgc.server.game.map.field.ServerGameField;
+import net.vgc.util.Util;
 
 public class TTTServerField implements ServerGameField {
 	
@@ -57,6 +61,15 @@ public class TTTServerField implements ServerGameField {
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = (TTTServerFigure) figure;
+	}
+	
+	@Override
+	public GameFieldInfo getFieldInfo() {
+		if (this.isEmpty()) {
+			return new GameFieldInfo(this.getFieldType(), TTTPlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+		}
+		TTTServerFigure figure = this.getFigure();
+		return new GameFieldInfo(this.getFieldType(), TTTPlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 
 	@Override

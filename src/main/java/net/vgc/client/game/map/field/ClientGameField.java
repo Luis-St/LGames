@@ -46,7 +46,9 @@ public interface ClientGameField extends GameField, PacketHandler<ClientPacket> 
 	
 	void setRenderState(FieldRenderState renderState);
 	
-	boolean canSelectField();
+	default boolean canSelectField() {
+		return !this.isEmpty();
+	}
 	
 	boolean isShadowed();
 	

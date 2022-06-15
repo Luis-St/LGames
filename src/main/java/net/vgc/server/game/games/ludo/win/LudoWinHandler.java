@@ -14,7 +14,7 @@ public class LudoWinHandler extends AbstractWinHandler {
 	}
 	
 	@Override
-	public boolean isPlayerFinished(ServerGamePlayer gamePlayer) {
+	public boolean hasPlayerFinished(ServerGamePlayer gamePlayer) {
 		if (gamePlayer instanceof LudoServerPlayer player) {
 			return player.hasAllFiguresAt(GameField::isWin);
 		}

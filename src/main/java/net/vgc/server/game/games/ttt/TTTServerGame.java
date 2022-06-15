@@ -138,7 +138,8 @@ public class TTTServerGame implements ServerGame {
 						if (figure != null) {
 							field.setFigure(figure);
 							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), TTTServerField::getFieldInfo)));
-							if (this.winHandler.isPlayerFinished(player)) {
+							if (this.winHandler.hasPlayerFinished(player)) {
+								this.winHandler.onPlayerFinished(player);
 								TTTResultLine resultLine = this.winHandler.getResultLine(map);
 								if (resultLine != TTTResultLine.EMPTY) {
 									for (TTTServerPlayer gamePlayer : this.players) {
