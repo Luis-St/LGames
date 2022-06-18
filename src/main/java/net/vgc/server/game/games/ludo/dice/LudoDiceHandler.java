@@ -6,6 +6,7 @@ import java.util.Objects;
 import com.google.common.collect.Lists;
 
 import net.vgc.game.map.field.GameField;
+import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
 import net.vgc.server.game.dice.Dice;
 import net.vgc.server.game.dice.DiceHandler;
 import net.vgc.server.game.dice.PlayerDiceInfo;
@@ -89,11 +90,11 @@ public class LudoDiceHandler implements DiceHandler {
 	
 	@Override
 	public void performGameAction(ServerGamePlayer player, int count) {
-		LOGGER.debug("Handle game action for player {} with dice count {}", player, count);
+		player.getPlayer().connection.send(new CanSelectGameFieldPacket());
 	}
 
 	@Override
-	public boolean canRollAfterMove(ServerGamePlayer player, ServerGameField field, int count) {
+	public boolean canRollAfterMove(ServerGamePlayer player, ServerGameField oldField, ServerGameField newField, int count) {
 		return Objects.equals(this.game.getCurrentPlayer(), player) && count == 6;
 	}
 
@@ -112,5 +113,10 @@ public class LudoDiceHandler implements DiceHandler {
 	public List<PlayerDiceInfo> getCountHistory() {
 		return this.countHistory;
 	}
-
+	
+	@Override
+	public void reset() {
+		this.countHistory.clear();
+	}
+	
 }

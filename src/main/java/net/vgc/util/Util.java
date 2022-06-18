@@ -3,6 +3,7 @@ package net.vgc.util;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -56,14 +57,6 @@ public class Util {
 			action.run();
 		}));
 		timeline.setCycleCount(cycleCount);
-		timeline.play();
-	}
-	
-	public static void runAfter(String name, int delay, Runnable action) {
-		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(0), name, (event) -> {
-			action.run();
-		}));
-		timeline.setDelay(Duration.millis(delay));
 		timeline.play();
 	}
 	
@@ -122,6 +115,13 @@ public class Util {
 			return function.apply(value);
 		}
 		return null;
+	}
+	
+	public static <T> T warpNullTo(T value, T nullFallback) {
+		if (value == null) {
+			return Objects.requireNonNull(nullFallback, "The fallback value can not be null");
+		}
+		return value;
 	}
 	
 	public static Random systemRandom() {

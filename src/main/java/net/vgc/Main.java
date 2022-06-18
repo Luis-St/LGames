@@ -16,18 +16,20 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
+	 *  - add GameMap#canMove -> fix Ludo move figure issues include GamePlayer#canMoveFigure (used for action skip)
+	 *  - sum #setOnAction of LudoClientMap & fix issue -> not ignore next field
 	 *  - check game casts via instance of
 	 *  - use WinHandler#canPlayerWin and rework of hasPlayerFinished -> in Ludo and TTT game
 	 *  - LobbyScreen does not update players correctly
 	 *  - new registry for Packets
-	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure (ActionGame)
+	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure (ActionGame) -> add Abstract impl, use common values, add all methods to it bas interface, remove server and client sub interfaces
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
 	 *  - add server settings
 	 *  - add super class for Windows
 	 *  - add way to display score in server window
 	 *  - create Loading Steps, which are load from 0% til 100% -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
 	 *  - add new info system form server -> client (add InfoInputPane)
-	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font) & rework of layout and grafic (use always InputPane)
+	 *  - rework of layout and grafic (use always InputPane)
 	 *  - account server close -> packet to client which skip loggout (without sync to account server)
 	 *  - fix Logger (testing)
 	 *  

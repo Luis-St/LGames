@@ -49,4 +49,10 @@ public abstract class AbstractWinHandler implements WinHandler {
 		return this.winningPlayers;
 	}
 	
+	@Override
+	public void reset() {
+		this.finishedPlayers.clear();
+		this.winningPlayers.clear();
+	}
+	
 }

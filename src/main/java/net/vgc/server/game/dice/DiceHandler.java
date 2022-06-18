@@ -37,7 +37,7 @@ public interface DiceHandler {
 	
 	void performGameAction(ServerGamePlayer player, int count);
 	
-	boolean canRollAfterMove(ServerGamePlayer player, ServerGameField field, int count);
+	boolean canRollAfterMove(ServerGamePlayer player, ServerGameField oldField, ServerGameField newField, int count);
 	
 	default boolean hasPlayerRolledDice(ServerGamePlayer player) {
 		return Util.mapList(this.getCountHistory(), PlayerDiceInfo::getPlayer).contains(player) && Mth.isInBounds(this.getLastCount(player), this.getMin(), this.getMax());
@@ -46,5 +46,7 @@ public interface DiceHandler {
 	int getLastCount(ServerGamePlayer player);
 	
 	List<PlayerDiceInfo> getCountHistory();
+	
+	void reset();
 	
 }

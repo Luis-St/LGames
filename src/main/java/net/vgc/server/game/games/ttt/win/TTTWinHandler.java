@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import net.vgc.game.games.ttt.TTTResultLine;
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
+import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.games.ttt.map.TTTServerMap;
 import net.vgc.server.game.games.ttt.map.field.TTTServerField;
 import net.vgc.server.game.games.ttt.player.TTTServerPlayer;
@@ -86,6 +87,11 @@ public class TTTWinHandler extends AbstractWinHandler {
 			return playerType == null ? TTTPlayerType.NO : playerType;
 		}
 		return TTTPlayerType.NO;
+	}
+	
+	@Override
+	public int getScoreFor(ServerGame game, ServerGamePlayer player) {
+		return this.getFinishedPlayers().contains(player) ? 1 : 0;
 	}
 
 }
