@@ -133,7 +133,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		if (player != null) {
 			player.setPlaying(playing);
 			player.getScore().sync(score);
-			LOGGER.info("Synchronize data from server to player {}", profile.getName());
+			LOGGER.info("Synchronize data from server of player {}", profile.getName());
 		} else {
 			LOGGER.warn("Fail to synchronize data from server to player {}, since the player does not exists", profile.getName());
 		}
@@ -149,9 +149,13 @@ public class ClientPacketListener extends AbstractPacketListener {
 		if (Mth.isInBounds(count, 1, 6)) {
 			player.setCount(count);
 			player.setCanRollDice(false);
+			if (player.isCurrent()) {
+				player.setCanSelect(true);
+			}
 		} else {
 			player.setCount(-1);
 			player.setCanRollDice(false);
+			player.setCanSelect(false);
 		}
 	}
 	
@@ -202,6 +206,13 @@ public class ClientPacketListener extends AbstractPacketListener {
 				LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", gameType.getInfoName());
 				this.client.setScreen(new LobbyScreen());
 			}
+		}
+	}
+	
+	public void handleCanSelectGameField() {
+		LocalPlayer player = this.client.getPlayer();
+		if (player.isCurrent()) {
+			player.setCanSelect(true);
 		}
 	}
 	

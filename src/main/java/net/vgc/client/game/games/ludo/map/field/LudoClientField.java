@@ -16,9 +16,12 @@ import net.vgc.client.game.map.field.FieldRenderState;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
+import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.player.GameProfile;
+import net.vgc.util.Util;
 
 public class LudoClientField extends ToggleButton implements ClientGameField, PacketHandler<ClientPacket> {
 	
@@ -93,7 +96,7 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = (LudoClientFigure) figure;
-		this.updateFieldGraphic();
+		this.setRenderState(this.figure == null ? LudoFieldRenderState.NO : LudoFieldRenderState.DEFAULT);
 	}
 	
 	@Override
@@ -129,11 +132,6 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 	}
 	
 	@Override
-	public boolean canSelectField() {
-		return !this.isEmpty() && this.renderState == LudoFieldRenderState.DEFAULT;
-	}
-	
-	@Override
 	public boolean isShadowed() {
 		return this.shadowed;
 	}
@@ -160,6 +158,15 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 			}
 			this.setGraphic(pane);
 		}
+	}
+	
+	@Override
+	public GameFieldInfo getFieldInfo() {
+		if (this.isEmpty()) {
+			return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+		}
+		LudoClientFigure figure = this.getFigure();
+		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	
 	@Override

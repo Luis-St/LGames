@@ -115,6 +115,7 @@ public class TTTServerGame implements ServerGame {
 	public boolean nextMatch() {
 		if (Mth.isInBounds(this.players.size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
 			this.map.reset();
+			this.winHandler.reset();
 			this.nextPlayer(true);
 			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), TTTServerField::getFieldInfo)));
 			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.players, this::getName));
@@ -140,6 +141,7 @@ public class TTTServerGame implements ServerGame {
 							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), TTTServerField::getFieldInfo)));
 							if (this.winHandler.hasPlayerFinished(player)) {
 								this.winHandler.onPlayerFinished(player);
+								LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Util.mapList(this.winHandler.getWinOrder(), this::getName));
 								TTTResultLine resultLine = this.winHandler.getResultLine(map);
 								if (resultLine != TTTResultLine.EMPTY) {
 									for (TTTServerPlayer gamePlayer : this.players) {

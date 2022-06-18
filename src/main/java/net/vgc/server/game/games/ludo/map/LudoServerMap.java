@@ -21,7 +21,9 @@ import net.vgc.server.game.games.ludo.map.field.LudoServerField;
 import net.vgc.server.game.games.ludo.player.LudoServerPlayer;
 import net.vgc.server.game.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.server.game.map.ServerGameMap;
+import net.vgc.util.Mth;
 import net.vgc.util.Util;
+import net.vgc.util.exception.InvalidValueException;
 
 public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket> {
 	
@@ -29,19 +31,42 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 	protected final LudoServerGame game;
 	protected final List<LudoServerField> fields = Util.make(Lists.newArrayList(), (fields) -> {
 		for (int i = 0; i < 40; i++) {
-			fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoFieldPos.ofGreen(i)));
+			if (i == 0) {
+				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.GREEN, LudoFieldPos.ofGreen(i)));
+			} else if (i == 10) {
+				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.YELLOW, LudoFieldPos.ofGreen(i)));
+			} else if (i == 20) {
+				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.BLUE, LudoFieldPos.ofGreen(i)));
+			} else if (i == 30) {
+				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.RED, LudoFieldPos.ofGreen(i)));
+			} else {
+				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.NO, LudoFieldPos.ofGreen(i)));
+			}
 		}
 	});
 	protected final List<LudoServerField> homeFields = Util.make(Lists.newArrayList(), (fields) -> {
 		for (int i = 0; i < 16; i++) {
-			fields.add(new LudoServerField(LudoFieldType.HOME, LudoFieldPos.of(i % 4)));
+			fields.add(new LudoServerField(LudoFieldType.HOME, this.getFieldColor(i), LudoFieldPos.of(i % 4)));
 		}
 	});
 	protected final List<LudoServerField> winFields = Util.make(Lists.newArrayList(), (fields) -> {
 		for (int i = 0; i < 16; i++) {
-			fields.add(new LudoServerField(LudoFieldType.WIN, LudoFieldPos.of(i % 4)));
+			fields.add(new LudoServerField(LudoFieldType.WIN, this.getFieldColor(i), LudoFieldPos.of(i % 4)));
 		}
 	});
+	
+	protected LudoPlayerType getFieldColor(int i) {
+		if (Mth.isInBounds(i, 0, 3)) {
+			return LudoPlayerType.GREEN;
+		} else if (Mth.isInBounds(i, 4, 7)) {
+			return LudoPlayerType.YELLOW;
+		} else if (Mth.isInBounds(i, 8, 11)) {
+			return LudoPlayerType.BLUE;
+		} else if (Mth.isInBounds(i, 12, 15)) {
+			return LudoPlayerType.RED;
+		}
+		throw new InvalidValueException("Fail to get field color for index " + i);
+	}
 	
 	public LudoServerMap(DedicatedServer server, LudoServerGame game) {
 		this.server = server;
@@ -86,16 +111,21 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 
 	@Override
 	public LudoServerField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
-		if (playerType != null) {
+		playerType = Util.warpNullTo(playerType, LudoPlayerType.NO);
+		if (fieldType == LudoFieldType.DEFAULT) {
+			if (playerType != LudoPlayerType.NO && fieldPos.getPosition() % 10 == 0) {
+				return this.fields.get(fieldPos.getPosition());
+			}
+			return this.fields.get(fieldPos.getPosition());
+		} else if (playerType != LudoPlayerType.NO) {
 			if (fieldType == LudoFieldType.HOME) {
 				return this.getHomeFields(playerType).get(fieldPos.getPositionFor(playerType));
 			} else if (fieldType == LudoFieldType.WIN) {
 				return this.getWinFields(playerType).get(fieldPos.getPositionFor(playerType));
 			}
-			LOGGER.warn("Fail to get a default field with type {} at position {}", fieldType, fieldPos.getPosition());
-			return null;
 		}
-		return this.fields.get(fieldPos.getPosition());
+		LOGGER.warn("Fail to get a field with type {} and color {} at position {}", fieldType, playerType, fieldPos.getPosition());
+		return null;
 	}
 
 	@Override
@@ -114,13 +144,11 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 					int position = currentField.getFieldPos().getPositionFor(playerType) + count;
 					if (currentField.getFieldType() == LudoFieldType.WIN) {
 						if (position > 3) {
-							LOGGER.info("The next field for figure {} of player {}, is out of map", figure.getCount(), playerName);
 							return null;
 						}
 						return this.getWinFields(playerType).get(position);
 					} else {
 						if (position > 43) {
-							LOGGER.info("The next field for figure {} of player {}, is out of map", figure.getCount(), playerName);
 							return null;
 						} else if (position > 39) {
 							return this.getWinFields(playerType).get(position - 40);
@@ -130,6 +158,7 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 					}
 				}
 			}
+			LOGGER.warn("Fail to get next field for figure {} of player {}, since the count must be larger than 0 but it is {}", figure.getCount(), playerName, count);
 			return currentField;
 		}
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since the current field is null", figure.getCount(), playerName);
@@ -187,6 +216,7 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 				if (opponentFigure.isKickable()) {
 					if (figure.canKick(opponentFigure)) {
 						if (this.moveFigureTo(opponentFigure, this.getField(LudoFieldType.HOME, opponentFigure.getPlayerType(), opponentFigure.getHomePos()))) {
+							this.getField(figure).clear();
 							field.setFigure(figure);
 							return true;
 						} else {

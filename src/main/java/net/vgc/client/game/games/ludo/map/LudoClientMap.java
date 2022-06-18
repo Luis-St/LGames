@@ -1,6 +1,7 @@
 package net.vgc.client.game.games.ludo.map;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
@@ -13,6 +14,7 @@ import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.game.games.ludo.LudoClientGame;
 import net.vgc.client.game.games.ludo.map.field.LudoClientField;
+import net.vgc.client.game.games.ludo.map.field.LudoFieldRenderState;
 import net.vgc.client.game.games.ludo.player.LudoClientPlayer;
 import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
 import net.vgc.client.game.map.ClientGameMap;
@@ -20,6 +22,7 @@ import net.vgc.client.player.LocalPlayer;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
+import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayer;
@@ -27,6 +30,8 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.field.GameFigure;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.player.GameProfile;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
@@ -57,7 +62,11 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			LocalPlayer player = this.client.getPlayer();
 			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
-				
+				if (newValue instanceof LudoClientField field && field.canSelectField() && field.getFigure().getPlayerType() == this.game.getPlayerType(this.game.getPlayerFor(player))) {
+					
+				} else {
+					this.group.selectToggle(null);
+				}
 			} else {
 				this.group.selectToggle(null);
 			}
@@ -145,17 +154,12 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 		LudoClientField field = new LudoClientField(this.group, fieldType, colorType, fieldPos, 75.0);
 		field.setOnAction((event) -> {
 			LocalPlayer player = this.client.getPlayer();
-			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
-				if (field.canSelectField()) {
-					this.getFields().forEach(LudoClientField::resetShadow);
-					LudoClientFigure figure = field.getFigure();
-					if (figure != null) {
-						LudoClientField nextField = this.getNextField(figure, player.getCount());
-						if (nextField != null) {
-							nextField.setShadowed(true);
-						} else {
-							LOGGER.warn("Fail to display shadow figure, since there is no next field");
-						}
+			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6) && field.canSelectField()) {
+				LudoClientFigure figure = field.getFigure();
+				if (figure != null && figure.getPlayerType() == this.game.getPlayerType(this.game.getPlayerFor(player))) {
+					LudoClientField nextField = this.getNextField(figure, player.getCount());
+					if (nextField != null) {
+						nextField.setShadowed(true);
 					}
 				}
 			}
@@ -179,7 +183,8 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 			if (gamePlayer instanceof LudoClientPlayer player) {
 				LOGGER.debug("Add figures ({}) of player {}, to their home fields", player.getFigures().size(), player.getPlayer().getProfile().getName());
 				for (LudoClientFigure figure : player.getFigures()) {
-					this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos()).setFigure(figure);
+					LudoClientField field = this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos());
+					field.setFigure(figure);
 				}
 			} else {
 				LOGGER.error("Can not add a game player of type {} to a ludo game", gamePlayer.getClass().getSimpleName());
@@ -210,15 +215,21 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 
 	@Override
 	public LudoClientField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
-		if (playerType != null) {
+		playerType = Util.warpNullTo(playerType, LudoPlayerType.NO);
+		if (fieldType == LudoFieldType.DEFAULT) {
+			if (playerType != LudoPlayerType.NO && fieldPos.getPosition() % 10 == 0) {
+				return this.fields.get(fieldPos.getPosition());
+			}
+			return this.fields.get(fieldPos.getPosition());
+		} else if (playerType != LudoPlayerType.NO) {
 			if (fieldType == LudoFieldType.HOME) {
 				return this.getHomeFields(playerType).get(fieldPos.getPositionFor(playerType));
 			} else if (fieldType == LudoFieldType.WIN) {
 				return this.getWinFields(playerType).get(fieldPos.getPositionFor(playerType));
 			}
-			LOGGER.warn("Fail to get a default field with type {} at position {}", fieldType, fieldPos.getPosition());
 		}
-		return this.fields.get(fieldPos.getPosition());
+		LOGGER.warn("Fail to get a field with type {} and color {} at position {}", fieldType, playerType, fieldPos.getPosition());
+		return null;
 	}
 
 	@Override
@@ -237,13 +248,11 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 					int position = currentField.getFieldPos().getPositionFor(playerType) + count;
 					if (currentField.getFieldType() == LudoFieldType.WIN) {
 						if (position > 3) {
-							LOGGER.info("The next field for figure {} of player {}, is out of map", figure.getCount(), playerName);
 							return null;
 						}
 						return this.getWinFields(playerType).get(position);
 					} else {
 						if (position > 43) {
-							LOGGER.info("The next field for figure {} of player {}, is out of map", figure.getCount(), playerName);
 							return null;
 						} else if (position > 39) {
 							return this.getWinFields(playerType).get(position - 40);
@@ -253,6 +262,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 					}
 				}
 			}
+			LOGGER.warn("Fail to get next field for figure {} of player {}, since the count must be larger than 0 but it is {}", figure.getCount(), playerName, count);
 			return currentField;
 		}
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since the current field is null", figure.getCount(), playerName);
@@ -274,15 +284,13 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 
 	@Override
 	public List<LudoClientField> getStartFields(GamePlayerType playerType) {
-		switch ((LudoPlayerType) playerType) {
-			case GREEN: Lists.newArrayList(LudoFieldPos.ofGreen(0));
-			case YELLOW: Lists.newArrayList(LudoFieldPos.ofYellow(0));
-			case BLUE: Lists.newArrayList(LudoFieldPos.ofBlue(0));
-			case RED: Lists.newArrayList(LudoFieldPos.ofRed(0));
-			default: break;
-		}
-		LOGGER.warn("Fail to get start field for type {}", playerType);
-		return Lists.newArrayList();
+		return switch ((LudoPlayerType) playerType) {
+			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.fields.get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
+			default -> {
+				LOGGER.warn("Fail to get start field for type {}", playerType);
+				yield Lists.newArrayList();
+			}
+		};
 	}
 
 	@Override
@@ -316,7 +324,40 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		ClientGameMap.super.handlePacket(clientPacket);
-		
+		if (clientPacket instanceof UpdateGameMapPacket packet) {
+			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
+				GameProfile profile = fieldInfo.getProfile();
+				if (fieldInfo.getFieldPos() instanceof LudoFieldPos fieldPos) {
+					LudoClientField field = this.getField(fieldInfo.getFieldType(), fieldInfo.getPlayerType(), fieldPos);
+					if (field != null) {
+						if (field.isShadowed()) {
+							field.setShadowed(false);
+						}
+						LudoClientPlayer player = (LudoClientPlayer) this.game.getPlayerFor(profile);
+						if (player != null) {
+							LudoClientFigure figure = player.getFigure(fieldInfo.getFigureCount());
+							UUID uuid = figure.getUUID();
+							UUID serverUUID = fieldInfo.getFigureUUID();
+							if (uuid.equals(serverUUID)) {
+								field.setFigure(figure);
+								field.setRenderState(LudoFieldRenderState.DEFAULT);
+							} else {
+								LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
+							}
+						} else if (profile.equals(GameProfile.EMPTY)) {
+							field.setFigure(null);
+							field.setRenderState(LudoFieldRenderState.NO);
+						} else {
+							LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
+						}
+					} else {
+						LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());
+					}
+				} else {
+					LOGGER.warn("Fail to update game field, since field pos is a instance of {}", fieldInfo.getFieldPos().getClass().getSimpleName());
+				}
+			}
+		}
 	}
 	
 	@Override

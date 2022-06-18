@@ -8,13 +8,16 @@ import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.DiceButton;
 import net.vgc.client.fx.game.PlayerInfoPane;
+import net.vgc.client.fx.game.PlayerScorePane;
 import net.vgc.client.game.games.ludo.LudoClientGame;
 import net.vgc.client.game.games.ludo.map.field.LudoClientField;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.game.LudoGameResultPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
+import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
 public class LudoScreen extends GameScreen {
 	
@@ -27,13 +30,13 @@ public class LudoScreen extends GameScreen {
 	
 	public LudoScreen(LudoClientGame game) {
 		this.game = game;
-		this.width = 1400;
-		this.height = 1100;
+		this.width = 1450;
+		this.height = 1150;
 	}
 	
 	@Override
 	public void init() {
-		this.playerInfo = new PlayerInfoPane(this.game, 150.0);
+		this.playerInfo = new PlayerInfoPane(this.game, 200.0, PlayerScorePane.Type.SCORE);
 		this.diceButton = new DiceButton(this.client, 100.0);
 		this.leaveButton = new ButtonBox(TranslationKey.createAndGet("screen.lobby.leave"), Pos.CENTER, 20.0, this::handleLeave);
 		this.playAgainButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.play_again"), Pos.CENTER, 20.0, this::handlePlayAgain);
@@ -48,16 +51,21 @@ public class LudoScreen extends GameScreen {
 	protected void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
+			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
 	
 	protected void handleConfirmAction() {
 		LudoClientField field = this.game.getMap().getSelectedField();
 		if (field != null) {
-//			this.client.getServerHandler().send(null); // TODO: add packet
-			this.getPlayer().setCanSelect(false);
+			if (this.getPlayer().canSelect()) {
+				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), field.getFieldType(), field.getFieldPos()));
+				this.getPlayer().setCanSelect(false);
+			} else {
+				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());
+			}
 		} else {
-			LOGGER.info("No field selected");
+			LOGGER.debug("No field selected");
 		}
 	}
 	
@@ -71,6 +79,8 @@ public class LudoScreen extends GameScreen {
 		this.playerInfo.update();
 		if (clientPacket instanceof RolledDicePacket packet) {
 			this.diceButton.setCount(packet.getCount());
+		} else if (clientPacket instanceof LudoGameResultPacket packet) {
+			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}
 
