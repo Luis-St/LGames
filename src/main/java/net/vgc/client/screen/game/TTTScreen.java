@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.PlayerInfoPane;
+import net.vgc.client.fx.game.PlayerScorePane;
 import net.vgc.client.game.games.ttt.TTTClientGame;
 import net.vgc.client.game.games.ttt.map.TTTClientMap;
 import net.vgc.client.game.games.ttt.map.field.TTTClientField;
@@ -28,13 +29,13 @@ public class TTTScreen extends GameScreen {
 	
 	public TTTScreen(TTTClientGame game) {
 		this.game = game;
-		this.width = 850;
+		this.width = 900;
 		this.height = 700;
 	}
 	
 	@Override
 	public void init() {
-		this.playerInfo = new PlayerInfoPane(this.game, 150.0);
+		this.playerInfo = new PlayerInfoPane(this.game, 200.0, PlayerScorePane.Type.WIN);
 		this.leaveButton = new ButtonBox(TranslationKey.createAndGet("screen.lobby.leave"), Pos.CENTER, 20.0, this::handleLeave);
 		this.playAgainButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.play_again"), Pos.CENTER, 20.0, this::handlePlayAgain);
 		this.playAgainButton.getNode().setDisable(true);
