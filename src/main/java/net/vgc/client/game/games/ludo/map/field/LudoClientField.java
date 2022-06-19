@@ -18,12 +18,10 @@ import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
 
-public class LudoClientField extends ToggleButton implements ClientGameField, PacketHandler<ClientPacket> {
+public class LudoClientField extends ToggleButton implements ClientGameField {
 	
 	protected final ToggleGroup group;
 	protected final LudoFieldType fieldType;
@@ -167,11 +165,6 @@ public class LudoClientField extends ToggleButton implements ClientGameField, Pa
 		}
 		LudoClientFigure figure = this.getFigure();
 		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
-	}
-	
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		
 	}
 	
 	@Override

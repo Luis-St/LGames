@@ -5,14 +5,12 @@ import java.util.List;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.map.ServerGameMap;
 import net.vgc.server.game.player.figure.ServerGameFigure;
 import net.vgc.server.player.ServerPlayer;
 
-public interface ServerGamePlayer extends GamePlayer, PacketHandler<ServerPacket> {
+public interface ServerGamePlayer extends GamePlayer {
 	
 	@Override
 	ServerGame getGame();
@@ -42,12 +40,5 @@ public interface ServerGamePlayer extends GamePlayer, PacketHandler<ServerPacket
 	
 	@Override
 	void setRollCount(int rollCount);
-	
-	@Override
-	default void handlePacket(ServerPacket serverPacket) {
-		for (ServerGameFigure figure : this.getFigures()) {
-			figure.handlePacket(serverPacket);
-		}
-	}
 	
 }

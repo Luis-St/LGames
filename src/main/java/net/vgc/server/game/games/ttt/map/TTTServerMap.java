@@ -13,8 +13,6 @@ import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.server.ServerPacket;
-import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.games.ttt.TTTServerGame;
 import net.vgc.server.game.games.ttt.map.field.TTTServerField;
 import net.vgc.server.game.map.ServerGameMap;
@@ -22,7 +20,6 @@ import net.vgc.util.Util;
 
 public class TTTServerMap implements ServerGameMap {
 	
-	protected final DedicatedServer server;
 	protected final TTTServerGame game;
 	protected final List<TTTServerField> fields = Util.make(Lists.newArrayList(), (list) -> {
 		for (int i = 0; i < 9; i++) {
@@ -30,8 +27,7 @@ public class TTTServerMap implements ServerGameMap {
 		}
 	});
 	
-	public TTTServerMap(DedicatedServer server, TTTServerGame game) {
-		this.server = server;
+	public TTTServerMap(TTTServerGame game) {
 		this.game = game;
 	}
 	
@@ -92,12 +88,6 @@ public class TTTServerMap implements ServerGameMap {
 	public boolean moveFigureTo(GameFigure figure, GameField field) {
 		LOGGER.warn("Fail to move figure {} of player {}, since tic tac toe figures are not moveable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return false;
-	}
-
-	@Override
-	public void handlePacket(ServerPacket serverPacket) {
-		ServerGameMap.super.handlePacket(serverPacket);
-		
 	}
 	
 	@Override

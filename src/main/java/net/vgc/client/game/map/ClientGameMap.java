@@ -66,9 +66,7 @@ public interface ClientGameMap extends GameMap, PacketHandler<ClientPacket> {
 	
 	@Override
 	default void handlePacket(ClientPacket packet) {
-		for (ClientGameField field : this.getFields()) {
-			field.handlePacket(packet);
-		}
+		
 	}
 	
 }

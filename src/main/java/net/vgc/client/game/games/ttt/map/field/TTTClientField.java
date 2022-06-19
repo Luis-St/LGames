@@ -16,7 +16,6 @@ import net.vgc.game.games.ttt.map.field.TTTFieldType;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
 
@@ -174,11 +173,6 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 		}
 		TTTClientFigure figure = this.getFigure();
 		return new GameFieldInfo(this.getFieldType(), TTTPlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
-	}
-	
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		
 	}
 	
 	@Override

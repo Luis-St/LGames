@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.game.games.ttt.player.TTTServerPlayer;
 import net.vgc.server.game.player.figure.ServerGameFigure;
 
@@ -48,11 +47,6 @@ public class TTTServerFigure implements ServerGameFigure {
 	@Override
 	public TTTFieldPos getStartPos() {
 		return TTTFieldPos.NO;
-	}
-
-	@Override
-	public void handlePacket(ServerPacket serverPacket) {
-		
 	}
 	
 	@Override

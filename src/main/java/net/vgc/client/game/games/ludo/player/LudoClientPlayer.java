@@ -13,10 +13,8 @@ import net.vgc.client.game.player.ClientGamePlayer;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientPacket;
 
-public class LudoClientPlayer implements ClientGamePlayer, PacketHandler<ClientPacket> {
+public class LudoClientPlayer implements ClientGamePlayer {
 	
 	protected final LudoClientGame game;
 	protected final AbstractClientPlayer player;
@@ -67,12 +65,6 @@ public class LudoClientPlayer implements ClientGamePlayer, PacketHandler<ClientP
 	@Override
 	public List<LudoFieldPos> getWinPoses() {
 		return Lists.newArrayList(LudoFieldPos.of(0), LudoFieldPos.of(1), LudoFieldPos.of(2), LudoFieldPos.of(3));
-	}
-	
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		ClientGamePlayer.super.handlePacket(clientPacket);
-		
 	}
 	
 	@Override

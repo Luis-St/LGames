@@ -41,10 +41,6 @@ public class TTTFieldPos implements GameFieldPos {
 		}
 	}
 	
-	public static void of(int row, int column) {
-		
-	}
-	
 	@Override
 	public int getPosition() {
 		return this.position;

@@ -4,11 +4,9 @@ import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.game.player.figure.ServerGameFigure;
 
-public interface ServerGameField extends GameField, PacketHandler<ServerPacket> {
+public interface ServerGameField extends GameField {
 	
 	@Override
 	GameFieldType getFieldType();
@@ -33,8 +31,5 @@ public interface ServerGameField extends GameField, PacketHandler<ServerPacket> 
 	
 	@Override
 	void setFigure(GameFigure figure);
-	
-	@Override
-	void handlePacket(ServerPacket serverPacket);
 	
 }

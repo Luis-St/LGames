@@ -56,9 +56,7 @@ public interface ServerGameMap extends GameMap, PacketHandler<ServerPacket> {
 	
 	@Override
 	default void handlePacket(ServerPacket serverPacket) {
-		for (ServerGameField field : this.getFields()) {
-			field.handlePacket(serverPacket);
-		}
+		
 	}
 	
 }

@@ -8,10 +8,8 @@ import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientPacket;
 
-public interface ClientGameField extends GameField, PacketHandler<ClientPacket> {
+public interface ClientGameField extends GameField {
 	
 	void init();
 	
@@ -59,8 +57,5 @@ public interface ClientGameField extends GameField, PacketHandler<ClientPacket> 
 	}
 	
 	void updateFieldGraphic();
-	
-	@Override
-	void handlePacket(ClientPacket packet);
 	
 }

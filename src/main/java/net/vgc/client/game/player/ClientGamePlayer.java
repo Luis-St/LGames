@@ -9,10 +9,8 @@ import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientPacket;
 
-public interface ClientGamePlayer extends GamePlayer, PacketHandler<ClientPacket> {
+public interface ClientGamePlayer extends GamePlayer {
 	
 	@Override
 	ClientGame getGame();
@@ -46,13 +44,6 @@ public interface ClientGamePlayer extends GamePlayer, PacketHandler<ClientPacket
 	@Override
 	default void setRollCount(int rollCount) {
 		LOGGER.warn("Can not set the roll count of player {}, on client", this.getPlayer().getProfile().getName());
-	}
-	
-	@Override
-	default void handlePacket(ClientPacket packet) {
-		for (ClientGameFigure figure : this.getFigures()) {
-			figure.handlePacket(packet);
-		}
 	}
 	
 }

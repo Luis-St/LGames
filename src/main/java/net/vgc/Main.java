@@ -20,6 +20,7 @@ public class Main {
 	 *  - sum #setOnAction of LudoClientMap & fix issue -> not ignore next field
 	 *  - check game casts via instance of
 	 *  - use WinHandler#canPlayerWin and rework of hasPlayerFinished -> in Ludo and TTT game
+	 *  - rework of FieldRenderState and shadow rendering
 	 *  - LobbyScreen does not update players correctly
 	 *  - new registry for Packets
 	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure (ActionGame) -> add Abstract impl, use common values, add all methods to it bas interface, remove server and client sub interfaces

@@ -7,14 +7,12 @@ import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.game.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.server.game.map.field.ServerGameField;
 import net.vgc.util.Util;
 
-public class LudoServerField implements ServerGameField, PacketHandler<ServerPacket> {
+public class LudoServerField implements ServerGameField {
 	
 	protected final LudoFieldType fieldType;
 	protected final LudoPlayerType colorType;
@@ -78,11 +76,6 @@ public class LudoServerField implements ServerGameField, PacketHandler<ServerPac
 		}
 		LudoServerFigure figure = this.getFigure();
 		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
-	}
-	
-	@Override
-	public void handlePacket(ServerPacket serverPacket) {
-		
 	}
 	
 	@Override

@@ -239,12 +239,6 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 	}
 	
 	@Override
-	public void handlePacket(ServerPacket serverPacket) {
-		ServerGameMap.super.handlePacket(serverPacket);
-		
-	}
-	
-	@Override
 	public String toString() {
 		return "LudoServerMap";
 	}

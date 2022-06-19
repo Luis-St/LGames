@@ -196,7 +196,6 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 	
 	@Override
 	public void handlePacket(ClientPacket clientPacket) {
-		ClientGameMap.super.handlePacket(clientPacket);
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
 				GameProfile profile = fieldInfo.getProfile();

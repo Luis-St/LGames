@@ -11,7 +11,6 @@ import net.vgc.client.game.player.ClientGamePlayer;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
-import net.vgc.network.packet.client.ClientPacket;
 
 public class TTTClientPlayer implements ClientGamePlayer {
 	
@@ -63,12 +62,6 @@ public class TTTClientPlayer implements ClientGamePlayer {
 	@Override
 	public List<TTTFieldPos> getWinPoses() {
 		return Lists.newArrayList();
-	}
-	
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		ClientGamePlayer.super.handlePacket(clientPacket);
-		
 	}
 	
 	@Override

@@ -45,7 +45,7 @@ public class TTTServerGame implements ServerGame {
 	
 	public TTTServerGame(DedicatedServer server, List<ServerPlayer> players) {
 		this.server = server;
-		this.map = new TTTServerMap(this.server, this);
+		this.map = new TTTServerMap(this);
 		this.players = createGamePlayers(this, players);
 		this.winHandler = new TTTWinHandler();
 	}

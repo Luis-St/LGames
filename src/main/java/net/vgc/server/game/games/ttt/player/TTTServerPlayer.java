@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.game.games.ttt.TTTServerGame;
 import net.vgc.server.game.games.ttt.player.figure.TTTServerFigure;
 import net.vgc.server.game.player.ServerGamePlayer;
@@ -85,12 +84,6 @@ public class TTTServerPlayer implements ServerGamePlayer {
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public void handlePacket(ServerPacket serverPacket) {
-		ServerGamePlayer.super.handlePacket(serverPacket);
-		
 	}
 
 	@Override

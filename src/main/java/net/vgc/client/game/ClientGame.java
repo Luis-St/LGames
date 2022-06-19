@@ -110,9 +110,6 @@ public interface ClientGame extends Game, PacketHandler<ClientPacket> {
 	@Override
 	default void handlePacket(ClientPacket packet) {
 		this.getMap().handlePacket(packet);
-		for (ClientGamePlayer player : this.getPlayers()) {
-			player.handlePacket(packet);
-		}
 	}
 	
 }

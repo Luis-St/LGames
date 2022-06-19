@@ -154,9 +154,6 @@ public interface ServerGame extends Game, PacketHandler<ServerPacket> {
 	@Override
 	default void handlePacket(ServerPacket serverPacket) {
 		this.getMap().handlePacket(serverPacket);
-		for (ServerGamePlayer player : this.getPlayers()) {
-			player.handlePacket(serverPacket);
-		}
 	}
 	
 	default void broadcastPlayer(Packet<?> packet, ServerGamePlayer player) {

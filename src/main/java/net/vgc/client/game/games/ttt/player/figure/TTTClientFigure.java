@@ -6,7 +6,6 @@ import net.vgc.client.game.games.ttt.player.TTTClientPlayer;
 import net.vgc.client.game.player.figure.ClientGameFigure;
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
-import net.vgc.network.packet.client.ClientPacket;
 
 public class TTTClientFigure implements ClientGameFigure {
 	
@@ -48,11 +47,6 @@ public class TTTClientFigure implements ClientGameFigure {
 	@Override
 	public TTTFieldPos getStartPos() {
 		return TTTFieldPos.NO;
-	}
-	
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		
 	}
 	
 	@Override

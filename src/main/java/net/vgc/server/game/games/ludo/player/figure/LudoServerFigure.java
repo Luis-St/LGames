@@ -5,7 +5,6 @@ import java.util.UUID;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
 import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.game.games.ludo.player.LudoServerPlayer;
 import net.vgc.server.game.player.figure.ServerGameFigure;
 
@@ -59,11 +58,6 @@ public class LudoServerFigure implements ServerGameFigure {
 	@Override
 	public boolean canKick(GameFigure figure) {
 		return !this.equals(figure) && this.getPlayerType() != figure.getPlayerType();
-	}
-	
-	@Override
-	public void handlePacket(ServerPacket serverPacket) {
-		
 	}
 	
 	@Override

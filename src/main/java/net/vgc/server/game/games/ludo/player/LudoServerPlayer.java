@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.games.ludo.LudoServerGame;
 import net.vgc.server.game.games.ludo.player.figure.LudoServerFigure;
@@ -80,12 +79,6 @@ public class LudoServerPlayer implements ServerGamePlayer {
 	@Override
 	public void setRollCount(int rollCount) {
 		this.rollCount = Math.max(0, rollCount);
-	}
-	
-	@Override
-	public void handlePacket(ServerPacket serverPacket) {
-		ServerGamePlayer.super.handlePacket(serverPacket);
-		
 	}
 	
 	@Override
