@@ -3,6 +3,7 @@ package net.vgc.game.games.ttt.map.field;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.Mth;
 import net.vgc.util.annotation.DecodingConstructor;
 
 public class TTTFieldPos implements GameFieldPos {
@@ -62,6 +63,14 @@ public class TTTFieldPos implements GameFieldPos {
 	@Override
 	public boolean isStart() {
 		return false;
+	}
+	
+	@Override
+	public boolean isOutOfMap() {
+		if (Mth.isInBounds(this.position, 0, 8) && Mth.isInBounds(this.row, 0, 2) && Mth.isInBounds(this.column, 0, 2)) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

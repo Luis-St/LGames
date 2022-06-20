@@ -50,6 +50,14 @@ public class TTTWinHandler extends AbstractWinHandler {
 		return false;
 	}
 	
+	protected TTTPlayerType getWinType(TTTServerMap map) {
+		TTTResultLine resultLine = this.getResultLine(map);
+		if (resultLine != TTTResultLine.EMPTY) {
+			return this.getFieldType(map, resultLine.getFirstPos());
+		}
+		return TTTPlayerType.NO;
+	}
+	
 	public TTTResultLine getResultLine(TTTServerMap map) {
 		for (TTTResultLine resultLine : this.resultLines) {
 			if (this.getLineWinType(map, resultLine) != TTTPlayerType.NO) {
@@ -65,14 +73,6 @@ public class TTTWinHandler extends AbstractWinHandler {
 			if (this.getFieldType(map, resultLine.getSecondPos()) == playerType && this.getFieldType(map, resultLine.getThirdPos()) == playerType) {
 				return playerType;
 			}
-		}
-		return TTTPlayerType.NO;
-	}
-	
-	protected TTTPlayerType getWinType(TTTServerMap map) {
-		TTTResultLine resultLine = this.getResultLine(map);
-		if (resultLine != TTTResultLine.EMPTY) {
-			return this.getFieldType(map, resultLine.getFirstPos());
 		}
 		return TTTPlayerType.NO;
 	}

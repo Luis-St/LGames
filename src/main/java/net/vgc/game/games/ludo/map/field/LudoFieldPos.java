@@ -6,6 +6,7 @@ import net.vgc.game.games.ludo.player.LudoPlayerType;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.Mth;
 import net.vgc.util.annotation.DecodingConstructor;
 
 public class LudoFieldPos implements GameFieldPos {
@@ -107,6 +108,14 @@ public class LudoFieldPos implements GameFieldPos {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean isOutOfMap() {
+		if (Mth.isInBounds(this.green, 0, 39) && Mth.isInBounds(this.yellow, 0, 39) && Mth.isInBounds(this.blue, 0, 39) && Mth.isInBounds(this.red, 0, 39)) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

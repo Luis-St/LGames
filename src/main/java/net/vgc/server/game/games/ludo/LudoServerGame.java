@@ -50,7 +50,7 @@ public class LudoServerGame implements ServerGame {
 	public LudoServerGame(DedicatedServer server, List<ServerPlayer> players) {
 		this.server = server;
 		this.map = new LudoServerMap(this.server, this);
-		this.players = createGamePlayers(this, players, 1);
+		this.players = createGamePlayers(this, players, 4);
 		this.diceHandler = new LudoDiceHandler(this, 1, 6);
 		this.winHandler = new LudoWinHandler();
 	}

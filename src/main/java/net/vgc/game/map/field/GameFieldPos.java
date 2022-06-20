@@ -16,4 +16,6 @@ public interface GameFieldPos extends Encodable {
 	
 	boolean isStart();
 	
+	boolean isOutOfMap();
+	
 }
