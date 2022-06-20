@@ -104,11 +104,13 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	}
 
 	@Override
+	@Deprecated
 	public TTTFieldRenderState getRenderState() {
 		return this.renderState;
 	}
 
 	@Override
+	@Deprecated
 	public void setRenderState(FieldRenderState renderState) {
 		this.renderState = (TTTFieldRenderState) renderState;
 		this.updateFieldGraphic();

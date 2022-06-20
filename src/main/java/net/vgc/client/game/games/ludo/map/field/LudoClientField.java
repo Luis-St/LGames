@@ -119,11 +119,13 @@ public class LudoClientField extends ToggleButton implements ClientGameField {
 	}
 	
 	@Override
+	@Deprecated
 	public LudoFieldRenderState getRenderState() {
 		return this.renderState;
 	}
 	
 	@Override
+	@Deprecated
 	public void setRenderState(FieldRenderState renderState) {
 		this.renderState = (LudoFieldRenderState) renderState;
 		this.updateFieldGraphic();
