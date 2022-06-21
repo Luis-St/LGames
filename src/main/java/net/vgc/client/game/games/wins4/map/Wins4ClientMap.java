@@ -20,7 +20,6 @@ import net.vgc.client.game.games.wins4.player.Wins4ClientPlayer;
 import net.vgc.client.game.games.wins4.player.figure.Wins4ClientFigure;
 import net.vgc.client.game.map.ClientGameMap;
 import net.vgc.game.GameResult;
-import net.vgc.game.games.wins4.Wins4ResultLine;
 import net.vgc.game.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;

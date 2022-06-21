@@ -149,13 +149,9 @@ public class ClientPacketListener extends AbstractPacketListener {
 		if (Mth.isInBounds(count, 1, 6)) {
 			player.setCount(count);
 			player.setCanRollDice(false);
-			if (player.isCurrent()) {
-				player.setCanSelect(true);
-			}
 		} else {
 			player.setCount(-1);
 			player.setCanRollDice(false);
-			player.setCanSelect(false);
 		}
 	}
 	

@@ -151,7 +151,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 	
 	protected void addField(LudoFieldType fieldType, LudoPlayerType colorType, LudoFieldPos fieldPos, int column, int row) {
-		LudoClientField field = new LudoClientField(this.group, fieldType, colorType, fieldPos, 75.0);
+		LudoClientField field = new LudoClientField(this.group, fieldType, colorType, fieldPos, 67.0);
 		field.setOnAction((event) -> {
 			LocalPlayer player = this.client.getPlayer();
 			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6) && field.canSelectField()) {

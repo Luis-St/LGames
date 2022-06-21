@@ -17,8 +17,8 @@ import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
+import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.GameActionFailedPacket;
 import net.vgc.network.packet.client.game.LudoGameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
@@ -196,37 +196,42 @@ public class LudoServerGame implements ServerGame {
 				int count = this.diceHandler.getLastCount(player);
 				if (count != -1) {
 					LudoServerField currentField = this.map.getField(fieldType, player.getPlayerType(), fieldPos);
-					LudoServerFigure figure = currentField.getFigure();
-					LudoServerField nextField = this.map.getNextField(figure, count);
-					if (nextField != null) {
-						if (this.map.moveFigureTo(figure, nextField)) {
-							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), LudoServerField::getFieldInfo)));
-							if (this.winHandler.hasPlayerFinished(player)) {
-								this.winHandler.onPlayerFinished(player);
-								if (this.winHandler.getWinOrder().size() - this.players.size() > 1) {
-									this.nextPlayer(false);
-								} else {
-									LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Util.mapList(this.winHandler.getWinOrder(), this::getName));
-									for (LudoServerPlayer gamePlayer : this.players) {
-										PlayerScore score = gamePlayer.getPlayer().getScore();
-										score.setScore(this.winHandler.getScoreFor(this, gamePlayer));
-										this.broadcastPlayers(new SyncPlayerDataPacket(gamePlayer.getPlayer().getProfile(), true, score));
+					if (!currentField.isEmpty()) {
+						LudoServerFigure figure = currentField.getFigure();
+						LudoServerField nextField = this.map.getNextField(figure, count);
+						if (nextField != null) {
+							if (this.map.moveFigureTo(figure, nextField)) {
+								this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), LudoServerField::getFieldInfo)));
+								if (this.winHandler.hasPlayerFinished(player)) {
+									this.winHandler.onPlayerFinished(player);
+									if (this.winHandler.getWinOrder().size() - this.players.size() > 1) {
+										this.nextPlayer(false);
+									} else {
+										LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Util.mapList(this.winHandler.getWinOrder(), this::getName));
+										for (LudoServerPlayer gamePlayer : this.players) {
+											PlayerScore score = gamePlayer.getPlayer().getScore();
+											score.setScore(this.winHandler.getScoreFor(this, gamePlayer));
+											this.broadcastPlayers(new SyncPlayerDataPacket(gamePlayer.getPlayer().getProfile(), true, score));
+										}
+										this.broadcastPlayers(new LudoGameResultPacket());
 									}
-									this.broadcastPlayers(new LudoGameResultPacket());
+								} else if (this.diceHandler.canRollAfterMove(player, currentField, nextField, count)) {
+									player.setRollCount(1);
+									this.broadcastPlayer(new CanRollDiceAgainPacket(), player);
+								} else {
+									this.nextPlayer(false);
 								}
-							} else if (this.diceHandler.canRollAfterMove(player, currentField, nextField, count)) {
-								player.setRollCount(1);
-								this.broadcastPlayer(new CanRollDiceAgainPacket(), player);
 							} else {
-								this.nextPlayer(false);
+								LOGGER.warn("Fail to move figure {} of player {} to field {}", figure.getCount(), this.getName(player), nextField.getFieldPos().getPosition());
+								this.broadcastPlayer(new CanSelectGameFieldPacket(), player);
 							}
 						} else {
-							LOGGER.warn("Fail to move figure {} of player {} to field {}", figure.getCount(), this.getName(player), nextField.getFieldPos().getPosition());
-							this.broadcastPlayer(new GameActionFailedPacket(), player);
+							LOGGER.warn("Fail to move figure {} of player {}, since there is no next field for the figure", figure.getCount(), this.getName(player));
+							this.broadcastPlayer(new CanSelectGameFieldPacket(), player);
 						}
 					} else {
-						LOGGER.warn("Fail to move figure {} of player {}, since there is no next field for the figure", figure.getCount(), this.getName(player));
-						this.broadcastPlayer(new GameActionFailedPacket(), player);
+						LOGGER.warn("Fail to get a figure of player {} from field {}, since the field is empty", this.getName(player), currentField.getFieldPos().getPosition());
+						this.broadcastPlayer(new CanSelectGameFieldPacket(), player);
 					}
 				} else {
 					LOGGER.warn("Fail to move figure of player {}, since the player has not rolled the dice yet", this.getName(player));

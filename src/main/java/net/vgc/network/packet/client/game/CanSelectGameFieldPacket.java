@@ -21,7 +21,7 @@ public class CanSelectGameFieldPacket implements ClientPacket {
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		
+		listener.handleCanSelectGameField();
 	}
 	
 }
