@@ -70,7 +70,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 			} else {
 				this.group.selectToggle(null);
 			}
-			this.getFields().forEach(LudoClientField::resetShadow);
+			this.fields.stream().filter(LudoClientField::isShadowed).forEach(LudoClientField::resetShadow);
 		});
 	}
 	

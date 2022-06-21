@@ -35,6 +35,7 @@ import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.network.packet.client.game.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameFieldPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.network.packet.client.game.Wins4GameResultPacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
@@ -82,6 +83,7 @@ public class Packets {
 		map.put(i++, UpdateGameMapPacket.class);
 		map.put(i++, TTTGameResultPacket.class);
 		map.put(i++, LudoGameResultPacket.class);
+		map.put(i++, Wins4GameResultPacket.class);
 		map.put(i++, ExitGameRequestPacket.class);
 		map.put(i++, ExitGamePacket.class);
 		map.put(i++, StopGamePacket.class);

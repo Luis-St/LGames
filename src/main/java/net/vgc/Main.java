@@ -67,6 +67,7 @@ public class Main {
 			Constans.LAUNCH_TYPE = "account";
 			AccountServer.launch(AccountServer.class, args);
 		} else {
+			LOGGER.error("A critical error occurred while launching the virtual game collection");
 			System.exit(-1);
 		}
 	}

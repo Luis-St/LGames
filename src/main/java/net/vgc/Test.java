@@ -105,6 +105,9 @@ public class Test {
 			list.add(new Translation("screen.ludo.blue_player", "Blue player: %1%"));
 			list.add(new Translation("screen.ludo.red_player", "Red player: %1%"));
 			list.add(new Translation("screen.ludo.no_player", "Player: %1%"));
+			list.add(new Translation("screen.lobby.4wins", "4 Wins"));
+			list.add(new Translation("screen.win4.yellow_player", "Yellow player: %1%"));
+			list.add(new Translation("screen.win4.red_player", "Red player: %1%"));
 		});
 		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
@@ -182,6 +185,9 @@ public class Test {
 			list.add(new Translation("screen.ludo.blue_player", "Blauer Spieler: %1%"));
 			list.add(new Translation("screen.ludo.red_player", "Roter Spieler: %1%"));
 			list.add(new Translation("screen.ludo.no_player", "Spieler: %1%"));
+			list.add(new Translation("screen.lobby.4wins", "4 Gewinnt"));
+			list.add(new Translation("screen.win4.yellow_player", "Gelber Spieler: %1%"));
+			list.add(new Translation("screen.win4.red_player", "Roter Spieler: %1%"));
 		});
 		saveLanguageFile(Languages.EN_US, english);
 		saveLanguageFile(Languages.DE_DE, german);

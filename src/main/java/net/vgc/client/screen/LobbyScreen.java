@@ -27,6 +27,7 @@ public class LobbyScreen extends GameScreen {
 	protected Menu gameMenu;
 	protected ButtonBox tttButtonBox;
 	protected ButtonBox ludoButtonBox;
+	protected ButtonBox wins4ButtonBox;
 	
 	public LobbyScreen() {
 		
@@ -46,6 +47,8 @@ public class LobbyScreen extends GameScreen {
 		this.tttButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 		this.ludoButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.ludo"), this::handleLudo);
 		this.ludoButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
+		this.wins4ButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.4wins"), this::handleWins4);
+		this.wins4ButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 	}
 	
 	protected void handleTTT() {
@@ -60,12 +63,19 @@ public class LobbyScreen extends GameScreen {
 		}
 	}
 	
+	protected void handleWins4() {
+		if (this.client.getPlayer().isAdmin()) {
+			this.showScreen(new PlayerSelectScreen(GameTypes.WINS_4, this));
+		}
+	}
+	
 	@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
 			this.tttButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 			this.ludoButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
+			this.wins4ButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 		}
 	}
 	
@@ -91,7 +101,7 @@ public class LobbyScreen extends GameScreen {
 	@Override
 	protected Pane createPane() {
 		GridPane gridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		gridPane.addRow(0, this.tttButtonBox, this.ludoButtonBox);
+		gridPane.addRow(0, this.tttButtonBox, this.ludoButtonBox, this.wins4ButtonBox);
 		this.refreshPlayers();
 		return new VBox(new MenuBar(this.playerMenu, this.gameMenu), gridPane);
 	}

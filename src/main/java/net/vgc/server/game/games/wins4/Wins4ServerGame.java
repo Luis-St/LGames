@@ -1,113 +1,114 @@
-package net.vgc.server.game.games.ttt;
+package net.vgc.server.game.games.wins4;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
-import net.vgc.client.game.games.ttt.TTTClientGame;
+import net.vgc.client.game.games.wins4.Wins4ClientGame;
 import net.vgc.game.GameResult;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
-import net.vgc.game.games.ttt.TTTResultLine;
-import net.vgc.game.games.ttt.map.field.TTTFieldPos;
-import net.vgc.game.games.ttt.player.TTTPlayerType;
+import net.vgc.game.games.wins4.Wins4ResultLine;
+import net.vgc.game.games.wins4.map.field.Wins4FieldPos;
+import net.vgc.game.games.wins4.player.Wins4PlayerType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.GameActionFailedPacket;
-import net.vgc.network.packet.client.game.TTTGameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.network.packet.client.game.Wins4GameResultPacket;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.ServerGame;
-import net.vgc.server.game.games.ttt.map.TTTServerMap;
-import net.vgc.server.game.games.ttt.map.field.TTTServerField;
-import net.vgc.server.game.games.ttt.player.TTTServerPlayer;
-import net.vgc.server.game.games.ttt.player.figure.TTTServerFigure;
-import net.vgc.server.game.games.ttt.win.TTTWinHandler;
+import net.vgc.server.game.games.wins4.map.Wins4ServerMap;
+import net.vgc.server.game.games.wins4.map.field.Wins4ServerField;
+import net.vgc.server.game.games.wins4.player.Wins4ServerPlayer;
+import net.vgc.server.game.games.wins4.player.figure.Wins4ServerFigure;
+import net.vgc.server.game.games.wins4.win.Wins4WinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
-public class TTTServerGame implements ServerGame {
+public class Wins4ServerGame implements ServerGame {
 	
 	protected final DedicatedServer server;
-	protected final TTTServerMap map;
-	protected final List<TTTServerPlayer> players;
-	protected final TTTWinHandler winHandler;
-	protected TTTServerPlayer player;
+	protected final Wins4ServerMap map;
+	protected final List<Wins4ServerPlayer> players;
+	protected final Wins4WinHandler winHandler;
+	protected Wins4ServerPlayer player;
 	
-	public TTTServerGame(DedicatedServer server, List<ServerPlayer> players) {
+	public Wins4ServerGame(DedicatedServer server, List<ServerPlayer> players) {
 		this.server = server;
-		this.map = new TTTServerMap(this);
+		this.map = new Wins4ServerMap(this);
 		this.players = createGamePlayers(this, players);
-		this.winHandler = new TTTWinHandler();
+		this.winHandler = new Wins4WinHandler();
 	}
 	
-	protected static List<TTTServerPlayer> createGamePlayers(TTTServerGame game, List<ServerPlayer> players) {
+	protected static List<Wins4ServerPlayer> createGamePlayers(Wins4ServerGame game, List<ServerPlayer> players) {
 		if (players.size() != 2) {
 			LOGGER.error("Fail to create player type map for player list {} with size {}, since a player list with size in bounds 2 was expected", players.stream().map(game::getName).collect(Collectors.toList()));
 			throw new IllegalStateException("Fail to create player type map for player list with size " + players.size() + ", since a player list with size 2 was expected");
 		}
 		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(players, ServerPlayer::getProfile, GameProfile::getName));
-		List<TTTServerPlayer> gamePlayers = Lists.newArrayList();
-		gamePlayers.add(new TTTServerPlayer(game, players.get(0), TTTPlayerType.CROSS));
-		gamePlayers.add(new TTTServerPlayer(game, players.get(1), TTTPlayerType.CIRCLE));
+		List<Wins4ServerPlayer> gamePlayers = Lists.newArrayList();
+		gamePlayers.add(new Wins4ServerPlayer(game, players.get(0), Wins4PlayerType.YELLOW));
+		gamePlayers.add(new Wins4ServerPlayer(game, players.get(1), Wins4PlayerType.RED));
 		return gamePlayers;
 	}
 	
 	@Override
 	public void initGame() {
-		this.map.init(this.players);
+		
 	}
 
 	@Override
 	public void startGame() {
 		
 	}
-	
+
 	@Override
 	public DedicatedServer getServer() {
 		return this.server;
 	}
 
 	@Override
-	public GameType<TTTServerGame, TTTClientGame> getType() {
-		return GameTypes.TIC_TAC_TOE;
+	public GameType<Wins4ServerGame, Wins4ClientGame> getType() {
+		return GameTypes.WINS_4;
 	}
-	
+
 	@Override
-	public TTTServerMap getMap() {
+	public Wins4ServerMap getMap() {
 		return this.map;
 	}
-	
+
 	@Override
-	public List<TTTServerPlayer> getPlayers() {
+	public List<Wins4ServerPlayer> getPlayers() {
 		return this.players;
 	}
-	
+
 	@Override
-	public TTTServerPlayer getCurrentPlayer() {
+	public Wins4ServerPlayer getCurrentPlayer() {
 		return this.player;
 	}
-	
+
 	@Override
 	public void setCurrentPlayer(GamePlayer player) {
 		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.player, this::getName), Util.runIfNotNull(player, this::getName));
-		this.player = (TTTServerPlayer) player;
+		this.player = (Wins4ServerPlayer) player;
 		if (this.player != null) {
-			this.server.getPlayerList().broadcastAll(Util.mapList(this.players, TTTServerPlayer::getPlayer), new CurrentPlayerUpdatePacket(this.player));
+			this.server.getPlayerList().broadcastAll(Util.mapList(this.players, Wins4ServerPlayer::getPlayer), new CurrentPlayerUpdatePacket(this.player));
 		}
 	}
-	
+
 	@Override
-	public TTTWinHandler getWinHandler() {
+	public Wins4WinHandler getWinHandler() {
 		return this.winHandler;
 	}
 
@@ -117,7 +118,7 @@ public class TTTServerGame implements ServerGame {
 			this.map.reset();
 			this.winHandler.reset();
 			this.nextPlayer(true);
-			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), TTTServerField::getFieldInfo)));
+			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), Wins4ServerField::getFieldInfo)));
 			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.players, this::getName));
 			return true;
 		}
@@ -129,35 +130,37 @@ public class TTTServerGame implements ServerGame {
 	public void handlePacket(ServerPacket serverPacket) {
 		ServerGame.super.handlePacket(serverPacket);
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
-			TTTFieldPos fieldPos = (TTTFieldPos) packet.getFieldPos();
-			TTTServerPlayer player = (TTTServerPlayer) this.getPlayerFor(packet.getProfile());
+			Wins4FieldPos fieldPos = (Wins4FieldPos) packet.getFieldPos();
+			Wins4ServerPlayer player = (Wins4ServerPlayer) this.getPlayerFor(packet.getProfile());
 			if (Objects.equals(this.player, player)) {
-				TTTServerField field = this.map.getField(null, null, fieldPos);
-				if (field != null) {
+				Optional<Wins4ServerField> optionalField = Util.reverseList(this.map.getFieldsForColumn(fieldPos.getColumn())).stream().filter(Wins4ServerField::isEmpty).findFirst();
+				if (optionalField.isPresent()) {
+					Wins4ServerField field = optionalField.orElseThrow(NullPointerException::new);
 					if (field.isEmpty()) {
-						TTTServerFigure figure = player.getUnplacedFigure();
+						Wins4ServerFigure figure = player.getUnplacedFigure();
 						if (figure != null) {
 							field.setFigure(figure);
-							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), TTTServerField::getFieldInfo)));
+							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), Wins4ServerField::getFieldInfo)));
 							if (this.winHandler.hasPlayerFinished(player)) {
 								this.winHandler.onPlayerFinished(player);
 								LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Util.mapList(this.winHandler.getWinOrder(), this::getName));
-								TTTResultLine resultLine = this.winHandler.getResultLine(map);
-								if (resultLine != TTTResultLine.EMPTY) {
-									for (TTTServerPlayer gamePlayer : this.players) {
+								Wins4ResultLine resultLine = this.winHandler.getResultLine(this.map);
+								LOGGER.debug("Result line of player {} is {}", this.getName(player), resultLine);
+								if (resultLine != Wins4ResultLine.EMPTY) {
+									for (Wins4ServerPlayer gamePlayer : this.players) {
 										if (gamePlayer.equals(player))  {
 											this.handlePlayerGameResult(gamePlayer, GameResult.WIN, resultLine, PlayerScore::increaseWin);
 										} else {
 											this.handlePlayerGameResult(gamePlayer, GameResult.LOSE, resultLine, PlayerScore::increaseLose);
 										}
 									}
-								} else {
+								} else  {
 									LOGGER.warn("Player {} finished the game but there is no result line", this.getName(player));
 									this.stopGame();
 								}
-							} else if (this.winHandler.isDraw(this.map)) {
-								for (TTTServerPlayer gamePlayer : this.players) {
-									this.handlePlayerGameResult(gamePlayer, GameResult.DRAW, TTTResultLine.EMPTY, PlayerScore::increaseDraw);
+							} else if (this.winHandler.isDraw(map)) {
+								for (Wins4ServerPlayer gamePlayer : this.players) {
+									this.handlePlayerGameResult(gamePlayer, GameResult.DRAW, Wins4ResultLine.EMPTY, PlayerScore::increaseDraw);
 								}
 							} else {
 								this.nextPlayer(false);
@@ -167,11 +170,11 @@ public class TTTServerGame implements ServerGame {
 							this.stopGame();
 						}
 					} else {
-						LOGGER.warn("Fail to place a figure of player {} on field, since on the field is already a figure of type {}", this.getName(player), field.getFigure().getPlayerType());
-						this.broadcastPlayer(new GameActionFailedPacket(), player);
+						LOGGER.warn("The field {} should be empty but there is a figure of player {} of it", fieldPos.getPosition(), this.getName(player));
+						this.stopGame();
 					}
 				} else {
-					LOGGER.warn("Fail to get field for pos {}", fieldPos.getPosition());
+					LOGGER.warn("Fail to get empty field in column {}", fieldPos.getColumn());
 					this.broadcastPlayer(new GameActionFailedPacket(), player);
 				}
 			} else {
@@ -180,16 +183,16 @@ public class TTTServerGame implements ServerGame {
 		}
 	}
 	
-	protected void handlePlayerGameResult(TTTServerPlayer gamePlayer, GameResult result, TTTResultLine resultLine, Consumer<PlayerScore> consumer) {
+	protected void handlePlayerGameResult(Wins4ServerPlayer gamePlayer, GameResult result, Wins4ResultLine resultLine, Consumer<PlayerScore> consumer) {
 		ServerPlayer player = gamePlayer.getPlayer();
-		this.broadcastPlayer(new TTTGameResultPacket(result, resultLine), gamePlayer);
+		this.broadcastPlayer(new Wins4GameResultPacket(result, resultLine), gamePlayer);
 		consumer.accept(player.getScore());
 		this.broadcastPlayers(new SyncPlayerDataPacket(player.getProfile(), true, player.getScore()));
 	}
 	
 	@Override
 	public String toString() {
-		return "TTTServerGame";
+		return "Win4ServerGame";
 	}
-
+	
 }
