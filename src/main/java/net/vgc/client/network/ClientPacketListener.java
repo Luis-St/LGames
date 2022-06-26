@@ -1,27 +1,28 @@
 package net.vgc.client.network;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.google.common.collect.Lists;
 
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.Client;
+import net.vgc.client.game.ClientGame;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
-import net.vgc.game.GameTypes;
-import net.vgc.game.ludo.LudoType;
+import net.vgc.game.GameType;
+import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.score.PlayerScore;
-import net.vgc.game.ttt.TTTType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.player.GameProfile;
+import net.vgc.player.Player;
+import net.vgc.server.game.ServerGame;
+import net.vgc.util.Mth;
+import net.vgc.util.Util;
 
 public class ClientPacketListener extends AbstractPacketListener {
 	
@@ -33,7 +34,6 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleClientLoggedIn(LoginType loginType, PlayerAccount account, boolean successful) {
-		this.checkSide();
 		LoginWindow loginWindow = this.client.getLoginWindow();
 		if (!this.client.isLoggedIn()) {
 			if (successful) {
@@ -72,7 +72,6 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleClientLoggedOut(boolean successful) {
-		this.checkSide();
 		LoginWindow loginWindow = this.client.getLoginWindow();
 		if (successful) {
 			LOGGER.info("Successfully logged out");
@@ -86,7 +85,6 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleClientJoined(List<GameProfile> profiles) {
-		this.checkSide();
 		for (GameProfile profile : profiles) {
 			if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 				this.client.setPlayer(new LocalPlayer(profile));
@@ -97,8 +95,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handlePlayerAdd(GameProfile profile) {
-		this.checkSide();
+	public void handlePlayerAdd(GameProfile profile) {;
 		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			if (this.client.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
@@ -112,7 +109,6 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handlePlayerRemove(GameProfile profile) {
-		this.checkSide();
 		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			this.client.removePlayer();
 		} else {
@@ -121,7 +117,6 @@ public class ClientPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleSyncPermission(GameProfile profile) {
-		this.checkSide();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player.getProfile().equals(profile)) {
 				player.setAdmin(true);
@@ -130,81 +125,132 @@ public class ClientPacketListener extends AbstractPacketListener {
 				player.setAdmin(false);
 			}
 		}
-		LOGGER.info("Sync admins to value {}, should not be larger than 1", this.client.getPlayers().stream().filter(AbstractClientPlayer::isAdmin).collect(Collectors.toList()).size());
+		LOGGER.info("Sync admins");
 	}
 	
 	public void handleSyncPlayerData(GameProfile profile, boolean playing, PlayerScore score) {
-		this.checkSide();
 		AbstractClientPlayer player = this.client.getPlayer(profile);
 		if (player != null) {
 			player.setPlaying(playing);
-			player.syncScore(score);
-			LOGGER.info("Synchronize data from server to player {}", profile.getName());
+			player.getScore().sync(score);
+			LOGGER.info("Synchronize data from server of player {}", profile.getName());
 		} else {
 			LOGGER.warn("Fail to synchronize data from server to player {}, since the player does not exists", profile.getName());
 		}
 	}
 	
-	public void handleStartTTTGame(TTTType type, List<GameProfile> profiles) {
-		this.checkSide();
-		boolean flag = false;
-		for (AbstractClientPlayer player : this.client.getPlayers(profiles)) {
-			player.setPlaying(true);
-			if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
-				flag = true;
-			}
-		}
-		if (flag) {
-			GameTypes.TIC_TAC_TOE.openScreen();
-			LOGGER.info("Start game {}", GameTypes.TIC_TAC_TOE.getName().toLowerCase());
+	public void handleCancelRollDiceRequest() {
+		LOGGER.info("Roll dice request was canceled from the server");
+		this.client.getPlayer().setCanRollDice(false);
+	}
+	
+	public void handleRolledDice(int count) {
+		LocalPlayer player = this.client.getPlayer();
+		if (Mth.isInBounds(count, 1, 6)) {
+			player.setCount(count);
+			player.setCanRollDice(false);
 		} else {
-			LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", GameTypes.TIC_TAC_TOE.getName().toLowerCase());
-			this.client.setScreen(new LobbyScreen());
+			player.setCount(-1);
+			player.setCanRollDice(false);
 		}
 	}
 	
-	public void handleStartLudoGame(LudoType playerType, Map<GameProfile, LudoType> playerTypes) {
-		this.checkSide();
+	public void handleCanRollDiceAgain() {
+		this.client.getPlayer().setCanRollDice(true);
+	}
+	
+	public void handleCurrentPlayerUpdate(GameProfile profile) {
 		boolean flag = false;
-		for (AbstractClientPlayer player : this.client.getPlayers(Lists.newArrayList(playerTypes.keySet()))) {
-			player.setPlaying(true);
-			if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
-				flag = true;
+		if (this.client.getGame() != null) {
+			ClientGame game = this.client.getGame();
+			for (AbstractClientPlayer player : this.client.getPlayers()) {
+				if (player.getProfile().equals(profile)) {
+					game.setCurrentPlayer(game.getPlayerFor(player));
+					player.setCurrent(true);
+					flag = true;
+					if (player instanceof LocalPlayer localPlayer) {
+						localPlayer.setCanRollDice(true);
+					}
+				} else {
+					player.setCurrent(false);
+				}
+			}
+			if (!flag) {
+				LOGGER.warn("Fail to update the current player to {}, since the player does not exists", profile.getName());
+			}
+		} else {
+			LOGGER.warn("Fail to update the current player to {}, since there is no active game", profile.getName());
+		}
+	}
+	
+	public <S extends ServerGame, C extends ClientGame> void handleStartGame(GameType<S, C> gameType, List<GamePlayerInfo> playerInfos) {
+		if (this.client.getGame() == null) {
+			C game = gameType.createClientGame(this.client, playerInfos);
+			game.startGame();
+			boolean flag = false;
+			for (Player player : Util.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
+				player.setPlaying(true);
+				if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
+					flag = true;
+				}
+			}
+			if (flag) {
+				gameType.openScreen(this.client, game);
+				LOGGER.info("Start game {}", gameType.getInfoName());
+				this.client.setGame(game);
+			} else {
+				LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", gameType.getInfoName());
+				this.client.setScreen(new LobbyScreen());
 			}
 		}
-		if (flag) {
-			GameTypes.LUDO.openScreen();
-			LOGGER.info("Start game {}", GameTypes.LUDO.getName().toLowerCase());
-		} else {
-			LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", GameTypes.LUDO.getName().toLowerCase());
-			this.client.setScreen(new LobbyScreen());
+	}
+	
+	public void handleCanSelectGameField() {
+		LocalPlayer player = this.client.getPlayer();
+		if (player.isCurrent()) {
+			player.setCanSelect(true);
 		}
+	}
+	
+	public void handleGameActionFailed() {
+		this.client.getPlayer().setCurrent(true);
+	}
+	
+	public void handleCancelPlayAgainGameRequest() {
+		LOGGER.warn("The request to play again was canceled by the server");
 	}
 	
 	public void handleExitGame() {
-		this.checkSide();
 		LOGGER.info("Exit the current game");
 		if (this.client.getPlayer().isPlaying()) {
 			this.client.getPlayer().setPlaying(false);
 			this.client.getPlayer().getScore().reset();
+			if (this.client.getGame() != null) {
+				this.client.setGame(null);
+			} else {
+				LOGGER.warn("Received a exit game packet, but there is no active game");
+			}
 		} else {
 			LOGGER.info("Received a exit game packet, but the local player is not playing a game");
 		}
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handleStopGame() {
-		this.checkSide();
+	public void handleStopGame() {;
 		LOGGER.info("Stopping the current game");
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			player.setPlaying(false);
 			player.getScore().reset();
 		}
+		if (this.client.getGame() != null) {
+			this.client.setGame(null);
+		} else {
+			LOGGER.warn("Received a stop game packet, but there is no active game");
+		}
 		this.client.setScreen(new LobbyScreen());
 	}
 	
 	public void handleServerClosed() {
-		this.checkSide();
 		this.client.getServerHandler().close();
 		this.client.removePlayer();
 		this.client.setScreen(new MenuScreen());

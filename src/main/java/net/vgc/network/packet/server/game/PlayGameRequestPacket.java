@@ -4,35 +4,35 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.game.GameType;
-import net.vgc.game.GameTypes;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.game.GameType;
+import net.vgc.game.GameTypes;
 import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketListener;
 
 public class PlayGameRequestPacket implements ServerPacket {
 	
-	protected final GameType<?> gameType;
+	protected final GameType<?, ?> gameType;
 	protected final List<GameProfile> profiles;
 	
-	public PlayGameRequestPacket(GameType<?> gameType, List<AbstractClientPlayer> players) {
+	public PlayGameRequestPacket(GameType<?, ?> gameType, List<AbstractClientPlayer> players) {
 		this.gameType = gameType;
 		this.profiles = players.stream().map(AbstractClientPlayer::getProfile).collect(Collectors.toList());
 	}
 	
 	public PlayGameRequestPacket(FriendlyByteBuffer buffer) {
 		this.gameType = GameTypes.fromName(buffer.readString());
-		this.profiles = buffer.readList(buffer, (buf) -> {
-			return buf.read(GameProfile.class);
+		this.profiles = buffer.readList(() -> {
+			return buffer.read(GameProfile.class);
 		});
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeString(this.gameType.getName());
-		buffer.writeList(buffer, this.profiles, (buf, profile) -> {
-			buf.write(profile);
+		buffer.writeList(this.profiles, (profile) -> {
+			buffer.write(profile);
 		});
 	}
 
@@ -41,7 +41,7 @@ public class PlayGameRequestPacket implements ServerPacket {
 		listener.handlePlayGameRequest(this.gameType, this.profiles);
 	}
 	
-	public GameType<?> getGameType() {
+	public GameType<?, ?> getGameType() {
 		return this.gameType;
 	}
 	

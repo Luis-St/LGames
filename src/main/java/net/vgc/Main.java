@@ -16,23 +16,25 @@ import net.vgc.util.Util;
 public class Main {
 	
 	/* TODO's:
-	 *  - use com.google.common.collect.Table for TTT game field & add Client side Map -> summarize/order methods in TTTScreen
-	 *  - issue in TTT game screen -> current player changes moves the hole game grid
-	 *  - add dice animation
+	 *  - add GameMap#canMove -> fix Ludo move figure issues include GamePlayer#canMoveFigure (used for action skip)
+	 *  - sum #setOnAction of LudoClientMap & fix issue -> not ignore next field
+	 *  - check game casts via instance of
+	 *  - use WinHandler#canPlayerWin and rework of hasPlayerFinished -> in Ludo and TTT game
+	 *  - rework of FieldRenderState and shadow rendering
+	 *  - LobbyScreen does not update players correctly
 	 *  - new registry for Packets
-	 *  - add server settings
+	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure (ActionGame) -> add Abstract impl, use common values, add all methods to it bas interface, remove server and client sub interfaces
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
+	 *  - add server settings
 	 *  - add super class for Windows
 	 *  - add way to display score in server window
 	 *  - create Loading Steps, which are load from 0% til 100% -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
-	 *  - add new info system form server -> client
-	 *  - rework of FxUtil.resize -> use gui size which is set via settings (include Font)
-	 *  - layout and grafic rework
+	 *  - add new info system form server -> client (add InfoInputPane)
+	 *  - rework of layout and grafic (use always InputPane)
 	 *  - account server close -> packet to client which skip loggout (without sync to account server)
-	 *  - fix Logger
-	 *  - impl. singleplayer
+	 *  - fix Logger (testing)
 	 *  
-	 *  https://codetabs.com/count-loc/count-loc-online.html -> Luis-st/School-Project
+	 *  https://codetabs.com/count-loc/count-loc-online.html -> Luis-st/School-Project & game-api
 	 */
 	
 	public static final Logger LOGGER = LogManager.getLogger(Main.class);
@@ -65,6 +67,7 @@ public class Main {
 			Constans.LAUNCH_TYPE = "account";
 			AccountServer.launch(AccountServer.class, args);
 		} else {
+			LOGGER.error("A critical error occurred while launching the virtual game collection");
 			System.exit(-1);
 		}
 	}

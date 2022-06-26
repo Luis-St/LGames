@@ -11,11 +11,11 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class FxTest extends Application {
@@ -28,24 +28,11 @@ public class FxTest extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		ToggleGroup group = new ToggleGroup();
-		group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-			LOGGER.info("Trigger");
-			if (oldValue != null && newValue == null) {
-				oldValue.setSelected(true);
-			}
-		});
-		ToggleButton button1 = new ToggleButton("Test 1");
-		button1.setToggleGroup(group);
-		button1.setOnAction((event) -> {
-			LOGGER.info("Test 1");
-		});
-		ToggleButton button2 = new ToggleButton("Test 2");
-		button2.setToggleGroup(group);
-		button2.setOnAction((event) -> {
-			LOGGER.info("Test 2");
-		});
-		stage.setScene(new Scene(new HBox(button1, button2), 200.0, 200.0));
+		StackPane pane = new StackPane();
+		pane.getChildren().add(new Button("Dummy"));
+		pane.getChildren().add(new Text("Test"));
+		stage.setTitle("Virtual Game Collection");
+		stage.setScene(new Scene(pane, 250.0, 250.0));
 		stage.show();
 	}
 	

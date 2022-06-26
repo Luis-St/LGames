@@ -21,7 +21,7 @@ public class CancelPlayAgainGameRequestPacket implements ClientPacket {
 
 	@Override
 	public void handle(ClientPacketListener listener) {
-		
+		listener.handleCancelPlayAgainGameRequest();
 	}
 	
 }

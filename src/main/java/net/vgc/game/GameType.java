@@ -1,10 +1,7 @@
 package net.vgc.game;
 
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -12,35 +9,39 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.vgc.client.Client;
+import net.vgc.client.game.ClientGame;
 import net.vgc.client.screen.game.GameScreen;
+import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.player.GameProfile;
+import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.game.ServerGame;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Mth;
 
-public class GameType<T extends Game> {
+public class GameType<S extends ServerGame, C extends ClientGame> {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	protected final String name;
 	protected final int minPlayers;
 	protected final int maxPlayers;
-	protected final Function<List<ServerPlayer>, T> createGame;
-	protected final BiFunction<T, ServerPlayer, ClientPacket> startPacket;
-	protected final Supplier<? extends GameScreen> openScreen;
+	protected final GameFactory<S, C> gameFactory;
+	protected final Function<C, ? extends GameScreen> screenFactory;
 	
-	public GameType(String name, int minPlayers, int maxPlayers, Function<List<ServerPlayer>, T> createGame, BiFunction<T, ServerPlayer, ClientPacket> startPacket, Supplier<? extends GameScreen> openScreen) {
+	public GameType(String name, int minPlayers, int maxPlayers, GameFactory<S, C> gameFactory, Function<C, ? extends GameScreen> screenFactory) {
 		this.name = name;
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
-		this.createGame = createGame;
-		this.startPacket = startPacket;
-		this.openScreen = openScreen;
+		this.gameFactory = gameFactory;
+		this.screenFactory = screenFactory;
 	}
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public String getInfoName() {
+		return this.name.toLowerCase();
 	}
 	
 	public int getMinPlayers() {
@@ -51,36 +52,30 @@ public class GameType<T extends Game> {
 		return this.maxPlayers;
 	}
 	
-	public boolean enoughPlayersToPlay(List<ServerPlayer> players) {
-		return Mth.isInBounds(players.size(), this.minPlayers, this.maxPlayers);
-	}
-	
 	@Nullable
-	public T createNewGame(List<ServerPlayer> players) {
-		if (this.enoughPlayersToPlay(players)) {
-			LOGGER.info("Start game with players {}", players.stream().map(ServerPlayer::getProfile).map(GameProfile::getName).collect(Collectors.toList()));
-			T game = this.createGame.apply(players);
-			game.onStart();
-			return game;
+	public S createServerGame(DedicatedServer server, List<ServerPlayer> players) {
+		if (Mth.isInBounds(players.size(), this.minPlayers, this.maxPlayers)) {
+			return this.gameFactory.createServerGame(server, players);
 		}
-		LOGGER.warn("Fail to create new game of type {}, since the player count {} is out of bounds {} - {} ", this.name, players.size(), this.minPlayers, this.maxPlayers);
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public ClientPacket getStartPacket(Game game, ServerPlayer player) {
-		return this.startPacket.apply((T) game, player);
+	public C createClientGame(Client client, List<GamePlayerInfo> playerInfos) {
+		if (Mth.isInBounds(playerInfos.size(), this.minPlayers, this.maxPlayers)) {
+			return this.gameFactory.createClientGame(client, playerInfos);
+		}
+		return null;
 	}
 	
-	public void openScreen() {
+	public void openScreen(Client client, C game) {
 		if (NetworkSide.CLIENT.isOn()) {
-			Client.getInstance().setScreen(this.openScreen.get());
+			client.setScreen(this.screenFactory.apply(game));
 		}
 	}
 	
 	@Override
 	public String toString() {
-		return this.name;
+		return this.getInfoName();
 	}
 	
 }

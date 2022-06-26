@@ -3,11 +3,13 @@ package net.vgc.util;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -58,14 +60,6 @@ public class Util {
 		timeline.play();
 	}
 	
-	public static void runAfter(String name, int delay, Runnable action) {
-		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(0), name, (event) -> {
-			action.run();
-		}));
-		timeline.setDelay(Duration.millis(delay));
-		timeline.play();
-	}
-	
 	public static <K, V, T> List<T> mapToList(Map<K, V> map, BiFunction<K, V, T> function) {
 		List<T> list = Lists.newArrayList();
 		for (Map.Entry<K, V> entry : map.entrySet()) {
@@ -81,6 +75,14 @@ public class Util {
 			map.put(entry.getKey(), entry.getValue());
 		}
 		return map;
+	}
+	
+	public static <T, U> List<U> mapList(List<T> list, Function<T, U> function) {
+		return list.stream().map(function).collect(Collectors.toList());
+	}
+	
+	public static <T, U, V> List<V> mapList(List<T> list, Function<T, U> firstFunction, Function<U, V> secondFunction) {
+		return list.stream().map(firstFunction).map(secondFunction).collect(Collectors.toList());
 	}
 	
 	public static <K, T, V> Map<T, V> mapKey(Map<K, V> map, Function<K, T> function) {
@@ -113,6 +115,13 @@ public class Util {
 			return function.apply(value);
 		}
 		return null;
+	}
+	
+	public static <T> T warpNullTo(T value, T nullFallback) {
+		if (value == null) {
+			return Objects.requireNonNull(nullFallback, "The fallback value can not be null");
+		}
+		return value;
 	}
 	
 	public static Random systemRandom() {

@@ -18,6 +18,16 @@ public class ReflectionHelper {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
+	@Nullable
+	public static Class<?> getClassForName(String className) {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			LOGGER.warn("Fail to find class for name " + className, e);
+		}
+		return null;
+	}
+	
 	public static boolean hasInterface(Class<?> clazz, Class<?> iface) {
 		if (iface.isInterface()) {
 			return Lists.newArrayList(clazz.getInterfaces()).contains(iface);

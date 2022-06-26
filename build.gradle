@@ -57,7 +57,7 @@ task clientRun(type:JavaExec) {
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("src/main/resources/assets"), "--accountHost", "localhost", "--accountPort", "8081")
+	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("assets"), "--accountHost", "localhost", "--accountPort", "8081")
 	args("--instantLoading", "true", "--safeLoading", "false")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
@@ -67,7 +67,7 @@ task serverRun(type:JavaExec) {
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--server", "--gameDir", file('run/server'), "--resourceDir", file('src/main/resources/assets'), "--host", "localhost", "--port", "8080", "--language", "en_us")
+	args("--debugMode", "false", "--ide", "--server", "--gameDir", file("run/server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8080", "--language", "en_us")
 	args("--admin", "00000000-aae0-9a05-0000-000061e6a80d")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
@@ -77,7 +77,7 @@ task accountRun(type:JavaExec) {
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--account", "--gameDir", file('run/account_server'), "--resourceDir", file('src/main/resources/assets'), "--host", "localhost", "--port", "8081", "--language", "en_us")
+	args("--debugMode", "false", "--ide", "--account", "--gameDir", file("run/account_server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8081", "--language", "en_us")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
@@ -103,9 +103,15 @@ wrapper {
 }
 
 jar {
+	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 	manifest {
 		attributes([
-			"Main-Class": javaMainClass
+			"Main-Class": javaMainClass,
+			"Built-By": "Luis Staudt, Felix Stenzel and Luca Loos",
+			"Multi-Release": "true"
 		])
 	}
+	from {
+    	configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  	}
 }

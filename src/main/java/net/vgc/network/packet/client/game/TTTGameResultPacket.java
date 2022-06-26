@@ -1,42 +1,30 @@
 package net.vgc.network.packet.client.game;
 
 import net.vgc.client.network.ClientPacketListener;
-import net.vgc.game.ttt.TTTType;
-import net.vgc.game.ttt.map.TTTResultLine;
+import net.vgc.game.GameResult;
+import net.vgc.game.games.ttt.TTTResultLine;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.player.GameProfile;
 
 public class TTTGameResultPacket implements ClientPacket {
 	
-	protected final GameProfile winnerProfile;
-	protected final TTTType winnerType;
-	protected final GameProfile loserProfile;
-	protected final TTTType loserType;
+	protected final GameResult result;
 	protected final TTTResultLine resultLine;
 	
-	public TTTGameResultPacket(GameProfile winnerProfile, TTTType winnerType, GameProfile loserProfile, TTTType loserType, TTTResultLine resultLine) {
-		this.winnerProfile = winnerProfile;
-		this.winnerType = winnerType;
-		this.loserProfile = loserProfile;
-		this.loserType = loserType;
+	public TTTGameResultPacket(GameResult result, TTTResultLine resultLine) {
+		this.result = result;
 		this.resultLine = resultLine;
 	}
 	
 	public TTTGameResultPacket(FriendlyByteBuffer buffer) {
-		this.winnerProfile = buffer.read(GameProfile.class);
-		this.winnerType = buffer.readEnum(TTTType.class);
-		this.loserProfile = buffer.read(GameProfile.class);
-		this.loserType = buffer.readEnum(TTTType.class);
-		this.resultLine = buffer.read(TTTResultLine.class);
+		this.result = buffer.readEnum(GameResult.class);
+		TTTResultLine resultLine = buffer.read(TTTResultLine.class);
+		this.resultLine = resultLine.equals(TTTResultLine.EMPTY) ? TTTResultLine.EMPTY : resultLine;
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.write(this.winnerProfile);
-		buffer.writeEnum(this.winnerType);
-		buffer.write(this.loserProfile);
-		buffer.writeEnum(this.loserType);
+		buffer.writeEnum(this.result);
 		buffer.write(this.resultLine);
 	}
 
@@ -45,20 +33,8 @@ public class TTTGameResultPacket implements ClientPacket {
 		
 	}
 	
-	public GameProfile getWinnerProfile() {
-		return this.winnerProfile;
-	}
-	
-	public TTTType getWinnerType() {
-		return this.winnerType;
-	}
-	
-	public GameProfile getLoserProfile() {
-		return this.loserProfile;
-	}
-	
-	public TTTType getLoserType() {
-		return this.loserType;
+	public GameResult getResult() {
+		return this.result;
 	}
 	
 	public TTTResultLine getResultLine() {

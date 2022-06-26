@@ -38,21 +38,24 @@ import javafx.stage.Stage;
 import net.vgc.Constans;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.data.tag.Tag;
-import net.vgc.data.tag.TagUtil;
 import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.game.Game;
+import net.vgc.game.player.GamePlayer;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.PacketDecoder;
-import net.vgc.network.PacketEncoder;
+import net.vgc.network.packet.PacketDecoder;
+import net.vgc.network.packet.PacketEncoder;
+import net.vgc.network.packet.PacketHandler;
+import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
+import net.vgc.server.game.ServerGame;
 import net.vgc.server.network.ServerPacketListener;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.ExceptionHandler;
 import net.vgc.util.Tickable;
 
-public class DedicatedServer implements Tickable  {
+public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	protected static final boolean NATIVE = Epoll.isAvailable();
@@ -68,7 +71,7 @@ public class DedicatedServer implements Tickable  {
 	protected TreeItem<String> playersTreeItem;
 	protected UUID admin;
 	protected ServerPlayer adminPlayer;
-	protected Game game;
+	protected ServerGame game;
 	
 	public DedicatedServer(String host, int port, Path serverDirectory) throws Exception {
 		this.host = host;
@@ -94,9 +97,7 @@ public class DedicatedServer implements Tickable  {
 	}
 	
 	protected void load(CompoundTag tag) {
-		if (tag.contains("admin")) {
-			this.admin = TagUtil.readUUID(tag.getCompound("admin"));
-		}
+		
 	}
 	
 	public void displayServer(Stage stage) {
@@ -124,10 +125,14 @@ public class DedicatedServer implements Tickable  {
 		Button settingsButton = FxUtil.makeButton(TranslationKey.createAndGet("screen.menu.settings"), this::openSettings);
 		settingsButton.setPrefWidth(150.0);
 		Button refreshButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshPlayers);
-		refreshButton.setPrefWidth(150.0);
+		refreshButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
 		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), Platform::exit);
-		closeButton.setPrefWidth(150.0);
-		pane.addRow(0, settingsButton, refreshButton, closeButton);
+		closeButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
+		if (Constans.IDE) {
+			pane.addRow(0, settingsButton, refreshButton, closeButton);
+		} else {
+			pane.addRow(0, refreshButton, closeButton);
+		}
 		box.getChildren().addAll(serverTree, pane);
 		return new Scene(box, 450.0, 400.0);
 	}
@@ -163,7 +168,7 @@ public class DedicatedServer implements Tickable  {
 	}
 	
 	public void enterPlayer(Connection connection, GameProfile profile) {
-		ServerPlayer player = new ServerPlayer(profile, this);
+		ServerPlayer player = new ServerPlayer(profile, new PlayerScore(profile), this);
 		this.playerList.addPlayer(connection, player);
 		if (this.admin != null && this.admin.equals(profile.getUUID())) {
 			if (this.adminPlayer == null) {
@@ -189,8 +194,9 @@ public class DedicatedServer implements Tickable  {
 				this.adminPlayer = null;
 			}
 			if (this.game != null) {
-				if (this.game.getPlayers().contains(player)) {
-					this.game.removePlayer(player, false);
+				GamePlayer gamePlayer = this.game.getPlayerFor(player);
+				if (gamePlayer != null) {
+					this.game.removePlayer(gamePlayer, false);
 				}
 			}
 		}
@@ -199,6 +205,13 @@ public class DedicatedServer implements Tickable  {
 	@Override
 	public void tick() {
 		this.playerList.tick();
+	}
+	
+	@Override
+	public void handlePacket(ServerPacket packet) {
+		if (this.game != null) {
+			this.game.handlePacket(packet);
+		}
 	}
 	
 	public String getHost() {
@@ -233,11 +246,11 @@ public class DedicatedServer implements Tickable  {
 		return this.playerList;
 	}
 	
-	public Game getGame() {
+	public ServerGame getGame() {
 		return this.game;
 	}
 	
-	public void setGame(Game game) {
+	public void setGame(ServerGame game) {
 		this.game = game;
 	}
 	
@@ -254,9 +267,6 @@ public class DedicatedServer implements Tickable  {
 	
 	protected CompoundTag save() {
 		CompoundTag tag = new CompoundTag();
-		if (this.admin != null)  {
-			tag.putCompound("admin", TagUtil.writeUUID(this.admin));
-		}
 		return tag;
 	}
 

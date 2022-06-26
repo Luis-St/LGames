@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import net.vgc.Constans;
 
 public class InputPane extends GridPane {
 	
@@ -20,6 +21,7 @@ public class InputPane extends GridPane {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(0.0);
 		this.setHgap(0.0);
+		this.setGridLinesVisible(Constans.DEBUG);
 		this.addColumn(0, FxUtil.makeVerticalBox(Pos.CENTER_LEFT, 0.0, this.inputText), this.inputField);
 	}
 	

@@ -21,10 +21,9 @@ import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.PacketListener;
 import net.vgc.util.ExceptionHandler;
 
-public abstract class GameApplication<T extends PacketListener> extends Application implements DataHandler, PacketHandler<Packet<T>> {
+public abstract class GameApplication<T extends Packet<?>> extends Application implements DataHandler, PacketHandler<T> {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	protected static final boolean NATIVE = Epoll.isAvailable();
@@ -96,7 +95,7 @@ public abstract class GameApplication<T extends PacketListener> extends Applicat
 	public abstract NetworkSide getNetworkSide();
 	
 	@Override
-	public void handlePacket(Packet<T> packet) {
+	public void handlePacket(T packet) {
 		
 	}
 	

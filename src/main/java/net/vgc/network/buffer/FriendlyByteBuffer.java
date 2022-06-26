@@ -4,9 +4,10 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -144,48 +145,102 @@ public class FriendlyByteBuffer {
 		return null;
 	}
 	
-	public <T extends Enum<T> & EnumRepresentable> void writeEnum(T value) {
+	public <T extends EnumRepresentable> void writeEnum(T value) {
 		this.writeInt(value.getId());
 	}
 	
-	public <T extends Enum<T> & EnumRepresentable> T readEnum(Class<T> clazz) {
+	public <T extends EnumRepresentable> T readEnum(Class<T> clazz) {
 		int id = this.readInt();
 		return EnumRepresentable.fromId(clazz, id);
 	}
 	
-	public <T> void writeList(FriendlyByteBuffer buffer, List<T> list, BiConsumer<FriendlyByteBuffer, T> consumer) {
-		buffer.writeInt(list.size());
+	public <T> void writeList(List<T> list, Consumer<T> encoder) {
+		this.writeInt(list.size());
 		for (T t : list) {
-			consumer.accept(buffer, t);
+			encoder.accept(t);
 		}
 	}
 	
-	public <T> List<T> readList(FriendlyByteBuffer buffer, Function<FriendlyByteBuffer, T> function) {
+	public <T> List<T> readList(Supplier<T> decoder) {
 		List<T> list = Lists.newArrayList();
-		int size = buffer.readInt();
+		int size = this.readInt();
 		for (int i = 0; i < size; i++) {
-			list.add(function.apply(buffer));
+			list.add(decoder.get());
 		}
 		return list;
 	}
 	
-	public <K, V> void writeMap(FriendlyByteBuffer buffer, Map<K, V> map, BiConsumer<FriendlyByteBuffer, K> keyConsumer, BiConsumer<FriendlyByteBuffer, V> valueConsumer) {
-		buffer.writeInt(map.size());
+	public <K, V> void writeMap(Map<K, V> map, Consumer<K> keyEncoder, Consumer<V> valueEncoder) {
+		this.writeInt(map.size());
 		for (Map.Entry<K, V> entry : map.entrySet()) {
-			keyConsumer.accept(buffer, entry.getKey());
-			valueConsumer.accept(buffer, entry.getValue());
+			keyEncoder.accept(entry.getKey());
+			valueEncoder.accept(entry.getValue());
 		}
 	}
 	
-	public <K, V> Map<K, V> readMap(FriendlyByteBuffer buffer, Function<FriendlyByteBuffer, K> keyFunction, Function<FriendlyByteBuffer, V> valueFunction) {
+	public <K, V> Map<K, V> readMap(Supplier<K> keyDecoder, Supplier<V> valueDecoder) {
 		Map<K, V> map = Maps.newHashMap();
 		int size = buffer.readInt();
 		for (int i = 0; i < size; i++) {
-			K key = keyFunction.apply(buffer);
-			V value = valueFunction.apply(buffer);
+			K key = keyDecoder.get();
+			V value = valueDecoder.get();
 			map.put(key, value);
 		}
 		return map;
+	}
+	
+	public <T extends Encodable> void writeOptional(Optional<T> optional) {
+		this.writeBoolean(optional.isPresent());
+		optional.ifPresent((value) -> {
+			this.write(value);
+		});
+	}
+	
+	public <T extends Encodable> Optional<T> readOptional(Class<T> clazz) {
+		boolean present = this.readBoolean();
+		if (present) {
+			T value = this.read(clazz);
+			return Optional.of(value);
+		}
+		return Optional.empty();
+	}
+	
+	public <T extends EnumRepresentable> void writeEnumOptional(Optional<T> optional) {
+		this.writeBoolean(optional.isPresent());
+		optional.ifPresent((value) -> {
+			this.writeEnum(value);
+		});
+	}
+	
+	public <T extends EnumRepresentable> Optional<T> readEnumOptional(Class<T> clazz) {
+		boolean present = this.readBoolean();
+		if (present) {
+			T value = this.readEnum(clazz);
+			return Optional.of(value);
+		}
+		return Optional.empty();
+	}
+	
+	public <T extends Encodable> void writeInterface(T value) {
+		this.writeString(value.getClass().getName());
+		this.write(value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Encodable> T readInterface() {
+		String className = this.readString();
+		return this.read((Class<T>) ReflectionHelper.getClassForName(className));
+	}
+	
+	public <T extends EnumRepresentable> void writeEnumInterface(T value) {
+		this.writeString(value.getClass().getName());
+		this.writeEnum(value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends EnumRepresentable> T readEnumInterface() {
+		String className = this.readString();
+		return this.readEnum((Class<T>) ReflectionHelper.getClassForName(className));
 	}
 	
 	public ByteBuf toBuffer() {

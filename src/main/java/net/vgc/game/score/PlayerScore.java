@@ -17,16 +17,18 @@ public class PlayerScore implements Encodable {
 	protected final MutableInt win;
 	protected final MutableInt lose;
 	protected final MutableInt draw;
+	protected final MutableInt score;
 	
 	public PlayerScore(GameProfile profile) {
-		this(profile, 0, 0, 0);
+		this(profile, 0, 0, 0, 0);
 	}
 	
-	public PlayerScore(GameProfile profile, int win, int lose, int draw) {
+	public PlayerScore(GameProfile profile, int win, int lose, int draw, int score) {
 		this.profile = profile;
 		this.win = new MutableInt(win);
 		this.lose = new MutableInt(lose);
 		this.draw = new MutableInt(draw);
+		this.score = new MutableInt(score);
 	}
 	
 	@DecodingConstructor
@@ -35,6 +37,18 @@ public class PlayerScore implements Encodable {
 		this.win = new MutableInt(buffer.readInt());
 		this.lose = new MutableInt(buffer.readInt());
 		this.draw = new MutableInt(buffer.readInt());
+		this.score = new MutableInt(buffer.readInt());
+	}
+	
+	public void sync(PlayerScore score) {
+		if (this.profile.equals(score.profile)) {
+			this.win.setValue(score.getWins());
+			this.lose.setValue(score.getLoses());
+			this.draw.setValue(score.getDraws());
+			this.score.setValue(score.getScore());
+		} else {
+			LOGGER.warn("Fail to sync player score of player {} with player {}", this.profile, score.profile);
+		}
 	}
 	
 	public GameProfile getProfile() {
@@ -46,18 +60,15 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public void setWins(int wins) {
-		LOGGER.info("Update win value of player {} from {} to {}", this.profile.getName(), this.win.getValue(), wins);
 		this.win.setValue(wins);
 	}
 	
 	public void increaseWin() {
-		LOGGER.info("Increase win value of player {} from {} to {}", this.profile.getName(), this.win.getValue(), this.win.getValue() + 1);
 		this.win.increment();
 	}
 	
 	public void resetWins() {
 		this.setWins(0);
-		LOGGER.info("Reset win value of player {} to {}", this.profile.getName(), 0);
 	}
 	
 	public int getLoses() {
@@ -65,18 +76,15 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public void setLoses(int loses) {
-		LOGGER.info("Update lose value of player {} from {} to {}", this.profile.getName(), this.lose.getValue(), loses);
 		this.lose.setValue(loses);
 	}
 	
 	public void increaseLose() {
-		LOGGER.info("Increase lose value of player {} from {} to {}", this.profile.getName(), this.lose.getValue(), this.lose.getValue() + 1);
 		this.lose.increment();
 	}
 	
 	public void resetLoses() {
 		this.setLoses(0);
-		LOGGER.info("Reset lose value of player {} to {}", this.profile.getName(), 0);
 	}
 	
 	public int getDraws() {
@@ -84,24 +92,38 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public void setDraws(int draws) {
-		LOGGER.info("Update draw value of player {} from {} to {}", this.profile.getName(), this.draw.getValue(), draws);
 		this.draw.setValue(draws);
 	}
 	
 	public void increaseDraw() {
-		LOGGER.info("Increase draw value of player {} from {} to {}", this.profile.getName(), this.draw.getValue(), this.draw.getValue() + 1);
 		this.draw.increment();
 	}
 	
 	public void resetDraws() {
 		this.setDraws(0);
-		LOGGER.info("Reset draw value of player {} to {}", this.profile.getName(), 0);
+	}
+	
+	public int getScore() {
+		return this.score.getValue();
+	}
+	
+	public void setScore(int score) {
+		this.score.setValue(score);
+	}
+	
+	public void increaseScore() {
+		this.score.increment();
+	}
+	
+	public void resetScore() {
+		this.setScore(0);
 	}
 	
 	public void reset() {
 		this.resetWins();
 		this.resetLoses();
 		this.resetDraws();
+		this.resetScore();
 	}
 	
 	@Override
@@ -110,6 +132,7 @@ public class PlayerScore implements Encodable {
 		buffer.writeInt(this.win.getValue());
 		buffer.writeInt(this.lose.getValue());
 		buffer.writeInt(this.draw.getValue());
+		buffer.writeInt(this.score.getValue());
 	}
 	
 	@Override
@@ -121,8 +144,10 @@ public class PlayerScore implements Encodable {
 				return false;
 			} else if (!this.lose.equals(score.lose)) {
 				return false;
+			} else if (!this.draw.equals(score.draw)) {
+				return false;
 			} else {
-				return this.draw.equals(score.draw);
+				return this.score.equals(score.score);
 			}
 		}
 		return false;
@@ -130,11 +155,12 @@ public class PlayerScore implements Encodable {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("Score{");
+		StringBuilder builder = new StringBuilder("PlayerScore{");
 		builder.append("profile=").append(this.profile).append(",");
 		builder.append("wins=").append(this.win.getValue()).append(",");
 		builder.append("loses=").append(this.lose.getValue()).append(",");
-		builder.append("draw=").append(this.draw.getValue()).append("}");
+		builder.append("draw=").append(this.draw.getValue()).append(",");
+		builder.append("score=").append(this.score.getValue()).append("}");
 		return builder.toString();
 	}
 	
