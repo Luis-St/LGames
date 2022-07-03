@@ -12,6 +12,7 @@ import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
 import net.vgc.client.game.map.field.ClientGameField;
+import net.vgc.game.GameResult;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
@@ -125,6 +126,17 @@ public class LudoClientField extends ToggleButton implements ClientGameField {
 	public void setShadowed(boolean shadowed) {
 		this.shadowed = shadowed;
 		this.updateFieldGraphic();
+	}
+	
+	@Override
+	public GameResult getResult() {
+		LOGGER.warn("Fail to get the game result of field {}, since ludo fields does not have a game result", this.getFieldPos().getPosition());
+		return GameResult.NO;
+	}
+	
+	@Override
+	public void setResult(GameResult result) {
+		LOGGER.warn("Fail to set the game result of field {}, since ludo fields do not store the game result", this.getFieldPos().getPosition());
 	}
 	
 	@Override

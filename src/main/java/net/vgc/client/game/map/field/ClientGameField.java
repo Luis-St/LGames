@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import javafx.scene.image.ImageView;
 import net.vgc.client.game.player.figure.ClientGameFigure;
+import net.vgc.game.GameResult;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
@@ -51,6 +52,10 @@ public interface ClientGameField extends GameField {
 	default void resetShadow() {
 		this.setShadowed(false);
 	}
+	
+	GameResult getResult();
+	
+	void setResult(GameResult result);
 	
 	void updateFieldGraphic();
 	

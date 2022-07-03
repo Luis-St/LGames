@@ -46,7 +46,7 @@ public class Wins4ClientField extends Label implements ClientGameField {
 
 	@Override
 	public Wins4FieldType getFieldType() {
-		LOGGER.warn("Fail to get field type of field {}, since the 4 wins fields does not have a field type", this.getFieldPos().getPosition());
+		LOGGER.warn("Fail to get the field type of field {}, since the 4 wins fields does not have a field type", this.getFieldPos().getPosition());
 		return Wins4FieldType.DEFAULT;
 	}
 
@@ -95,6 +95,11 @@ public class Wins4ClientField extends Label implements ClientGameField {
 			default -> FxUtil.makeImageView("textures/wins4/field/field_background.png", this.imageSize, this.imageSize);
 		};
 	}
+	
+	@Override
+	public boolean canSelectField() {
+		return this.figure == null && this.getResult() == GameResult.NO;
+	}
 
 	@Override
 	public boolean isShadowed() {
@@ -107,10 +112,12 @@ public class Wins4ClientField extends Label implements ClientGameField {
 		this.updateFieldGraphic();
 	}
 	
+	@Override
 	public GameResult getResult() {
 		return this.result;
 	}
 	
+	@Override
 	public void setResult(GameResult result) {
 		this.result = result;
 		this.updateFieldGraphic();
@@ -140,10 +147,10 @@ public class Wins4ClientField extends Label implements ClientGameField {
 	@Override
 	public GameFieldInfo getFieldInfo() {
 		if (this.isEmpty()) {
-			return new GameFieldInfo(this.getFieldType(), Wins4PlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+			return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
 		}
 		Wins4ClientFigure figure = this.getFigure();
-		return new GameFieldInfo(this.getFieldType(), Wins4PlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
+		return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	
 	@Override

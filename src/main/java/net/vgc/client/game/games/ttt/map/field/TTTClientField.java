@@ -53,7 +53,7 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 
 	@Override
 	public TTTFieldType getFieldType() {
-		LOGGER.warn("Fail to get field type of field {}, since tic tac toe fields does not have a field type", this.getFieldPos().getPosition());
+		LOGGER.warn("Fail to get the field type of field {}, since tic tac toe fields does not have a field type", this.getFieldPos().getPosition());
 		return TTTFieldType.DEFAULT;
 	}
 
@@ -100,7 +100,7 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 
 	@Override
 	public boolean canSelectField() {
-		return this.figure == null;
+		return this.figure == null && this.getResult() == GameResult.NO;
 	}
 
 	@Override
@@ -114,10 +114,12 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 		this.updateFieldGraphic();
 	}
 	
+	@Override
 	public GameResult getResult() {
 		return this.result;
 	}
 	
+	@Override
 	public void setResult(GameResult result) {
 		this.result = result;
 		this.updateFieldGraphic();
@@ -161,10 +163,10 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	@Override
 	public GameFieldInfo getFieldInfo() {
 		if (this.isEmpty()) {
-			return new GameFieldInfo(this.getFieldType(), TTTPlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
 		}
 		TTTClientFigure figure = this.getFigure();
-		return new GameFieldInfo(this.getFieldType(), TTTPlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
+		return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	
 	@Override
