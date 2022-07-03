@@ -65,10 +65,10 @@ public class TTTServerField implements ServerGameField {
 	@Override
 	public GameFieldInfo getFieldInfo() {
 		if (this.isEmpty()) {
-			return new GameFieldInfo(this.getFieldType(), TTTPlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
 		}
 		TTTServerFigure figure = this.getFigure();
-		return new GameFieldInfo(this.getFieldType(), TTTPlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
+		return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	
 	@Override

@@ -24,9 +24,11 @@ public class Main {
 	 *  - LobbyScreen does not update players correctly
 	 *  - new registry for Packets
 	 *  - add interfaces MoveableGame, MoveableGameMap, MoveableGamePlayer, MoveableFigure (ActionGame) -> add Abstract impl, use common values, add all methods to it bas interface, remove server and client sub interfaces
+	 *  - add new Test system which skip the loading suff
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
 	 *  - add server settings
 	 *  - add super class for Windows
+	 *  - new version system
 	 *  - add way to display score in server window
 	 *  - create Loading Steps, which are load from 0% til 100% -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
 	 *  - add new info system form server -> client (add InfoInputPane)

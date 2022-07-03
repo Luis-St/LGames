@@ -14,7 +14,6 @@ import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.game.games.ludo.LudoClientGame;
 import net.vgc.client.game.games.ludo.map.field.LudoClientField;
-import net.vgc.client.game.games.ludo.map.field.LudoFieldRenderState;
 import net.vgc.client.game.games.ludo.player.LudoClientPlayer;
 import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
 import net.vgc.client.game.map.ClientGameMap;
@@ -339,13 +338,11 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 							UUID serverUUID = fieldInfo.getFigureUUID();
 							if (uuid.equals(serverUUID)) {
 								field.setFigure(figure);
-								field.setRenderState(LudoFieldRenderState.DEFAULT);
 							} else {
 								LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
 							}
 						} else if (profile.equals(GameProfile.EMPTY)) {
 							field.setFigure(null);
-							field.setRenderState(LudoFieldRenderState.NO);
 						} else {
 							LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
 						}

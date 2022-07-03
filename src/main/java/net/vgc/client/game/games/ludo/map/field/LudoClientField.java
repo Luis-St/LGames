@@ -12,7 +12,6 @@ import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
 import net.vgc.client.game.map.field.ClientGameField;
-import net.vgc.client.game.map.field.FieldRenderState;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
@@ -29,7 +28,6 @@ public class LudoClientField extends ToggleButton implements ClientGameField {
 	protected final LudoFieldPos fieldPos;
 	protected final double imageSize;
 	protected LudoClientFigure figure = null;
-	protected LudoFieldRenderState renderState = LudoFieldRenderState.NO;
 	protected boolean shadowed = false;
 	
 	public LudoClientField(ToggleGroup group, LudoFieldType fieldType, LudoPlayerType colorType, LudoFieldPos fieldPos, double imageSize) {
@@ -94,7 +92,7 @@ public class LudoClientField extends ToggleButton implements ClientGameField {
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = (LudoClientFigure) figure;
-		this.setRenderState(this.figure == null ? LudoFieldRenderState.NO : LudoFieldRenderState.DEFAULT);
+		this.updateFieldGraphic();
 	}
 	
 	@Override
@@ -116,19 +114,6 @@ public class LudoClientField extends ToggleButton implements ClientGameField {
 	
 	protected ImageView makeImage(String path) {
 		return FxUtil.makeImageView(path, this.imageSize * 0.95, this.imageSize * 0.95);
-	}
-	
-	@Override
-	@Deprecated
-	public LudoFieldRenderState getRenderState() {
-		return this.renderState;
-	}
-	
-	@Override
-	@Deprecated
-	public void setRenderState(FieldRenderState renderState) {
-		this.renderState = (LudoFieldRenderState) renderState;
-		this.updateFieldGraphic();
 	}
 	
 	@Override
@@ -180,8 +165,6 @@ public class LudoClientField extends ToggleButton implements ClientGameField {
 				return false;
 			} else if (!Objects.equals(this.figure, field.figure)) {
 				return false;
-			} else if (!Objects.equals(this.renderState, field.renderState)) {
-				return false;
 			} else {
 				return this.shadowed == field.shadowed;
 			}
@@ -195,8 +178,7 @@ public class LudoClientField extends ToggleButton implements ClientGameField {
 		builder.append("fieldType=").append(this.fieldType).append(",");
 		builder.append("colorType=").append(this.colorType).append(",");
 		builder.append("fieldPos=").append(this.fieldPos).append(",");
-		builder.append("figure=").append(this.figure == null ? "null" : this.figure).append(",");
-		builder.append("renderState=").append(this.renderState).append("}");
+		builder.append("figure=").append(this.figure == null ? "null" : this.figure).append("}");
 		return builder.toString();
 	}
 

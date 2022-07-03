@@ -18,7 +18,6 @@ import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.game.games.ttt.TTTClientGame;
 import net.vgc.client.game.games.ttt.map.field.TTTClientField;
-import net.vgc.client.game.games.ttt.map.field.TTTFieldRenderState;
 import net.vgc.client.game.games.ttt.player.TTTClientPlayer;
 import net.vgc.client.game.games.ttt.player.figure.TTTClientFigure;
 import net.vgc.client.game.map.ClientGameMap;
@@ -70,6 +69,7 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 					oldField.setSelected(true);
 				}
 			}
+			this.fields.stream().filter(TTTClientField::isShadowed).forEach(TTTClientField::resetShadow);
 		});
 	}
 
@@ -90,9 +90,8 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 		TTTClientField field = new TTTClientField(this.client, this.game, this.group, fieldPos, 150.0);
 		field.setOnAction((event) -> {
 			if (this.client.getPlayer().isCurrent()) {
-				if (field.getRenderState() == TTTFieldRenderState.NO) {
+				if (field.isEmpty() && field.getResult() == GameResult.NO) {
 					field.setShadowed(true);
-					LOGGER.debug("Update render state of field {} to {}", fieldPos.getPosition(), field.getRenderState());
 				}
 			} else {
 				this.group.selectToggle(null);
@@ -205,6 +204,9 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 						if (field.isShadowed()) {
 							field.setShadowed(false);
 						}
+						if (field.getResult() != GameResult.NO) {
+							field.setResult(GameResult.NO);
+						}
 						TTTClientPlayer player = (TTTClientPlayer) this.game.getPlayerFor(profile);
 						if (player != null) {
 							TTTClientFigure figure = player.getFigure(fieldInfo.getFigureCount());
@@ -212,13 +214,11 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 							UUID serverUUID = fieldInfo.getFigureUUID();
 							if (uuid.equals(serverUUID)) {
 								field.setFigure(figure);
-								field.setRenderState(TTTFieldRenderState.DEFAULT);
 							} else {
 								LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
 							}
 						} else if (profile.equals(GameProfile.EMPTY)) {
 							field.setFigure(null);
-							field.setRenderState(TTTFieldRenderState.NO);
 						} else {
 							LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
 						}
@@ -235,12 +235,12 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 				TTTResultLine resultLine = packet.getResultLine();
 				if (result == GameResult.DRAW) {
 					for (TTTClientField field : this.fields) {
-						field.setRenderState(TTTFieldRenderState.DRAW);
+						field.setResult(GameResult.DRAW);
 					}
 				} else {
 					if (resultLine != TTTResultLine.EMPTY) {
 						for (TTTFieldPos fieldPos : resultLine.getPoses()) {
-							this.getField(null, null, fieldPos).setRenderState(result == GameResult.WIN ? TTTFieldRenderState.WIN : TTTFieldRenderState.LOSE);
+							this.getField(null, null, fieldPos).setResult(result);
 						}
 					} else {
 						LOGGER.warn("Fail to handle game result {}, since there is no result line", result);

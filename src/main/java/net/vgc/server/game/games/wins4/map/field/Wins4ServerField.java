@@ -23,6 +23,7 @@ public class Wins4ServerField implements ServerGameField {
 
 	@Override
 	public Wins4FieldType getFieldType() {
+		LOGGER.warn("Fail to get field type of field {}, since 4 wins fields does not have a field type", this.getFieldPos().getPosition());
 		return Wins4FieldType.DEFAULT;
 	}
 
@@ -64,10 +65,10 @@ public class Wins4ServerField implements ServerGameField {
 	@Override
 	public GameFieldInfo getFieldInfo() {
 		if (this.isEmpty()) {
-			return new GameFieldInfo(this.getFieldType(), Wins4PlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+			return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
 		}
 		Wins4ServerFigure figure = this.getFigure();
-		return new GameFieldInfo(this.getFieldType(), Wins4PlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
+		return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	
 	@Override

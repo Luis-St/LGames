@@ -10,7 +10,6 @@ import net.vgc.client.fx.FxUtil;
 import net.vgc.client.game.games.wins4.Wins4ClientGame;
 import net.vgc.client.game.games.wins4.player.figure.Wins4ClientFigure;
 import net.vgc.client.game.map.field.ClientGameField;
-import net.vgc.client.game.map.field.FieldRenderState;
 import net.vgc.game.GameResult;
 import net.vgc.game.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.game.games.wins4.map.field.Wins4FieldType;
@@ -27,7 +26,6 @@ public class Wins4ClientField extends Label implements ClientGameField {
 	protected final Wins4FieldPos fieldPos;
 	protected final double imageSize;
 	protected Wins4ClientFigure figure;
-	protected Wins4FieldRenderState renderState = Wins4FieldRenderState.NO;
 	protected boolean shadowed = false;
 	protected GameResult result = GameResult.NO;
 	
@@ -89,14 +87,6 @@ public class Wins4ClientField extends Label implements ClientGameField {
 	}
 	
 	@Override
-	public void clear() {
-		ClientGameField.super.clear();
-		if (this.renderState != Wins4FieldRenderState.SHADOW) {
-			this.renderState = Wins4FieldRenderState.NO;
-		}
-	}
-	
-	@Override
 	public ImageView getFieldBackground() {
 		return switch (this.result) {
 			case WIN -> FxUtil.makeImageView("textures/wins4/field/field_background_win.png", this.imageSize, this.imageSize); 
@@ -104,19 +94,6 @@ public class Wins4ClientField extends Label implements ClientGameField {
 			case DRAW -> FxUtil.makeImageView("textures/wins4/field/field_background_draw.png", this.imageSize, this.imageSize);
 			default -> FxUtil.makeImageView("textures/wins4/field/field_background.png", this.imageSize, this.imageSize);
 		};
-	}
-
-	@Override
-	@Deprecated
-	public Wins4FieldRenderState getRenderState() {
-		return this.renderState;
-	}
-
-	@Override
-	@Deprecated
-	public void setRenderState(FieldRenderState renderState) {
-		this.renderState = (Wins4FieldRenderState) renderState;
-		this.updateFieldGraphic();
 	}
 
 	@Override
@@ -149,7 +126,7 @@ public class Wins4ClientField extends Label implements ClientGameField {
 			}
 			this.setGraphic(pane);
 		} else {
-			ImageView figure = this.figure.getPlayer().getPlayerType().getImage(null, this.imageSize, this.imageSize);
+			ImageView figure = this.figure.getPlayer().getPlayerType().getImage(this.imageSize, this.imageSize);
 			if (figure != null) {
 				pane.getChildren().add(figure);
 			}
@@ -174,10 +151,8 @@ public class Wins4ClientField extends Label implements ClientGameField {
 		if (object instanceof Wins4ClientField field) {
 			if (!this.fieldPos.equals(field.fieldPos)) {
 				return false;
-			} else if (!Objects.equals(this.figure, field.figure)) {
-				return false;
 			} else {
-				return Objects.equals(this.renderState, field.renderState);
+				return Objects.equals(this.figure, field.figure);
 			}
 		}
 		return false;
@@ -187,8 +162,7 @@ public class Wins4ClientField extends Label implements ClientGameField {
 	public String toString() {
 		StringBuilder builder = new StringBuilder("Win4ClientField{");
 		builder.append("fieldPos=").append(this.fieldPos).append(",");
-		builder.append("figure=").append(this.figure == null ? "null" : this.figure).append(",");
-		builder.append("renderState=").append(this.renderState).append("}");
+		builder.append("figure=").append(this.figure == null ? "null" : this.figure).append("}");
 		return builder.toString();
 	}
 

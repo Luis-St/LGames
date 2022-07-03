@@ -7,10 +7,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import net.vgc.Constans;
 import net.vgc.client.Client;
+import net.vgc.client.fx.FxUtil;
 import net.vgc.client.game.games.ttt.TTTClientGame;
 import net.vgc.client.game.games.ttt.player.figure.TTTClientFigure;
 import net.vgc.client.game.map.field.ClientGameField;
-import net.vgc.client.game.map.field.FieldRenderState;
+import net.vgc.game.GameResult;
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.map.field.TTTFieldType;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
@@ -27,7 +28,8 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	protected final TTTFieldPos fieldPos;
 	protected final double imageSize;
 	protected TTTClientFigure figure;
-	protected TTTFieldRenderState renderState = TTTFieldRenderState.NO;
+	protected boolean shadowed = false;
+	protected GameResult result = GameResult.NO;
 	
 	public TTTClientField(Client client, TTTClientGame game, ToggleGroup group, TTTFieldPos fieldPos, double imageSize) {
 		this.client = client;
@@ -88,32 +90,12 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = (TTTClientFigure) figure;
-	}
-	
-	@Override
-	public void clear() {
-		ClientGameField.super.clear();
-		if (this.renderState != TTTFieldRenderState.SHADOW) {
-			this.renderState = TTTFieldRenderState.NO;
-		}
+		this.updateFieldGraphic();
 	}
 
 	@Override
 	public ImageView getFieldBackground() {
 		return null;
-	}
-
-	@Override
-	@Deprecated
-	public TTTFieldRenderState getRenderState() {
-		return this.renderState;
-	}
-
-	@Override
-	@Deprecated
-	public void setRenderState(FieldRenderState renderState) {
-		this.renderState = (TTTFieldRenderState) renderState;
-		this.updateFieldGraphic();
 	}
 
 	@Override
@@ -123,49 +105,57 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 
 	@Override
 	public boolean isShadowed() {
-		return this.renderState == TTTFieldRenderState.SHADOW;
+		return this.shadowed;
 	}
 
 	@Override
 	public void setShadowed(boolean shadowed) {
-		if (shadowed) {
-			if (this.renderState == TTTFieldRenderState.NO) {
-				this.renderState = TTTFieldRenderState.SHADOW;
-				this.updateFieldGraphic();
-			} else if (this.renderState == TTTFieldRenderState.SHADOW) {
-				LOGGER.info("Field {} is already shadowed", this.fieldPos.getPosition());
-			} else {
-				LOGGER.warn("Fail to shadow field {}, since the current render state is {}", this.renderState);
-			}
-		} else {
-			if (this.renderState == TTTFieldRenderState.NO) {
-				LOGGER.info("Field {} is already unshadowed", this.fieldPos.getPosition());
-			} else if (this.renderState == TTTFieldRenderState.SHADOW) {
-				this.renderState = TTTFieldRenderState.NO;
-				this.updateFieldGraphic();
-			} else {
-				LOGGER.warn("Fail to shadow field {}, since the current render state is {}", this.renderState);
-			}
-		}
+		this.shadowed = shadowed;
+		this.updateFieldGraphic();
+	}
+	
+	public GameResult getResult() {
+		return this.result;
+	}
+	
+	public void setResult(GameResult result) {
+		this.result = result;
+		this.updateFieldGraphic();
 	}
 
 	@Override
 	public void updateFieldGraphic() {
 		TTTPlayerType playerType = (TTTPlayerType) this.game.getPlayerFor(this.client.getPlayer()).getPlayerType();
 		if (this.isEmpty()) {
-			if (!this.renderState.canRenderWithFigure()) {
-				this.setGraphic(playerType.getImage(this.renderState, this.imageSize * 0.95, this.imageSize * 0.95));
+			if (this.isShadowed()) {
+				if (this.getResult() == GameResult.NO) {
+					this.setGraphic(FxUtil.makeImageView(playerType.getPath() + "_shadow.png", this.imageSize * 0.95, this.imageSize * 0.95));
+				} else {
+					this.setShadowed(false);
+					this.updateFieldGraphic();
+				}
 			} else {
 				this.setGraphic(null);
 			}
 		} else {
-			if (this.renderState.canRenderWithFigure()) {
-				this.setGraphic(this.figure.getPlayerType().getImage(this.renderState, this.imageSize * 0.95, this.imageSize * 0.95));
+			if (this.isShadowed()) {
+				this.setShadowed(false);
+				LOGGER.warn("Can not display a shadow figure on a non empty field");
+				this.updateFieldGraphic();
 			} else {
-				LOGGER.warn("Fail to display figure {} of player {} on field {}, since the render state is {}", this.figure.getCount(), this.figure.getPlayer().getPlayer().getProfile().getName(), this.fieldPos.getPosition(), this.renderState);
-				this.setGraphic(null);
+				this.setGraphic(this.getFigureTexture());
 			}
 		}
+	}
+	
+	protected ImageView getFigureTexture() {
+		TTTPlayerType playerType = this.figure.getPlayerType();
+		return switch (this.result) {
+			case WIN -> FxUtil.makeImageView(playerType.getPath() + "_win.png", this.imageSize * 0.95, this.imageSize * 0.95);
+			case LOSE -> FxUtil.makeImageView(playerType.getPath() + "_lose.png", this.imageSize * 0.95, this.imageSize * 0.95);
+			case DRAW -> FxUtil.makeImageView(playerType.getPath() + "_draw.png", this.imageSize * 0.95, this.imageSize * 0.95);
+			default -> FxUtil.makeImageView(playerType.getPath() + ".png", this.imageSize * 0.95, this.imageSize * 0.95);
+		};
 	}
 	
 	@Override
@@ -182,10 +172,8 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 		if (object instanceof TTTClientField field) {
 			if (!this.fieldPos.equals(field.fieldPos)) {
 				return false;
-			} else if (!Objects.equals(this.figure, field.figure)) {
-				return false;
 			} else {
-				return Objects.equals(this.renderState, field.renderState);
+				return Objects.equals(this.figure, field.figure);
 			}
 		}
 		return false;
@@ -195,8 +183,7 @@ public class TTTClientField extends ToggleButton implements ClientGameField {
 	public String toString() {
 		StringBuilder builder = new StringBuilder("TTTClientField{");
 		builder.append("fieldPos=").append(this.fieldPos).append(",");
-		builder.append("figure=").append(this.figure == null ? "null" : this.figure).append(",");
-		builder.append("renderState=").append(this.renderState).append("}");
+		builder.append("figure=").append(this.figure == null ? "null" : this.figure).append("}");
 		return builder.toString();
 	}
 

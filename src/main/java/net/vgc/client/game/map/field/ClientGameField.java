@@ -40,12 +40,6 @@ public interface ClientGameField extends GameField {
 	@Nullable
 	ImageView getFieldBackground();
 	
-	@Deprecated
-	FieldRenderState getRenderState();
-	
-	@Deprecated
-	void setRenderState(FieldRenderState renderState);
-	
 	default boolean canSelectField() {
 		return !this.isEmpty();
 	}

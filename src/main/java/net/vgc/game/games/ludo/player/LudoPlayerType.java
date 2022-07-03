@@ -64,7 +64,7 @@ public enum LudoPlayerType implements GamePlayerType {
 	}
 	
 	@Nullable
-	public ImageView getImage( double width, double height) {
+	public ImageView getImage(double width, double height) {
 		if (this.path == null) {
 			return null;
 		}

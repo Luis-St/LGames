@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 
 import javafx.scene.image.ImageView;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.client.game.games.wins4.map.field.Wins4FieldRenderState;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
 
@@ -59,7 +58,7 @@ public enum Wins4PlayerType implements GamePlayerType {
 	}
 	
 	@Nullable
-	public ImageView getImage(Wins4FieldRenderState renderState, double width, double height) {
+	public ImageView getImage(double width, double height) {
 		if (this.path == null) {
 			return null;
 		}
