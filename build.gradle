@@ -82,7 +82,7 @@ task accountRun(type:JavaExec) {
 }
 
 task testRun(type:JavaExec) {
-	group = "runs"
+	group = "test runs"
 	main = "net.vgc.Test"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
@@ -90,7 +90,7 @@ task testRun(type:JavaExec) {
 }
 
 task fxTestRun(type:JavaExec) {
-	group = "runs"
+	group = "test runs"
 	main = "net.vgc.FxTest"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
