@@ -14,7 +14,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class PacketDecoder extends ByteToMessageDecoder {
 
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
 	protected void decode(ChannelHandlerContext context, ByteBuf input, List<Object> output) throws Exception {

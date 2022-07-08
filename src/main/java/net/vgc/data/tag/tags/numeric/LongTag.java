@@ -31,9 +31,9 @@ public class LongTag extends NumericTag {
 		}
 	};
 	
-	protected final long data;
+	private final long data;
 	
-	LongTag(long data) {
+	private LongTag(long data) {
 		this.data = data;
 	}
 	

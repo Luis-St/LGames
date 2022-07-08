@@ -17,9 +17,9 @@ import net.vgc.util.SimpleEntry;
 
 public class PlayerScorePane extends GridPane {
 	
-	protected final Game game;
-	protected final PlayerScorePane.Type scoreType;
-	protected final List<Entry<GamePlayer, Text>> playerScoreInfos;
+	private final Game game;
+	private final PlayerScorePane.Type scoreType;
+	private final List<Entry<GamePlayer, Text>> playerScoreInfos;
 	
 	public PlayerScorePane(Game game, PlayerScorePane.Type scoreType) {
 		this.game = game;
@@ -28,7 +28,7 @@ public class PlayerScorePane extends GridPane {
 		this.init();
 	}
 	
-	protected void init() {
+	private void init() {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(10.0);
 		this.setHgap(10.0);
@@ -36,7 +36,7 @@ public class PlayerScorePane extends GridPane {
 		this.makePlayerScore();
 	}
 	
-	protected void makePlayerScore() {
+	private void makePlayerScore() {
 		int i = 0;
 		for (GamePlayer gamePlayer : this.game.getPlayers()) {
 			Player player = gamePlayer.getPlayer();

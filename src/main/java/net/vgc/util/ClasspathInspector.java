@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 
 public class ClasspathInspector {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public static List<Class<?>> getClasses() {
 		List<Class<?>> classes = Lists.newArrayList();
@@ -24,7 +24,7 @@ public class ClasspathInspector {
 		return classes;
 	}
 	
-	protected static List<Class<?>> getClasses(File path) {
+	private static List<Class<?>> getClasses(File path) {
 		List<Class<?>> classes = Lists.newArrayList();
 		for (File file : getFiles(path, (dir, name) -> name.endsWith(".class"), true)) {
 			String className = getClassName(file.getAbsolutePath().substring(path.getAbsolutePath().length() + 1));
@@ -38,7 +38,7 @@ public class ClasspathInspector {
 		return classes;
 	}
 	
-	protected static List<File> getFiles(File directory, FilenameFilter filter, boolean recurse) {
+	private static List<File> getFiles(File directory, FilenameFilter filter, boolean recurse) {
 		List<File> files = Lists.newArrayList();
 		for (File file : directory.listFiles()) {
 			if (filter == null || filter.accept(directory, file.getName())) {
@@ -51,11 +51,11 @@ public class ClasspathInspector {
 		return files;
 	}
 	
-	protected static String getClassName(final String fileName) {
+	private static String getClassName(final String fileName) {
 		return fileName.substring(0, fileName.length() - 6).replaceAll("/|\\\\", "\\.");
 	}
 
-	protected static List<File> getClasspathClasses() {
+	private static List<File> getClasspathClasses() {
 		List<File> files = Lists.newArrayList();
 		if (System.getProperty("java.class.path") != null) {
 			for (String path : System.getProperty("java.class.path").split(File.pathSeparator)) {

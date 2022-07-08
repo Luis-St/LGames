@@ -45,7 +45,7 @@ public class Wins4ServerMap extends AbstractServerGameMap {
 
 	@Nullable
 	@Override
-	public GameField getNextField(GameFigure figure, int count) {
+	public final GameField getNextField(GameFigure figure, int count) {
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since the 4 wins figures does not have a next field", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return null;
 	}
@@ -77,7 +77,7 @@ public class Wins4ServerMap extends AbstractServerGameMap {
 	}
 
 	@Override
-	public boolean moveFigureTo(GameFigure figure, GameField field) {
+	public final boolean moveFigureTo(GameFigure figure, GameField field) {
 		LOGGER.warn("Fail to move figure {} of player {}, since the 4 wins figures are not moveable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return false;
 	}

@@ -10,10 +10,10 @@ import net.vgc.player.GameProfile;
 
 public class UpdateGameFieldPacket implements ClientPacket {
 	
-	protected final GameFieldPos fieldPos;
-	protected final GameProfile profile;
-	protected final int figureCount;
-	protected final UUID figureUUID;
+	private final GameFieldPos fieldPos;
+	private final GameProfile profile;
+	private final int figureCount;
+	private final UUID figureUUID;
 	
 	public UpdateGameFieldPacket(GameFieldPos fieldPos, GameProfile profile, int figureCount, UUID figureUUID) {
 		this.fieldPos = fieldPos;

@@ -20,7 +20,7 @@ import net.vgc.server.game.games.wins4.Wins4ServerGame;
 
 public class GameTypes {
 	
-	public static final List<GameType<?, ?>> GAME_TYPES = Lists.newArrayList();
+	private static final List<GameType<?, ?>> GAME_TYPES = Lists.newArrayList();
 	
 	public static final GameType<LudoServerGame, LudoClientGame> LUDO = register(new GameType<>("Ludo", 2, 4, new GameFactory<>(LudoServerGame::new, LudoClientGame::new), LudoScreen::new));
 	public static final GameType<TTTServerGame, TTTClientGame> TIC_TAC_TOE = register(new GameType<>("Tic Tac Toe", 2, 2, new GameFactory<>(TTTServerGame::new, TTTClientGame::new), TTTScreen::new));

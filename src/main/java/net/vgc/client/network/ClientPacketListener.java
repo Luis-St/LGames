@@ -25,7 +25,7 @@ import net.vgc.util.Util;
 
 public class ClientPacketListener extends AbstractPacketListener {
 	
-	protected final Client client;
+	private final Client client;
 	
 	public ClientPacketListener(Client client, NetworkSide networkSide) {
 		super(networkSide);

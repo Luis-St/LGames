@@ -31,7 +31,7 @@ import net.vgc.util.Util;
 
 public class ServerPacketListener extends AbstractPacketListener {
 	
-	protected final DedicatedServer server;
+	private final DedicatedServer server;
 	
 	public ServerPacketListener(DedicatedServer server, NetworkSide networkSide) {
 		super(networkSide);

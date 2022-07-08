@@ -60,13 +60,13 @@ public class CompoundTag implements Tag {
 		}
 	};
 	
-	protected final Map<String, Tag> data;
+	private final Map<String, Tag> data;
 	
 	public CompoundTag() {
 		this(Maps.newHashMap());
 	}
 	
-	protected CompoundTag(Map<String, Tag> data) {
+	private CompoundTag(Map<String, Tag> data) {
 		this.data = data;
 	}
 	
@@ -136,19 +136,6 @@ public class CompoundTag implements Tag {
 			throw new IllegalArgumentException("Invalid tag with value null for key: " + key);
 		}
 		return this.data.put(key, tag);
-	}
-	
-	protected void validKey(String key) {
-		for (int i = 0; i < key.length(); i++) {
-			char c = key.charAt(i);
-			if (!this.validChar(c)) {
-				throw new IllegalArgumentException("Invalid char '" + c + "' in key '" + key + "' at " + i);
-			}
-		}
-	}
-	
-	protected boolean validChar(char c) {
-		return ('z' >= c && c >= 'a') || ('9' >= c && c >= '0') || c == '_';
 	}
 	
 	public void putByte(String key, byte data) {

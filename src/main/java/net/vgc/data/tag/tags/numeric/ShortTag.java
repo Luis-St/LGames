@@ -31,9 +31,9 @@ public class ShortTag extends NumericTag {
 		}
 	};
 	
-	protected final short data;
+	private final short data;
 	
-	ShortTag(short data) {
+	private ShortTag(short data) {
 		this.data = data;
 	}
 	

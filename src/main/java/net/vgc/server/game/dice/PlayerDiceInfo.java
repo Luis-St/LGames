@@ -4,8 +4,8 @@ import net.vgc.game.player.GamePlayer;
 
 public class PlayerDiceInfo {
 	
-	protected final GamePlayer player;
-	protected final int count;
+	private final GamePlayer player;
+	private final int count;
 	
 	public PlayerDiceInfo(GamePlayer player, int count) {
 		this.player = player;

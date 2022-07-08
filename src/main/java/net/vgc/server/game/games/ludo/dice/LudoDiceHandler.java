@@ -18,11 +18,11 @@ import net.vgc.util.Util;
 
 public class LudoDiceHandler implements DiceHandler {
 	
-	protected final LudoServerGame game;
-	protected final int min;
-	protected final int max;
-	protected final Dice dice;
-	protected final List<PlayerDiceInfo> countHistory;
+	private final LudoServerGame game;
+	private final int min;
+	private final int max;
+	private final Dice dice;
+	private final List<PlayerDiceInfo> countHistory;
 	
 	public LudoDiceHandler(LudoServerGame game, int min, int max) {
 		this.game = game;

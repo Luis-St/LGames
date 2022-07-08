@@ -9,7 +9,7 @@ import net.vgc.util.Util;
 
 public class ClientLeavePacket implements ServerPacket {
 	
-	protected final UUID uuid;
+	private final UUID uuid;
 	
 	public ClientLeavePacket(PlayerAccount account) {
 		this.uuid = account == null ? Util.EMPTY_UUID : account.getUUID();

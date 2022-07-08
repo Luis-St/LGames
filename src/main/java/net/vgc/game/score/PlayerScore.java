@@ -11,13 +11,13 @@ import net.vgc.util.annotation.DecodingConstructor;
 
 public class PlayerScore implements Encodable {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final GameProfile profile;
-	protected final MutableInt win;
-	protected final MutableInt lose;
-	protected final MutableInt draw;
-	protected final MutableInt score;
+	private final GameProfile profile;
+	private final MutableInt win;
+	private final MutableInt lose;
+	private final MutableInt draw;
+	private final MutableInt score;
 	
 	public PlayerScore(GameProfile profile) {
 		this(profile, 0, 0, 0, 0);

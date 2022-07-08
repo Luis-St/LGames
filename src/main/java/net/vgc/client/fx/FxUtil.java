@@ -25,7 +25,7 @@ import net.vgc.network.Network;
 
 public class FxUtil {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public static GridPane makeGrid(Pos pos, double gap, double padding) {
 		return makeGrid(pos, gap, gap, padding);

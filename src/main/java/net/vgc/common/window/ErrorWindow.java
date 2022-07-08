@@ -22,14 +22,14 @@ import net.vgc.server.Server;
 
 public class ErrorWindow {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(ErrorWindow.class);
+	private static final Logger LOGGER = LogManager.getLogger(ErrorWindow.class);
 	
-	protected final String title;
-	protected final String errorMessage;
-	protected final Runnable action;
-	protected ErrorLevel errorLevel = ErrorLevel.NO;
+	private final String title;
+	private final String errorMessage;
+	private final Runnable action;
+	private ErrorLevel errorLevel = ErrorLevel.NO;
 	
-	protected ErrorWindow(String title, String errorMessage, Runnable action) {
+	private ErrorWindow(String title, String errorMessage, Runnable action) {
 		this.title = title;
 		this.errorMessage = errorMessage.toLowerCase().trim().length() != 0 ? errorMessage : null;
 		this.action = action;

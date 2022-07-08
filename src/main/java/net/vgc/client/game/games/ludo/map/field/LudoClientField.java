@@ -84,6 +84,8 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 						yield null;
 					}
 				};
+			} else {
+				throw new ClassCastException();
 			}
 		}
 		LOGGER.warn("Fail to get field background for field {} with type {} and color type {}", this.getFieldPos().getPosition(), this.getFieldType(), this.getColorType());
@@ -91,13 +93,13 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 	}
 	
 	@Override
-	public GameResult getResult() {
+	public final GameResult getResult() {
 		LOGGER.warn("Fail to get the game result of field {}, since ludo fields does not have a game result", this.getFieldPos().getPosition());
 		return super.getResult();
 	}
 	
 	@Override
-	public void setResult(GameResult result) {
+	public final void setResult(GameResult result) {
 		LOGGER.warn("Fail to set the game result of field {}, since ludo fields do not store the game result", this.getFieldPos().getPosition());
 	}
 	

@@ -5,9 +5,9 @@ import net.vgc.player.GameProfile;
 
 public class LocalPlayer extends AbstractClientPlayer {
 	
-	protected boolean canSelect = false;
-	protected boolean canRollDice = false;
-	protected int count = -1;
+	private boolean canSelect = false;
+	private boolean canRollDice = false;
+	private int count = -1;
 	
 	public LocalPlayer(GameProfile profile) {
 		super(profile, new PlayerScore(profile));

@@ -23,11 +23,11 @@ public final class PlayerAccount implements Encodable, Serializable  {
 	
 	public static final PlayerAccount UNKNOWN = new PlayerAccount("Unknown", "unknown", Util.EMPTY_UUID, false);
 	
-	protected final String name;
-	protected final String password;
-	protected final UUID uuid;
-	protected final boolean guest;
-	protected boolean taken;
+	private final String name;
+	private final String password;
+	private final UUID uuid;
+	private final boolean guest;
+	private boolean taken;
 	
 	public PlayerAccount(String name, String password, UUID uuid, boolean guest) {
 		this.name = name;
@@ -63,7 +63,7 @@ public final class PlayerAccount implements Encodable, Serializable  {
 		return treeItem;
 	}
 	
-	protected String obfuscated() {
+	private String obfuscated() {
 		String obfuscated = "";
 		for (int i = 0; i < this.password.length(); i++) {
 			obfuscated += "?";

@@ -22,17 +22,17 @@ import net.vgc.language.TranslationKey;
 
 public class AccountCreationWindow {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final AccountServer accountServer;
-	protected final Stage stage;
+	private final AccountServer accountServer;
+	private final Stage stage;
 	
 	public AccountCreationWindow(AccountServer accountServer, Stage stage) {
 		this.accountServer = accountServer;
 		this.stage = stage;
 	}
 	
-	protected Pane main() {
+	private Pane main() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField nameField = new TextField();
 		VBox nameBox = new Box<>(nameField);

@@ -30,11 +30,11 @@ public class Server extends GameApplication<ServerPacket> implements Tickable {
 		throw new InvalidNetworkSideException(NetworkSide.SERVER);
 	}
 	
-	protected final Timeline ticker = Util.createTicker("ServerTicker", this);
-	protected String host;
-	protected int port;
-	protected UUID admin;
-	protected DedicatedServer server;
+	private final Timeline ticker = Util.createTicker("ServerTicker", this);
+	private String host;
+	private int port;
+	private UUID admin;
+	private DedicatedServer server;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {

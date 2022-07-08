@@ -31,9 +31,9 @@ public class ByteTag extends NumericTag {
 		}
 	};
 	
-	protected final byte data;
+	private final byte data;
 	
-	ByteTag(byte data) {
+	private ByteTag(byte data) {
 		this.data = data;
 	}
 	

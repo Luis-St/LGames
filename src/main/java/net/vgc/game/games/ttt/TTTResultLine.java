@@ -13,9 +13,9 @@ public class TTTResultLine implements Encodable {
 	
 	public static final TTTResultLine EMPTY = new TTTResultLine(TTTFieldPos.NO, TTTFieldPos.NO, TTTFieldPos.NO);
 	
-	protected final TTTFieldPos firstPos;
-	protected final TTTFieldPos secondPos;
-	protected final TTTFieldPos thirdPos;
+	private final TTTFieldPos firstPos;
+	private final TTTFieldPos secondPos;
+	private final TTTFieldPos thirdPos;
 	
 	public TTTResultLine(TTTFieldPos firstPos, TTTFieldPos secondPos, TTTFieldPos thirdPos) {
 		this.firstPos = firstPos;

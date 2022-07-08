@@ -7,8 +7,8 @@ import net.vgc.server.network.ServerPacketListener;
 
 public class ClientJoinPacket implements ServerPacket {
 	
-	protected final String name;
-	protected final UUID uuid;
+	private final String name;
+	private final UUID uuid;
 	
 	public ClientJoinPacket(String name, UUID uuid) {
 		this.name = name;

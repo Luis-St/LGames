@@ -51,8 +51,8 @@ import net.vgc.util.Util;
 
 public class Packets {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
-	protected static final Map<Integer, Class<? extends Packet<?>>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Map<Integer, Class<? extends Packet<?>>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
 		int i = 0;
 		map.put(i++, ClientLoginPacket.class);
 		map.put(i++, ClientLogoutPacket.class);

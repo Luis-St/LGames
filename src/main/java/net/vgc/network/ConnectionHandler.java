@@ -30,15 +30,15 @@ import net.vgc.util.ExceptionHandler;
 
 public class ConnectionHandler {
 	
-	protected static final boolean NATIVE = Epoll.isAvailable();
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final boolean NATIVE = Epoll.isAvailable();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final String connectTo;
-	protected final Supplier<PacketListener> listenerFactory;
-	protected final Consumer<Connection> closeAction;
-	protected EventLoopGroup group;
-	protected Channel channel;
-	protected Connection connection;
+	private final String connectTo;
+	private final Supplier<PacketListener> listenerFactory;
+	private final Consumer<Connection> closeAction;
+	private EventLoopGroup group;
+	private Channel channel;
+	private Connection connection;
 	
 	public ConnectionHandler(String connectTo, Supplier<PacketListener> listenerFactory, Consumer<Connection> closeAction) {
 		this.connectTo = connectTo;

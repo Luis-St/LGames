@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Mth {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(Mth.class);
+	private static final Logger LOGGER = LogManager.getLogger(Mth.class);
 	
 	public static byte sum(byte b) {
 		String s = String.valueOf(b);

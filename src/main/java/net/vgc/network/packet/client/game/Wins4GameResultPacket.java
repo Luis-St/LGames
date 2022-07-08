@@ -8,8 +8,8 @@ import net.vgc.network.packet.client.ClientPacket;
 
 public class Wins4GameResultPacket implements ClientPacket {
 	
-	protected final GameResult result;
-	protected final Wins4ResultLine resultLine;
+	private final GameResult result;
+	private final Wins4ResultLine resultLine;
 	
 	public Wins4GameResultPacket(GameResult result, Wins4ResultLine resultLine) {
 		this.result = result;

@@ -22,10 +22,10 @@ public class LanguageProvider {
 	
 	public static final LanguageProvider INSTANCE = new LanguageProvider();
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected List<LanguageFile> loadLanguageFiles;
-	protected Language currentLanguage = Languages.EN_US;
+	private List<LanguageFile> loadLanguageFiles;
+	private Language currentLanguage = Languages.EN_US;
 	
 	public void load() {
 		List<LanguageFile> languageFiles = Lists.newArrayList();
@@ -54,7 +54,7 @@ public class LanguageProvider {
 		this.loadLanguageFiles = languageFiles;
 	}
 	
-	protected LanguageFile loadLanguage(Language language) {
+	private LanguageFile loadLanguage(Language language) {
 		Path path = language.getPath();
 		if (Files.exists(path)) {
 			Optional<Pair<LanguageFile, JsonElement>> optional = JsonOps.INSTANCE.withDecoder(LanguageFile.CODEC).apply(JsonHelper.load(path)).result();

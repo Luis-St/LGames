@@ -31,9 +31,9 @@ public class DoubleTag extends NumericTag {
 		}
 	};
 	
-	protected final double data;
+	private final double data;
 	
-	DoubleTag(double data) {
+	private DoubleTag(double data) {
 		this.data = data;
 	}
 	

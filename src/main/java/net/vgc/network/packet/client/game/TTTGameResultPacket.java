@@ -8,8 +8,8 @@ import net.vgc.network.packet.client.ClientPacket;
 
 public class TTTGameResultPacket implements ClientPacket {
 	
-	protected final GameResult result;
-	protected final TTTResultLine resultLine;
+	private final GameResult result;
+	private final TTTResultLine resultLine;
 	
 	public TTTGameResultPacket(GameResult result, TTTResultLine resultLine) {
 		this.result = result;

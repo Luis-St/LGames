@@ -9,9 +9,9 @@ import net.vgc.server.network.ServerPacketListener;
 
 public class SelectGameFieldPacket implements ServerPacket {
 	
-	protected final GameProfile profile;
-	protected final GameFieldType fieldType;
-	protected final GameFieldPos fieldPos;
+	private final GameProfile profile;
+	private final GameFieldType fieldType;
+	private final GameFieldPos fieldPos;
 	
 	public SelectGameFieldPacket(GameProfile profile, GameFieldType fieldType, GameFieldPos fieldPos) {
 		this.profile = profile;

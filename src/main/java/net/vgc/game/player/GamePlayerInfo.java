@@ -10,9 +10,9 @@ import net.vgc.util.annotation.DecodingConstructor;
 
 public class GamePlayerInfo implements Encodable {
 	
-	protected final GameProfile profile;
-	protected final GamePlayerType playerType;
-	protected final List<UUID> uuids;
+	private final GameProfile profile;
+	private final GamePlayerType playerType;
+	private final List<UUID> uuids;
 	
 	public GamePlayerInfo(GameProfile profile, GamePlayerType playerType, List<UUID> uuids) {
 		this.profile = profile;

@@ -4,9 +4,9 @@ import com.google.common.collect.Table.Cell;
 
 public class SimpleCell<R, C, V> implements Cell<R, C, V> {
 	
-	protected final R rowKey;
-	protected final C columnKey;
-	protected final V value;
+	private final R rowKey;
+	private final C columnKey;
+	private final V value;
 	
 	public SimpleCell(R rowKey, C columnKey, V value) {
 		this.rowKey = rowKey;

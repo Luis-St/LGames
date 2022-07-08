@@ -21,13 +21,13 @@ import net.vgc.util.Util;
 
 public class Wins4WinHandler extends AbstractWinHandler {
 	
-	protected final List<Wins4ResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {
+	private final List<Wins4ResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {
 		for (int i = 0; i < 42; i++) {
 			list.addAll(this.getResultLinesForPos(Wins4FieldPos.of(i)));
 		}
 	});
 	
-	protected List<Wins4ResultLine> getResultLinesForPos(Wins4FieldPos fieldPos) {
+	private List<Wins4ResultLine> getResultLinesForPos(Wins4FieldPos fieldPos) {
 		int position = fieldPos.getPosition();
 		int row = fieldPos.getRow();
 		int column = fieldPos.getColumn();
@@ -66,7 +66,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return false;
 	}
 	
-	protected GamePlayerType getWinType(Wins4ServerMap map) {
+	private GamePlayerType getWinType(Wins4ServerMap map) {
 		Wins4ResultLine resultLine = this.getResultLine(map);
 		if (resultLine != Wins4ResultLine.EMPTY) {
 			return this.getFieldType(map, resultLine.getFirstPos());
@@ -83,7 +83,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return Wins4ResultLine.EMPTY;
 	}
 	
-	protected GamePlayerType getLineWinType(Wins4ServerMap map, Wins4ResultLine resultLine) {
+	private GamePlayerType getLineWinType(Wins4ServerMap map, Wins4ResultLine resultLine) {
 		GamePlayerType playerType = this.getFieldType(map, resultLine.getFirstPos());
 		if (playerType != Wins4PlayerType.NO) {
 			if (this.getFieldType(map, resultLine.getSecondPos()) == playerType && this.getFieldType(map, resultLine.getThirdPos()) == playerType && this.getFieldType(map, resultLine.getFourthPos()) == playerType) {
@@ -93,7 +93,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return Wins4PlayerType.NO;
 	}
 	
-	protected GamePlayerType getFieldType(Wins4ServerMap map, Wins4FieldPos fieldPos) {
+	private GamePlayerType getFieldType(Wins4ServerMap map, Wins4FieldPos fieldPos) {
 		GameField field = map.getField(null, null, fieldPos);
 		if (field != null) {
 			if (field.isEmpty()) {

@@ -14,10 +14,10 @@ import net.vgc.util.Util;
 
 public class PlayerInfoPane extends GridPane {
 	
-	protected final Game game;
-	protected final double separatorLength;
-	protected final Text currentPlayerInfo;
-	protected final PlayerScorePane scorePane;
+	private final Game game;
+	private final double separatorLength;
+	private final Text currentPlayerInfo;
+	private final PlayerScorePane scorePane;
 	
 	public PlayerInfoPane(Game game, double separatorLength, PlayerScorePane.Type scoreType) {
 		this.game = game;
@@ -27,7 +27,7 @@ public class PlayerInfoPane extends GridPane {
 		this.init();
 	}
 	
-	protected void init() {
+	private void init() {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(10.0);
 		this.setHgap(10.0);
@@ -41,29 +41,29 @@ public class PlayerInfoPane extends GridPane {
 		this.add(this.scorePane, 0, 6);
 	}
 	
-	protected Separator makeSeparator() {
+	private Separator makeSeparator() {
 		Separator separator = new Separator(Orientation.HORIZONTAL);
 		separator.setPrefWidth(this.separatorLength);
 		return separator;
 	}
 	
-	protected String getName(GamePlayer player) {
+	private String getName(GamePlayer player) {
 		return player.getPlayer().getProfile().getName();
 	}
 	
-	protected GridPane makePlayerInfoPane() {
+	private GridPane makePlayerInfoPane() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 0.0, 5.0);
 		pane.add(new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_info")), 0, 0);
 		return pane;
 	}
 	
-	protected GridPane makeCurrentPlayerPane() {
+	private GridPane makeCurrentPlayerPane() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
 		pane.add(this.currentPlayerInfo, 0, 0);
 		return pane;
 	}
 	
-	protected GridPane makePlayersPane() {
+	private GridPane makePlayersPane() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
 		int i = 0;
 		for (GamePlayer player : this.game.getPlayers()) {

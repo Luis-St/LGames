@@ -6,9 +6,9 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLoginPacket implements AccountPacket {
 	
-	protected final LoginType loginType;
-	protected final String name;
-	protected final String password;
+	private final LoginType loginType;
+	private final String name;
+	private final String password;
 	
 	public ClientLoginPacket(LoginType loginType, String name, String password) {
 		this.loginType = loginType;

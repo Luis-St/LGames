@@ -11,9 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 public final class AccountAgent {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final List<PlayerAccount> accounts;
+	private final List<PlayerAccount> accounts;
 	
 	public AccountAgent(List<PlayerAccount> accounts) {
 		this.accounts = accounts;
@@ -58,7 +58,7 @@ public final class AccountAgent {
 		}
 	}
 	
-	protected String checkOrGeneratePassword(String password, int length) {
+	private String checkOrGeneratePassword(String password, int length) {
 		if (!StringUtils.trimToEmpty(password).isEmpty()) {
 			return password;
 		}
@@ -71,7 +71,7 @@ public final class AccountAgent {
 		return password;
 	}
 	
-	protected UUID generateUUID(String name, String password) {
+	private UUID generateUUID(String name, String password) {
 		Random rng = new Random(name.charAt(0) * password.charAt(0));
 		long mostBits = 0;
 		String most = name + password + name;

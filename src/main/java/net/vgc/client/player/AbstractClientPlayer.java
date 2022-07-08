@@ -6,8 +6,8 @@ import net.vgc.player.Player;
 
 public abstract class AbstractClientPlayer extends Player {
 	
-	protected boolean admin = false;
-	protected boolean current = false;
+	private boolean admin = false;
+	private boolean current = false;
 	
 	public AbstractClientPlayer(GameProfile profile, PlayerScore score) {
 		super(profile, score);
@@ -41,10 +41,8 @@ public abstract class AbstractClientPlayer extends Player {
 				return false;
 			} else if (this.admin != player.admin) {
 				return false;
-			} else if (this.current != player.current) {
-				return false;
 			} else {
-				return this.score.equals(player.score);
+				return this.current == player.current;
 			}
 		}
 		return false;

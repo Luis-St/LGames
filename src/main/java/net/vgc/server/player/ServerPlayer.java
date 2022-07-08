@@ -10,7 +10,7 @@ import net.vgc.server.dedicated.DedicatedServer;
 
 public class ServerPlayer extends Player {
 	
-	protected final DedicatedServer server;
+	private final DedicatedServer server;
 	public Connection connection;
 	
 	public ServerPlayer(GameProfile profile, PlayerScore score, DedicatedServer server) {
@@ -24,9 +24,9 @@ public class ServerPlayer extends Player {
 	}
 	
 	public TreeItem<String> display() {
-		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("server.window.player", this.profile.getName()));
-		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.player_name", this.profile.getName())));
-		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.player_uuid", this.profile.getUUID())));
+		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("server.window.player", this.getProfile().getName()));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.player_name", this.getProfile().getName())));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.player_uuid", this.getProfile().getUUID())));
 		String trueTranslation = TranslationKey.createAndGet("window.create_account.true");
 		String falseTranslation = TranslationKey.createAndGet("window.create_account.false");
 		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.player_admin", this.getServer().isAdmin(this) ? trueTranslation : falseTranslation)));

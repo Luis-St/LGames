@@ -6,7 +6,7 @@ import net.vgc.player.GameProfile;
 
 public class SyncPermissionPacket implements ClientPacket {
 	
-	protected final GameProfile profile;
+	private final GameProfile profile;
 	
 	public SyncPermissionPacket(GameProfile profile) {
 		this.profile = profile;

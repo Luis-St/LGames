@@ -63,14 +63,14 @@ public class AccountServer extends GameApplication<Packet<AccountServerPacketLis
 		throw new InvalidNetworkSideException(NetworkSide.ACCOUNT_SERVER);
 	}
 	
-	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
+	private final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
 		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
-	protected final List<Connection> connections = Lists.newArrayList();
-	protected final List<Channel> channels = Lists.newArrayList();
-	protected TreeView<String> accountView;
-	protected String host;
-	protected int port;
-	protected AccountAgent agent;
+	private final List<Connection> connections = Lists.newArrayList();
+	private final List<Channel> channels = Lists.newArrayList();
+	private TreeView<String> accountView;
+	private String host;
+	private int port;
+	private AccountAgent agent;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -172,7 +172,7 @@ public class AccountServer extends GameApplication<Packet<AccountServerPacketLis
 		this.agent = new AccountAgent(accounts);
 	}
 	
-	protected void launchServer() {
+	private void launchServer() {
 		new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
 			@Override
 			protected void initChannel(Channel channel) throws Exception {
@@ -199,7 +199,7 @@ public class AccountServer extends GameApplication<Packet<AccountServerPacketLis
 		this.stage.show();
 	}
 	
-	protected Scene makeScene() {
+	private Scene makeScene() {
 		VBox box = new VBox();
 		this.accountView = new TreeView<>();
 		this.accountView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -223,12 +223,12 @@ public class AccountServer extends GameApplication<Packet<AccountServerPacketLis
 		return new Scene(box, 450.0, 400.0);
 	}
 	
-	protected void createAccount() {
+	private void createAccount() {
 		AccountCreationWindow window = new AccountCreationWindow(this, new Stage());
 		window.show();
 	}
 	
-	protected void removeAccount() {
+	private void removeAccount() {
 		int index = this.accountView.getSelectionModel().getSelectedIndex();
 		if (this.accountView.getRoot().getChildren().size() > index && index >= 0) {
 			TreeItem<String> treeItem = this.accountView.getRoot().getChildren().get(index);

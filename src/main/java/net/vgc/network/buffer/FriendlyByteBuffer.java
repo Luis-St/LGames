@@ -24,9 +24,9 @@ import net.vgc.util.annotation.DecodingConstructor;
 
 public class FriendlyByteBuffer {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final ByteBuf buffer;
+	private final ByteBuf buffer;
 	
 	public FriendlyByteBuffer() {
 		this(Unpooled.buffer());

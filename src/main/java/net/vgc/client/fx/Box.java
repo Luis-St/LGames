@@ -7,9 +7,9 @@ import javafx.scene.layout.VBox;
 
 public class Box<T extends Node> extends VBox {
 	
-	protected final T node;
-	protected final Pos pos;
-	protected final Insets padding;
+	private final T node;
+	private final Pos pos;
+	private final Insets padding;
 	
 	public Box(T node) {
 		this(node, Pos.CENTER);

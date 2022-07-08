@@ -6,7 +6,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientExitPacket implements AccountPacket {
 	
-	protected final PlayerAccount account;
+	private final PlayerAccount account;
 	
 	public ClientExitPacket(PlayerAccount account) {
 		this.account = account == null ? PlayerAccount.UNKNOWN : account;

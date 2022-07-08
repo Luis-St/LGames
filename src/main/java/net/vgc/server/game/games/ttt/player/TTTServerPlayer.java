@@ -45,13 +45,13 @@ public class TTTServerPlayer extends AbstractServerGamePlayer {
 	}
 
 	@Override
-	public int getRollCount() {
+	public final int getRollCount() {
 		LOGGER.warn("Fail to get roll count of player {}, since tic tac toe is not a dice game", this.getPlayer().getProfile().getName());
 		return -1;
 	}
 
 	@Override
-	public void setRollCount(int rollCount) {
+	public final void setRollCount(int rollCount) {
 		LOGGER.warn("Fail to set roll count of player {} to {}, since tic tac toe is not a dice game", this.getPlayer().getProfile().getName(), rollCount);
 	}
 	

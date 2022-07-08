@@ -12,7 +12,7 @@ import net.vgc.language.Languages;
 
 public class SettingValueTypes {
 	
-	protected static final Map<Integer, SettingValueType<?>> INT_TO_TYPE = Maps.newHashMap();
+	private static final Map<Integer, SettingValueType<?>> INT_TO_TYPE = Maps.newHashMap();
 	
 	public static final SettingValueType<Integer> INT = register(0, new SettingValueType<Integer>() {
 		@Override
@@ -97,7 +97,7 @@ public class SettingValueTypes {
 		return -1;
 	}
 	
-	protected static <T> SettingValueType<T> register(int id, SettingValueType<T> valueType) {
+	private static <T> SettingValueType<T> register(int id, SettingValueType<T> valueType) {
 		INT_TO_TYPE.put(id, valueType);
 		return valueType;
 	}

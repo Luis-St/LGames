@@ -118,7 +118,7 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 	}
 
 	@Override
-	public GameField getNextField(GameFigure figure, int count) {
+	public final GameField getNextField(GameFigure figure, int count) {
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since tic tac toe figures does not have a next field", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return null;
 	}

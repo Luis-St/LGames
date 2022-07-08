@@ -7,9 +7,9 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLoggedInPacket implements ClientPacket {
 	
-	protected final LoginType loginType;
-	protected final PlayerAccount account;
-	protected final boolean successful;
+	private final LoginType loginType;
+	private final PlayerAccount account;
+	private final boolean successful;
 	
 	public ClientLoggedInPacket(LoginType loginType, PlayerAccount account, boolean successful) {
 		this.loginType = loginType;

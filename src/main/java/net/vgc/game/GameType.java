@@ -5,9 +5,6 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.vgc.client.Client;
 import net.vgc.client.screen.game.GameScreen;
 import net.vgc.game.player.GamePlayer;
@@ -19,13 +16,11 @@ import net.vgc.util.Mth;
 
 public class GameType<S extends Game, C extends Game> {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
-	
-	protected final String name;
-	protected final int minPlayers;
-	protected final int maxPlayers;
-	protected final GameFactory<S, C> gameFactory;
-	protected final Function<C, ? extends GameScreen> screenFactory;
+	private final String name;
+	private final int minPlayers;
+	private final int maxPlayers;
+	private final GameFactory<S, C> gameFactory;
+	private final Function<C, ? extends GameScreen> screenFactory;
 	
 	public GameType(String name, int minPlayers, int maxPlayers, GameFactory<S, C> gameFactory, Function<C, ? extends GameScreen> screenFactory) {
 		this.name = name;

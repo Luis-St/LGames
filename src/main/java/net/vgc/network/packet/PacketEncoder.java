@@ -13,7 +13,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
 	@SuppressWarnings("unchecked")

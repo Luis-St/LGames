@@ -13,10 +13,10 @@ import net.vgc.util.Mth;
 
 public class LoadingScreen extends Screen {
 	
-	protected Box<Text> vgcTextBox;
-	protected Box<Text> loadingTextBox;
-	protected Box<ProgressBar> loadingBarBox;
-	protected boolean enterMenu;
+	private Box<Text> vgcTextBox;
+	private Box<Text> loadingTextBox;
+	private Box<ProgressBar> loadingBarBox;
+	private boolean enterMenu;
 	
 	public LoadingScreen() {
 		this.title = TranslationKey.createAndGet("screen.loading.title");

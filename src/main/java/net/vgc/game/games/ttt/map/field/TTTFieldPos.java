@@ -10,9 +10,9 @@ public class TTTFieldPos implements GameFieldPos {
 	
 	public static final TTTFieldPos NO = new TTTFieldPos(-1, -1, -1);
 	
-	protected final int position;
-	protected final int row;
-	protected final int column;
+	private final int position;
+	private final int row;
+	private final int column;
 	
 	public TTTFieldPos(int position, int row, int column) {
 		this.position = position;

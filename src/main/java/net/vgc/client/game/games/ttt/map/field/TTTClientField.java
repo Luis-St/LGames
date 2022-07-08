@@ -46,13 +46,13 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 	}
 
 	@Override
-	public GameFieldType getFieldType() {
+	public final GameFieldType getFieldType() {
 		LOGGER.warn("Fail to get the field type of field {}, since tic tac toe fields does not have a field type", this.getFieldPos().getPosition());
 		return super.getFieldType();
 	}
 
 	@Override
-	public GamePlayerType getColorType() {
+	public final GamePlayerType getColorType() {
 		LOGGER.warn("Fail to get field color type of field {}, since tic tac toe fields does not have a field color type", this.getFieldPos().getPosition());
 		return super.getColorType();
 	}
@@ -89,11 +89,14 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 
 	@Override
 	public void updateFieldGraphic() {
-		TTTPlayerType playerType = (TTTPlayerType) this.getMap().getGame().getPlayerFor(this.getClient().getPlayer()).getPlayerType();
 		if (this.isEmpty()) {
 			if (this.isShadowed()) {
 				if (this.getResult() == GameResult.NO) {
-					this.setGraphic(this.makeImage(playerType.getPath() + "_shadow.png", 0.95));
+					if (this.getMap().getGame().getPlayerFor(this.getClient().getPlayer()).getPlayerType() instanceof TTTPlayerType playerType) {
+						this.setGraphic(this.makeImage(playerType.getPath() + "_shadow.png", 0.95));
+					} else {
+						throw new ClassCastException();
+					}
 				} else {
 					this.setShadowed(false);
 					this.updateFieldGraphic();
@@ -121,8 +124,7 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 				default -> this.makeImage(playerType.getPath() + ".png", 0.95);
 			};
 		}
-		LOGGER.warn("Fail to get figure texture figure on field {} with type {}", this.getFieldPos().getPosition(), this.getFieldType());
-		return null;
+		throw new ClassCastException();
 	}
 	
 	@Override

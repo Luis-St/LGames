@@ -25,10 +25,10 @@ import net.vgc.util.Util;
 
 public class DedicatedPlayerList implements Tickable {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final DedicatedServer server;
-	protected final List<ServerPlayer> players;
+	private final DedicatedServer server;
+	private final List<ServerPlayer> players;
 	
 	public DedicatedPlayerList(DedicatedServer server) {
 		this.server = server;
@@ -124,9 +124,7 @@ public class DedicatedPlayerList implements Tickable {
 		return this.players.stream().map(ServerPlayer::getProfile).collect(Collectors.toList());
 	}
 	
-
-	
-	protected void broadcast(Packet<?> packet, ServerPlayer player) {
+	private void broadcast(Packet<?> packet, ServerPlayer player) {
 		if (player.connection.isConnected()) {
 			player.connection.send(packet);
 		} else if (this.players.contains(player)) {

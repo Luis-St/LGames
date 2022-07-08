@@ -11,8 +11,8 @@ import net.vgc.network.packet.client.ClientPacket;
 
 public class StartGamePacket implements ClientPacket {
 	
-	protected final GameType<?, ?> gameType;
-	protected final List<GamePlayerInfo> playerInfos;
+	private final GameType<?, ?> gameType;
+	private final List<GamePlayerInfo> playerInfos;
 	
 	public StartGamePacket(GameType<?, ?> gameType, List<GamePlayerInfo> playerInfos) {
 		this.gameType = gameType;

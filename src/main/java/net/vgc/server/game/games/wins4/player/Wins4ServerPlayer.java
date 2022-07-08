@@ -45,13 +45,13 @@ public class Wins4ServerPlayer extends AbstractServerGamePlayer {
 	}
 
 	@Override
-	public int getRollCount() {
+	public final int getRollCount() {
 		LOGGER.warn("Fail to get roll count of player {}, since the 4 wins is not a dice game", this.getPlayer().getProfile().getName());
 		return -1;
 	}
 
 	@Override
-	public void setRollCount(int rollCount) {
+	public final void setRollCount(int rollCount) {
 		LOGGER.warn("Fail to set roll count of player {} to {}, since the 4 wins is not a dice game", this.getPlayer().getProfile().getName(), rollCount);
 	}
 	

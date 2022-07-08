@@ -24,11 +24,11 @@ import net.vgc.util.Util;
 
 public class PlayerSelectScreen extends Screen {
 	
-	protected final GameType<?, ?> gameType;
-	protected final Screen backScreen;
-	protected ListView<String> playerList;
-	protected ButtonBox backButtonBox;
-	protected ButtonBox playButtonBox;
+	private final GameType<?, ?> gameType;
+	private final Screen backScreen;
+	private ListView<String> playerList;
+	private ButtonBox backButtonBox;
+	private ButtonBox playButtonBox;
 	
 	public PlayerSelectScreen(GameType<?, ?> gameType, Screen backScreen) {
 		this.gameType = gameType;
@@ -50,11 +50,11 @@ public class PlayerSelectScreen extends Screen {
 		this.playButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.player_select.play"), this::handlePlay);
 	}
 	
-	protected void handleBack() {
+	private void handleBack() {
 		this.showScreen(this.backScreen);
 	}
 	
-	protected void handlePlay() {
+	private void handlePlay() {
 		if (this.client.getPlayer().isAdmin()) {
 			List<String> selected = this.playerList.getSelectionModel().getSelectedItems();
 			int selectCount = selected.size();
@@ -93,7 +93,7 @@ public class PlayerSelectScreen extends Screen {
 		}
 	}
 	
-	protected void refreshPlayers() {
+	private void refreshPlayers() {
 		this.playerList.getItems().clear();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (!player.isPlaying()) {

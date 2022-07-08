@@ -16,7 +16,7 @@ import net.vgc.util.ReflectionHelper;
 
 public class SerializationUtil {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Nullable
 	public static <T extends Serializable> T deserialize(Class<T> clazz, Path path) {
@@ -66,7 +66,7 @@ public class SerializationUtil {
 		return null;
 	}
 	
-	protected static <T extends Serializable> Method getMethod(Class<T> clazz) throws Exception {
+	private static <T extends Serializable> Method getMethod(Class<T> clazz) throws Exception {
 		Method method = null;
 		if (ReflectionHelper.hasMethod(clazz, "load", CompoundTag.class)) {
 			method = ReflectionHelper.getMethod(clazz, "load", CompoundTag.class);

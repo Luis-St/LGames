@@ -8,8 +8,8 @@ import net.vgc.Constans;
 
 public class InputPane extends GridPane {
 	
-	protected final Text inputText;
-	protected final TextField inputField;
+	private final Text inputText;
+	private final TextField inputField;
 	
 	public InputPane(String inputText) {
 		this.inputText = new Text(inputText);
@@ -17,7 +17,7 @@ public class InputPane extends GridPane {
 		this.init();
 	}
 	
-	protected void init() {
+	private void init() {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(0.0);
 		this.setHgap(0.0);

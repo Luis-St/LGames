@@ -11,10 +11,10 @@ import net.vgc.util.annotation.DecodingConstructor;
 
 public class LudoFieldPos implements GameFieldPos {
 	
-	protected final int green;
-	protected final int yellow;
-	protected final int blue;
-	protected final int red;
+	private final int green;
+	private final int yellow;
+	private final int blue;
+	private final int red;
 	
 	public LudoFieldPos(int green, int yellow, int blue, int red) {
 		this.green = green;
@@ -40,8 +40,7 @@ public class LudoFieldPos implements GameFieldPos {
 		if (playerType instanceof LudoPlayerType) {
 			return of((LudoPlayerType) playerType, pos);
 		}
-		LOGGER.warn("Fail to create field pos for a non ludo type {}", playerType);
-		return null;
+		throw new ClassCastException("Can not cast playerType of type " + playerType.getClass().getSimpleName() + " to LudoPlayerType");
 	}
 	
 	@Nullable
@@ -96,13 +95,16 @@ public class LudoFieldPos implements GameFieldPos {
 
 	@Override
 	public int getPositionFor(GamePlayerType playerType) {
-		switch ((LudoPlayerType) playerType) {
-			case GREEN: return this.green;
-			case YELLOW: return this.yellow;
-			case BLUE: return this.blue;
-			case RED: return this.red;
-			default: return this.green;
+		if (playerType instanceof LudoPlayerType) {
+			return switch ((LudoPlayerType) playerType) {
+				case GREEN -> this.green;
+				case YELLOW -> this.yellow;
+				case BLUE -> this.blue;
+				case RED -> this.red;
+				default -> this.green;
+			};
 		}
+		throw new ClassCastException("Can not cast playerType of type " + playerType.getClass().getSimpleName() + " to LudoPlayerType");
 	}
 	
 	@Override

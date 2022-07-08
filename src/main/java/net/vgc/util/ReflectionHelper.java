@@ -16,7 +16,7 @@ import com.google.common.collect.Lists;
 
 public class ReflectionHelper {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Nullable
 	public static Class<?> getClassForName(String className) {

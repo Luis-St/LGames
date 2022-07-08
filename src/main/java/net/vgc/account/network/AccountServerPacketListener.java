@@ -11,7 +11,7 @@ import net.vgc.network.packet.client.ClientLoggedOutPacket;
 
 public class AccountServerPacketListener extends AbstractPacketListener {
 	
-	protected final AccountServer accountServer;
+	private final AccountServer accountServer;
 	
 	public AccountServerPacketListener(AccountServer accountServer, NetworkSide networkSide) {
 		super(networkSide);

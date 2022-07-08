@@ -11,7 +11,7 @@ import net.vgc.util.Tickable;
 
 public class ScreenScene extends Scene implements Tickable {
 
-	protected final Screen screen;
+	private final Screen screen;
 
 	public ScreenScene(Parent root, double width, double height, Screen screen) {
 		super(root, width, height);

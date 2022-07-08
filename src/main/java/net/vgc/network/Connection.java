@@ -21,14 +21,14 @@ import net.vgc.network.packet.PacketListener;
 
 public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final PacketListener listener;
-	protected final List<Connection.PacketHolder> waitingPackets = new ArrayList<>();
-	protected Channel channel;
-	protected int sentPackets;
-	protected int receivedPackets;
-	protected int failedPackets;
+	private final PacketListener listener;
+	private final List<Connection.PacketHolder> waitingPackets = new ArrayList<>();
+	private Channel channel;
+	private int sentPackets;
+	private int receivedPackets;
+	private int failedPackets;
 	
 	public Connection(PacketListener listener) {
 		this.listener = listener;
@@ -101,7 +101,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		}
 	}
 	
-	protected void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener, boolean waiting) {
+	private void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener, boolean waiting) {
 		ChannelFuture channelFuture = this.channel.writeAndFlush(packet);
 		LOGGER.debug("Send{}packet of type {}", waiting ? " waiting " : " ", packet.getClass().getSimpleName());
 		if (listener != null) {
@@ -111,7 +111,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		++this.sentPackets;
 	}
 	
-	protected void flush() {
+	private void flush() {
 		if (this.isConnected()) {
 			Iterator<PacketHolder> iterator = this.waitingPackets.iterator();
 			while (iterator.hasNext()) {
@@ -151,7 +151,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		return false;
 	}
 	
-	protected static record PacketHolder(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener) {
+	private static record PacketHolder(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener) {
 		
 	}
 	

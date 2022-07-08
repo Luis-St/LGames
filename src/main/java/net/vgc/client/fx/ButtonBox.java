@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 
 public class ButtonBox extends Box<Button> {
 	
-	protected final Runnable action;
+	private final Runnable action;
 	
 	public ButtonBox(String text, Runnable action) {
 		this(text, Pos.CENTER, action);
@@ -34,7 +34,7 @@ public class ButtonBox extends Box<Button> {
 	@Override
 	protected void init() {
 		super.init();
-		this.node.setOnAction((event) -> {
+		this.getNode().setOnAction((event) -> {
 			this.action.run();
 		});
 	}

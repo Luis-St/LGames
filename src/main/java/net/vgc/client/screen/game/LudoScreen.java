@@ -22,12 +22,12 @@ import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
 public class LudoScreen extends GameScreen {
 	
-	protected final LudoClientGame game;
-	protected PlayerInfoPane playerInfo;
-	protected DiceButton diceButton;
-	protected ButtonBox leaveButton;
-	protected ButtonBox playAgainButton;
-	protected ButtonBox confirmActionButton;
+	private final LudoClientGame game;
+	private PlayerInfoPane playerInfo;
+	private DiceButton diceButton;
+	private ButtonBox leaveButton;
+	private ButtonBox playAgainButton;
+	private ButtonBox confirmActionButton;
 	
 	public LudoScreen(LudoClientGame game) {
 		this.game = game;
@@ -45,18 +45,18 @@ public class LudoScreen extends GameScreen {
 		this.confirmActionButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.confirm_action"), Pos.CENTER, 20.0, this::handleConfirmAction);
 	}
 	
-	protected void handleLeave() {
+	private void handleLeave() {
 		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
 	}
 	
-	protected void handlePlayAgain() {
+	private void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
 			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
 	
-	protected void handleConfirmAction() {
+	private void handleConfirmAction() {
 		GameField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().canSelect()) {
@@ -95,20 +95,20 @@ public class LudoScreen extends GameScreen {
 		return pane;
 	}
 	
-	protected Pane createDicePane() {
+	private Pane createDicePane() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		pane.addColumn(0, this.diceButton);
 		return pane;
 	}
 	
-	protected Pane createGamePane() {
+	private Pane createGamePane() {
 		if (this.game.getMap() instanceof LudoClientMap map) {
 			return map.getGridPane();
 		}
 		throw new NullPointerException("The map of game ludo is null");
 	}
 	
-	protected Pane createActionPane() {
+	private Pane createActionPane() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 30.0);
 		pane.addRow(0, this.leaveButton, this.playAgainButton, this.confirmActionButton);
 		return pane;

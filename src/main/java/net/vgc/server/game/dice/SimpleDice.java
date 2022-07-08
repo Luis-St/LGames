@@ -7,9 +7,9 @@ import net.vgc.util.exception.InvalidValueException;
 
 public class SimpleDice implements Dice {
 	
-	protected final int min;
-	protected final int max;
-	protected final Random rng;
+	private final int min;
+	private final int max;
+	private final Random rng;
 	
 	public SimpleDice(int min, int max) {
 		this(min, max, new Random());

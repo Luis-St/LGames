@@ -39,7 +39,7 @@ public class LongArrayTag extends CollectionTag<LongTag> {
 		}
 	};
 	
-	protected long[] data;
+	private long[] data;
 	
 	public LongArrayTag() {
 		this(new long[0]);
@@ -53,7 +53,7 @@ public class LongArrayTag extends CollectionTag<LongTag> {
 		this.data = data;
 	}
 	
-	protected static long[] toArray(List<Long> list) {
+	private static long[] toArray(List<Long> list) {
 		long[] data = new long[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			Long integer = list.get(i);

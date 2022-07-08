@@ -14,8 +14,8 @@ public class GameProfile implements Encodable, Serializable {
 	
 	public static final GameProfile EMPTY = new GameProfile("empty", Util.EMPTY_UUID);
 	
-	protected final String name;
-	protected final UUID uuid;
+	private final String name;
+	private final UUID uuid;
 	
 	public GameProfile(String name, UUID uuid)  {
 		this.name = name;

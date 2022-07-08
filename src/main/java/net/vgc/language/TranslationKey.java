@@ -8,7 +8,7 @@ import net.vgc.Main;
 
 public class TranslationKey {
 	
-	protected final String key;
+	private final String key;
 	
 	public TranslationKey(String key) {
 		this.key = key;

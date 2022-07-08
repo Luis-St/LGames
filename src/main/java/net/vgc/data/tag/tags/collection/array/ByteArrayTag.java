@@ -39,7 +39,7 @@ public class ByteArrayTag extends CollectionTag<ByteTag> {
 		}
 	};
 	
-	protected byte[] data;
+	private byte[] data;
 	
 	public ByteArrayTag() {
 		this(new byte[0]);
@@ -53,7 +53,7 @@ public class ByteArrayTag extends CollectionTag<ByteTag> {
 		this.data = data;
 	}
 	
-	protected static byte[] toArray(List<Byte> list) {
+	private static byte[] toArray(List<Byte> list) {
 		byte[] data = new byte[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			Byte integer = list.get(i);

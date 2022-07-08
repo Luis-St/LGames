@@ -57,21 +57,21 @@ import net.vgc.util.Tickable;
 
 public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
-	protected static final boolean NATIVE = Epoll.isAvailable();
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final boolean NATIVE = Epoll.isAvailable();
 	
-	protected final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
+	private final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
 		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
-	protected final String host;
-	protected final int port;
-	protected final Path serverDirectory;
-	protected final DedicatedPlayerList playerList;
-	protected final List<Channel> channels = Lists.newArrayList();
-	protected final List<Connection> connections = Lists.newArrayList();
-	protected TreeItem<String> playersTreeItem;
-	protected UUID admin;
-	protected ServerPlayer adminPlayer;
-	protected Game game;
+	private final String host;
+	private final int port;
+	private final Path serverDirectory;
+	private final DedicatedPlayerList playerList;
+	private final List<Channel> channels = Lists.newArrayList();
+	private final List<Connection> connections = Lists.newArrayList();
+	private TreeItem<String> playersTreeItem;
+	private UUID admin;
+	private ServerPlayer adminPlayer;
+	private Game game;
 	
 	public DedicatedServer(String host, int port, Path serverDirectory) throws Exception {
 		this.host = host;
@@ -96,7 +96,7 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 		}
 	}
 	
-	protected void load(CompoundTag tag) {
+	private void load(CompoundTag tag) {
 		
 	}
 	
@@ -107,7 +107,7 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 		stage.show();
 	}
 	
-	protected Scene makeScene() {
+	private Scene makeScene() {
 		VBox box = new VBox();
 		TreeView<String> serverTree = new TreeView<>();
 		TreeItem<String> treeItem = new TreeItem<String>(TranslationKey.createAndGet("server.window.server"));
@@ -137,7 +137,7 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 		return new Scene(box, 450.0, 400.0);
 	}
 	
-	protected void openSettings() {
+	private void openSettings() {
 		LOGGER.debug("Settings");
 	}
 	

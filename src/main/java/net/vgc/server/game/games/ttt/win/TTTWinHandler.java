@@ -19,7 +19,7 @@ import net.vgc.util.Util;
 
 public class TTTWinHandler extends AbstractWinHandler {
 	
-	protected final List<TTTResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {
+	private final List<TTTResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {
 		list.add(new TTTResultLine(TTTFieldPos.of(0), TTTFieldPos.of(1), TTTFieldPos.of(2)));
 		list.add(new TTTResultLine(TTTFieldPos.of(3), TTTFieldPos.of(4), TTTFieldPos.of(5)));
 		list.add(new TTTResultLine(TTTFieldPos.of(6), TTTFieldPos.of(7), TTTFieldPos.of(8)));
@@ -51,7 +51,7 @@ public class TTTWinHandler extends AbstractWinHandler {
 		return false;
 	}
 	
-	protected GamePlayerType getWinType(GameMap map) {
+	private GamePlayerType getWinType(GameMap map) {
 		TTTResultLine resultLine = this.getResultLine(map);
 		if (resultLine != TTTResultLine.EMPTY) {
 			return this.getFieldType(map, resultLine.getFirstPos());
@@ -68,7 +68,7 @@ public class TTTWinHandler extends AbstractWinHandler {
 		return TTTResultLine.EMPTY;
 	}
 	
-	protected GamePlayerType getLineWinType(GameMap map, TTTResultLine resultLine) {
+	private GamePlayerType getLineWinType(GameMap map, TTTResultLine resultLine) {
 		GamePlayerType playerType = this.getFieldType(map, resultLine.getFirstPos());
 		if (playerType != TTTPlayerType.NO) {
 			if (this.getFieldType(map, resultLine.getSecondPos()) == playerType && this.getFieldType(map, resultLine.getThirdPos()) == playerType) {
@@ -78,7 +78,7 @@ public class TTTWinHandler extends AbstractWinHandler {
 		return TTTPlayerType.NO;
 	}
 	
-	protected GamePlayerType getFieldType(GameMap map, TTTFieldPos fieldPos) {
+	private GamePlayerType getFieldType(GameMap map, TTTFieldPos fieldPos) {
 		GameField field = map.getField(null, null, fieldPos);
 		if (field != null) {
 			if (field.isEmpty()) {

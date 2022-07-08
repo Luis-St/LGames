@@ -3,10 +3,6 @@ package net.vgc.data.tag.tags.numeric;
 import net.vgc.data.tag.Tag;
 
 public abstract class NumericTag implements Tag {
-
-	protected NumericTag() {
-		
-	}
 	
 	public abstract byte getAsByte();
 	

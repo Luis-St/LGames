@@ -10,8 +10,8 @@ import net.vgc.server.player.ServerPlayer;
 
 public class GameFactory<S extends Game, C extends Game> {
 	
-	protected final BiFunction<DedicatedServer, List<ServerPlayer>, S> serverFactory;
-	protected final BiFunction<Client, List<GamePlayerInfo>, C> clientFactory;
+	private final BiFunction<DedicatedServer, List<ServerPlayer>, S> serverFactory;
+	private final BiFunction<Client, List<GamePlayerInfo>, C> clientFactory;
 	
 	public GameFactory(BiFunction<DedicatedServer, List<ServerPlayer>, S> serverFactory, BiFunction<Client, List<GamePlayerInfo>, C> clientFactory) {
 		this.serverFactory = serverFactory;

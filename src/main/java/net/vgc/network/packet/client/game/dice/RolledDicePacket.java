@@ -6,7 +6,7 @@ import net.vgc.network.packet.client.ClientPacket;
 
 public class RolledDicePacket implements ClientPacket {
 	
-	protected final int count;
+	private final int count;
 	
 	public RolledDicePacket(int count) {
 		this.count = count;

@@ -17,13 +17,13 @@ public class Wins4ServerField extends AbstractServerGameField {
 	}
 
 	@Override
-	public GameFieldType getFieldType() {
+	public final GameFieldType getFieldType() {
 		LOGGER.warn("Fail to get field type of field {}, since 4 wins fields does not have a field type", this.getFieldPos().getPosition());
 		return super.getFieldType();
 	}
 
 	@Override
-	public GamePlayerType getColorType() {
+	public final GamePlayerType getColorType() {
 		LOGGER.warn("Fail to get field color type of field {}, since 4 wins fields does not have a field color type", this.getFieldPos().getPosition());
 		return super.getColorType();
 	}

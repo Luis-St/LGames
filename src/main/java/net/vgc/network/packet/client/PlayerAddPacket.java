@@ -6,7 +6,7 @@ import net.vgc.player.GameProfile;
 
 public class PlayerAddPacket implements ClientPacket {
 	
-	protected final GameProfile profile;
+	private final GameProfile profile;
 	
 	public PlayerAddPacket(GameProfile profile) {
 		this.profile = profile;

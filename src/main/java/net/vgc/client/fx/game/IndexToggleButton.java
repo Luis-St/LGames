@@ -4,7 +4,7 @@ import javafx.scene.control.ToggleButton;
 
 public class IndexToggleButton extends ToggleButton {
 	
-	protected final int index;
+	private final int index;
 	
 	public IndexToggleButton(int index) {
 		this.index = index;

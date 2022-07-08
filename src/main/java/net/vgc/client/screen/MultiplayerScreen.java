@@ -21,12 +21,12 @@ import net.vgc.util.Util;
 
 public class MultiplayerScreen extends Screen {
 	
-	protected final Screen backScreen;
-	protected InputPane hostInputPane;
-	protected InputPane portInputPane;
-	protected ButtonBox connectButtonBox;
-	protected ButtonBox connectLocalButtonBox;
-	protected ButtonBox backButtonBox;
+	private final Screen backScreen;
+	private InputPane hostInputPane;
+	private InputPane portInputPane;
+	private ButtonBox connectButtonBox;
+	private ButtonBox connectLocalButtonBox;
+	private ButtonBox backButtonBox;
 	
 	public MultiplayerScreen(Screen backScreen) {
 		this.backScreen = backScreen;
@@ -41,7 +41,7 @@ public class MultiplayerScreen extends Screen {
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
 	
-	protected boolean canConnect() {
+	private boolean canConnect() {
 		if (this.client.isLoggedIn()) {
 			return true;
 		} else {
@@ -53,7 +53,7 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	protected void handleConnect() {
+	private void handleConnect() {
 		if (this.canConnect()) {
 			String host = StringUtils.trimToEmpty(this.hostInputPane.getText());
 			String port = StringUtils.trimToEmpty(this.portInputPane.getText());
@@ -71,7 +71,7 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	protected void handleConnectLocal() {
+	private void handleConnectLocal() {
 		if (this.canConnect()) {
 			this.hostInputPane.setText("127.0.0.1");
 			this.portInputPane.setText("8080");
@@ -80,7 +80,7 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	protected void connectAndSend(String host, int port, Packet<?> packet) {
+	private void connectAndSend(String host, int port, Packet<?> packet) {
 		ConnectionHandler handler = this.client.getServerHandler();
 		try {
 			handler.connect(host, port);
@@ -96,7 +96,7 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	protected void handleBack() {
+	private void handleBack() {
 		this.showScreen(this.backScreen);
 	}
 	

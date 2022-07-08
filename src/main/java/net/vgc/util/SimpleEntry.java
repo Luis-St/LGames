@@ -8,9 +8,9 @@ import net.vgc.Main;
 
 public class SimpleEntry<K, V> implements Map.Entry<K, V> {
 	
-	protected final K key;
-	protected V value;
-	protected boolean muted;
+	private final K key;
+	private V value;
+	private boolean muted;
 	
 	public SimpleEntry(K key) {
 		this(key, null);

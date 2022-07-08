@@ -110,7 +110,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 	}
 
 	@Override
-	public GameField getNextField(GameFigure figure, int count) {
+	public final GameField getNextField(GameFigure figure, int count) {
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since the 4 wins figures does not have a next field", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return null;
 	}
@@ -142,7 +142,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 	}
 
 	@Override
-	public GameField getSelectedField() {
+	public final GameField getSelectedField() {
 		LOGGER.warn("Fail to get the selected field, since the 4 wins map does not have a selected field");
 		return null;
 	}

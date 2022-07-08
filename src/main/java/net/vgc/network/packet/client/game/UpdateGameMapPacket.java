@@ -9,7 +9,7 @@ import net.vgc.network.packet.client.ClientPacket;
 
 public class UpdateGameMapPacket implements ClientPacket {
 	
-	protected final List<GameFieldInfo> fieldInfos;
+	private final List<GameFieldInfo> fieldInfos;
 	
 	public UpdateGameMapPacket(List<GameFieldInfo> fieldInfos) {
 		this.fieldInfos = fieldInfos;

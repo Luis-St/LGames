@@ -13,10 +13,10 @@ public class Wins4ResultLine implements Encodable {
 	
 	public static final Wins4ResultLine EMPTY = new Wins4ResultLine(Wins4FieldPos.NO, Wins4FieldPos.NO, Wins4FieldPos.NO, Wins4FieldPos.NO);
 	
-	protected final Wins4FieldPos firstPos;
-	protected final Wins4FieldPos secondPos;
-	protected final Wins4FieldPos thirdPos;
-	protected final Wins4FieldPos fourthPos;
+	private final Wins4FieldPos firstPos;
+	private final Wins4FieldPos secondPos;
+	private final Wins4FieldPos thirdPos;
+	private final Wins4FieldPos fourthPos;
 	
 	public Wins4ResultLine(Wins4FieldPos firstPos, Wins4FieldPos secondPos, Wins4FieldPos thirdPos, Wins4FieldPos fourthPos) {
 		this.firstPos = firstPos;

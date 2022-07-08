@@ -21,11 +21,11 @@ import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
 public class Wins4Screen extends GameScreen {
 	
-	protected final Wins4ClientGame game;
-	protected PlayerInfoPane playerInfo;
-	protected ButtonBox leaveButton;
-	protected ButtonBox playAgainButton;
-	protected ButtonBox confirmActionButton;
+	private final Wins4ClientGame game;
+	private PlayerInfoPane playerInfo;
+	private ButtonBox leaveButton;
+	private ButtonBox playAgainButton;
+	private ButtonBox confirmActionButton;
 	
 	public Wins4Screen(Wins4ClientGame game) {
 		this.game = game;
@@ -42,18 +42,18 @@ public class Wins4Screen extends GameScreen {
 		this.confirmActionButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.confirm_action"), Pos.CENTER, 20.0, this::handleConfirmAction);
 	}
 	
-	protected void handleLeave() {
+	private void handleLeave() {
 		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
 	}
 	
-	protected void handlePlayAgain() {
+	private void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
 			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
 	
-	protected void handleConfirmAction() {
+	private void handleConfirmAction() {
 		int column = -1;
 		if (this.game.getMap() instanceof Wins4ClientMap map) {
 			column = map.getSelectedColumn();
@@ -89,18 +89,18 @@ public class Wins4Screen extends GameScreen {
 		return pane;
 	}
 	
-	protected PlayerInfoPane createInfoPane() {
+	private PlayerInfoPane createInfoPane() {
 		return this.playerInfo;
 	}
 	
-	protected Pane createGamePane() {
+	private Pane createGamePane() {
 		if (this.game.getMap() instanceof Wins4ClientMap map) {
 			return map.getStackPane();
 		}
 		throw new NullPointerException("The map of game 4 wins is null");
 	}
 	
-	protected Pane createActionPane() {
+	private Pane createActionPane() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		pane.addRow(0, this.leaveButton, this.playAgainButton, this.confirmActionButton);
 		return pane;

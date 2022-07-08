@@ -17,8 +17,8 @@ public class LanguageFile {
 		return instance.group(Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("keys").forGetter(LanguageFile::getLanguageKeyMap)).apply(instance, LanguageFile::new);
 	});
 	
-	protected final List<Translation> translations;
-	protected Language language;
+	private final List<Translation> translations;
+	private Language language;
 	
 	public LanguageFile(List<Translation> translations) {
 		this.translations = translations;

@@ -31,9 +31,9 @@ public class FloatTag extends NumericTag {
 		}
 	};
 	
-	protected final float data;
+	private final float data;
 	
-	FloatTag(float data) {
+	private FloatTag(float data) {
 		this.data = data;
 	}
 	

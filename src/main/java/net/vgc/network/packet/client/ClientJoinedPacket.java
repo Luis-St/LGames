@@ -10,7 +10,7 @@ import net.vgc.server.player.ServerPlayer;
 
 public class ClientJoinedPacket implements ClientPacket {
 	
-	protected final List<GameProfile> profiles;
+	private final List<GameProfile> profiles;
 	
 	public ClientJoinedPacket(List<ServerPlayer> players) {
 		this.profiles = players.stream().map(ServerPlayer::getProfile).collect(Collectors.toList());

@@ -6,8 +6,8 @@ import net.vgc.network.Network;
 
 public class Language {
 	
-	protected final String name;
-	protected final String fileName;
+	private final String name;
+	private final String fileName;
 	
 	public Language(String name, String fileName) {
 		this.name = name;

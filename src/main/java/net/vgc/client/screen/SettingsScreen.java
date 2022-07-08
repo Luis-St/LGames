@@ -16,11 +16,11 @@ import net.vgc.language.TranslationKey;
 
 public class SettingsScreen extends Screen {
 	
-	protected final Screen backScreen;
-	protected Text languageSettingText;
-	protected ComboBox<String> languageSettingBox;
-	protected GridPane languageSetting;
-	protected ButtonBox backButtonBox;
+	private final Screen backScreen;
+	private Text languageSettingText;
+	private ComboBox<String> languageSettingBox;
+	private GridPane languageSetting;
+	private ButtonBox backButtonBox;
 	
 	public SettingsScreen(Screen backScreen) {
 		this.backScreen = backScreen;
@@ -42,7 +42,7 @@ public class SettingsScreen extends Screen {
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
 	
-	protected void handleBack() {
+	private void handleBack() {
 		this.showScreen(this.backScreen);
 	}
 	

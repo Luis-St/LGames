@@ -7,7 +7,7 @@ import net.vgc.server.network.ServerPacketListener;
 
 public class ExitGameRequestPacket implements ServerPacket {
 	
-	protected final GameProfile profile;
+	private final GameProfile profile;
 	
 	public ExitGameRequestPacket(GameProfile profile) {
 		this.profile = profile;

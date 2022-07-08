@@ -12,9 +12,9 @@ import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
 
 public class DiceButton extends Button {
 	
-	protected final Client client;
-	protected final double prefSize;
-	protected int count = 0;
+	private final Client client;
+	private final double prefSize;
+	private int count = 0;
 	
 	public DiceButton(Client client, double prefSize) {
 		this.client = client;
@@ -22,7 +22,7 @@ public class DiceButton extends Button {
 		this.init();
 	}
 	
-	protected void init() {
+	private void init() {
 		this.setPrefSize(this.prefSize, this.prefSize);
 		this.updateState();
 		if (!Constans.DEBUG) {
@@ -36,7 +36,7 @@ public class DiceButton extends Button {
 		});
 	}
 	
-	protected void updateState() {
+	private void updateState() {
 		ImageView image = DiceRenderState.fromCount(this.count).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
 		if (image != null) {
 			this.setGraphic(new Box<>(image, Pos.CENTER));

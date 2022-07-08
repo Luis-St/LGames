@@ -59,14 +59,14 @@ public class ListTag extends CollectionTag<Tag> {
 		}
 	};
 	
-	protected final List<Tag> data;
-	protected byte type;
+	private final List<Tag> data;
+	private byte type;
 	
 	public ListTag() {
 		this(Lists.newArrayList(), (byte) 0);
 	}
 	
-	protected ListTag(List<Tag> data, byte type) {
+	private ListTag(List<Tag> data, byte type) {
 		this.data = data;
 		this.type = type;
 	}
@@ -109,7 +109,7 @@ public class ListTag extends CollectionTag<Tag> {
 		visitor.visitList(this);
 	}
 
-	protected void updateTypeAfterRemove() {
+	private void updateTypeAfterRemove() {
 		if (this.data.isEmpty()) {
 			this.type = 0;
 		}
@@ -291,7 +291,7 @@ public class ListTag extends CollectionTag<Tag> {
 		return false;
 	}
 
-	protected boolean updateType(Tag tag) {
+	private boolean updateType(Tag tag) {
 		if (tag.getId() == 0) {
 			return false;
 		} else if (this.type == 0) {

@@ -30,9 +30,9 @@ public class StringTag implements Tag {
 	};
 	public static final StringTag EMPTY = new StringTag("");
 	
-	protected final String data;
+	private final String data;
 	
-	StringTag(String data) {
+	private StringTag(String data) {
 		this.data = data;
 	}
 	

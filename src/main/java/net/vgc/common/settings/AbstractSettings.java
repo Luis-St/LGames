@@ -15,7 +15,7 @@ public abstract class AbstractSettings implements Serializable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final List<Setting<?>> settings;
+	private final List<Setting<?>> settings;
 	
 	protected AbstractSettings(CompoundTag tag) {
 		this(TagUtil.readList(tag.getList("settings", Tag.COMPOUND_TAG), (settingTag) -> {

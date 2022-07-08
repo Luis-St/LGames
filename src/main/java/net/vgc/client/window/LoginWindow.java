@@ -27,10 +27,10 @@ import net.vgc.util.Util;
 
 public class LoginWindow {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final Client client;
-	protected final Stage stage;
+	private final Client client;
+	private final Stage stage;
 	
 	public LoginWindow(Client client, Stage stage) {
 		this.client = client;
@@ -42,11 +42,11 @@ public class LoginWindow {
 		});
 	}
 	
-	protected void setScene(Pane pane) {
+	private void setScene(Pane pane) {
 		this.stage.setScene(new Scene(pane, 275.0, 200.0));
 	}
 	
-	protected Pane main() {
+	private Pane main() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		Button registrationButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.register"), () -> {
 			this.setScene(this.registration());
@@ -61,7 +61,7 @@ public class LoginWindow {
 		return pane;
 	}
 	
-	protected Pane profile() {
+	private Pane profile() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		PlayerAccount account = this.client.getAccount();
 		pane.addRow(0, new Text(TranslationKey.createAndGet("window.login.username")), new Text(account.getName()));
@@ -79,7 +79,7 @@ public class LoginWindow {
 		return pane;
 	}
 	
-	protected Pane registration() {
+	private Pane registration() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField usernameField = new TextField();
 		PasswordField passwordField = new PasswordField();
@@ -113,7 +113,7 @@ public class LoginWindow {
 		return pane;
 	}
 	
-	protected Pane loginSelect() {
+	private Pane loginSelect() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		Button userButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.user"), () -> {
 			this.setScene(this.loginUser());
@@ -128,7 +128,7 @@ public class LoginWindow {
 		return pane;
 	}
 	
-	protected Pane loginGuest() {
+	private Pane loginGuest() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField usernameField = new TextField();
 		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
@@ -148,7 +148,7 @@ public class LoginWindow {
 		return pane;
 	}
 	
-	protected Pane loginUser() {
+	private Pane loginUser() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField usernameField = new TextField();
 		PasswordField passwordField = new PasswordField();
@@ -173,7 +173,7 @@ public class LoginWindow {
 		return pane;
 	}
 	
-	protected void connectAndSend(Packet<?> packet) {
+	private void connectAndSend(Packet<?> packet) {
 		ConnectionHandler handler = this.client.getAccountHandler();
 		if (!handler.isConnected()) {
 			try {
@@ -216,7 +216,7 @@ public class LoginWindow {
 		this.close();
 	}
 	
-	protected void close() {
+	private void close() {
 		this.client.setLoginWindow(null);
 		if (!this.client.isLoggedIn()) {
 			this.client.getAccountHandler().close();

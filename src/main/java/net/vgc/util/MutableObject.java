@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class MutableObject<T> {
 	
-	protected T value;
+	private T value;
 	
 	public MutableObject() {
 		

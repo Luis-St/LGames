@@ -50,23 +50,23 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 		throw new InvalidNetworkSideException(NetworkSide.CLIENT);
 	}
 	
-	protected final Timeline ticker = Util.createTicker("ClientTicker", this);
-	protected final List<AbstractClientPlayer> players = Lists.newArrayList();
-	protected final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", () -> new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
+	private final Timeline ticker = Util.createTicker("ClientTicker", this);
+	private final List<AbstractClientPlayer> players = Lists.newArrayList();
+	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", () -> new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
 		connection.send(new ClientLeavePacket(this.account));
 	});
-	protected final ConnectionHandler accountHandler = new ConnectionHandler("account server", () ->  new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
+	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", () ->  new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
 		connection.send(new ClientExitPacket(this.account));
 	});
-	protected boolean instantLoading;
-	protected boolean safeLoading;
-	protected LoginWindow loginWindow;
-	protected PlayerAccount account;
-	protected LocalPlayer player;
-	protected ClientSettings settings;
-	protected String accountHost;
-	protected int accountPort;
-	protected Game game;
+	private boolean instantLoading;
+	private boolean safeLoading;
+	private LoginWindow loginWindow;
+	private PlayerAccount account;
+	private LocalPlayer player;
+	private ClientSettings settings;
+	private String accountHost;
+	private int accountPort;
+	private Game game;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -172,7 +172,7 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 		this.setScene(screen.show());
 	}
 	
-	protected void setScene(Scene scene) {
+	private void setScene(Scene scene) {
 		if (scene instanceof ScreenScene screenScene) {
 			screenScene.setInputListeners();
 		}

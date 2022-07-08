@@ -10,12 +10,12 @@ import net.vgc.util.annotation.DecodingConstructor;
 
 public class GameFieldInfo implements Encodable {
 	
-	protected final GameFieldType fieldType;
-	protected final GamePlayerType playerType;
-	protected final GameFieldPos fieldPos;
-	protected final GameProfile profile;
-	protected final int figureCount;
-	protected final UUID figureUUID;
+	private final GameFieldType fieldType;
+	private final GamePlayerType playerType;
+	private final GameFieldPos fieldPos;
+	private final GameProfile profile;
+	private final int figureCount;
+	private final UUID figureUUID;
 	
 	public GameFieldInfo(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos, GameProfile profile, int figureCount, UUID figureUUID) {
 		this.fieldType = fieldType;

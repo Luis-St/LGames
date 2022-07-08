@@ -23,11 +23,11 @@ import net.vgc.util.Util;
 
 public class LobbyScreen extends GameScreen {
 	
-	protected Menu playerMenu;
-	protected Menu gameMenu;
-	protected ButtonBox tttButtonBox;
-	protected ButtonBox ludoButtonBox;
-	protected ButtonBox wins4ButtonBox;
+	private Menu playerMenu;
+	private Menu gameMenu;
+	private ButtonBox tttButtonBox;
+	private ButtonBox ludoButtonBox;
+	private ButtonBox wins4ButtonBox;
 	
 	public LobbyScreen() {
 		
@@ -51,19 +51,19 @@ public class LobbyScreen extends GameScreen {
 		this.wins4ButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 	}
 	
-	protected void handleTTT() {
+	private void handleTTT() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.showScreen(new PlayerSelectScreen(GameTypes.TIC_TAC_TOE, this));
 		}
 	}
 	
-	protected void handleLudo() {
+	private void handleLudo() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.showScreen(new PlayerSelectScreen(GameTypes.LUDO, this));
 		}
 	}
 	
-	protected void handleWins4() {
+	private void handleWins4() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.showScreen(new PlayerSelectScreen(GameTypes.WINS_4, this));
 		}
@@ -79,7 +79,7 @@ public class LobbyScreen extends GameScreen {
 		}
 	}
 	
-	protected void refreshPlayers() {
+	private void refreshPlayers() {
 		this.playerMenu.getItems().clear();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player instanceof LocalPlayer) {

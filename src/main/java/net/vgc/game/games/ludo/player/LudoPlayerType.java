@@ -46,14 +46,13 @@ public enum LudoPlayerType implements GamePlayerType {
 	
 	@Override
 	public List<LudoPlayerType> getOpponents() {
-		switch (this) {
-			case GREEN: return Lists.newArrayList(YELLOW, BLUE, RED);
-			case YELLOW: return Lists.newArrayList(GREEN, BLUE, RED);
-			case BLUE: return Lists.newArrayList(GREEN, YELLOW, RED);
-			case RED: return Lists.newArrayList(GREEN, YELLOW, BLUE);
-			default: break;
-		}
-		return Lists.newArrayList(NO);
+		return switch (this) {
+			case GREEN -> Lists.newArrayList(YELLOW, BLUE, RED);
+			case YELLOW -> Lists.newArrayList(GREEN, BLUE, RED);
+			case BLUE -> Lists.newArrayList(GREEN, YELLOW, RED);
+			case RED -> Lists.newArrayList(GREEN, YELLOW, BLUE);
+			default -> Lists.newArrayList(NO);
+		}; 
 	}
 	
 	@Override

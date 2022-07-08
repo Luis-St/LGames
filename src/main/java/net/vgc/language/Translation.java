@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Translation {
 	
-	protected final String key;
-	protected final String value;
+	private final String key;
+	private final String value;
 	
 	public Translation(String key, String value) {
 		this.key = key;

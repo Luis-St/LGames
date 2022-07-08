@@ -22,7 +22,7 @@ import net.vgc.data.tag.tags.numeric.ShortTag;
 
 public class StringTagVisitor implements TagVisitor {
 	
-	protected final StringBuilder builder = new StringBuilder();
+	private final StringBuilder builder = new StringBuilder();
 	
 	public String visit(Tag tag) {
 		tag.accept(this);

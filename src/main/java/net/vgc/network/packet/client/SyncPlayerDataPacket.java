@@ -9,9 +9,9 @@ import net.vgc.player.Player;
 
 public class SyncPlayerDataPacket implements ClientPacket {
 	
-	protected final GameProfile profile;
-	protected final boolean playing;
-	protected final PlayerScore score;
+	private final GameProfile profile;
+	private final boolean playing;
+	private final PlayerScore score;
 	
 	public SyncPlayerDataPacket(GamePlayer player) {
 		this(player.getPlayer());

@@ -18,7 +18,7 @@ import com.google.gson.JsonParser;
 
 public class JsonHelper {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Nullable
 	public static JsonElement load(Path path) {

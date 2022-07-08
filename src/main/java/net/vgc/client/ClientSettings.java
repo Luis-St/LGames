@@ -1,7 +1,5 @@
 package net.vgc.client;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 
 import net.vgc.common.settings.AbstractSettings;
@@ -33,11 +31,6 @@ public class ClientSettings extends AbstractSettings {
 				LanguageProvider.INSTANCE.setCurrentLanguage(newValue);
 			}
 		});
-	}
-	
-	@Override
-	public List<Setting<?>> getSettings() {
-		return this.settings;
 	}
 
 }

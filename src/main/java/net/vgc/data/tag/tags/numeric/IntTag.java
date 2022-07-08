@@ -31,9 +31,9 @@ public class IntTag extends NumericTag {
 		}
 	};
 	
-	protected final int data;
+	private final int data;
 	
-	IntTag(int data) {
+	private IntTag(int data) {
 		this.data = data;
 	}
 	

@@ -20,15 +20,15 @@ import net.vgc.util.exception.InvalidValueException;
 
 public class Setting<T> implements Serializable {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final List<BiConsumer<T, T>> listeners = Lists.newArrayList();
-	protected final TranslationKey name;
-	protected final TranslationKey description;
-	protected final SettingValueType<T> valueType;
-	protected final T defaultValue;
-	protected final List<T> possibleValues;
-	protected T value;
+	private final List<BiConsumer<T, T>> listeners = Lists.newArrayList();
+	private final TranslationKey name;
+	private final TranslationKey description;
+	private final SettingValueType<T> valueType;
+	private final T defaultValue;
+	private final List<T> possibleValues;
+	private T value;
 	
 	@SafeVarargs
 	public Setting(TranslationKey name, TranslationKey description, SettingValueType<T> valueType, T defaultValue, T... possibleValues) {

@@ -39,7 +39,7 @@ public class IntArrayTag extends CollectionTag<IntTag> {
 		}
 	};
 	
-	protected int[] data;
+	private int[] data;
 	
 	public IntArrayTag() {
 		this(new int[0]);
@@ -53,7 +53,7 @@ public class IntArrayTag extends CollectionTag<IntTag> {
 		this.data = data;
 	}
 	
-	protected static int[] toArray(List<Integer> list) {
+	private static int[] toArray(List<Integer> list) {
 		int[] data = new int[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			Integer integer = list.get(i);

@@ -6,7 +6,7 @@ import net.vgc.player.GameProfile;
 
 public class PlayerRemovePacket implements ClientPacket {
 	
-	protected final GameProfile profile;
+	private final GameProfile profile;
 	
 	public PlayerRemovePacket(GameProfile profile) {
 		this.profile = profile;

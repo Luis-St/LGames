@@ -5,9 +5,9 @@ import net.vgc.util.Tickable;
 
 public abstract class Player implements Tickable {
 	
-	protected final GameProfile profile;
-	protected final PlayerScore score;
-	protected boolean playing;
+	private final GameProfile profile;
+	private final PlayerScore score;
+	private boolean playing;
 	
 	public Player(GameProfile profile, PlayerScore score) {
 		this.profile = profile;

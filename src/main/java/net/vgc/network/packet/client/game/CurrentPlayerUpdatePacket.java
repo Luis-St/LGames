@@ -8,7 +8,7 @@ import net.vgc.player.GameProfile;
 
 public class CurrentPlayerUpdatePacket implements ClientPacket {
 	
-	protected final GameProfile profile;
+	private final GameProfile profile;
 	
 	public CurrentPlayerUpdatePacket(GamePlayer player) {
 		this.profile = player.getPlayer().getProfile();

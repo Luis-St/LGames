@@ -30,7 +30,7 @@ public abstract class GameApplication<T extends Packet<?>> extends Application i
 	protected static GameApplication<?> instance;
 	
 	protected Stage stage;
-	protected Random rng;
+	private Random rng;
 	protected LaunchState launchState = LaunchState.UNKNOWN;
 	protected Path gameDirectory; 
 	protected Path resourceDirectory;
@@ -106,6 +106,10 @@ public abstract class GameApplication<T extends Packet<?>> extends Application i
 	
 	public Stage getStage() {
 		return this.stage;
+	}
+	
+	public Random getRNG() {
+		return this.rng;
 	}
 	
 	public Path getGameDirectory() {

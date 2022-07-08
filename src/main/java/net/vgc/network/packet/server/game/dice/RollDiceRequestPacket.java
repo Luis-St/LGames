@@ -7,7 +7,7 @@ import net.vgc.server.network.ServerPacketListener;
 
 public class RollDiceRequestPacket implements ServerPacket {
 	
-	protected final GameProfile profile;
+	private final GameProfile profile;
 	
 	public RollDiceRequestPacket(GameProfile profile) {
 		this.profile = profile;

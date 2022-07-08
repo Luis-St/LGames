@@ -14,10 +14,10 @@ import net.vgc.language.TranslationKey;
 
 public class MenuScreen extends Screen {
 	
-	protected Button loginButton;
-	protected ButtonBox multiplayerButtonBox;
-	protected ButtonBox settingsButtonBox;
-	protected VBox centerBox;
+	private Button loginButton;
+	private ButtonBox multiplayerButtonBox;
+	private ButtonBox settingsButtonBox;
+	private VBox centerBox;
 	
 	@Override
 	public void init() {
@@ -36,15 +36,15 @@ public class MenuScreen extends Screen {
 		}
 	}
 	
-	protected void handleMultiplayer() {
+	private void handleMultiplayer() {
 		this.showScreen(new MultiplayerScreen(this));
 	}
 	
-	protected void handleSettings() {
+	private void handleSettings() {
 		this.showScreen(new SettingsScreen(this));
 	}
 	
-	protected void handleLogin() {
+	private void handleLogin() {
 		if (this.client.getLoginWindow() == null)  {
 			LoginWindow window = new LoginWindow(this.client, new Stage());
 			window.show();

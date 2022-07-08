@@ -75,7 +75,7 @@ public class Main {
 		}
 	}
 	
-	protected static void checkLaunch(boolean client, boolean server, boolean account) {
+	private static void checkLaunch(boolean client, boolean server, boolean account) {
 		if (client && server && account) {
 			LOGGER.trace("Can not launch a client, a server and a account server");
 			System.exit(-1);

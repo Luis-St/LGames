@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 
 public class FxTest extends Application {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public static void main(String[] args) {
 		launch(args);

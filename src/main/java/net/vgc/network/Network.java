@@ -12,7 +12,7 @@ public class Network implements PacketHandler<Packet<?>> {
 	
 	public static final Network INSTANCE = new Network();
 	
-	protected NetworkSide networkSide;
+	private NetworkSide networkSide;
 	
 	private Network() {
 		

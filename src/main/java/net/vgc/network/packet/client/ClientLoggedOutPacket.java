@@ -5,7 +5,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLoggedOutPacket implements ClientPacket {
 	
-	protected final boolean successful;
+	private final boolean successful;
 	
 	public ClientLoggedOutPacket(boolean successful) {
 		this.successful = successful;
