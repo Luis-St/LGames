@@ -10,7 +10,8 @@ import net.vgc.client.fx.game.DiceButton;
 import net.vgc.client.fx.game.PlayerInfoPane;
 import net.vgc.client.fx.game.PlayerScorePane;
 import net.vgc.client.game.games.ludo.LudoClientGame;
-import net.vgc.client.game.games.ludo.map.field.LudoClientField;
+import net.vgc.client.game.games.ludo.map.LudoClientMap;
+import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.LudoGameResultPacket;
@@ -56,7 +57,7 @@ public class LudoScreen extends GameScreen {
 	}
 	
 	protected void handleConfirmAction() {
-		LudoClientField field = this.game.getMap().getSelectedField();
+		GameField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().canSelect()) {
 				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), field.getFieldType(), field.getFieldPos()));
@@ -89,7 +90,7 @@ public class LudoScreen extends GameScreen {
 		BorderPane pane = new BorderPane();
 		pane.setLeft(this.playerInfo);
 		pane.setRight(this.createDicePane());
-		pane.setCenter(this.game.getMap());
+		pane.setCenter(this.createGamePane());
 		pane.setBottom(this.createActionPane());
 		return pane;
 	}
@@ -98,6 +99,13 @@ public class LudoScreen extends GameScreen {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
 		pane.addColumn(0, this.diceButton);
 		return pane;
+	}
+	
+	protected Pane createGamePane() {
+		if (this.game.getMap() instanceof LudoClientMap map) {
+			return map.getGridPane();
+		}
+		throw new NullPointerException("The map of game ludo is null");
 	}
 	
 	protected Pane createActionPane() {

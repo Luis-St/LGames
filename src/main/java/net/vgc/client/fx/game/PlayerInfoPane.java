@@ -7,19 +7,19 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import net.vgc.Constans;
 import net.vgc.client.fx.FxUtil;
-import net.vgc.client.game.ClientGame;
-import net.vgc.client.game.player.ClientGamePlayer;
+import net.vgc.game.Game;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.Util;
 
 public class PlayerInfoPane extends GridPane {
 	
-	protected final ClientGame game;
+	protected final Game game;
 	protected final double separatorLength;
 	protected final Text currentPlayerInfo;
 	protected final PlayerScorePane scorePane;
 	
-	public PlayerInfoPane(ClientGame game, double separatorLength, PlayerScorePane.Type scoreType) {
+	public PlayerInfoPane(Game game, double separatorLength, PlayerScorePane.Type scoreType) {
 		this.game = game;
 		this.separatorLength = separatorLength;
 		this.currentPlayerInfo = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.no_current_player"));
@@ -47,7 +47,7 @@ public class PlayerInfoPane extends GridPane {
 		return separator;
 	}
 	
-	protected String getName(ClientGamePlayer player) {
+	protected String getName(GamePlayer player) {
 		return player.getPlayer().getProfile().getName();
 	}
 	
@@ -66,7 +66,7 @@ public class PlayerInfoPane extends GridPane {
 	protected GridPane makePlayersPane() {
 		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
 		int i = 0;
-		for (ClientGamePlayer player : this.game.getPlayers()) {
+		for (GamePlayer player : this.game.getPlayers()) {
 			pane.add(new Text(player.getPlayerType().getTranslation().getValue(this.getName(player))), 0, i++);
 		}
 		return pane;
@@ -74,7 +74,7 @@ public class PlayerInfoPane extends GridPane {
 	
 	public void update() {
 		Util.runDelayed("DelayedPlayerInfoUpdate", 500, () -> {
-			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.getName(this.game.getCurrentPlayer())));
+			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.getName(this.game.getPlayer())));
 			this.scorePane.update();
 		});
 	}

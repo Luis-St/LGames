@@ -5,13 +5,13 @@ import java.util.List;
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.Client;
-import net.vgc.client.game.ClientGame;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.window.LoginWindow;
+import net.vgc.game.Game;
 import net.vgc.game.GameType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
@@ -20,7 +20,6 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
-import net.vgc.server.game.ServerGame;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
@@ -162,10 +161,10 @@ public class ClientPacketListener extends AbstractPacketListener {
 	public void handleCurrentPlayerUpdate(GameProfile profile) {
 		boolean flag = false;
 		if (this.client.getGame() != null) {
-			ClientGame game = this.client.getGame();
+			Game game = this.client.getGame();
 			for (AbstractClientPlayer player : this.client.getPlayers()) {
 				if (player.getProfile().equals(profile)) {
-					game.setCurrentPlayer(game.getPlayerFor(player));
+					game.setPlayer(game.getPlayerFor(player));
 					player.setCurrent(true);
 					flag = true;
 					if (player instanceof LocalPlayer localPlayer) {
@@ -183,7 +182,7 @@ public class ClientPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	public <S extends ServerGame, C extends ClientGame> void handleStartGame(GameType<S, C> gameType, List<GamePlayerInfo> playerInfos) {
+	public <S extends Game, C extends Game> void handleStartGame(GameType<S, C> gameType, List<GamePlayerInfo> playerInfos) {
 		if (this.client.getGame() == null) {
 			C game = gameType.createClientGame(this.client, playerInfos);
 			game.startGame();

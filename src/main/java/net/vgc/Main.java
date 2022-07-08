@@ -19,7 +19,7 @@ public class Main {
 	 *  - add GameMap#canMove -> fix Ludo move figure issues include GamePlayer#canMoveFigure (used for action skip)
 	 *  - sum #setOnAction of LudoClientMap & fix issue -> not ignore next field
 	 *  - check game casts via instance of
-	 *  - use WinHandler#canPlayerWin and rework of hasPlayerFinished -> in Ludo and TTT game
+	 *  - use WinHandler#canPlayerWin and rework of hasPlayerFinished -> in Ludo, TTT and Wins4 game
 	 *  - rework of FieldRenderState and shadow rendering
 	 *  - LobbyScreen does not update players correctly
 	 *  - new registry for Packets
@@ -27,9 +27,10 @@ public class Main {
 	 *  - add new Test system which skip the loading suff
 	 *  - rework of settings system, create screen dynamic -> create Screen by Setting Type + fix issue (List and Field are not synced -> different instances) -> remove auto save of settings
 	 *  - add server settings
+	 *  - impl. remove player correctly, remove figures, ...
 	 *  - add super class for Windows
 	 *  - new version system
-	 *  - add way to display score in server window
+	 *  - score rework & add way to display score in server window
 	 *  - create Loading Steps, which are load from 0% til 100% -> use ErrorWindow & interrupt loading (Loading Steps) while open/not choose
 	 *  - add new info system form server -> client (add InfoInputPane)
 	 *  - rework of layout and grafic (use always InputPane)

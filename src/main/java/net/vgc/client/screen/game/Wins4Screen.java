@@ -54,7 +54,12 @@ public class Wins4Screen extends GameScreen {
 	}
 	
 	protected void handleConfirmAction() {
-		int column = this.game.getMap().getSelectedColumn();
+		int column = -1;
+		if (this.game.getMap() instanceof Wins4ClientMap map) {
+			column = map.getSelectedColumn();
+		} else {
+			throw new NullPointerException("The map of game 4 wins is null");
+		}
 		if (column != -1) {
 			if (this.getPlayer().isCurrent()) {
 				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), Wins4FieldType.DEFAULT, Wins4FieldPos.of(0, column)));
@@ -88,8 +93,11 @@ public class Wins4Screen extends GameScreen {
 		return this.playerInfo;
 	}
 	
-	protected Wins4ClientMap createGamePane() {
-		return this.game.getMap();
+	protected Pane createGamePane() {
+		if (this.game.getMap() instanceof Wins4ClientMap map) {
+			return map.getStackPane();
+		}
+		throw new NullPointerException("The map of game 4 wins is null");
 	}
 	
 	protected Pane createActionPane() {

@@ -1,67 +1,46 @@
 package net.vgc.server.game.games.ttt.player;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
-import net.vgc.game.games.ttt.map.field.TTTFieldPos;
-import net.vgc.game.games.ttt.player.TTTPlayerType;
-import net.vgc.server.game.games.ttt.TTTServerGame;
+import net.vgc.game.Game;
+import net.vgc.game.map.field.GameFieldPos;
+import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.player.figure.GameFigure;
+import net.vgc.player.Player;
 import net.vgc.server.game.games.ttt.player.figure.TTTServerFigure;
-import net.vgc.server.game.player.ServerGamePlayer;
-import net.vgc.server.player.ServerPlayer;
+import net.vgc.server.game.player.AbstractServerGamePlayer;
+import net.vgc.util.ToString;
 
-public class TTTServerPlayer implements ServerGamePlayer {
+public class TTTServerPlayer extends AbstractServerGamePlayer {
 	
-	protected final TTTServerGame game;
-	protected final ServerPlayer player;
-	protected final TTTPlayerType playerType;
-	protected final List<TTTServerFigure> figures;
+	private final List<GameFigure> figures;
 	
-	public TTTServerPlayer(TTTServerGame game, ServerPlayer player, TTTPlayerType playerType) {
-		this.game = game;
-		this.player = player;
-		this.playerType = playerType;
-		this.figures = createFigures(this, this.playerType);
+	public TTTServerPlayer(Game game, Player player, GamePlayerType playerType) {
+		super(game, player, playerType);
+		this.figures = createFigures(this, playerType);
 	}
 	
-	protected static List<TTTServerFigure> createFigures(TTTServerPlayer player, TTTPlayerType type) {
-		List<TTTServerFigure> figures = Lists.newArrayList();
+	private static List<GameFigure> createFigures(GamePlayer player, GamePlayerType type) {
+		List<GameFigure> figures = Lists.newArrayList();
 		for (int i = 0; i < 5; i++) {
-			figures.add(new TTTServerFigure(player, i));
+			figures.add(new TTTServerFigure(player, i, UUID.randomUUID()));
 		}
 		return figures;
 	}
 	
 	@Override
-	public TTTServerGame getGame() {
-		return this.game;
-	}
-
-	@Override
-	public ServerPlayer getPlayer() {
-		return this.player;
-	}
-	
-	@Override
-	public TTTPlayerType getPlayerType() {
-		return this.playerType;
-	}
-	
-	@Override
-	public List<TTTServerFigure> getFigures() {
+	public List<GameFigure> getFigures() {
 		return this.figures;
 	}
 
 	@Override
-	public TTTServerFigure getFigure(int figure) {
-		return this.figures.get(figure);
-	}
-
-	@Override
-	public List<TTTFieldPos> getWinPoses() {
+	public List<GameFieldPos> getWinPoses() {
 		return Lists.newArrayList();
 	}
 
@@ -77,8 +56,8 @@ public class TTTServerPlayer implements ServerGamePlayer {
 	}
 	
 	@Nullable
-	public TTTServerFigure getUnplacedFigure() {
-		for (TTTServerFigure figure : this.figures) {
+	public GameFigure getUnplacedFigure() {
+		for (GameFigure figure : this.figures) {
 			if (this.getMap().getField(figure) == null) {
 				return figure;
 			}
@@ -88,28 +67,17 @@ public class TTTServerPlayer implements ServerGamePlayer {
 
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof TTTServerPlayer player) {
-			if (!this.game.equals(player.game)) {
-				return false;
-			} else if (!this.player.equals(player.player)) {
-				return false;
-			} else if (!this.playerType.equals(player.playerType)) {
-				return false;
-			} else {
-				return this.figures.equals(player.figures);
-			}
+		if (!super.equals(object)) {
+			return false;
+		} else if (object instanceof TTTServerPlayer player) {
+			return this.figures.equals(player.figures);
 		}
 		return false;
 	}
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("TTTServerPlayer{");
-		builder.append("game=").append(this.game).append(",");
-		builder.append("player=").append(this.player).append(",");
-		builder.append("playerType=").append(this.playerType).append(",");
-		builder.append("figures=").append(this.figures).append("}");
-		return builder.toString();
+		return ToString.toString(this);
 	}
 	
 }

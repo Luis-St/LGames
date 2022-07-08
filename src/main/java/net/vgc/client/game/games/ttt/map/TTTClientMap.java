@@ -1,9 +1,6 @@
 package net.vgc.client.game.games.ttt.map;
 
 import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -16,40 +13,35 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import net.vgc.Constans;
 import net.vgc.client.Client;
-import net.vgc.client.game.games.ttt.TTTClientGame;
+import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
 import net.vgc.client.game.games.ttt.map.field.TTTClientField;
-import net.vgc.client.game.games.ttt.player.TTTClientPlayer;
-import net.vgc.client.game.games.ttt.player.figure.TTTClientFigure;
-import net.vgc.client.game.map.ClientGameMap;
+import net.vgc.client.game.map.AbstractClientGameMap;
+import net.vgc.game.Game;
 import net.vgc.game.GameResult;
-import net.vgc.game.games.ttt.TTTResultLine;
 import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.map.field.GameField;
-import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
-import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.TTTGameResultPacket;
-import net.vgc.network.packet.client.game.UpdateGameMapPacket;
-import net.vgc.player.GameProfile;
+import net.vgc.game.player.figure.GameFigure;
 
-public class TTTClientMap extends GridPane implements ClientGameMap {
+public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
-	protected final Client client;
-	protected final TTTClientGame game;
-	protected final List<TTTClientField> fields = Lists.newArrayList();
-	protected final ToggleGroup group;
+	private final ToggleGroup group;
+	private final GridPane gridPane;
 	
-	public TTTClientMap(Client client, TTTClientGame game) {
-		this.client = client;
-		this.game = game;
+	public TTTClientMap(Client client, Game game) {
+		super(client, game);
 		this.group = new ToggleGroup();
+		this.gridPane = new GridPane();
 		this.init();
 		this.addFields();
 		this.addBorders();
+	}
+	
+	@Override
+	public GridPane getGridPane() {
+		return this.gridPane;
 	}
 	
 	@Override
@@ -69,7 +61,7 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 					oldField.setSelected(true);
 				}
 			}
-			this.fields.stream().filter(TTTClientField::isShadowed).forEach(TTTClientField::resetShadow);
+			this.getFields().stream().filter(GameField::isShadowed).forEach(GameField::clearShadow);
 		});
 	}
 
@@ -87,9 +79,9 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 	}
 	
 	protected void addField(TTTFieldPos fieldPos, int column, int row) {
-		TTTClientField field = new TTTClientField(this.client, this.game, this.group, fieldPos, 150.0);
+		TTTClientField field = new TTTClientField(this.getClient(), this, this.group, fieldPos, 150.0);
 		field.setOnAction((event) -> {
-			if (this.client.getPlayer().isCurrent()) {
+			if (this.getClient().getPlayer().isCurrent()) {
 				if (field.isEmpty() && field.getResult() == GameResult.NO) {
 					field.setShadowed(true);
 				}
@@ -97,8 +89,8 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 				this.group.selectToggle(null);
 			}
 		});
-		this.add(field, column, row);
-		this.fields.add(field);
+		this.add(field.getToggleButton(), column, row);
+		this.addField(field);
 	}
 	
 	public void addBorders() {
@@ -121,65 +113,33 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 	}
 
 	@Override
-	public void init(List<? extends GamePlayer> players) {
-		this.getFields().forEach(TTTClientField::clear);
-	}
-	
-	@Override
-	public TTTClientGame getGame() {
-		return this.game;
+	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
+		return this.getFields().get(fieldPos.getPosition());
 	}
 
 	@Override
-	public List<TTTClientField> getFields() {
-		return this.fields;
-	}
-
-	@Nullable
-	@Override
-	public TTTClientField getField(GameFigure figure) {
-		for (TTTClientField field : this.getFields()) {
-			if (!field.isEmpty() && field.getFigure().equals(figure)) {
-				return field;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public TTTClientField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
-		return this.fields.get(fieldPos.getPosition());
-	}
-
-	@Override
-	public TTTClientField getNextField(GameFigure figure, int count) {
+	public GameField getNextField(GameFigure figure, int count) {
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since tic tac toe figures does not have a next field", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return null;
 	}
 
 	@Override
-	public List<TTTClientField> getHomeFields(GamePlayerType playerType) {
+	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 
 	@Override
-	public List<TTTClientField> getStartFields(GamePlayerType playerType) {
+	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 
 	@Override
-	public List<TTTClientField> getWinFields(GamePlayerType playerType) {
+	public List<GameField> getWinFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
-	}
-	
-	@Override
-	public boolean moveFigureTo(GameFigure figure, GameField field) {
-		LOGGER.warn("Fail to move figure {} of player {}, since tic tac toe figures are not moveable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
-		return false;
 	}
 
 	@Override
-	public TTTClientField getSelectedField() {
+	public GameField getSelectedField() {
 		Toggle toggle = this.group.getSelectedToggle();
 		if (toggle instanceof TTTClientField field) {
 			if (field.isEmpty()) {
@@ -193,7 +153,7 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 		return null;
 	}
 	
-	@Override
+	/*@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
@@ -250,7 +210,7 @@ public class TTTClientMap extends GridPane implements ClientGameMap {
 				LOGGER.warn("Fail to handle game result {}", result);
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public String toString() {

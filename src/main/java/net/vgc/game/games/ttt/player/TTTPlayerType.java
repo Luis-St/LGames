@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import javafx.scene.image.ImageView;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
 
@@ -61,6 +62,11 @@ public enum TTTPlayerType implements GamePlayerType {
 	
 	public String getPath() {
 		return this.path;
+	}
+	
+	@Override
+	public ImageView getImage(double width, double height) {
+		return null;
 	}
 	
 	@Override

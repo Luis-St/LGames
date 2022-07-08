@@ -1,107 +1,43 @@
 package net.vgc.server.game.games.ludo.map.field;
 
-import java.util.Objects;
-
-import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
-import net.vgc.game.games.ludo.player.LudoPlayerType;
-import net.vgc.game.map.field.GameFieldInfo;
-import net.vgc.game.player.field.GameFigure;
-import net.vgc.player.GameProfile;
-import net.vgc.server.game.games.ludo.player.figure.LudoServerFigure;
-import net.vgc.server.game.map.field.ServerGameField;
-import net.vgc.util.Util;
+import net.vgc.game.map.GameMap;
+import net.vgc.game.map.field.GameFieldPos;
+import net.vgc.game.map.field.GameFieldType;
+import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.player.figure.GameFigure;
+import net.vgc.server.game.map.field.AbstractServerGameField;
+import net.vgc.util.ToString;
 
-public class LudoServerField implements ServerGameField {
+public class LudoServerField extends AbstractServerGameField {
 	
-	protected final LudoFieldType fieldType;
-	protected final LudoPlayerType colorType;
-	protected final LudoFieldPos fieldPos;
-	protected LudoServerFigure figure;
-	
-	public LudoServerField(LudoFieldType fieldType, LudoPlayerType colorType, LudoFieldPos fieldPos) {
-		this.fieldType = fieldType;
-		this.colorType = colorType;
-		this.fieldPos = fieldPos;
-	}
-	
-	@Override
-	public LudoFieldType getFieldType() {
-		return this.fieldType;
-	}
-	
-	public LudoPlayerType getColorType() {
-		return this.colorType;
-	}
-	
-	@Override
-	public LudoFieldPos getFieldPos() {
-		return this.fieldPos;
+	public LudoServerField(GameMap map, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos) {
+		super(map, fieldType, colorType, fieldPos);
 	}
 
 	@Override
 	public boolean isHome() {
-		return this.fieldType == LudoFieldType.HOME;
+		return this.getFieldType() == LudoFieldType.HOME;
 	}
 
 	@Override
 	public boolean isStart() {
-		return this.fieldPos.isStart();
+		return this.getFieldPos().isStart();
 	}
 	
 	@Override
 	public boolean isStartFor(GameFigure figure) {
-		return figure.getStartPos().equals(this.fieldPos);
+		return figure.getStartPos().equals(this.getFieldPos());
 	}
 	
 	@Override
 	public boolean isWin() {
-		return this.fieldType == LudoFieldType.WIN;
-	}
-
-	@Override
-	public LudoServerFigure getFigure() {
-		return this.figure;
-	}
-
-	@Override
-	public void setFigure(GameFigure figure) {
-		this.figure = (LudoServerFigure) figure;
-	}
-	
-	@Override
-	public GameFieldInfo getFieldInfo() {
-		if (this.isEmpty()) {
-			return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
-		}
-		LudoServerFigure figure = this.getFigure();
-		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
-	}
-	
-	@Override
-	public boolean equals(Object object) {
-		if (object instanceof LudoServerField field) {
-			if (!this.fieldType.equals(field.fieldType)) {
-				return false;
-			} else if (!this.colorType.equals(field.colorType)) {
-				return false;
-			}  else if (!this.fieldPos.equals(field.fieldPos)) {
-				return false;
-			} else {
-				return Objects.equals(this.figure, field.figure);
-			}
-		}
-		return false;
+		return this.getFieldType() == LudoFieldType.WIN;
 	}
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("LudoServerField{");
-		builder.append("fieldType=").append(this.fieldType).append(",");
-		builder.append("colorType=").append(this.colorType).append(",");
-		builder.append("fieldPos=").append(this.fieldPos).append(",");
-		builder.append("figure=").append(this.figure == null ? "null" : this.figure).append("}");
-		return builder.toString();
+		return ToString.toString(this, "result");
 	}
 
 }

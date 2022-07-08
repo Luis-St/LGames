@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.vgc.game.Game;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
@@ -12,50 +13,67 @@ import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.game.player.figure.GameFigure;
 import net.vgc.server.dedicated.DedicatedServer;
-import net.vgc.server.game.games.ludo.LudoServerGame;
 import net.vgc.server.game.games.ludo.map.field.LudoServerField;
 import net.vgc.server.game.games.ludo.player.LudoServerPlayer;
-import net.vgc.server.game.games.ludo.player.figure.LudoServerFigure;
-import net.vgc.server.game.map.ServerGameMap;
+import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidValueException;
 
-public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket> {
+public class LudoServerMap extends AbstractServerGameMap {
 	
-	protected final DedicatedServer server;
-	protected final LudoServerGame game;
-	protected final List<LudoServerField> fields = Util.make(Lists.newArrayList(), (fields) -> {
-		for (int i = 0; i < 40; i++) {
-			if (i == 0) {
-				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.GREEN, LudoFieldPos.ofGreen(i)));
-			} else if (i == 10) {
-				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.YELLOW, LudoFieldPos.ofGreen(i)));
-			} else if (i == 20) {
-				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.BLUE, LudoFieldPos.ofGreen(i)));
-			} else if (i == 30) {
-				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.RED, LudoFieldPos.ofGreen(i)));
+	private final List<GameField> homeFields;
+	private final List<GameField> winFields;
+	
+	public LudoServerMap(DedicatedServer server, Game game) {
+		super(server, game);
+		this.homeFields = Lists.newArrayList();
+		this.winFields = Lists.newArrayList();
+		this.addFields();
+	}
+	
+	@Override
+	public void init(List<GamePlayer> players) {
+		super.init(players);
+		for (GamePlayer gamePlayer : players) {
+			if (gamePlayer instanceof LudoServerPlayer player) {
+				LOGGER.debug("Add figures ({}) of player {}, to their home fields", player.getFigures().size(), player.getPlayer().getProfile().getName());
+				for (GameFigure figure : player.getFigures()) {
+					this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos()).setFigure(figure);
+				}
 			} else {
-				fields.add(new LudoServerField(LudoFieldType.DEFAULT, LudoPlayerType.NO, LudoFieldPos.ofGreen(i)));
+				LOGGER.error("Can not add a game player of type {} to a ludo game", gamePlayer.getClass().getSimpleName());
+				throw new RuntimeException("Can not add a game player of type " + gamePlayer.getClass().getSimpleName() + " to a ludo game");
 			}
 		}
-	});
-	protected final List<LudoServerField> homeFields = Util.make(Lists.newArrayList(), (fields) -> {
-		for (int i = 0; i < 16; i++) {
-			fields.add(new LudoServerField(LudoFieldType.HOME, this.getFieldColor(i), LudoFieldPos.of(i % 4)));
-		}
-	});
-	protected final List<LudoServerField> winFields = Util.make(Lists.newArrayList(), (fields) -> {
-		for (int i = 0; i < 16; i++) {
-			fields.add(new LudoServerField(LudoFieldType.WIN, this.getFieldColor(i), LudoFieldPos.of(i % 4)));
-		}
-	});
+	}
 	
-	protected LudoPlayerType getFieldColor(int i) {
+	@Override
+	public void addFields() {
+		for (int i = 0; i < 40; i++) {
+			if (i == 0) {
+				this.addField(new LudoServerField(this, LudoFieldType.DEFAULT, LudoPlayerType.GREEN, LudoFieldPos.ofGreen(i)));
+			} else if (i == 10) {
+				this.addField(new LudoServerField(this, LudoFieldType.DEFAULT, LudoPlayerType.YELLOW, LudoFieldPos.ofGreen(i)));
+			} else if (i == 20) {
+				this.addField(new LudoServerField(this, LudoFieldType.DEFAULT, LudoPlayerType.BLUE, LudoFieldPos.ofGreen(i)));
+			} else if (i == 30) {
+				this.addField(new LudoServerField(this, LudoFieldType.DEFAULT, LudoPlayerType.RED, LudoFieldPos.ofGreen(i)));
+			} else {
+				this.addField(new LudoServerField(this, LudoFieldType.DEFAULT, LudoPlayerType.NO, LudoFieldPos.ofGreen(i)));
+			}
+		}
+		for (int i = 0; i < 16; i++) {
+			this.homeFields.add(new LudoServerField(this, LudoFieldType.HOME, this.getFieldColor(i), LudoFieldPos.of(i % 4)));
+		}
+		for (int i = 0; i < 16; i++) {
+			this.winFields.add(new LudoServerField(this, LudoFieldType.WIN, this.getFieldColor(i), LudoFieldPos.of(i % 4)));
+		}
+	}
+	
+	private LudoPlayerType getFieldColor(int i) {
 		if (Mth.isInBounds(i, 0, 3)) {
 			return LudoPlayerType.GREEN;
 		} else if (Mth.isInBounds(i, 4, 7)) {
@@ -67,56 +85,15 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 		}
 		throw new InvalidValueException("Fail to get field color for index " + i);
 	}
-	
-	public LudoServerMap(DedicatedServer server, LudoServerGame game) {
-		this.server = server;
-		this.game = game;
-	}
-	
-	@Override
-	public void init(List<? extends GamePlayer> players) {
-		this.getFields().forEach(LudoServerField::clear);
-		for (GamePlayer gamePlayer : players) {
-			if (gamePlayer instanceof LudoServerPlayer player) {
-				LOGGER.debug("Add figures ({}) of player {}, to their home fields", player.getFigures().size(), player.getPlayer().getProfile().getName());
-				for (LudoServerFigure figure : player.getFigures()) {
-					this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos()).setFigure(figure);
-				}
-			} else {
-				LOGGER.error("Can not add a game player of type {} to a ludo game", gamePlayer.getClass().getSimpleName());
-				throw new RuntimeException("Can not add a game player of type " + gamePlayer.getClass().getSimpleName() + " to a ludo game");
-			}
-		}
-	}
-	
-	@Override
-	public LudoServerGame getGame() {
-		return this.game;
-	}
 
 	@Override
-	public List<LudoServerField> getFields() {
-		return Util.concatLists(this.fields, this.homeFields, this.winFields);
-	}
-
-	@Override
-	public LudoServerField getField(GameFigure figure) {
-		for (LudoServerField field : this.getFields()) {
-			if (!field.isEmpty() && field.getFigure().equals(figure)) {
-				return field;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public LudoServerField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
+	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
 		playerType = Util.warpNullTo(playerType, LudoPlayerType.NO);
 		if (fieldType == LudoFieldType.DEFAULT) {
 			if (playerType != LudoPlayerType.NO && fieldPos.getPosition() % 10 == 0) {
-				return this.fields.get(fieldPos.getPosition());
+				return this.getFields().get(fieldPos.getPosition());
 			}
-			return this.fields.get(fieldPos.getPosition());
+			return this.getFields().get(fieldPos.getPosition());
 		} else if (playerType != LudoPlayerType.NO) {
 			if (fieldType == LudoFieldType.HOME) {
 				return this.getHomeFields(playerType).get(fieldPos.getPositionFor(playerType));
@@ -129,10 +106,10 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 	}
 
 	@Override
-	public LudoServerField getNextField(GameFigure figure, int count) {
+	public GameField getNextField(GameFigure figure, int count) {
 		String playerName = figure.getPlayer().getPlayer().getProfile().getName();
-		LudoPlayerType playerType = (LudoPlayerType) figure.getPlayerType();
-		LudoServerField currentField = this.getField(figure);
+		GamePlayerType playerType = figure.getPlayerType();
+		GameField currentField = this.getField(figure);
 		if (currentField != null) {
 			if (count > 0) {
 				if (currentField.getFieldType() == LudoFieldType.HOME) {
@@ -153,7 +130,7 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 						} else if (position > 39) {
 							return this.getWinFields(playerType).get(position - 40);
 						} else {
-							return this.fields.get(LudoFieldPos.of(playerType, position).getPosition());
+							return this.getFields().get(LudoFieldPos.of(playerType, position).getPosition());
 						}
 					}
 				}
@@ -166,7 +143,7 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 	}
 
 	@Override
-	public List<LudoServerField> getHomeFields(GamePlayerType playerType) {
+	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		switch ((LudoPlayerType) playerType) {
 			case GREEN: return this.homeFields.subList(0, 4);
 			case YELLOW: return this.homeFields.subList(4, 8);
@@ -179,9 +156,9 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 	}
 
 	@Override
-	public List<LudoServerField> getStartFields(GamePlayerType playerType) {
+	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return switch ((LudoPlayerType) playerType) {
-			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.fields.get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
+			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
 			default -> {
 				LOGGER.warn("Fail to get start field for type {}", playerType);
 				yield Lists.newArrayList();
@@ -190,7 +167,7 @@ public class LudoServerMap implements ServerGameMap, PacketHandler<ServerPacket>
 	}
 
 	@Override
-	public List<LudoServerField> getWinFields(GamePlayerType playerType) {
+	public List<GameField> getWinFields(GamePlayerType playerType) {
 		switch ((LudoPlayerType) playerType) {
 			case GREEN: return this.winFields.subList(0, 4);
 			case YELLOW: return this.winFields.subList(4, 8);

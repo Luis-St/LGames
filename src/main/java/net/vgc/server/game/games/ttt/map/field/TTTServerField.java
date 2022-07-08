@@ -1,35 +1,31 @@
 package net.vgc.server.game.games.ttt.map.field;
 
-import java.util.Objects;
-
-import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.map.field.TTTFieldType;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
-import net.vgc.game.map.field.GameFieldInfo;
-import net.vgc.game.player.field.GameFigure;
-import net.vgc.player.GameProfile;
-import net.vgc.server.game.games.ttt.player.figure.TTTServerFigure;
-import net.vgc.server.game.map.field.ServerGameField;
-import net.vgc.util.Util;
+import net.vgc.game.map.GameMap;
+import net.vgc.game.map.field.GameFieldPos;
+import net.vgc.game.map.field.GameFieldType;
+import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.player.figure.GameFigure;
+import net.vgc.server.game.map.field.AbstractServerGameField;
+import net.vgc.util.ToString;
 
-public class TTTServerField implements ServerGameField {
+public class TTTServerField extends AbstractServerGameField {
 	
-	protected final TTTFieldPos fieldPos;
-	protected TTTServerFigure figure;
-	
-	public TTTServerField(TTTFieldPos fieldPos) {
-		this.fieldPos = fieldPos;
+	public TTTServerField(GameMap map, GameFieldPos fieldPos) {
+		super(map, TTTFieldType.DEFAULT, TTTPlayerType.NO, fieldPos);
 	}
 	
 	@Override
-	public TTTFieldType getFieldType() {
+	public GameFieldType getFieldType() {
 		LOGGER.warn("Fail to get field type of field {}, since tic tac toe fields does not have a field type", this.getFieldPos().getPosition());
-		return TTTFieldType.DEFAULT;
+		return super.getFieldType();
 	}
-
+	
 	@Override
-	public TTTFieldPos getFieldPos() {
-		return this.fieldPos;
+	public GamePlayerType getColorType() {
+		LOGGER.warn("Fail to get field color type of field {}, since tic tac toe fields does not have a field color type", this.getFieldPos().getPosition());
+		return super.getColorType();
 	}
 
 	@Override
@@ -53,42 +49,8 @@ public class TTTServerField implements ServerGameField {
 	}
 	
 	@Override
-	public TTTServerFigure getFigure() {
-		return this.figure;
-	}
-
-	@Override
-	public void setFigure(GameFigure figure) {
-		this.figure = (TTTServerFigure) figure;
-	}
-	
-	@Override
-	public GameFieldInfo getFieldInfo() {
-		if (this.isEmpty()) {
-			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.fieldPos, GameProfile.EMPTY, -1, Util.EMPTY_UUID);
-		}
-		TTTServerFigure figure = this.getFigure();
-		return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.fieldPos, figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
-	}
-	
-	@Override
-	public boolean equals(Object object) {
-		if (object instanceof TTTServerField field) {
-			if (!this.fieldPos.equals(field.fieldPos)) {
-				return false;
-			} else {
-				return Objects.equals(this.figure, field.figure);
-			}
-		}
-		return false;
-	}
-	
-	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("TTTServerField{");
-		builder.append("fieldPos=").append(this.fieldPos).append(",");
-		builder.append("figure=").append(this.figure == null ? "null" : this.figure).append("}");
-		return builder.toString();
+		return ToString.toString(this, "fieldType", "colorType", "result");
 	}
 
 }

@@ -6,8 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.vgc.game.Game;
-import net.vgc.server.game.map.field.ServerGameField;
-import net.vgc.server.game.player.ServerGamePlayer;
+import net.vgc.game.map.field.GameField;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
@@ -23,27 +23,27 @@ public interface DiceHandler {
 	
 	Dice getDice();
 	
-	boolean canRoll(ServerGamePlayer player);
+	boolean canRoll(GamePlayer player);
 	
-	int roll(ServerGamePlayer player);
+	int roll(GamePlayer player);
 	
-	int rollExclude(ServerGamePlayer player, int value);
+	int rollExclude(GamePlayer player, int value);
 	
-	int rollPreferred(ServerGamePlayer player, int value, int rolls);
+	int rollPreferred(GamePlayer player, int value, int rolls);
 	
-	boolean canRollAgain(ServerGamePlayer player, int count);
+	boolean canRollAgain(GamePlayer player, int count);
 	
-	boolean canPerformGameAction(ServerGamePlayer player, int count);
+	boolean canPerformGameAction(GamePlayer player, int count);
 	
-	void performGameAction(ServerGamePlayer player, int count);
+	void performGameAction(GamePlayer player, int count);
 	
-	boolean canRollAfterMove(ServerGamePlayer player, ServerGameField oldField, ServerGameField newField, int count);
+	boolean canRollAfterMove(GamePlayer player, GameField oldField, GameField newField, int count);
 	
-	default boolean hasPlayerRolledDice(ServerGamePlayer player) {
+	default boolean hasPlayerRolledDice(GamePlayer player) {
 		return Util.mapList(this.getCountHistory(), PlayerDiceInfo::getPlayer).contains(player) && Mth.isInBounds(this.getLastCount(player), this.getMin(), this.getMax());
 	}
 	
-	int getLastCount(ServerGamePlayer player);
+	int getLastCount(GamePlayer player);
 	
 	List<PlayerDiceInfo> getCountHistory();
 	

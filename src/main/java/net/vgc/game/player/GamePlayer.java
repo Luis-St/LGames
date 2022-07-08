@@ -3,6 +3,8 @@ package net.vgc.game.player;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,7 +12,7 @@ import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
-import net.vgc.game.player.field.GameFigure;
+import net.vgc.game.player.figure.GameFigure;
 import net.vgc.player.Player;
 
 public interface GamePlayer {
@@ -23,15 +25,26 @@ public interface GamePlayer {
 	
 	GamePlayerType getPlayerType();
 	
-	GameMap getMap();
+	default GameMap getMap() {
+		return this.getGame().getMap();
+	}
 	
-	List<? extends GameFigure> getFigures();
+	List<GameFigure> getFigures();
 	
 	default int getFigureCount() {
 		return this.getFigures().size();
 	}
 	
-	GameFigure getFigure(int figure);
+	@Nullable
+	default GameFigure getFigure(int count) {
+		for (GameFigure figure : this.getFigures()) {
+			if (figure.getCount() == count) {
+				return figure;
+			}
+		}
+		LOGGER.warn("Fail to get figure for count {} from player {}", count, this.getPlayer().getProfile().getName());
+		return null;
+	}
 	
 	default boolean hasFigureAt(Predicate<GameField> predicate) {
 		for (GameFigure figure : this.getFigures()) {
@@ -64,7 +77,7 @@ public interface GamePlayer {
 		return false;
 	}
 	
-	List<? extends GameFieldPos> getWinPoses();
+	List<GameFieldPos> getWinPoses();
 	
 	int getRollCount();
 	

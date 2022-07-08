@@ -29,7 +29,7 @@ import net.vgc.util.streams.InfoPrintStream;
 
 public class Util {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(Util.class);
+	protected static final Logger LOGGER = LogManager.getLogger();
 	public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 	
 	public static <T> T make(T object, Consumer<T> consumer) {	

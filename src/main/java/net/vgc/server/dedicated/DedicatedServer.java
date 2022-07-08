@@ -39,6 +39,7 @@ import net.vgc.Constans;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.language.TranslationKey;
@@ -49,7 +50,6 @@ import net.vgc.network.packet.PacketEncoder;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
-import net.vgc.server.game.ServerGame;
 import net.vgc.server.network.ServerPacketListener;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.ExceptionHandler;
@@ -71,7 +71,7 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 	protected TreeItem<String> playersTreeItem;
 	protected UUID admin;
 	protected ServerPlayer adminPlayer;
-	protected ServerGame game;
+	protected Game game;
 	
 	public DedicatedServer(String host, int port, Path serverDirectory) throws Exception {
 		this.host = host;
@@ -209,9 +209,7 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 	
 	@Override
 	public void handlePacket(ServerPacket packet) {
-		if (this.game != null) {
-			this.game.handlePacket(packet);
-		}
+		
 	}
 	
 	public String getHost() {
@@ -246,11 +244,11 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 		return this.playerList;
 	}
 	
-	public ServerGame getGame() {
+	public Game getGame() {
 		return this.game;
 	}
 	
-	public void setGame(ServerGame game) {
+	public void setGame(Game game) {
 		this.game = game;
 	}
 	

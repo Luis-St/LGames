@@ -1,7 +1,6 @@
 package net.vgc.client.game.games.ludo.map;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
@@ -12,43 +11,42 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import net.vgc.Constans;
 import net.vgc.client.Client;
-import net.vgc.client.game.games.ludo.LudoClientGame;
+import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
 import net.vgc.client.game.games.ludo.map.field.LudoClientField;
 import net.vgc.client.game.games.ludo.player.LudoClientPlayer;
-import net.vgc.client.game.games.ludo.player.figure.LudoClientFigure;
-import net.vgc.client.game.map.ClientGameMap;
+import net.vgc.client.game.map.AbstractClientGameMap;
 import net.vgc.client.player.LocalPlayer;
+import net.vgc.game.Game;
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
 import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
-import net.vgc.game.map.field.GameFieldInfo;
+import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.UpdateGameMapPacket;
-import net.vgc.player.GameProfile;
+import net.vgc.game.player.figure.GameFigure;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
-public class LudoClientMap extends GridPane implements ClientGameMap, PacketHandler<ClientPacket> {
+public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
-	protected final Client client;
-	protected final LudoClientGame game;
-	protected final List<LudoClientField> fields = Lists.newArrayList();
-	protected final List<LudoClientField> homeFields = Lists.newArrayList();
-	protected final List<LudoClientField> winFields = Lists.newArrayList();
-	protected final ToggleGroup group;
+	private final ToggleGroup group;
+	private final GridPane gridPane;
+	private final List<GameField> homeFields = Lists.newArrayList();
+	private final List<GameField> winFields = Lists.newArrayList();
 	
-	public LudoClientMap(Client client, LudoClientGame game) {
-		this.client = client;
-		this.game = game;
+	public LudoClientMap(Client client, Game game) {
+		super(client, game);
 		this.group = new ToggleGroup();
+		this.gridPane = new GridPane();
 		this.init();
 		this.addFields();
+	}
+	
+	@Override
+	public GridPane getGridPane() {
+		return this.gridPane;
 	}
 	
 	@Override
@@ -59,9 +57,9 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 		this.setPadding(new Insets(20.0));
 		this.setGridLinesVisible(Constans.DEBUG);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-			LocalPlayer player = this.client.getPlayer();
+			LocalPlayer player = this.getClient().getPlayer();
 			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
-				if (newValue instanceof LudoClientField field && field.canSelectField() && field.getFigure().getPlayerType() == this.game.getPlayerType(this.game.getPlayerFor(player))) {
+				if (newValue instanceof LudoClientField field && field.canSelect() && field.getFigure().getPlayerType() == this.getGame().getPlayerType(this.getGame().getPlayerFor(player))) {
 					
 				} else {
 					this.group.selectToggle(null);
@@ -69,7 +67,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 			} else {
 				this.group.selectToggle(null);
 			}
-			this.fields.stream().filter(LudoClientField::isShadowed).forEach(LudoClientField::resetShadow);
+			this.getFields().stream().filter(GameField::isShadowed).forEach(GameField::clearShadow);
 		});
 	}
 	
@@ -150,22 +148,22 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 	
 	protected void addField(LudoFieldType fieldType, LudoPlayerType colorType, LudoFieldPos fieldPos, int column, int row) {
-		LudoClientField field = new LudoClientField(this.group, fieldType, colorType, fieldPos, 67.0);
+		LudoClientField field = new LudoClientField(this.getClient(), this, this.group, fieldType, colorType, fieldPos, 67.0);
 		field.setOnAction((event) -> {
-			LocalPlayer player = this.client.getPlayer();
-			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6) && field.canSelectField()) {
-				LudoClientFigure figure = field.getFigure();
-				if (figure != null && figure.getPlayerType() == this.game.getPlayerType(this.game.getPlayerFor(player))) {
-					LudoClientField nextField = this.getNextField(figure, player.getCount());
+			LocalPlayer player = this.getClient().getPlayer();
+			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6) && field.canSelect()) {
+				GameFigure figure = field.getFigure();
+				if (figure != null && figure.getPlayerType() == this.getGame().getPlayerType(this.getGame().getPlayerFor(player))) {
+					GameField nextField = this.getNextField(figure, player.getCount());
 					if (nextField != null) {
 						nextField.setShadowed(true);
 					}
 				}
 			}
 		});
-		this.add(field, column, row);
+		this.add(field.getToggleButton(), column, row);
 		if (fieldType == LudoFieldType.DEFAULT) {
-			this.fields.add(field);
+			this.addField(field);
 		} else if (fieldType == LudoFieldType.HOME) {
 			this.homeFields.add(field);
 		} else if (fieldType == LudoFieldType.WIN) {
@@ -176,13 +174,13 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 	
 	@Override
-	public void init(List<? extends GamePlayer> players) {
-		this.getFields().forEach(LudoClientField::clear);
+	public void init(List<GamePlayer> players) {
+		super.init(players);
 		for (GamePlayer gamePlayer : players) {
 			if (gamePlayer instanceof LudoClientPlayer player) {
 				LOGGER.debug("Add figures ({}) of player {}, to their home fields", player.getFigures().size(), player.getPlayer().getProfile().getName());
-				for (LudoClientFigure figure : player.getFigures()) {
-					LudoClientField field = this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos());
+				for (GameFigure figure : player.getFigures()) {
+					GameField field = this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos());
 					field.setFigure(figure);
 				}
 			} else {
@@ -191,35 +189,15 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 			}
 		}
 	}
-	
-	@Override
-	public LudoClientGame getGame() {
-		return this.game;
-	}
 
 	@Override
-	public List<LudoClientField> getFields() {
-		return Util.concatLists(this.fields, this.homeFields, this.winFields);
-	}
-
-	@Override
-	public LudoClientField getField(GameFigure figure) {
-		for (LudoClientField field : this.getFields()) {
-			if (!field.isEmpty() && field.getFigure().equals(figure)) {
-				return field;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public LudoClientField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
+	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
 		playerType = Util.warpNullTo(playerType, LudoPlayerType.NO);
 		if (fieldType == LudoFieldType.DEFAULT) {
 			if (playerType != LudoPlayerType.NO && fieldPos.getPosition() % 10 == 0) {
-				return this.fields.get(fieldPos.getPosition());
+				return this.getFields().get(fieldPos.getPosition());
 			}
-			return this.fields.get(fieldPos.getPosition());
+			return this.getFields().get(fieldPos.getPosition());
 		} else if (playerType != LudoPlayerType.NO) {
 			if (fieldType == LudoFieldType.HOME) {
 				return this.getHomeFields(playerType).get(fieldPos.getPositionFor(playerType));
@@ -232,10 +210,10 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 
 	@Override
-	public LudoClientField getNextField(GameFigure figure, int count) {
+	public GameField getNextField(GameFigure figure, int count) {
 		String playerName = figure.getPlayer().getPlayer().getProfile().getName();
-		LudoPlayerType playerType = (LudoPlayerType) figure.getPlayerType();
-		LudoClientField currentField = this.getField(figure);
+		GamePlayerType playerType = figure.getPlayerType();
+		GameField currentField = this.getField(figure);
 		if (currentField != null) {
 			if (count > 0) {
 				if (currentField.getFieldType() == LudoFieldType.HOME) {
@@ -256,7 +234,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 						} else if (position > 39) {
 							return this.getWinFields(playerType).get(position - 40);
 						} else {
-							return this.fields.get(LudoFieldPos.of(playerType, position).getPosition());
+							return this.getFields().get(LudoFieldPos.of(playerType, position).getPosition());
 						}
 					}
 				}
@@ -269,7 +247,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 
 	@Override
-	public List<LudoClientField> getHomeFields(GamePlayerType playerType) {
+	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		switch ((LudoPlayerType) playerType) {
 			case GREEN: return this.homeFields.subList(0, 4);
 			case YELLOW: return this.homeFields.subList(4, 8);
@@ -282,9 +260,9 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 
 	@Override
-	public List<LudoClientField> getStartFields(GamePlayerType playerType) {
+	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return switch ((LudoPlayerType) playerType) {
-			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.fields.get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
+			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
 			default -> {
 				LOGGER.warn("Fail to get start field for type {}", playerType);
 				yield Lists.newArrayList();
@@ -293,7 +271,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 
 	@Override
-	public List<LudoClientField> getWinFields(GamePlayerType playerType) {
+	public List<GameField> getWinFields(GamePlayerType playerType) {
 		switch ((LudoPlayerType) playerType) {
 			case GREEN: return this.winFields.subList(0, 4);
 			case YELLOW: return this.winFields.subList(4, 8);
@@ -306,7 +284,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 	}
 	
 	@Override
-	public LudoClientField getSelectedField() {
+	public GameField getSelectedField() {
 		Toggle toggle = this.group.getSelectedToggle();
 		if (toggle instanceof LudoClientField field) {
 			if (!field.isEmpty()) {
@@ -320,7 +298,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 		return null;
 	}
 	
-	@Override
+/*	@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
@@ -354,7 +332,7 @@ public class LudoClientMap extends GridPane implements ClientGameMap, PacketHand
 				}
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public String toString() {

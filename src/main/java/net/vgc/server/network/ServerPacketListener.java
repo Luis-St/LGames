@@ -8,9 +8,11 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.google.common.collect.Lists;
 
-import net.vgc.client.game.ClientGame;
+import net.vgc.game.Game;
 import net.vgc.game.GameType;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
+import net.vgc.game.player.figure.GameFigure;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientJoinedPacket;
@@ -23,10 +25,7 @@ import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedServer;
-import net.vgc.server.game.ServerGame;
 import net.vgc.server.game.dice.DiceHandler;
-import net.vgc.server.game.player.ServerGamePlayer;
-import net.vgc.server.game.player.figure.ServerGameFigure;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
@@ -48,7 +47,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 		this.server.leavePlayer(this.connection, this.server.getPlayerList().getPlayer(uuid));
 	}
 	
-	public <S extends ServerGame, C extends ClientGame> void handlePlayGameRequest(GameType<S, C> gameType, List<GameProfile> profiles) {
+	public <S extends Game, C extends Game> void handlePlayGameRequest(GameType<S, C> gameType, List<GameProfile> profiles) {
 		MutableBoolean mutable = new MutableBoolean(false);
 		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(profiles).stream().filter((player) -> {
 			if (player.isPlaying()) {
@@ -90,10 +89,10 @@ public class ServerPacketListener extends AbstractPacketListener {
 		}
 	}
 	
-	protected List<GamePlayerInfo> createPlayerInfos(List<? extends ServerGamePlayer> players) {
+	protected List<GamePlayerInfo> createPlayerInfos(List<GamePlayer> players) {
 		List<GamePlayerInfo> playerInfos = Lists.newArrayList();
-		for (ServerGamePlayer player : players) {
-			playerInfos.add(new GamePlayerInfo(player.getPlayer().getProfile(), player.getPlayerType(), Util.mapList(player.getFigures(), ServerGameFigure::getUUID)));
+		for (GamePlayer player : players) {
+			playerInfos.add(new GamePlayerInfo(player.getPlayer().getProfile(), player.getPlayerType(), Util.mapList(player.getFigures(), GameFigure::getUUID)));
 		}
 		return playerInfos;
 	}
@@ -102,7 +101,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (player != null) {
 			if (this.server.isAdmin(player)) {
-				ServerGame game = this.server.getGame();
+				Game game = this.server.getGame();
 				if (game != null) {
 					if (!game.nextMatch()) {
 						LOGGER.warn("Fail to start new match of game {}", game.getType().getInfoName());
@@ -124,9 +123,9 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleRollDiceRequest(GameProfile profile) {
-		ServerGame game = this.server.getGame();
+		Game game = this.server.getGame();
 		if (game != null) {
-			ServerGamePlayer player = game.getPlayerFor(profile);
+			GamePlayer player = game.getPlayerFor(profile);
 			if (player != null) {
 				if (game.isDiceGame()) {
 					DiceHandler diceHandler = game.getDiceHandler();
@@ -170,7 +169,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 	}
 	
 	public void handleExitGameRequest(GameProfile profile) {
-		ServerGame game = this.server.getGame();
+		Game game = this.server.getGame();
 		if (game != null) {
 			if(!game.removePlayer(game.getPlayerFor(profile), true)) {
 				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getInfoName());

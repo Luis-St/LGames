@@ -3,50 +3,25 @@ package net.vgc.server.game.games.ludo.player.figure;
 import java.util.UUID;
 
 import net.vgc.game.games.ludo.map.field.LudoFieldPos;
-import net.vgc.game.games.ludo.player.LudoPlayerType;
-import net.vgc.game.player.field.GameFigure;
-import net.vgc.server.game.games.ludo.player.LudoServerPlayer;
-import net.vgc.server.game.player.figure.ServerGameFigure;
+import net.vgc.game.map.field.GameFieldPos;
+import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.figure.AbstractGameFigure;
+import net.vgc.game.player.figure.GameFigure;
+import net.vgc.util.ToString;
 
-public class LudoServerFigure implements ServerGameFigure {
+public class LudoServerFigure extends AbstractGameFigure {
 	
-	protected final LudoServerPlayer player;
-	protected final int count;
-	protected final UUID uuid;
-	
-	public LudoServerFigure(LudoServerPlayer player, int count) {
-		this.player = player;
-		this.count = count;
-		this.uuid = UUID.randomUUID();
+	public LudoServerFigure(GamePlayer player, int count, UUID uuid) {
+		super(player, count, uuid);
 	}
 	
 	@Override
-	public LudoServerPlayer getPlayer() {
-		return this.player;
-	}
-
-	@Override
-	public LudoPlayerType getPlayerType() {
-		return this.player.getPlayerType();
-	}
-
-	@Override
-	public int getCount() {
-		return this.count;
-	}
-
-	@Override
-	public UUID getUUID() {
-		return this.uuid;
-	}
-
-	@Override
-	public LudoFieldPos getHomePos() {
-		return LudoFieldPos.of(this.count);
+	public GameFieldPos getHomePos() {
+		return LudoFieldPos.of(this.getCount());
 	}
 	
 	@Override
-	public LudoFieldPos getStartPos() {
+	public GameFieldPos getStartPos() {
 		return LudoFieldPos.of(this.getPlayerType(), 0);
 	}
 	
@@ -61,25 +36,8 @@ public class LudoServerFigure implements ServerGameFigure {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof LudoServerFigure figure) {
-			if (!this.player.equals(figure.player)) {
-				return false;
-			} else if (this.count != figure.count) {
-				return false;
-			} else {
-				return this.uuid.equals(figure.uuid);
-			}
-		}
-		return false;
-	}
-	
-	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("LudoServerFigure{");
-		builder.append("count=").append(this.count).append(",");
-		builder.append("uuid=").append(this.uuid).append("}");
-		return builder.toString();
+		return ToString.toString(this, "player");
 	}
 
 }

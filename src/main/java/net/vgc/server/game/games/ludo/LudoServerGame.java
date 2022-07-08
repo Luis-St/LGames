@@ -1,144 +1,63 @@
 package net.vgc.server.game.games.ludo;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
 import net.vgc.client.game.games.ludo.LudoClientGame;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
-import net.vgc.game.games.ludo.map.field.LudoFieldPos;
-import net.vgc.game.games.ludo.map.field.LudoFieldType;
 import net.vgc.game.games.ludo.player.LudoPlayerType;
-import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.game.score.PlayerScore;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
-import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.LudoGameResultPacket;
-import net.vgc.network.packet.client.game.UpdateGameMapPacket;
-import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
-import net.vgc.network.packet.server.ServerPacket;
-import net.vgc.network.packet.server.game.SelectGameFieldPacket;
-import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedServer;
-import net.vgc.server.game.ServerGame;
+import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.game.dice.DiceHandler;
 import net.vgc.server.game.games.ludo.dice.LudoDiceHandler;
 import net.vgc.server.game.games.ludo.map.LudoServerMap;
-import net.vgc.server.game.games.ludo.map.field.LudoServerField;
 import net.vgc.server.game.games.ludo.player.LudoServerPlayer;
-import net.vgc.server.game.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.server.game.games.ludo.win.LudoWinHandler;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Mth;
-import net.vgc.util.Util;
 
-public class LudoServerGame implements ServerGame {
+public class LudoServerGame extends AbstractServerGame {
 	
-	protected final DedicatedServer server;
-	protected final LudoServerMap map;
-	protected final List<LudoServerPlayer> players;
 	protected final LudoDiceHandler diceHandler;
-	protected final LudoWinHandler winHandler;
-	protected LudoServerPlayer player;
 	
 	public LudoServerGame(DedicatedServer server, List<ServerPlayer> players) {
-		this.server = server;
-		this.map = new LudoServerMap(this.server, this);
-		this.players = createGamePlayers(this, players, 4);
+		super(server, LudoServerMap::new, players, LudoPlayerType.values(), (game, player, playerType) -> {
+			return new LudoServerPlayer(game, player, playerType, 4);
+		}, new LudoWinHandler());
 		this.diceHandler = new LudoDiceHandler(this, 1, 6);
-		this.winHandler = new LudoWinHandler();
-	}
-	
-	protected static List<LudoServerPlayer> createGamePlayers(LudoServerGame game, List<ServerPlayer> players, int figureCount) {
-		if (!Mth.isInBounds(players.size(), 2, 4)) {
-			LOGGER.error("Fail to create player type map for player list {} with size {}, since a player list with size in bounds 2 - 4 was expected", players.stream().map(game::getName).collect(Collectors.toList()));
-			throw new IllegalStateException("Fail to create player type map for player list with size " + players.size() + ", since a player list with size in bounds 2 - 4 was expected");
-		}
-		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(players, ServerPlayer::getProfile, GameProfile::getName));
-		List<LudoServerPlayer> gamePlayers = Lists.newArrayList();
-		int i = 0;
-		for (ServerPlayer player : players) {
-			LudoPlayerType playerType = LudoPlayerType.values()[i++];
-			gamePlayers.add(new LudoServerPlayer(game, player, playerType, figureCount));
-			
-		}
-		return gamePlayers;
-	}
-	
-	@Override
-	public void initGame() {
-		this.map.init(this.players);
-	}
-
-	@Override
-	public void startGame() {
-		
-	}
-
-	@Override
-	public DedicatedServer getServer() {
-		return this.server;
 	}
 	
 	@Override
 	public GameType<LudoServerGame, LudoClientGame> getType() {
 		return GameTypes.LUDO;
 	}
-
-	@Override
-	public LudoServerMap getMap() {
-		return this.map;
-	}
-
-	@Override
-	public List<LudoServerPlayer> getPlayers() {
-		return this.players;
-	}
-	
-	@Override
-	public LudoServerPlayer getCurrentPlayer() {
-		return this.player;
-	}
-
-	@Override
-	public void setCurrentPlayer(GamePlayer player) {
-		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.player, this::getName), Util.runIfNotNull(player, this::getName));
-		this.player = (LudoServerPlayer) player;
-		if (this.player != null) {
-			this.player.setRollCount(this.getRollCount());
-			this.server.getPlayerList().broadcastAll(Util.mapList(this.players, LudoServerPlayer::getPlayer), new CurrentPlayerUpdatePacket(this.player));
-		}
-	}
 	
 	@Override
 	public void nextPlayer(boolean random) {
-		List<? extends GamePlayer> players = Lists.newArrayList(this.players);
-		players.removeIf(this.winHandler.getWinOrder()::contains);
+		List<? extends GamePlayer> players = Lists.newArrayList(this.getPlayers());
+		players.removeIf(this.getWinHandler().getWinOrder()::contains);
 		if (!players.isEmpty()) {
 			if (random) {
-				this.setCurrentPlayer(players.get(new Random().nextInt(players.size())));
+				this.setPlayer(players.get(new Random().nextInt(players.size())));
 			} else {
-				GamePlayer player = this.getCurrentPlayer();
+				GamePlayer player = this.getPlayer();
 				if (player == null) {
-					this.setCurrentPlayer(players.get(0));
+					this.setPlayer(players.get(0));
 				} else {
 					int index = players.indexOf(player);
 					if (index != -1) {
 						index++;
 						if (index >= players.size()) {
-							this.setCurrentPlayer(players.get(0));
+							this.setPlayer(players.get(0));
 						} else {
-							this.setCurrentPlayer(players.get(index));
+							this.setPlayer(players.get(index));
 						}
 					} else {
 						LOGGER.warn("Fail to get next player, since the player {} does not exists", this.getName(player));
-						this.setCurrentPlayer(players.get(0));
+						this.setPlayer(players.get(0));
 					}
 				}
 			}
@@ -147,12 +66,12 @@ public class LudoServerGame implements ServerGame {
 		}
 	}
 	
-	protected int getRollCount() {
-		if (this.player.hasAllFiguresAt(GameField::isHome)) {
+/*	protected int getRollCount() {
+		if (this.getCurrentPlayer().hasAllFiguresAt(GameField::isHome)) {
 			return 3;
 		}
 		return 1;
-	}
+	}*/
 	
 	@Override
 	public boolean isDiceGame() {
@@ -164,28 +83,7 @@ public class LudoServerGame implements ServerGame {
 		return this.diceHandler;
 	}
 	
-	@Override
-	public LudoWinHandler getWinHandler() {
-		return this.winHandler;
-	}
-	
-	@Override
-	public boolean nextMatch() {
-		if (Mth.isInBounds(this.players.size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
-			this.map.reset();
-			this.map.init(this.players);
-			this.diceHandler.reset();
-			this.winHandler.reset();
-			this.nextPlayer(true);
-			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), LudoServerField::getFieldInfo)));
-			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.players, this::getName));
-			return true;
-		}
-		LOGGER.warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.players.size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
-		return false;
-	}
-	
-	@Override
+	/*@Override
 	public void handlePacket(ServerPacket serverPacket) {
 		ServerGame.super.handlePacket(serverPacket);
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
@@ -241,7 +139,7 @@ public class LudoServerGame implements ServerGame {
 				LOGGER.warn("Player {} tries to change the {} map at pos {} to {}, but it is not his turn", this.getName(player), fieldPos.getPosition(), player.getPlayerType());
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public String toString() {

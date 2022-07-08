@@ -1,18 +1,18 @@
 package net.vgc.server.game.dice;
 
-import net.vgc.server.game.player.ServerGamePlayer;
+import net.vgc.game.player.GamePlayer;
 
 public class PlayerDiceInfo {
 	
-	protected final ServerGamePlayer player;
+	protected final GamePlayer player;
 	protected final int count;
 	
-	public PlayerDiceInfo(ServerGamePlayer player, int count) {
+	public PlayerDiceInfo(GamePlayer player, int count) {
 		this.player = player;
 		this.count = count;
 	}
 	
-	public ServerGamePlayer getPlayer() {
+	public GamePlayer getPlayer() {
 		return this.player;
 	}
 	

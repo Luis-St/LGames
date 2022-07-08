@@ -2,8 +2,6 @@ package net.vgc.game.games.wins4.player;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 
 import javafx.scene.image.ImageView;
@@ -57,7 +55,7 @@ public enum Wins4PlayerType implements GamePlayerType {
 		return NO;
 	}
 	
-	@Nullable
+	@Override
 	public ImageView getImage(double width, double height) {
 		if (this.path == null) {
 			return null;

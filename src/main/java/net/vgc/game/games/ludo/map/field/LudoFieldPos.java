@@ -36,7 +36,16 @@ public class LudoFieldPos implements GameFieldPos {
 	}
 	
 	@Nullable
-	public static LudoFieldPos of(LudoPlayerType playerType, int pos) {
+	public static LudoFieldPos of(GamePlayerType playerType, int pos) {
+		if (playerType instanceof LudoPlayerType) {
+			return of((LudoPlayerType) playerType, pos);
+		}
+		LOGGER.warn("Fail to create field pos for a non ludo type {}", playerType);
+		return null;
+	}
+	
+	@Nullable
+	private static LudoFieldPos of(LudoPlayerType playerType, int pos) {
 		switch (playerType) {
 			case GREEN: return ofGreen(pos);
 			case YELLOW:  return ofYellow(pos);

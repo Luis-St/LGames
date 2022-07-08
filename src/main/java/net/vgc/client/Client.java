@@ -19,7 +19,6 @@ import net.vgc.Constans;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
-import net.vgc.client.game.ClientGame;
 import net.vgc.client.network.ClientPacketListener;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
@@ -31,6 +30,7 @@ import net.vgc.client.window.LoginWindow;
 import net.vgc.common.application.GameApplication;
 import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.game.Game;
 import net.vgc.network.ConnectionHandler;
 import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
@@ -66,7 +66,7 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 	protected ClientSettings settings;
 	protected String accountHost;
 	protected int accountPort;
-	protected ClientGame game;
+	protected Game game;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -210,9 +210,6 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 				LOGGER.warn("Fail to handle packet of type {} in screen, since there is no screen set", packet.getClass().getSimpleName());
 			}
 		}
-		if (this.game != null) {
-			this.game.handlePacket(packet);
-		}
 	}
 	
 	@Override
@@ -335,11 +332,11 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 		return this.accountPort;
 	}
 	
-	public ClientGame getGame() {
+	public Game getGame() {
 		return this.game;
 	}
 	
-	public void setGame(ClientGame game) {
+	public void setGame(Game game) {
 		this.game = game;
 	}
 	

@@ -1,4 +1,4 @@
-package net.vgc.game.player.field;
+package net.vgc.game.player.figure;
 
 import java.util.UUID;
 
@@ -17,7 +17,9 @@ public interface GameFigure {
 	
 	GamePlayer getPlayer();
 	
-	GamePlayerType getPlayerType();
+	default GamePlayerType getPlayerType() {
+		return this.getPlayer().getPlayerType();
+	}
 	
 	int getCount();
 	

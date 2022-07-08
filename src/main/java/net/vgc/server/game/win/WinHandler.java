@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.vgc.server.game.ServerGame;
-import net.vgc.server.game.map.ServerGameMap;
-import net.vgc.server.game.player.ServerGamePlayer;
+import net.vgc.game.Game;
+import net.vgc.game.map.GameMap;
+import net.vgc.game.player.GamePlayer;
 
 public interface WinHandler {
 	
@@ -17,27 +17,27 @@ public interface WinHandler {
 	
 	boolean hasWinner();
 	
-	ServerGamePlayer getWinningPlayer();
+	GamePlayer getWinningPlayer();
 	
 	boolean hasWinners();
 	
-	List<? extends ServerGamePlayer> getWinningPlayers();
+	List<GamePlayer> getWinningPlayers();
 	
-	boolean hasPlayerFinished(ServerGamePlayer player);
+	boolean hasPlayerFinished(GamePlayer player);
 	
-	boolean isDraw(ServerGameMap map);
+	boolean isDraw(GameMap map);
 	
-	default boolean canPlayerWin(ServerGamePlayer player) {
+	default boolean canPlayerWin(GamePlayer player) {
 		return true;
 	}
 	
-	void onPlayerFinished(ServerGamePlayer player);
+	void onPlayerFinished(GamePlayer player);
 	
-	List<? extends ServerGamePlayer> getFinishedPlayers();
+	List<GamePlayer> getFinishedPlayers();
 	
-	List<? extends ServerGamePlayer> getWinOrder();
+	List<GamePlayer> getWinOrder();
 	
-	int getScoreFor(ServerGame game, ServerGamePlayer player);
+	int getScoreFor(Game game, GamePlayer player);
 	
 	void reset();
 	

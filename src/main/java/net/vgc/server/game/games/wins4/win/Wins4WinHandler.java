@@ -6,15 +6,16 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
+import net.vgc.game.Game;
 import net.vgc.game.games.wins4.Wins4ResultLine;
 import net.vgc.game.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.game.games.wins4.player.Wins4PlayerType;
-import net.vgc.server.game.ServerGame;
+import net.vgc.game.map.GameMap;
+import net.vgc.game.map.field.GameField;
+import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.GamePlayerType;
 import net.vgc.server.game.games.wins4.map.Wins4ServerMap;
-import net.vgc.server.game.games.wins4.map.field.Wins4ServerField;
 import net.vgc.server.game.games.wins4.player.Wins4ServerPlayer;
-import net.vgc.server.game.map.ServerGameMap;
-import net.vgc.server.game.player.ServerGamePlayer;
 import net.vgc.server.game.win.AbstractWinHandler;
 import net.vgc.util.Util;
 
@@ -50,7 +51,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 	}
 
 	@Override
-	public boolean hasPlayerFinished(ServerGamePlayer gamePlayer) {
+	public boolean hasPlayerFinished(GamePlayer gamePlayer) {
 		if (gamePlayer instanceof Wins4ServerPlayer player) {
 			return this.getWinType((Wins4ServerMap) player.getMap()) == player.getPlayerType();
 		}
@@ -58,14 +59,14 @@ public class Wins4WinHandler extends AbstractWinHandler {
 	}
 	
 	@Override
-	public boolean isDraw(ServerGameMap gameMap) {
+	public boolean isDraw(GameMap gameMap) {
 		if (gameMap instanceof Wins4ServerMap map) {
 			return !map.hasEmptyField() && this.getWinType(map) == Wins4PlayerType.NO;
 		}
 		return false;
 	}
 	
-	protected Wins4PlayerType getWinType(Wins4ServerMap map) {
+	protected GamePlayerType getWinType(Wins4ServerMap map) {
 		Wins4ResultLine resultLine = this.getResultLine(map);
 		if (resultLine != Wins4ResultLine.EMPTY) {
 			return this.getFieldType(map, resultLine.getFirstPos());
@@ -82,8 +83,8 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return Wins4ResultLine.EMPTY;
 	}
 	
-	protected Wins4PlayerType getLineWinType(Wins4ServerMap map, Wins4ResultLine resultLine) {
-		Wins4PlayerType playerType = this.getFieldType(map, resultLine.getFirstPos());
+	protected GamePlayerType getLineWinType(Wins4ServerMap map, Wins4ResultLine resultLine) {
+		GamePlayerType playerType = this.getFieldType(map, resultLine.getFirstPos());
 		if (playerType != Wins4PlayerType.NO) {
 			if (this.getFieldType(map, resultLine.getSecondPos()) == playerType && this.getFieldType(map, resultLine.getThirdPos()) == playerType && this.getFieldType(map, resultLine.getFourthPos()) == playerType) {
 				return playerType;
@@ -92,20 +93,20 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return Wins4PlayerType.NO;
 	}
 	
-	protected Wins4PlayerType getFieldType(Wins4ServerMap map, Wins4FieldPos fieldPos) {
-		Wins4ServerField field = map.getField(null, null, fieldPos);
+	protected GamePlayerType getFieldType(Wins4ServerMap map, Wins4FieldPos fieldPos) {
+		GameField field = map.getField(null, null, fieldPos);
 		if (field != null) {
 			if (field.isEmpty()) {
 				return Wins4PlayerType.NO;
 			}
-			Wins4PlayerType playerType = field.getFigure().getPlayerType();
+			GamePlayerType playerType = field.getFigure().getPlayerType();
 			return playerType == null ? Wins4PlayerType.NO : playerType;
 		}
 		return Wins4PlayerType.NO;
 	}
 
 	@Override
-	public int getScoreFor(ServerGame game, ServerGamePlayer player) {
+	public int getScoreFor(Game game, GamePlayer player) {
 		return this.getFinishedPlayers().contains(player) ? 1 : 0;
 	}
 

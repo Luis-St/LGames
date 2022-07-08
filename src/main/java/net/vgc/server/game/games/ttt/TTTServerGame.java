@@ -1,80 +1,22 @@
 package net.vgc.server.game.games.ttt;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import com.google.common.collect.Lists;
 
 import net.vgc.client.game.games.ttt.TTTClientGame;
-import net.vgc.game.GameResult;
 import net.vgc.game.GameType;
 import net.vgc.game.GameTypes;
-import net.vgc.game.games.ttt.TTTResultLine;
-import net.vgc.game.games.ttt.map.field.TTTFieldPos;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
-import net.vgc.game.player.GamePlayer;
-import net.vgc.game.score.PlayerScore;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.GameActionFailedPacket;
-import net.vgc.network.packet.client.game.TTTGameResultPacket;
-import net.vgc.network.packet.client.game.UpdateGameMapPacket;
-import net.vgc.network.packet.server.ServerPacket;
-import net.vgc.network.packet.server.game.SelectGameFieldPacket;
-import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedServer;
-import net.vgc.server.game.ServerGame;
+import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.game.games.ttt.map.TTTServerMap;
-import net.vgc.server.game.games.ttt.map.field.TTTServerField;
 import net.vgc.server.game.games.ttt.player.TTTServerPlayer;
-import net.vgc.server.game.games.ttt.player.figure.TTTServerFigure;
 import net.vgc.server.game.games.ttt.win.TTTWinHandler;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Mth;
-import net.vgc.util.Util;
 
-public class TTTServerGame implements ServerGame {
-	
-	protected final DedicatedServer server;
-	protected final TTTServerMap map;
-	protected final List<TTTServerPlayer> players;
-	protected final TTTWinHandler winHandler;
-	protected TTTServerPlayer player;
+public class TTTServerGame extends AbstractServerGame {
 	
 	public TTTServerGame(DedicatedServer server, List<ServerPlayer> players) {
-		this.server = server;
-		this.map = new TTTServerMap(this);
-		this.players = createGamePlayers(this, players);
-		this.winHandler = new TTTWinHandler();
-	}
-	
-	protected static List<TTTServerPlayer> createGamePlayers(TTTServerGame game, List<ServerPlayer> players) {
-		if (players.size() != 2) {
-			LOGGER.error("Fail to create player type map for player list {} with size {}, since a player list with size in bounds 2 was expected", players.stream().map(game::getName).collect(Collectors.toList()));
-			throw new IllegalStateException("Fail to create player type map for player list with size " + players.size() + ", since a player list with size 2 was expected");
-		}
-		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(players, ServerPlayer::getProfile, GameProfile::getName));
-		List<TTTServerPlayer> gamePlayers = Lists.newArrayList();
-		gamePlayers.add(new TTTServerPlayer(game, players.get(0), TTTPlayerType.CROSS));
-		gamePlayers.add(new TTTServerPlayer(game, players.get(1), TTTPlayerType.CIRCLE));
-		return gamePlayers;
-	}
-	
-	@Override
-	public void initGame() {
-		this.map.init(this.players);
-	}
-
-	@Override
-	public void startGame() {
-		
-	}
-	
-	@Override
-	public DedicatedServer getServer() {
-		return this.server;
+		super(server, TTTServerMap::new, players, TTTPlayerType.values(), TTTServerPlayer::new, new TTTWinHandler());
 	}
 
 	@Override
@@ -82,50 +24,7 @@ public class TTTServerGame implements ServerGame {
 		return GameTypes.TIC_TAC_TOE;
 	}
 	
-	@Override
-	public TTTServerMap getMap() {
-		return this.map;
-	}
-	
-	@Override
-	public List<TTTServerPlayer> getPlayers() {
-		return this.players;
-	}
-	
-	@Override
-	public TTTServerPlayer getCurrentPlayer() {
-		return this.player;
-	}
-	
-	@Override
-	public void setCurrentPlayer(GamePlayer player) {
-		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.player, this::getName), Util.runIfNotNull(player, this::getName));
-		this.player = (TTTServerPlayer) player;
-		if (this.player != null) {
-			this.server.getPlayerList().broadcastAll(Util.mapList(this.players, TTTServerPlayer::getPlayer), new CurrentPlayerUpdatePacket(this.player));
-		}
-	}
-	
-	@Override
-	public TTTWinHandler getWinHandler() {
-		return this.winHandler;
-	}
-
-	@Override
-	public boolean nextMatch() {
-		if (Mth.isInBounds(this.players.size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
-			this.map.reset();
-			this.winHandler.reset();
-			this.nextPlayer(true);
-			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), TTTServerField::getFieldInfo)));
-			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.players, this::getName));
-			return true;
-		}
-		LOGGER.warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.players.size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
-		return false;
-	}
-	
-	@Override
+/*	@Override
 	public void handlePacket(ServerPacket serverPacket) {
 		ServerGame.super.handlePacket(serverPacket);
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
@@ -185,7 +84,7 @@ public class TTTServerGame implements ServerGame {
 		this.broadcastPlayer(new TTTGameResultPacket(result, resultLine), gamePlayer);
 		consumer.accept(player.getScore());
 		this.broadcastPlayers(new SyncPlayerDataPacket(player.getProfile(), true, player.getScore()));
-	}
+	}*/
 	
 	@Override
 	public String toString() {

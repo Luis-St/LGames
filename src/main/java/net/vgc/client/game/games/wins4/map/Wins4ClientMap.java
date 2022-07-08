@@ -1,7 +1,6 @@
 package net.vgc.client.game.games.wins4.map;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
@@ -14,45 +13,41 @@ import javafx.scene.layout.StackPane;
 import net.vgc.client.Client;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.IndexToggleButton;
-import net.vgc.client.game.games.wins4.Wins4ClientGame;
+import net.vgc.client.fx.game.wrapper.StackPaneWrapper;
 import net.vgc.client.game.games.wins4.map.field.Wins4ClientField;
-import net.vgc.client.game.games.wins4.player.Wins4ClientPlayer;
-import net.vgc.client.game.games.wins4.player.figure.Wins4ClientFigure;
-import net.vgc.client.game.map.ClientGameMap;
-import net.vgc.game.GameResult;
+import net.vgc.client.game.map.AbstractClientGameMap;
+import net.vgc.game.Game;
 import net.vgc.game.games.wins4.map.field.Wins4FieldPos;
-import net.vgc.game.map.field.GameFieldInfo;
+import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
-import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.game.player.field.GameFigure;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.UpdateGameMapPacket;
-import net.vgc.network.packet.client.game.Wins4GameResultPacket;
-import net.vgc.player.GameProfile;
+import net.vgc.game.player.figure.GameFigure;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
-public class Wins4ClientMap extends StackPane implements ClientGameMap {
+public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWrapper {
+
+	private final ToggleGroup group;
+	private final StackPane stackPane;
+	private final GridPane fieldPane;
+	private final GridPane interactionPane;
 	
-	protected final Client client;
-	protected final ToggleGroup group;
-	protected final Wins4ClientGame game;
-	protected final GridPane fieldPane;
-	protected final GridPane interactionPane;
-	protected final List<Wins4ClientField> fields = Lists.newArrayList();
-	
-	public Wins4ClientMap(Client client, Wins4ClientGame game) {
-		this.client = client;
+	public Wins4ClientMap(Client client, Game game) {
+		super(client, game);
 		this.group = new ToggleGroup();
-		this.game = game;
+		this.stackPane = new StackPane();
 		this.fieldPane = FxUtil.makeGrid(Pos.CENTER, 0.0, 0.0);
 		this.interactionPane = FxUtil.makeGrid(Pos.CENTER, 0.0, 0.0);
 		this.init();
 		this.addFields();
 		this.addInteractions();
 		this.mergePanes();
+	}
+	
+	@Override
+	public StackPane getStackPane() {
+		return this.stackPane;
 	}
 	
 	@Override
@@ -69,11 +64,11 @@ public class Wins4ClientMap extends StackPane implements ClientGameMap {
 	}
 	
 	protected void addField(Wins4FieldPos fieldPos) {
-		Wins4ClientField field = new Wins4ClientField(this.client, this.game, fieldPos, 120.0);
-		this.fieldPane.add(field, fieldPos.getColumn(), fieldPos.getRow());
-		this.fields.add(field);
+		Wins4ClientField field = new Wins4ClientField(this.getClient(), this, fieldPos, 120.0);
+		this.fieldPane.add(field.getLabel(), fieldPos.getColumn(), fieldPos.getRow());
+		this.getFields().add(field);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-			this.fields.stream().filter(Wins4ClientField::isShadowed).forEach(Wins4ClientField::resetShadow);
+			this.getFields().stream().filter(GameField::isShadowed).forEach(GameField::clearShadow);
 		});
 	}
 	
@@ -93,16 +88,16 @@ public class Wins4ClientMap extends StackPane implements ClientGameMap {
 		button.setBackground(null);
 		button.setPrefSize(120.0, 6 * 120.0);
 		button.setOnAction((event) -> {
-			if (this.client.getPlayer().isCurrent()) {
-				List<Wins4ClientField> fields = Util.reverseList(this.getFieldsForColumn(index));
-				for (Wins4ClientField field : fields) {
+			if (this.getClient().getPlayer().isCurrent()) {
+				List<GameField> fields = Util.reverseList(this.getFieldsForColumn(index));
+				for (GameField field : fields) {
 					if (field.isEmpty()) {
 						field.setShadowed(true);
 						break;
 					}
 				}
 			} else {
-				this.fields.stream().filter(Wins4ClientField::isShadowed).forEach(Wins4ClientField::resetShadow);
+				this.getFields().stream().filter(GameField::isShadowed).forEach(GameField::clearShadow);
 				this.group.selectToggle(null);
 			}
 		});
@@ -110,44 +105,19 @@ public class Wins4ClientMap extends StackPane implements ClientGameMap {
 	}
 
 	@Override
-	public void init(List<? extends GamePlayer> players) {
-		this.getFields().forEach(Wins4ClientField::clear);
+	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
+		return this.getFields().get(fieldPos.getPosition());
 	}
 
 	@Override
-	public Wins4ClientGame getGame() {
-		return this.game;
-	}
-
-	@Override
-	public List<Wins4ClientField> getFields() {
-		return this.fields;
-	}
-
-	@Override
-	public Wins4ClientField getField(GameFigure figure) {
-		for (Wins4ClientField field : this.getFields()) {
-			if (!field.isEmpty() && field.getFigure().equals(figure)) {
-				return field;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public Wins4ClientField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
-		return this.fields.get(fieldPos.getPosition());
-	}
-
-	@Override
-	public Wins4ClientField getNextField(GameFigure figure, int count) {
+	public GameField getNextField(GameFigure figure, int count) {
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since the 4 wins figures does not have a next field", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return null;
 	}
 	
-	public List<Wins4ClientField> getFieldsForColumn(int column) {
+	public List<GameField> getFieldsForColumn(int column) {
 		if (Mth.isInBounds(column, 0, 6)) {
-			List<Wins4ClientField> fields = Lists.newArrayList();
+			List<GameField> fields = Lists.newArrayList();
 			for (int i = 0; i < 6; i++) {
 				fields.add(this.getField(null, null, Wins4FieldPos.of(i, column)));
 			}
@@ -157,22 +127,22 @@ public class Wins4ClientMap extends StackPane implements ClientGameMap {
 	}
 
 	@Override
-	public List<Wins4ClientField> getHomeFields(GamePlayerType playerType) {
+	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 
 	@Override
-	public List<Wins4ClientField> getStartFields(GamePlayerType playerType) {
+	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 
 	@Override
-	public List<Wins4ClientField> getWinFields(GamePlayerType playerType) {
+	public List<GameField> getWinFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 
 	@Override
-	public Wins4ClientField getSelectedField() {
+	public GameField getSelectedField() {
 		LOGGER.warn("Fail to get the selected field, since the 4 wins map does not have a selected field");
 		return null;
 	}
@@ -186,7 +156,7 @@ public class Wins4ClientMap extends StackPane implements ClientGameMap {
 		return -1;
 	}
 	
-	@Override
+	/*@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
@@ -232,7 +202,7 @@ public class Wins4ClientMap extends StackPane implements ClientGameMap {
 				LOGGER.warn("Fail to handle game result {}", result);
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public String toString() {
