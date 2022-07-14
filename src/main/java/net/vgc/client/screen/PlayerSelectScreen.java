@@ -12,7 +12,7 @@ import javafx.scene.layout.Pane;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.game.GameType;
+import net.vgc.game.type.GameType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;

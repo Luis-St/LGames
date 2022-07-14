@@ -1,9 +1,10 @@
-package net.vgc.game;
+package net.vgc.game.type;
 
 import java.util.List;
 import java.util.function.BiFunction;
 
 import net.vgc.client.Client;
+import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;

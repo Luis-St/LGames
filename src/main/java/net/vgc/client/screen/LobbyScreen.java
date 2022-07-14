@@ -13,12 +13,12 @@ import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.screen.game.GameScreen;
+import net.vgc.game.type.GameTypes;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
-import net.vgc.game.GameTypes;
 import net.vgc.util.Util;
 
 public class LobbyScreen extends GameScreen {

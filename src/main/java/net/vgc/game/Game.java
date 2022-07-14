@@ -15,6 +15,7 @@ import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.type.GameType;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.player.GameProfile;

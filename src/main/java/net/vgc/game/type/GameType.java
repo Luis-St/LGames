@@ -1,4 +1,4 @@
-package net.vgc.game;
+package net.vgc.game.type;
 
 import java.util.List;
 import java.util.function.Function;
@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import net.vgc.client.Client;
 import net.vgc.client.screen.game.GameScreen;
+import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.network.NetworkSide;

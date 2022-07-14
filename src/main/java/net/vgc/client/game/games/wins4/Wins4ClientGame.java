@@ -6,9 +6,9 @@ import net.vgc.client.Client;
 import net.vgc.client.game.AbstractClientGame;
 import net.vgc.client.game.games.ttt.map.TTTClientMap;
 import net.vgc.client.game.games.ttt.player.TTTClientPlayer;
-import net.vgc.game.GameType;
-import net.vgc.game.GameTypes;
 import net.vgc.game.player.GamePlayerInfo;
+import net.vgc.game.type.GameType;
+import net.vgc.game.type.GameTypes;
 import net.vgc.server.game.games.wins4.Wins4ServerGame;
 
 public class Wins4ClientGame extends AbstractClientGame {

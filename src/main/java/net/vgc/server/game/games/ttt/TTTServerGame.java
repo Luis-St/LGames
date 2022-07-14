@@ -3,9 +3,9 @@ package net.vgc.server.game.games.ttt;
 import java.util.List;
 
 import net.vgc.client.game.games.ttt.TTTClientGame;
-import net.vgc.game.GameType;
-import net.vgc.game.GameTypes;
 import net.vgc.game.games.ttt.player.TTTPlayerType;
+import net.vgc.game.type.GameType;
+import net.vgc.game.type.GameTypes;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.game.games.ttt.map.TTTServerMap;

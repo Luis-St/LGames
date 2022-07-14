@@ -9,10 +9,10 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import com.google.common.collect.Lists;
 
 import net.vgc.game.Game;
-import net.vgc.game.GameType;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.player.figure.GameFigure;
+import net.vgc.game.type.GameType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketListener;
 import net.vgc.network.packet.client.ClientJoinedPacket;

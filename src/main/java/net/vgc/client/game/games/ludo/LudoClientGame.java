@@ -6,9 +6,9 @@ import net.vgc.client.Client;
 import net.vgc.client.game.AbstractClientGame;
 import net.vgc.client.game.games.ludo.map.LudoClientMap;
 import net.vgc.client.game.games.ludo.player.LudoClientPlayer;
-import net.vgc.game.GameType;
-import net.vgc.game.GameTypes;
 import net.vgc.game.player.GamePlayerInfo;
+import net.vgc.game.type.GameType;
+import net.vgc.game.type.GameTypes;
 import net.vgc.server.game.games.ludo.LudoServerGame;
 
 public class LudoClientGame extends AbstractClientGame {

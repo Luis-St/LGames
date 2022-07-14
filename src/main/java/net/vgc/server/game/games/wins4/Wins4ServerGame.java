@@ -3,9 +3,9 @@ package net.vgc.server.game.games.wins4;
 import java.util.List;
 
 import net.vgc.client.game.games.wins4.Wins4ClientGame;
-import net.vgc.game.GameType;
-import net.vgc.game.GameTypes;
 import net.vgc.game.games.wins4.player.Wins4PlayerType;
+import net.vgc.game.type.GameType;
+import net.vgc.game.type.GameTypes;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.game.games.ttt.player.TTTServerPlayer;

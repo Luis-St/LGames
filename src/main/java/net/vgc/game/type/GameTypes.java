@@ -1,4 +1,4 @@
-package net.vgc.game;
+package net.vgc.game.type;
 
 import java.util.List;
 
