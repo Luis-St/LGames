@@ -7,16 +7,16 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 
 import net.vgc.client.game.AbstractClientGame;
-import net.vgc.client.game.games.ludo.LudoClientGame;
-import net.vgc.client.game.games.ttt.TTTClientGame;
-import net.vgc.client.game.games.wins4.Wins4ClientGame;
+import net.vgc.client.games.ludo.LudoClientGame;
+import net.vgc.client.games.ttt.TTTClientGame;
+import net.vgc.client.games.wins4.Wins4ClientGame;
 import net.vgc.client.screen.game.LudoScreen;
 import net.vgc.client.screen.game.TTTScreen;
 import net.vgc.client.screen.game.Wins4Screen;
 import net.vgc.server.game.AbstractServerGame;
-import net.vgc.server.game.games.ludo.LudoServerGame;
-import net.vgc.server.game.games.ttt.TTTServerGame;
-import net.vgc.server.game.games.wins4.Wins4ServerGame;
+import net.vgc.server.games.ludo.LudoServerGame;
+import net.vgc.server.games.ttt.TTTServerGame;
+import net.vgc.server.games.wins4.Wins4ServerGame;
 
 public class GameTypes {
 	
