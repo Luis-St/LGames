@@ -4,20 +4,20 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.PlayerInfoPane;
 import net.vgc.client.fx.game.PlayerScorePane;
 import net.vgc.client.games.wins4.Wins4ClientGame;
 import net.vgc.client.games.wins4.map.Wins4ClientMap;
+import net.vgc.game.action.data.gobal.ProfileData;
+import net.vgc.game.action.data.specific.SelectFieldData;
+import net.vgc.game.action.type.ActionTypes;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.Wins4GameResultPacket;
-import net.vgc.network.packet.server.game.ExitGameRequestPacket;
-import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
-import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
 public class Wins4Screen extends GameScreen {
 	
@@ -43,12 +43,12 @@ public class Wins4Screen extends GameScreen {
 	}
 	
 	private void handleLeave() {
-		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
+		ActionTypes.EXIT_GAME_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.getPlayer().getProfile()));
 	}
 	
 	private void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
-			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
+			ActionTypes.PLAY_AGAIN_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.getPlayer().getProfile()));
 			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
@@ -62,7 +62,7 @@ public class Wins4Screen extends GameScreen {
 		}
 		if (column != -1) {
 			if (this.getPlayer().isCurrent()) {
-				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), Wins4FieldType.DEFAULT, Wins4FieldPos.of(0, column)));
+				ActionTypes.SELECT_FIELD.send(this.client.getServerHandler(), new SelectFieldData(this.getPlayer().getProfile(), Wins4FieldType.DEFAULT, Wins4FieldPos.of(0, column)));
 				this.getPlayer().setCurrent(false);
 			} else {
 				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());
@@ -101,9 +101,9 @@ public class Wins4Screen extends GameScreen {
 	}
 	
 	private Pane createActionPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		pane.addRow(0, this.leaveButton, this.playAgainButton, this.confirmActionButton);
 		return pane;
 	}
-
+	
 }

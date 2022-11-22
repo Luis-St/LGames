@@ -22,22 +22,22 @@ public abstract class AbstractGame implements Game {
 	public void initGame() {
 		this.map.init(this.players);
 	}
-
+	
 	@Override
 	public GameMap getMap() {
 		return this.map;
 	}
-
+	
 	@Override
 	public List<GamePlayer> getPlayers() {
 		return this.players;
 	}
-
+	
 	@Override
 	public GamePlayer getPlayer() {
 		return this.player;
 	}
-
+	
 	@Override
 	public void setPlayer(GamePlayer player) {
 		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.getPlayer(), this::getName), Util.runIfNotNull(player, this::getName));

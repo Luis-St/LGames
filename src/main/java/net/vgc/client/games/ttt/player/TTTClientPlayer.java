@@ -31,12 +31,12 @@ public class TTTClientPlayer extends AbstractClientGamePlayer {
 		}
 		return figures;
 	}
-
+	
 	@Override
 	public List<GameFigure> getFigures() {
 		return this.figures;
 	}
-
+	
 	@Override
 	public List<GameFieldPos> getWinPoses() {
 		return Lists.newArrayList();

@@ -10,9 +10,9 @@ import net.vgc.client.screen.Screen;
 import net.vgc.util.Tickable;
 
 public class ScreenScene extends Scene implements Tickable {
-
+	
 	private final Screen screen;
-
+	
 	public ScreenScene(Parent root, double width, double height, Screen screen) {
 		super(root, width, height);
 		this.screen = screen;
@@ -21,11 +21,11 @@ public class ScreenScene extends Scene implements Tickable {
 	public Screen getScreen() {
 		return this.screen;
 	}
-
+	
 	public void setInputListeners() {
 		this.setOnKeyPressed((event) -> {
 			this.screen.keyPressed(event.getCode(), new InputContext(event.isShiftDown(), event.isControlDown(), event.isAltDown(), event.isMetaDown()));
-
+			
 		});
 		this.setOnKeyReleased((event) -> {
 			this.screen.keyReleased(event.getCode(), new InputContext(event.isShiftDown(), event.isControlDown(), event.isAltDown(), event.isMetaDown()));
@@ -59,10 +59,10 @@ public class ScreenScene extends Scene implements Tickable {
 			this.screen.scrollFinished(new ScrollInputContext(inputContext, positionContext, event.getDeltaX(), event.getDeltaY()));
 		});
 	}
-
+	
 	@Override
 	public void tick() {
 		this.screen.tick();
 	}
-
+	
 }

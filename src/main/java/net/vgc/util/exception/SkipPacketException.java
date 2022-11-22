@@ -1,9 +1,9 @@
-package net.vgc.network;
+package net.vgc.util.exception;
 
 import io.netty.handler.codec.EncoderException;
 
 public class SkipPacketException extends EncoderException {
-
+	
 	private static final long serialVersionUID = 182028572541416074L;
 	
 	public SkipPacketException() {

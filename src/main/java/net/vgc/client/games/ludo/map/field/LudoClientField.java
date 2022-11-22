@@ -47,12 +47,12 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 		}
 		this.updateFieldGraphic();
 	}
-
+	
 	@Override
 	public boolean isHome() {
 		return this.getFieldType() == LudoFieldType.HOME;
 	}
-
+	
 	@Override
 	public boolean isStart() {
 		return this.getFieldPos().isStart();
@@ -130,5 +130,5 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 	public String toString() {
 		return ToString.toString(this, "result");
 	}
-
+	
 }

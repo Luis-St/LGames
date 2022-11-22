@@ -8,7 +8,7 @@ import net.vgc.server.game.win.AbstractWinHandler;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
 
 public class LudoWinHandler extends AbstractWinHandler {
-
+	
 	@Override
 	public boolean hasMultipleWinners() {
 		return false;

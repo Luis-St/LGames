@@ -49,7 +49,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 	public boolean hasMultipleWinners() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean hasPlayerFinished(GamePlayer gamePlayer) {
 		if (gamePlayer instanceof Wins4ServerPlayer player) {
@@ -104,10 +104,10 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		}
 		return Wins4PlayerType.NO;
 	}
-
+	
 	@Override
 	public int getScoreFor(Game game, GamePlayer player) {
 		return this.getFinishedPlayers().contains(player) ? 1 : 0;
 	}
-
+	
 }

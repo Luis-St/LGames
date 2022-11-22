@@ -28,17 +28,27 @@ public class TTTFieldPos implements GameFieldPos {
 	}
 	
 	public static TTTFieldPos of(int position) {
-		 switch (position) {
-			case 0: return new TTTFieldPos(0, 0, 0);
-			case 1: return new TTTFieldPos(1, 0, 1);
-			case 2: return new TTTFieldPos(2, 0, 2);
-			case 3: return new TTTFieldPos(3, 1, 0);
-			case 4: return new TTTFieldPos(4, 1, 1);
-			case 5: return new TTTFieldPos(5, 1, 2);
-			case 6: return new TTTFieldPos(6, 2, 0);
-			case 7: return new TTTFieldPos(7, 2, 1);
-			case 8: return new TTTFieldPos(8, 2, 2);
-			default: return NO;
+		switch (position) {
+			case 0:
+				return new TTTFieldPos(0, 0, 0);
+			case 1:
+				return new TTTFieldPos(1, 0, 1);
+			case 2:
+				return new TTTFieldPos(2, 0, 2);
+			case 3:
+				return new TTTFieldPos(3, 1, 0);
+			case 4:
+				return new TTTFieldPos(4, 1, 1);
+			case 5:
+				return new TTTFieldPos(5, 1, 2);
+			case 6:
+				return new TTTFieldPos(6, 2, 0);
+			case 7:
+				return new TTTFieldPos(7, 2, 1);
+			case 8:
+				return new TTTFieldPos(8, 2, 2);
+			default:
+				return NO;
 		}
 	}
 	
@@ -54,7 +64,7 @@ public class TTTFieldPos implements GameFieldPos {
 	public int getColumn() {
 		return this.column;
 	}
-
+	
 	@Override
 	public int getPositionFor(GamePlayerType playerType) {
 		return this.position;

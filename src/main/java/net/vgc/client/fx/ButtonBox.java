@@ -38,5 +38,5 @@ public class ButtonBox extends Box<Button> {
 			this.action.run();
 		});
 	}
-
+	
 }

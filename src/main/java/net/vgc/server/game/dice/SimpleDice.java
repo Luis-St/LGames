@@ -33,7 +33,7 @@ public class SimpleDice implements Dice {
 		}
 		return Mth.randomInt(this.rng, this.min, this.max);
 	}
-
+	
 	@Override
 	public int rollExclude(int value) {
 		if (!Mth.isInBounds(value, this.min, this.max)) {
@@ -49,7 +49,7 @@ public class SimpleDice implements Dice {
 		}
 		return count;
 	}
-
+	
 	@Override
 	public int rollPreferred(int value, int rolls) {
 		if (0 >= rolls) {
@@ -91,5 +91,5 @@ public class SimpleDice implements Dice {
 		builder.append("max=").append(this.max).append("}");
 		return builder.toString();
 	}
-
+	
 }

@@ -16,7 +16,7 @@ public class LudoClientGame extends AbstractClientGame {
 	public LudoClientGame(Client client, List<GamePlayerInfo> playerInfos) {
 		super(client, LudoClientMap::new, playerInfos, LudoClientPlayer::new);
 	}
-
+	
 	@Override
 	public GameType<LudoServerGame, LudoClientGame> getType() {
 		return GameTypes.LUDO;
@@ -31,5 +31,5 @@ public class LudoClientGame extends AbstractClientGame {
 	public String toString() {
 		return "LudoClientGame";
 	}
-
+	
 }

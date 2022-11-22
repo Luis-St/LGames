@@ -3,7 +3,7 @@ package net.vgc.network.packet.server;
 import java.util.UUID;
 
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.server.network.ServerPacketListener;
+import net.vgc.server.network.ServerPacketHandler;
 
 public class ClientJoinPacket implements ServerPacket {
 	
@@ -25,9 +25,9 @@ public class ClientJoinPacket implements ServerPacket {
 		buffer.writeString(this.name);
 		buffer.writeUUID(this.uuid);
 	}
-
+	
 	@Override
-	public void handle(ServerPacketListener listener) {
+	public void handle(ServerPacketHandler listener) {
 		listener.handleClientJoin(this.name, this.uuid);
 	}
 	
@@ -38,5 +38,5 @@ public class ClientJoinPacket implements ServerPacket {
 	public UUID getUUID() {
 		return this.uuid;
 	}
-
+	
 }

@@ -13,12 +13,12 @@ public class Wins4ServerFigure extends AbstractGameFigure {
 	public Wins4ServerFigure(GamePlayer player, int count, UUID uuid) {
 		super(player, count, uuid);
 	}
-
+	
 	@Override
 	public GameFieldPos getHomePos() {
 		return Wins4FieldPos.NO;
 	}
-
+	
 	@Override
 	public GameFieldPos getStartPos() {
 		return Wins4FieldPos.NO;

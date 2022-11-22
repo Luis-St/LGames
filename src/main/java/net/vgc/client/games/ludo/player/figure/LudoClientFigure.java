@@ -19,7 +19,7 @@ public class LudoClientFigure extends AbstractGameFigure {
 	public GameFieldPos getHomePos() {
 		return LudoFieldPos.of(this.getCount());
 	}
-
+	
 	@Override
 	public GameFieldPos getStartPos() {
 		return LudoFieldPos.of(this.getPlayerType(), 0);
@@ -39,5 +39,5 @@ public class LudoClientFigure extends AbstractGameFigure {
 	public String toString() {
 		return ToString.toString(this, "player");
 	}
-
+	
 }

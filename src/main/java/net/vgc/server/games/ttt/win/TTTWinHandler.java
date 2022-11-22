@@ -94,5 +94,5 @@ public class TTTWinHandler extends AbstractWinHandler {
 	public int getScoreFor(Game game, GamePlayer player) {
 		return this.getFinishedPlayers().contains(player) ? 1 : 0;
 	}
-
+	
 }

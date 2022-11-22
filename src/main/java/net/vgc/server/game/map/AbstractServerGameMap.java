@@ -22,11 +22,11 @@ public abstract class AbstractServerGameMap extends AbstractGameMap {
 	public DedicatedServer getServer() {
 		return this.server;
 	}
-
+	
 	@Override
 	public final GameField getSelectedField() {
 		LOGGER.warn("Can not get the selected field on server");
 		return null;
 	}
-
+	
 }

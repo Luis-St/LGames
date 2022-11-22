@@ -1,6 +1,7 @@
 package net.vgc.client.screen;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
@@ -9,9 +10,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
+import net.vgc.game.action.data.specific.PlayRequestData;
+import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.type.GameType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
@@ -19,7 +22,6 @@ import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
-import net.vgc.network.packet.server.game.PlayGameRequestPacket;
 import net.vgc.util.Util;
 
 public class PlayerSelectScreen extends Screen {
@@ -74,7 +76,7 @@ public class PlayerSelectScreen extends Screen {
 					this.playerList.getSelectionModel().clearSelection();
 				} else {
 					LOGGER.debug("Send play game request to server");
-					this.client.getServerHandler().send(new PlayGameRequestPacket(this.gameType, players));
+					ActionTypes.PLAY_REQUEST.send(this.client.getServerHandler(), new PlayRequestData(this.gameType, players.stream().map(AbstractClientPlayer::getProfile).collect(Collectors.toList())));
 				}
 			}
 		} else {
@@ -103,14 +105,14 @@ public class PlayerSelectScreen extends Screen {
 			}
 		}
 	}
-
+	
 	@Override
 	protected Pane createPane() {
-		GridPane outerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		GridPane innerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane outerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane innerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		innerPane.addRow(0, this.backButtonBox, this.playButtonBox);
 		outerPane.addColumn(0, this.playerList, innerPane);
 		return outerPane;
 	}
-
+	
 }

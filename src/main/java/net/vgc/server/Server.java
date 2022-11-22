@@ -14,12 +14,12 @@ import net.vgc.common.application.GameApplication;
 import net.vgc.language.Language;
 import net.vgc.language.LanguageProvider;
 import net.vgc.language.Languages;
-import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
+import net.vgc.util.exception.InvalidNetworkSideException;
 
 public class Server extends GameApplication<ServerPacket> implements Tickable {
 	

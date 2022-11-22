@@ -11,5 +11,5 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 	public void uncaughtException(Thread thread, Throwable throwable) {
 		LOGGER.warn("Error in thread " + thread.getName(), throwable);
 	}
-
+	
 }

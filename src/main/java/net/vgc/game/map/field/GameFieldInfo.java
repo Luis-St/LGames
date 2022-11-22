@@ -102,5 +102,5 @@ public class GameFieldInfo implements Encodable {
 		builder.append("figureUUID=").append(this.figureUUID).append("}");
 		return builder.toString();
 	}
-
+	
 }

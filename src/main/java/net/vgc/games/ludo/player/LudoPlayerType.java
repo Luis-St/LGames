@@ -11,10 +11,8 @@ import net.vgc.language.TranslationKey;
 
 public enum LudoPlayerType implements GamePlayerType {
 	
-	GREEN("green", 0, new TranslationKey("screen.ludo.green_player"), "textures/ludo/figure/figure_green"),
-	YELLOW("yellow", 1, new TranslationKey("screen.ludo.yellow_player"), "textures/ludo/figure/figure_yellow"),
-	BLUE("blue", 2, new TranslationKey("screen.ludo.blue_player"), "textures/ludo/figure/figure_blue"),
-	RED("red", 3, new TranslationKey("screen.ludo.red_player"), "textures/ludo/figure/figure_red"),
+	GREEN("green", 0, new TranslationKey("screen.ludo.green_player"), "textures/ludo/figure/figure_green"), YELLOW("yellow", 1, new TranslationKey("screen.ludo.yellow_player"), "textures/ludo/figure/figure_yellow"),
+	BLUE("blue", 2, new TranslationKey("screen.ludo.blue_player"), "textures/ludo/figure/figure_blue"), RED("red", 3, new TranslationKey("screen.ludo.red_player"), "textures/ludo/figure/figure_red"),
 	NO("no", 4, new TranslationKey("screen.ludo.no_player"), null);
 	
 	private final String name;
@@ -33,7 +31,7 @@ public enum LudoPlayerType implements GamePlayerType {
 	public String getName() {
 		return this.name;
 	}
-
+	
 	@Override
 	public int getId() {
 		return this.id;
@@ -52,7 +50,7 @@ public enum LudoPlayerType implements GamePlayerType {
 			case BLUE -> Lists.newArrayList(GREEN, YELLOW, RED);
 			case RED -> Lists.newArrayList(GREEN, YELLOW, BLUE);
 			default -> Lists.newArrayList(NO);
-		}; 
+		};
 	}
 	
 	@Override

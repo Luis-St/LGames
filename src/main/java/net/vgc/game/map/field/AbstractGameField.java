@@ -32,32 +32,32 @@ public abstract class AbstractGameField implements GameField {
 	public GameFieldType getFieldType() {
 		return this.fieldType;
 	}
-
+	
 	@Override
 	public GamePlayerType getColorType() {
 		return this.colorType;
 	}
-
+	
 	@Override
 	public GameFieldPos getFieldPos() {
 		return this.fieldPos;
 	}
-
+	
 	@Override
 	public GameFigure getFigure() {
 		return this.figure;
 	}
-
+	
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = figure;
 	}
-
+	
 	@Override
 	public GameResult getResult() {
 		return this.result;
 	}
-
+	
 	@Override
 	public void setResult(GameResult result) {
 		this.result = result;
@@ -70,7 +70,7 @@ public abstract class AbstractGameField implements GameField {
 				return false;
 			} else if (!this.colorType.equals(field.colorType)) {
 				return false;
-			}  else if (!this.fieldPos.equals(field.fieldPos)) {
+			} else if (!this.fieldPos.equals(field.fieldPos)) {
 				return false;
 			} else if (!Objects.equals(this.figure, field.figure)) {
 				return false;
@@ -80,5 +80,5 @@ public abstract class AbstractGameField implements GameField {
 		}
 		return false;
 	}
-
+	
 }

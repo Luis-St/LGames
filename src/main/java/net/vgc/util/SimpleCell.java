@@ -18,12 +18,12 @@ public class SimpleCell<R, C, V> implements Cell<R, C, V> {
 	public R getRowKey() {
 		return this.rowKey;
 	}
-
+	
 	@Override
 	public C getColumnKey() {
 		return this.columnKey;
 	}
-
+	
 	@Override
 	public V getValue() {
 		return this.value;
@@ -42,5 +42,5 @@ public class SimpleCell<R, C, V> implements Cell<R, C, V> {
 		}
 		return false;
 	}
-
+	
 }

@@ -1,4 +1,7 @@
-package net.vgc.network;
+package net.vgc.util.exception;
+
+import net.vgc.network.Network;
+import net.vgc.network.NetworkSide;
 
 public class InvalidNetworkSideException extends RuntimeException {
 	
@@ -7,13 +10,13 @@ public class InvalidNetworkSideException extends RuntimeException {
 	public InvalidNetworkSideException() {
 		super();
 	}
-    
+	
 	public InvalidNetworkSideException(NetworkSide networkSide) {
 		super("Invalid network side for " + networkSide + " since the current network side is " + Network.INSTANCE.getNetworkSide());
 	}
-
+	
 	public InvalidNetworkSideException(NetworkSide networkSide, Throwable cause) {
 		super("Invalid network side for " + networkSide + " since the current network side is " + Network.INSTANCE.getNetworkSide(), cause);
 	}
-
+	
 }

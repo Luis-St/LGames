@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import net.vgc.network.SkipPacketException;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.exception.SkipPacketException;
 
 public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 	
@@ -41,7 +41,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 					throw new RuntimeException("Fail to encode packet " + packet.getClass().getSimpleName(), e);
 				}
 			}
-
+			
 		}
 	}
 	
@@ -49,5 +49,5 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
 		LOGGER.warn("Caught an exception while encode a packet");
 	}
-
+	
 }

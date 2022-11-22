@@ -1,6 +1,6 @@
 package net.vgc.network.packet.client;
 
-import net.vgc.client.network.ClientPacketListener;
+import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLoggedOutPacket implements ClientPacket {
@@ -19,14 +19,14 @@ public class ClientLoggedOutPacket implements ClientPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeBoolean(this.successful);
 	}
-
+	
 	@Override
-	public void handle(ClientPacketListener listener) {
+	public void handle(ClientPacketHandler listener) {
 		listener.handleClientLoggedOut(this.successful);
 	}
 	
 	public boolean isSuccessful() {
 		return this.successful;
 	}
-
+	
 }

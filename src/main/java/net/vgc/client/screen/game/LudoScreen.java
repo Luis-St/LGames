@@ -4,21 +4,21 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.DiceButton;
 import net.vgc.client.fx.game.PlayerInfoPane;
 import net.vgc.client.fx.game.PlayerScorePane;
 import net.vgc.client.games.ludo.LudoClientGame;
 import net.vgc.client.games.ludo.map.LudoClientMap;
+import net.vgc.game.action.data.gobal.ProfileData;
+import net.vgc.game.action.data.specific.SelectFieldData;
+import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.LudoGameResultPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
-import net.vgc.network.packet.server.game.ExitGameRequestPacket;
-import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
-import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
 public class LudoScreen extends GameScreen {
 	
@@ -46,12 +46,12 @@ public class LudoScreen extends GameScreen {
 	}
 	
 	private void handleLeave() {
-		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
+		ActionTypes.EXIT_GAME_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.getPlayer().getProfile()));
 	}
 	
 	private void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
-			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
+			ActionTypes.PLAY_AGAIN_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.getPlayer().getProfile()));
 			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
@@ -60,7 +60,7 @@ public class LudoScreen extends GameScreen {
 		GameField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().canSelect()) {
-				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), field.getFieldType(), field.getFieldPos()));
+				ActionTypes.SELECT_FIELD.send(this.client.getServerHandler(), new SelectFieldData(this.getPlayer().getProfile(), field.getFieldType(), field.getFieldPos()));
 				this.getPlayer().setCanSelect(false);
 			} else {
 				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());
@@ -84,7 +84,7 @@ public class LudoScreen extends GameScreen {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}
-
+	
 	@Override
 	protected Pane createPane() {
 		BorderPane pane = new BorderPane();
@@ -96,7 +96,7 @@ public class LudoScreen extends GameScreen {
 	}
 	
 	private Pane createDicePane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		pane.addColumn(0, this.diceButton);
 		return pane;
 	}
@@ -109,9 +109,9 @@ public class LudoScreen extends GameScreen {
 	}
 	
 	private Pane createActionPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 30.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 30.0);
 		pane.addRow(0, this.leaveButton, this.playAgainButton, this.confirmActionButton);
 		return pane;
 	}
-
+	
 }

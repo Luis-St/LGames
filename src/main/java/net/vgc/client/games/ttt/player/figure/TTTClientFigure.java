@@ -13,12 +13,12 @@ public class TTTClientFigure extends AbstractGameFigure {
 	public TTTClientFigure(GamePlayer player, int count, UUID uuid) {
 		super(player, count, uuid);
 	}
-
+	
 	@Override
 	public GameFieldPos getHomePos() {
 		return TTTFieldPos.NO;
 	}
-
+	
 	@Override
 	public GameFieldPos getStartPos() {
 		return TTTFieldPos.NO;

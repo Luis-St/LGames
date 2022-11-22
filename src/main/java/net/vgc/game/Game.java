@@ -3,10 +3,9 @@ package net.vgc.game;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -160,6 +159,7 @@ public interface Game {
 			}
 			this.getWinHandler().reset();
 			this.nextPlayer(true);
+			// rename/use actions instead of packets
 			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.getPlayers(), this::getName));
 			return true;

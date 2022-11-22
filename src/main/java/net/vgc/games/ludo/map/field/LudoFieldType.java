@@ -4,9 +4,7 @@ import net.vgc.game.map.field.GameFieldType;
 
 public enum LudoFieldType implements GameFieldType {
 	
-	DEFAULT("default", 0),
-	HOME("home", 1),
-	WIN("win", 2);
+	DEFAULT("default", 0), HOME("home", 1), WIN("win", 2);
 	
 	private final String name;
 	private final int id;

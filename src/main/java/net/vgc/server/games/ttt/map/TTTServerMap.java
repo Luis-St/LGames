@@ -2,7 +2,7 @@ package net.vgc.server.games.ttt.map;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -53,17 +53,17 @@ public class TTTServerMap extends AbstractServerGameMap {
 	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getWinFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public final boolean moveFigureTo(GameFigure figure, GameField field) {
 		LOGGER.warn("Fail to move figure {} of player {}, since tic tac toe figures are not moveable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());

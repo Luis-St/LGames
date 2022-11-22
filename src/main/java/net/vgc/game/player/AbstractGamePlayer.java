@@ -19,12 +19,12 @@ public abstract class AbstractGamePlayer implements GamePlayer {
 	public Game getGame() {
 		return this.game;
 	}
-
+	
 	@Override
 	public Player getPlayer() {
 		return this.player;
 	}
-
+	
 	@Override
 	public GamePlayerType getPlayerType() {
 		return this.playerType;
@@ -43,5 +43,5 @@ public abstract class AbstractGamePlayer implements GamePlayer {
 		}
 		return false;
 	}
-
+	
 }

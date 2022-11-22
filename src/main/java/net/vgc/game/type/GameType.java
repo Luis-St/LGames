@@ -3,7 +3,7 @@ package net.vgc.game.type;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.vgc.client.Client;
 import net.vgc.client.screen.game.GameScreen;

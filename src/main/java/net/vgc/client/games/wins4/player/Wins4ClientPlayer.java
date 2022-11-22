@@ -31,12 +31,12 @@ public class Wins4ClientPlayer extends AbstractClientGamePlayer {
 		}
 		return figures;
 	}
-
+	
 	@Override
 	public List<GameFigure> getFigures() {
 		return this.figures;
 	}
-
+	
 	@Override
 	public List<GameFieldPos> getWinPoses() {
 		return Lists.newArrayList();
@@ -56,5 +56,5 @@ public class Wins4ClientPlayer extends AbstractClientGamePlayer {
 	public String toString() {
 		return ToString.toString(this);
 	}
-
+	
 }

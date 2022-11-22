@@ -8,9 +8,9 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.ClientSettings;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.language.Language;
 import net.vgc.language.TranslationKey;
 
@@ -37,7 +37,7 @@ public class SettingsScreen extends Screen {
 			ClientSettings.LANGUAGE.setValue(this.languageSettingBox.getSelectionModel().getSelectedItem());
 			this.reapplyScreen();
 		});
-		this.languageSetting = FxUtil.makeGrid(Pos.CENTER, 75.0, 10.0, 20.0);
+		this.languageSetting = FxUtils.makeGrid(Pos.CENTER, 75.0, 10.0, 20.0);
 		this.languageSetting.addRow(0, this.languageSettingText, this.languageSettingBox);
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
@@ -48,12 +48,12 @@ public class SettingsScreen extends Screen {
 	
 	@Override
 	protected Pane createPane() {
-		GridPane gridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		GridPane settingsGridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane gridPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane settingsGridPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		settingsGridPane.addRow(0, this.languageSetting);
 		gridPane.addRow(0, settingsGridPane);
 		gridPane.addRow(1, this.backButtonBox);
 		return gridPane;
 	}
-
+	
 }

@@ -17,17 +17,17 @@ import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.AbstractPacketListener;
+import net.vgc.network.packet.AbstractPacketHandler;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
-public class ClientPacketListener extends AbstractPacketListener {
+public class ClientPacketHandler extends AbstractPacketHandler {
 	
 	private final Client client;
 	
-	public ClientPacketListener(Client client, NetworkSide networkSide) {
+	public ClientPacketHandler(Client client, NetworkSide networkSide) {
 		super(networkSide);
 		this.client = client;
 	}
@@ -43,24 +43,28 @@ public class ClientPacketListener extends AbstractPacketListener {
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} break;
+					}
+						break;
 					case USER_LOGIN: {
 						LOGGER.debug("Successfully logged in");
 						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} break;
+					}
+						break;
 					case GUEST_LOGIN: {
 						LOGGER.debug("Successfully logged in as a guest");
 						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} break;
+					}
+						break;
 					case UNKNOWN: {
 						LOGGER.warn("Fail to log in");
-					} break;
+					}
+						break;
 				}
 			} else {
 				LOGGER.warn("Fail to log in");
@@ -94,7 +98,8 @@ public class ClientPacketListener extends AbstractPacketListener {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handlePlayerAdd(GameProfile profile) {;
+	public void handlePlayerAdd(GameProfile profile) {
+		;
 		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			if (this.client.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
@@ -235,7 +240,8 @@ public class ClientPacketListener extends AbstractPacketListener {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handleStopGame() {;
+	public void handleStopGame() {
+		;
 		LOGGER.info("Stopping the current game");
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			player.setPlaying(false);

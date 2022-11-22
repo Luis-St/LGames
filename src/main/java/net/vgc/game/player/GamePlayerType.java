@@ -2,7 +2,7 @@ package net.vgc.game.player;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import javafx.scene.image.ImageView;
 import net.vgc.language.TranslationKey;

@@ -39,5 +39,5 @@ public class LudoServerFigure extends AbstractGameFigure {
 	public String toString() {
 		return ToString.toString(this, "player");
 	}
-
+	
 }

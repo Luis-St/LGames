@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import net.vgc.account.PlayerAccount;
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.server.network.ServerPacketListener;
+import net.vgc.server.network.ServerPacketHandler;
 import net.vgc.util.Util;
 
 public class ClientLeavePacket implements ServerPacket {
@@ -23,9 +23,9 @@ public class ClientLeavePacket implements ServerPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeUUID(this.uuid);
 	}
-
+	
 	@Override
-	public void handle(ServerPacketListener listener) {
+	public void handle(ServerPacketHandler listener) {
 		listener.handleClientLeave(this.uuid);
 	}
 	

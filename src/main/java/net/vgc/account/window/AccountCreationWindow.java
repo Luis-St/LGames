@@ -14,10 +14,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import net.luis.fxutils.FxUtils;
 import net.vgc.account.AccountServer;
 import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxAnimationUtil;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.language.TranslationKey;
 
 public class AccountCreationWindow {
@@ -33,12 +33,12 @@ public class AccountCreationWindow {
 	}
 	
 	private Pane main() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField nameField = new TextField();
 		VBox nameBox = new Box<>(nameField);
 		TextField passwordField = new TextField();
 		VBox passwordBox = new Box<>(passwordField);
-		GridPane guestPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 0.0);
+		GridPane guestPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 0.0);
 		guestPane.setAlignment(Pos.CENTER);
 		ToggleGroup toggleGroup = new ToggleGroup();
 		ToggleButton falseButton = new ToggleButton(TranslationKey.createAndGet("window.create_account.false"));
@@ -46,10 +46,10 @@ public class AccountCreationWindow {
 		ToggleButton trueButton = new ToggleButton(TranslationKey.createAndGet("window.create_account.true"));
 		trueButton.setToggleGroup(toggleGroup);
 		guestPane.addRow(0, falseButton, trueButton);
-		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), () -> {
+		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), () -> {
 			this.stage.close();
 		});
-		Button createButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.create"), () -> {
+		Button createButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.create"), () -> {
 			String name = nameField.getText();
 			String password = passwordField.getText();
 			boolean gueatFalse = falseButton.isSelected();

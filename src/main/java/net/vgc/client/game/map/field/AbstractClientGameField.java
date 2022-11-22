@@ -1,8 +1,8 @@
 package net.vgc.client.game.map.field;
 
 import javafx.scene.image.ImageView;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.Client;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.AbstractGameField;
@@ -36,7 +36,7 @@ public abstract class AbstractClientGameField extends AbstractGameField {
 	}
 	
 	protected ImageView makeImage(String path, double scale) {
-		return FxUtil.makeImageView(path, this.getSize() * scale, this.getSize() * scale);
+		return FxUtils.makeImageView(path, this.getSize() * scale, this.getSize() * scale);
 	}
 	
 	@Override
@@ -55,11 +55,11 @@ public abstract class AbstractClientGameField extends AbstractGameField {
 	public boolean isShadowed() {
 		return this.shadowed;
 	}
-
+	
 	@Override
 	public void setShadowed(boolean shadowed) {
 		this.shadowed = shadowed;
 		this.updateFieldGraphic();
 	}
-
+	
 }

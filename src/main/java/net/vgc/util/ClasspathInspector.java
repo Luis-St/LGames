@@ -54,7 +54,7 @@ public class ClasspathInspector {
 	private static String getClassName(final String fileName) {
 		return fileName.substring(0, fileName.length() - 6).replaceAll("/|\\\\", "\\.");
 	}
-
+	
 	private static List<File> getClasspathClasses() {
 		List<File> files = Lists.newArrayList();
 		if (System.getProperty("java.class.path") != null) {

@@ -1,10 +1,10 @@
 package net.vgc.common.settings;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract interface SettingValueType<T> {
 	
-	@Nonnull
+	@NotNull
 	T getValue(String string);
 	
 	String toString(T value);

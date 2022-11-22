@@ -27,22 +27,22 @@ public class TTTServerField extends AbstractServerGameField {
 		LOGGER.warn("Fail to get field color type of field {}, since tic tac toe fields does not have a field color type", this.getFieldPos().getPosition());
 		return super.getColorType();
 	}
-
+	
 	@Override
 	public boolean isHome() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isStart() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isStartFor(GameFigure figure) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isWin() {
 		return false;
@@ -52,5 +52,5 @@ public class TTTServerField extends AbstractServerGameField {
 	public String toString() {
 		return ToString.toString(this, "fieldType", "colorType", "result");
 	}
-
+	
 }

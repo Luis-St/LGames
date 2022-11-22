@@ -4,10 +4,7 @@ import net.vgc.util.EnumRepresentable;
 
 public enum LoginType implements EnumRepresentable {
 	
-	REGISTRATION("registration", 0),
-	USER_LOGIN("login_user", 1),
-	GUEST_LOGIN("login_guest", 2),
-	UNKNOWN("unknown", 3);
+	REGISTRATION("registration", 0), USER_LOGIN("login_user", 1), GUEST_LOGIN("login_guest", 2), UNKNOWN("unknown", 3);
 	
 	private final String name;
 	private final int id;

@@ -11,8 +11,7 @@ import net.vgc.language.TranslationKey;
 
 public enum Wins4PlayerType implements GamePlayerType {
 	
-	YELLOW("yellow", 0, new TranslationKey("screen.win4.yellow_player"), "textures/wins4/figure/figure_yellow"),
-	RED("red", 1, new TranslationKey("screen.win4.red_player"), "textures/wins4/figure/figure_red"),
+	YELLOW("yellow", 0, new TranslationKey("screen.win4.yellow_player"), "textures/wins4/figure/figure_yellow"), RED("red", 1, new TranslationKey("screen.win4.red_player"), "textures/wins4/figure/figure_red"),
 	NO("no", 2, new TranslationKey("screen.tic_tac_toe.no_player"), null);
 	
 	private final String name;
@@ -31,7 +30,7 @@ public enum Wins4PlayerType implements GamePlayerType {
 	public String getName() {
 		return this.name;
 	}
-
+	
 	@Override
 	public int getId() {
 		return this.id;
@@ -41,7 +40,7 @@ public enum Wins4PlayerType implements GamePlayerType {
 	public TranslationKey getTranslation() {
 		return this.translation;
 	}
-
+	
 	@Override
 	public List<Wins4PlayerType> getOpponents() {
 		if (this == NO) {
@@ -67,5 +66,5 @@ public enum Wins4PlayerType implements GamePlayerType {
 	public String toString() {
 		return this.name;
 	}
-
+	
 }

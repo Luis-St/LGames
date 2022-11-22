@@ -1,7 +1,7 @@
 package net.vgc.network.packet.account;
 
 import net.vgc.account.PlayerAccount;
-import net.vgc.account.network.AccountServerPacketListener;
+import net.vgc.account.network.AccountServerPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLogoutPacket implements AccountPacket {
@@ -20,14 +20,14 @@ public class ClientLogoutPacket implements AccountPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.account);
 	}
-
+	
 	@Override
-	public void handle(AccountServerPacketListener listener) {
+	public void handle(AccountServerPacketHandler listener) {
 		listener.handleClientLogout(this.account.getName(), this.account.getPassword());
 	}
 	
 	public PlayerAccount getAccount() {
 		return this.account;
 	}
-
+	
 }

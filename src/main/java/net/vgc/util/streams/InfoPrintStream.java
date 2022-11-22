@@ -29,5 +29,5 @@ public class InfoPrintStream extends PrintStream {
 	protected void log(String string) {
 		LOGGER.info("[{}]: {}", this.name, string);
 	}
-
+	
 }

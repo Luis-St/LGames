@@ -1,6 +1,6 @@
 package net.vgc.network.packet.client;
 
-import net.vgc.client.network.ClientPacketListener;
+import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 
@@ -22,7 +22,7 @@ public class PlayerRemovePacket implements ClientPacket {
 	}
 	
 	@Override
-	public void handle(ClientPacketListener listener) {
+	public void handle(ClientPacketHandler listener) {
 		listener.handlePlayerRemove(this.profile);
 	}
 	

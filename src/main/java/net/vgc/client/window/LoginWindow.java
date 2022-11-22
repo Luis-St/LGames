@@ -12,12 +12,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import net.luis.fxutils.FxUtils;
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxAnimationUtil;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.ConnectionHandler;
 import net.vgc.network.packet.Packet;
@@ -47,14 +47,14 @@ public class LoginWindow {
 	}
 	
 	private Pane main() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		Button registrationButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.register"), () -> {
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
+		Button registrationButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.register"), () -> {
 			this.setScene(this.registration());
 		});
-		Button loginButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
+		Button loginButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
 			this.setScene(this.loginSelect());
 		});
-		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), () -> {
+		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), () -> {
 			this.exit();
 		});
 		pane.addColumn(0, new Box<>(registrationButton), new Box<>(loginButton), new Box<>(closeButton));
@@ -62,14 +62,14 @@ public class LoginWindow {
 	}
 	
 	private Pane profile() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		PlayerAccount account = this.client.getAccount();
 		pane.addRow(0, new Text(TranslationKey.createAndGet("window.login.username")), new Text(account.getName()));
 		if (!account.isGuest()) {
 			pane.addRow(1, new Text(TranslationKey.createAndGet("window.login.password")));
 			account.displayPassword(pane);
 		}
-		Button logoutButton = FxUtil.makeButton(TranslationKey.createAndGet("window.logout.logout"), () -> {
+		Button logoutButton = FxUtils.makeButton(TranslationKey.createAndGet("window.logout.logout"), () -> {
 			ConnectionHandler handler = this.client.getAccountHandler();
 			if (handler.isConnected()) {
 				handler.send(new ClientLogoutPacket(account));
@@ -80,14 +80,14 @@ public class LoginWindow {
 	}
 	
 	private Pane registration() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField usernameField = new TextField();
 		PasswordField passwordField = new PasswordField();
 		PasswordField confirmPasswordField = new PasswordField();
-		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
+		Button backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
 			this.setScene(this.client.isLoggedIn() ? this.profile() : this.main());
 		});
-		Button registrationButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.register"), () -> {
+		Button registrationButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.register"), () -> {
 			String username = usernameField.getText();
 			String password = passwordField.getText();
 			String confirmPassword = confirmPasswordField.getText();
@@ -114,14 +114,14 @@ public class LoginWindow {
 	}
 	
 	private Pane loginSelect() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		Button userButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.user"), () -> {
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
+		Button userButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.user"), () -> {
 			this.setScene(this.loginUser());
 		});
-		Button guestButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.guest"), () -> {
+		Button guestButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.guest"), () -> {
 			this.setScene(this.loginGuest());
 		});
-		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
+		Button backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
 			this.setScene(this.client.isLoggedIn() ? this.profile() : this.main());
 		});
 		pane.addColumn(0, new Box<>(userButton), new Box<>(guestButton), new Box<>(backButton));
@@ -129,12 +129,12 @@ public class LoginWindow {
 	}
 	
 	private Pane loginGuest() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField usernameField = new TextField();
-		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
+		Button backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
 			this.setScene(this.loginSelect());
 		});
-		Button loginButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
+		Button loginButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
 			String userName = usernameField.getText();
 			if (userName.trim().isEmpty()) {
 				FxAnimationUtil.makeEmptyText(usernameField, 750);
@@ -149,13 +149,13 @@ public class LoginWindow {
 	}
 	
 	private Pane loginUser() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		TextField usernameField = new TextField();
 		PasswordField passwordField = new PasswordField();
-		Button backButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
+		Button backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> {
 			this.setScene(this.loginSelect());
 		});
-		Button loginButton = FxUtil.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
+		Button loginButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.login"), () -> {
 			String username = usernameField.getText();
 			String password = passwordField.getText();
 			if (username.trim().isEmpty()) {

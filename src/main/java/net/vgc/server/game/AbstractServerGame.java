@@ -8,12 +8,13 @@ import com.google.common.collect.Lists;
 
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
+import net.vgc.game.action.data.gobal.EmptyData;
+import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.player.Player;
 import net.vgc.server.dedicated.DedicatedServer;
@@ -76,7 +77,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 		if (this.getPlayers().remove(gamePlayer)) {
 			if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
 				if (sendExit) {
-					player.connection.send(new ExitGamePacket());
+					ActionTypes.EXIT_GAME.send(player.connection, new EmptyData());
 				}
 				player.setPlaying(false);
 				LOGGER.info("Remove player {} from game {}", this.getName(player), this.getType().getName().toLowerCase());
@@ -107,7 +108,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 	public WinHandler getWinHandler() {
 		return this.winHandler;
 	}
-
+	
 	@Override
 	public void stopGame() {
 		for (ServerPlayer player : this.getServer().getPlayerList().getPlayers()) {

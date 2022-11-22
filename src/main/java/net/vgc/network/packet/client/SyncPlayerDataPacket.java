@@ -1,6 +1,6 @@
 package net.vgc.network.packet.client;
 
-import net.vgc.client.network.ClientPacketListener;
+import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.buffer.FriendlyByteBuffer;
@@ -39,9 +39,9 @@ public class SyncPlayerDataPacket implements ClientPacket {
 		buffer.writeBoolean(this.playing);
 		buffer.write(this.score);
 	}
-
+	
 	@Override
-	public void handle(ClientPacketListener listener) {
+	public void handle(ClientPacketHandler listener) {
 		listener.handleSyncPlayerData(this.profile, this.playing, this.score);
 	}
 	
@@ -56,5 +56,5 @@ public class SyncPlayerDataPacket implements ClientPacket {
 	public PlayerScore getScore() {
 		return this.score;
 	}
-
+	
 }

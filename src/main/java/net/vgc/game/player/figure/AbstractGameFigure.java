@@ -20,12 +20,12 @@ public abstract class AbstractGameFigure implements GameFigure {
 	public GamePlayer getPlayer() {
 		return this.player;
 	}
-
+	
 	@Override
 	public int getCount() {
 		return this.count;
 	}
-
+	
 	@Override
 	public UUID getUUID() {
 		return this.uuid;
@@ -44,5 +44,5 @@ public abstract class AbstractGameFigure implements GameFigure {
 		}
 		return false;
 	}
-
+	
 }

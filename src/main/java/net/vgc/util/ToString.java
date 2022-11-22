@@ -46,17 +46,17 @@ public class ToString {
 	}
 	
 	private <T> List<Field> getFields() {
-        List<List<Field>> allFields = new ArrayList<>();
-        Class<?> clazz = this.object.getClass();
-        while (clazz.getSuperclass() != null) {
-        	allFields.add(Arrays.asList(clazz.getDeclaredFields()));
-            clazz = clazz.getSuperclass();
-        }
-        List<Field> fields = new ArrayList<>();
-        for (List<Field> list : Util.reverseList(allFields)) {
+		List<List<Field>> allFields = new ArrayList<>();
+		Class<?> clazz = this.object.getClass();
+		while (clazz.getSuperclass() != null) {
+			allFields.add(Arrays.asList(clazz.getDeclaredFields()));
+			clazz = clazz.getSuperclass();
+		}
+		List<Field> fields = new ArrayList<>();
+		for (List<Field> list : Util.reverseList(allFields)) {
 			fields.addAll(list);
 		}
-        return fields;
-    }
+		return fields;
+	}
 	
 }

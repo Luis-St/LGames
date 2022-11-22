@@ -3,7 +3,7 @@ package net.vgc.server.games.wins4.player;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -33,23 +33,23 @@ public class Wins4ServerPlayer extends AbstractServerGamePlayer {
 		}
 		return figures;
 	}
-
+	
 	@Override
 	public List<GameFigure> getFigures() {
 		return this.figures;
 	}
-
+	
 	@Override
 	public List<GameFieldPos> getWinPoses() {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public final int getRollCount() {
 		LOGGER.warn("Fail to get roll count of player {}, since the 4 wins is not a dice game", this.getPlayer().getProfile().getName());
 		return -1;
 	}
-
+	
 	@Override
 	public final void setRollCount(int rollCount) {
 		LOGGER.warn("Fail to set roll count of player {} to {}, since the 4 wins is not a dice game", this.getPlayer().getProfile().getName(), rollCount);
@@ -64,7 +64,7 @@ public class Wins4ServerPlayer extends AbstractServerGamePlayer {
 		}
 		return null;
 	}
-
+	
 	@Override
 	public boolean equals(Object object) {
 		if (!super.equals(object)) {
@@ -79,5 +79,5 @@ public class Wins4ServerPlayer extends AbstractServerGamePlayer {
 	public String toString() {
 		return ToString.toString(this);
 	}
-
+	
 }

@@ -16,7 +16,7 @@ public class TTTClientGame extends AbstractClientGame {
 	public TTTClientGame(Client client, List<GamePlayerInfo> playerInfos) {
 		super(client, TTTClientMap::new, playerInfos, TTTClientPlayer::new);
 	}
-
+	
 	@Override
 	public GameType<TTTServerGame, TTTClientGame> getType() {
 		return GameTypes.TIC_TAC_TOE;
@@ -26,5 +26,5 @@ public class TTTClientGame extends AbstractClientGame {
 	public String toString() {
 		return "TTTClientGame";
 	}
-
+	
 }

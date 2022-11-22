@@ -10,8 +10,8 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.Client;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.IndexToggleButton;
 import net.vgc.client.fx.game.wrapper.StackPaneWrapper;
 import net.vgc.client.game.map.AbstractClientGameMap;
@@ -27,7 +27,7 @@ import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWrapper {
-
+	
 	private final ToggleGroup group;
 	private final StackPane stackPane;
 	private final GridPane fieldPane;
@@ -37,8 +37,8 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		super(client, game);
 		this.group = new ToggleGroup();
 		this.stackPane = new StackPane();
-		this.fieldPane = FxUtil.makeGrid(Pos.CENTER, 0.0, 0.0);
-		this.interactionPane = FxUtil.makeGrid(Pos.CENTER, 0.0, 0.0);
+		this.fieldPane = FxUtils.makeGrid(Pos.CENTER, 0.0, 0.0);
+		this.interactionPane = FxUtils.makeGrid(Pos.CENTER, 0.0, 0.0);
 		this.init();
 		this.addFields();
 		this.addInteractions();
@@ -55,7 +55,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		this.setAlignment(Pos.CENTER);
 		this.setPadding(new Insets(20.0));
 	}
-
+	
 	@Override
 	public void addFields() {
 		for (int i = 0; i < 42; i++) {
@@ -103,12 +103,12 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		});
 		this.interactionPane.add(button, column, row);
 	}
-
+	
 	@Override
 	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
 		return this.getFields().get(fieldPos.getPosition());
 	}
-
+	
 	@Override
 	public final GameField getNextField(GameFigure figure, int count) {
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since the 4 wins figures does not have a next field", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
@@ -125,22 +125,22 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		}
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getWinFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public final GameField getSelectedField() {
 		LOGGER.warn("Fail to get the selected field, since the 4 wins map does not have a selected field");
@@ -156,57 +156,60 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		return -1;
 	}
 	
-	/*@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		if (clientPacket instanceof UpdateGameMapPacket packet) {
-			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
-				GameProfile profile = fieldInfo.getProfile();
-				if (fieldInfo.getFieldPos() instanceof Wins4FieldPos fieldPos) {
-					Wins4ClientField field = this.getField(null, null, fieldPos);
-					if (field != null) {
-						if (field.isShadowed()) {
-							field.setShadowed(false);
-						}
-						if (field.getResult() != GameResult.NO) {
-							field.setResult(GameResult.NO);
-						}
-						Wins4ClientPlayer player = (Wins4ClientPlayer) this.game.getPlayerFor(profile);
-						if (player != null) {
-							Wins4ClientFigure figure = player.getFigure(fieldInfo.getFigureCount());
-							UUID uuid = figure.getUUID();
-							UUID serverUUID = fieldInfo.getFigureUUID();
-							if (uuid.equals(serverUUID)) {
-								field.setFigure(figure);
-							} else {
-								LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
-							}
-						} else if (profile.equals(GameProfile.EMPTY)) {
-							field.setFigure(null);
-						} else {
-							LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
-						}
-					} else {
-						LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());
-					}
-				} else {
-					LOGGER.warn("Fail to update game field, since field pos is a instance of {}", fieldInfo.getFieldPos().getClass().getSimpleName());
-				}
-			}
-		} else if (clientPacket instanceof Wins4GameResultPacket packet) {
-			GameResult result = packet.getResult();
-			if (result != GameResult.NO) {
-				for (Wins4ClientField field : this.fields) {
-					field.setResult(result);
-				}
-			} else {
-				LOGGER.warn("Fail to handle game result {}", result);
-			}
-		}
-	}*/
+	/*
+	 * @Override
+	 * public void handlePacket(ClientPacket clientPacket) {
+	 * if (clientPacket instanceof UpdateGameMapPacket packet) {
+	 * for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
+	 * GameProfile profile = fieldInfo.getProfile();
+	 * if (fieldInfo.getFieldPos() instanceof Wins4FieldPos fieldPos) {
+	 * Wins4ClientField field = this.getField(null, null, fieldPos);
+	 * if (field != null) {
+	 * if (field.isShadowed()) {
+	 * field.setShadowed(false);
+	 * }
+	 * if (field.getResult() != GameResult.NO) {
+	 * field.setResult(GameResult.NO);
+	 * }
+	 * Wins4ClientPlayer player = (Wins4ClientPlayer) this.game.getPlayerFor(profile);
+	 * if (player != null) {
+	 * Wins4ClientFigure figure = player.getFigure(fieldInfo.getFigureCount());
+	 * UUID uuid = figure.getUUID();
+	 * UUID serverUUID = fieldInfo.getFigureUUID();
+	 * if (uuid.equals(serverUUID)) {
+	 * field.setFigure(figure);
+	 * } else {
+	 * LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(),
+	 * uuid, serverUUID);
+	 * }
+	 * } else if (profile.equals(GameProfile.EMPTY)) {
+	 * field.setFigure(null);
+	 * } else {
+	 * LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
+	 * }
+	 * } else {
+	 * LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());
+	 * }
+	 * } else {
+	 * LOGGER.warn("Fail to update game field, since field pos is a instance of {}", fieldInfo.getFieldPos().getClass().getSimpleName());
+	 * }
+	 * }
+	 * } else if (clientPacket instanceof Wins4GameResultPacket packet) {
+	 * GameResult result = packet.getResult();
+	 * if (result != GameResult.NO) {
+	 * for (Wins4ClientField field : this.fields) {
+	 * field.setResult(result);
+	 * }
+	 * } else {
+	 * LOGGER.warn("Fail to handle game result {}", result);
+	 * }
+	 * }
+	 * }
+	 */
 	
 	@Override
 	public String toString() {
 		return "Win4ClientMap";
 	}
-
+	
 }

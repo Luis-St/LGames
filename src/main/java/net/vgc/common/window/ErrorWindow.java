@@ -1,9 +1,8 @@
 package net.vgc.common.window;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -39,7 +38,7 @@ public class ErrorWindow {
 		return new ErrorWindow("Error", errorMessage, () -> {
 			if (NetworkSide.CLIENT.isOn()) {
 				Client.getInstance().exit();
-			} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
+			} else if (NetworkSide.ACCOUNT.isOn()) {
 				AccountServer.getInstance().exit();
 			} else if (NetworkSide.SERVER.isOn()) {
 				Server.getInstance().exit();
@@ -103,7 +102,7 @@ public class ErrorWindow {
 		box.setAlignment(Pos.CENTER);
 		box.getChildren().add(button);
 		pane.add(box, 0, flag ? 1 : 0);
-
+		
 		stage.setScene(new Scene(pane, width, height));
 		stage.setTitle(this.title);
 		stage.showAndWait();

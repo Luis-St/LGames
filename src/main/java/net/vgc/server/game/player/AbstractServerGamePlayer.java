@@ -12,12 +12,12 @@ public abstract class AbstractServerGamePlayer extends AbstractGamePlayer {
 	protected AbstractServerGamePlayer(Game game, Player player, GamePlayerType playerType) {
 		super(game, player, playerType);
 	}
-
+	
 	@Override
 	public int getRollCount() {
 		return this.getGame().isDiceGame() ? this.rollCount : 0;
 	}
-
+	
 	@Override
 	public void setRollCount(int rollCount) {
 		this.rollCount = Math.max(0, rollCount);
@@ -32,5 +32,5 @@ public abstract class AbstractServerGamePlayer extends AbstractGamePlayer {
 		}
 		return false;
 	}
-
+	
 }

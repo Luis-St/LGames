@@ -17,7 +17,7 @@ public abstract class AbstractClientGameMap extends AbstractGameMap {
 		super(game);
 		this.client = client;
 	}
-
+	
 	@Override
 	public void init(List<GamePlayer> players) {
 		this.getFields().forEach(GameField::clear);
@@ -32,5 +32,5 @@ public abstract class AbstractClientGameMap extends AbstractGameMap {
 		LOGGER.warn("Can not move figure {} of player {} on client", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return false;
 	}
-
+	
 }

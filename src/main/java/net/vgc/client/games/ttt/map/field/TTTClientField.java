@@ -44,13 +44,13 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 	public ToggleButton getToggleButton() {
 		return this.button;
 	}
-
+	
 	@Override
 	public final GameFieldType getFieldType() {
 		LOGGER.warn("Fail to get the field type of field {}, since tic tac toe fields does not have a field type", this.getFieldPos().getPosition());
 		return super.getFieldType();
 	}
-
+	
 	@Override
 	public final GamePlayerType getColorType() {
 		LOGGER.warn("Fail to get field color type of field {}, since tic tac toe fields does not have a field color type", this.getFieldPos().getPosition());
@@ -61,32 +61,32 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 	public boolean isHome() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isStart() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isStartFor(GameFigure figure) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isWin() {
 		return false;
 	}
-
+	
 	@Override
 	public ImageView getFieldBackground() {
 		return null;
 	}
-
+	
 	@Override
 	public boolean canSelect() {
 		return this.isEmpty() && this.getResult() == GameResult.NO;
 	}
-
+	
 	@Override
 	public void updateFieldGraphic() {
 		if (this.isEmpty()) {
@@ -131,5 +131,5 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 	public String toString() {
 		return ToString.toString(this, "fieldType", "colorType", "result");
 	}
-
+	
 }

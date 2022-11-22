@@ -9,11 +9,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.tags.CompoundTag;
+import net.luis.utils.data.tag.tags.StringTag;
 import net.vgc.data.serialization.Serializable;
-import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.TagUtil;
-import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.data.tag.tags.StringTag;
 import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.exception.InvalidValueException;

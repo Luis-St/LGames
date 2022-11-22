@@ -72,7 +72,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public int getLoses() {
-		return this.lose.getValue();	
+		return this.lose.getValue();
 	}
 	
 	public void setLoses(int loses) {
@@ -88,7 +88,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public int getDraws() {
-		return this.draw.getValue();	
+		return this.draw.getValue();
 	}
 	
 	public void setDraws(int draws) {

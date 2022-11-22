@@ -2,7 +2,7 @@ package net.vgc.server.games.wins4.map;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -37,12 +37,12 @@ public class Wins4ServerMap extends AbstractServerGameMap {
 			this.addField(new Wins4ServerField(this, Wins4FieldPos.of(i)));
 		}
 	}
-
+	
 	@Override
 	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
 		return this.getFields().get(fieldPos.getPosition());
 	}
-
+	
 	@Nullable
 	@Override
 	public final GameField getNextField(GameFigure figure, int count) {
@@ -60,22 +60,22 @@ public class Wins4ServerMap extends AbstractServerGameMap {
 		}
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getWinFields(GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public final boolean moveFigureTo(GameFigure figure, GameField field) {
 		LOGGER.warn("Fail to move figure {} of player {}, since the 4 wins figures are not moveable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());

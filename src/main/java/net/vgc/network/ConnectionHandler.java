@@ -1,12 +1,12 @@
 package net.vgc.network;
 
+import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
@@ -25,8 +25,14 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketDecoder;
 import net.vgc.network.packet.PacketEncoder;
-import net.vgc.network.packet.PacketListener;
+import net.vgc.network.packet.PacketHandler;
 import net.vgc.util.ExceptionHandler;
+
+/**
+ * 
+ * @author Luis-st
+ *
+ */
 
 public class ConnectionHandler {
 	
@@ -34,23 +40,23 @@ public class ConnectionHandler {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private final String connectTo;
-	private final Supplier<PacketListener> listenerFactory;
+	private final Supplier<PacketHandler> handlerFactory;
 	private final Consumer<Connection> closeAction;
 	private EventLoopGroup group;
 	private Channel channel;
 	private Connection connection;
 	
-	public ConnectionHandler(String connectTo, Supplier<PacketListener> listenerFactory, Consumer<Connection> closeAction) {
+	public ConnectionHandler(String connectTo, Supplier<PacketHandler> handlerFactory, Consumer<Connection> closeAction) {
 		this.connectTo = connectTo;
-		this.listenerFactory = listenerFactory;
+		this.handlerFactory = handlerFactory;
 		this.closeAction = closeAction;
 	}
 	
 	public void connect(String host, int port) {
 		try {
-			this.group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("client network").setUncaughtExceptionHandler(new ExceptionHandler()).build())
-				: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("client network").setUncaughtExceptionHandler(new ExceptionHandler()).build());
-			this.connection = new Connection(this.listenerFactory.get());
+			ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("client network").setUncaughtExceptionHandler(new ExceptionHandler()).build();
+			this.group = NATIVE ? new EpollEventLoopGroup(0, threadFactory) : new NioEventLoopGroup(0, threadFactory);
+			this.connection = new Connection(this.handlerFactory.get());
 			this.channel = new Bootstrap().group(this.group).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
 				@Override
 				protected void initChannel(Channel channel) throws Exception {

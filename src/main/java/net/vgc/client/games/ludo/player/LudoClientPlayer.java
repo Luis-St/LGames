@@ -32,7 +32,7 @@ public class LudoClientPlayer extends AbstractClientGamePlayer {
 		}
 		return figures;
 	}
-
+	
 	@Override
 	public List<GameFigure> getFigures() {
 		return this.figures;

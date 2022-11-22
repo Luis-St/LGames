@@ -85,7 +85,7 @@ public class LudoServerMap extends AbstractServerGameMap {
 		}
 		throw new InvalidValueException("Fail to get field color for index " + i);
 	}
-
+	
 	@Override
 	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
 		playerType = Util.warpNullTo(playerType, LudoPlayerType.NO);
@@ -104,7 +104,7 @@ public class LudoServerMap extends AbstractServerGameMap {
 		LOGGER.warn("Fail to get a field with type {} and color {} at position {}", fieldType, playerType, fieldPos.getPosition());
 		return null;
 	}
-
+	
 	@Override
 	public GameField getNextField(GameFigure figure, int count) {
 		String playerName = figure.getPlayer().getPlayer().getProfile().getName();
@@ -141,20 +141,25 @@ public class LudoServerMap extends AbstractServerGameMap {
 		LOGGER.warn("Fail to get next field for figure {} of player {}, since the current field is null", figure.getCount(), playerName);
 		return null;
 	}
-
+	
 	@Override
 	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		switch ((LudoPlayerType) playerType) {
-			case GREEN: return this.homeFields.subList(0, 4);
-			case YELLOW: return this.homeFields.subList(4, 8);
-			case BLUE: return this.homeFields.subList(8, 12);
-			case RED: return this.homeFields.subList(12, 16);
-			default: break;
+			case GREEN:
+				return this.homeFields.subList(0, 4);
+			case YELLOW:
+				return this.homeFields.subList(4, 8);
+			case BLUE:
+				return this.homeFields.subList(8, 12);
+			case RED:
+				return this.homeFields.subList(12, 16);
+			default:
+				break;
 		}
 		LOGGER.warn("Fail to get home fields for type {}", playerType);
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return switch ((LudoPlayerType) playerType) {
@@ -165,20 +170,25 @@ public class LudoServerMap extends AbstractServerGameMap {
 			}
 		};
 	}
-
+	
 	@Override
 	public List<GameField> getWinFields(GamePlayerType playerType) {
 		switch ((LudoPlayerType) playerType) {
-			case GREEN: return this.winFields.subList(0, 4);
-			case YELLOW: return this.winFields.subList(4, 8);
-			case BLUE: return this.winFields.subList(8, 12);
-			case RED: return this.winFields.subList(12, 16);
-			default: break;
+			case GREEN:
+				return this.winFields.subList(0, 4);
+			case YELLOW:
+				return this.winFields.subList(4, 8);
+			case BLUE:
+				return this.winFields.subList(8, 12);
+			case RED:
+				return this.winFields.subList(12, 16);
+			default:
+				break;
 		}
 		LOGGER.warn("Fail to get win fields for type {}", playerType);
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public boolean moveFigureTo(GameFigure figure, GameField field) {
 		String playerName = figure.getPlayer().getPlayer().getProfile().getName();
@@ -219,5 +229,5 @@ public class LudoServerMap extends AbstractServerGameMap {
 	public String toString() {
 		return "LudoServerMap";
 	}
-
+	
 }

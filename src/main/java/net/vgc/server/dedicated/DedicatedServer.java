@@ -6,10 +6,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -35,10 +34,10 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import net.luis.fxutils.FxUtils;
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.Constans;
-import net.vgc.client.fx.FxUtil;
-import net.vgc.data.tag.Tag;
-import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
@@ -47,15 +46,15 @@ import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.PacketDecoder;
 import net.vgc.network.packet.PacketEncoder;
-import net.vgc.network.packet.PacketHandler;
+import net.vgc.network.packet.PacketListener;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
-import net.vgc.server.network.ServerPacketListener;
+import net.vgc.server.network.ServerPacketHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.ExceptionHandler;
 import net.vgc.util.Tickable;
 
-public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
+public class DedicatedServer implements Tickable, PacketListener<ServerPacket> {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final boolean NATIVE = Epoll.isAvailable();
@@ -121,12 +120,12 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 		treeItem.getChildren().add(this.playersTreeItem);
 		serverTree.setRoot(treeItem);
 		serverTree.setShowRoot(Constans.DEBUG);
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
-		Button settingsButton = FxUtil.makeButton(TranslationKey.createAndGet("screen.menu.settings"), this::openSettings);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 5.0, 5.0);
+		Button settingsButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.menu.settings"), this::openSettings);
 		settingsButton.setPrefWidth(150.0);
-		Button refreshButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshPlayers);
+		Button refreshButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshPlayers);
 		refreshButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
-		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), Platform::exit);
+		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), Platform::exit);
 		closeButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
 		if (Constans.IDE) {
 			pane.addRow(0, settingsButton, refreshButton, closeButton);
@@ -147,13 +146,13 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 			this.playersTreeItem.getChildren().add(player.display());
 		}
 	}
-
+	
 	public void startServer() {
 		new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
 			@Override
 			protected void initChannel(Channel channel) throws Exception {
 				ChannelPipeline pipeline = channel.pipeline();
-				Connection connection = new Connection(new ServerPacketListener(DedicatedServer.this, NetworkSide.SERVER));
+				Connection connection = new Connection(new ServerPacketHandler(DedicatedServer.this, NetworkSide.SERVER));
 				pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
 				pipeline.addLast("decoder", new PacketDecoder());
 				pipeline.addLast("prepender", new ProtobufVarint32LengthFieldPrepender());
@@ -267,5 +266,5 @@ public class DedicatedServer implements Tickable, PacketHandler<ServerPacket> {
 		CompoundTag tag = new CompoundTag();
 		return tag;
 	}
-
+	
 }

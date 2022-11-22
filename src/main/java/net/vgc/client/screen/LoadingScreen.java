@@ -6,8 +6,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.Box;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.Mth;
 
@@ -46,7 +46,7 @@ public class LoadingScreen extends Screen {
 		if (progress > 1.0) {
 			this.loadingBarBox.getNode().setProgress(1.0);
 		} else if (progress == 1.0 && !enterMenu) {
-			this.client.setScreen(new MenuScreen());	
+			this.client.setScreen(new MenuScreen());
 			this.enterMenu = true;
 		} else {
 			if (0 > progress) {
@@ -58,7 +58,7 @@ public class LoadingScreen extends Screen {
 	
 	@Override
 	protected Pane createPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		pane.add(this.vgcTextBox, 0, 0);
 		pane.add(this.loadingBarBox, 0, 10);
 		pane.add(this.loadingTextBox, 0, 10);

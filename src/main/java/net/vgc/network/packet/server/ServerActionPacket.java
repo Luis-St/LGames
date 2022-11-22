@@ -1,9 +1,9 @@
 package net.vgc.network.packet.server;
 
 import net.vgc.game.action.Action;
-import net.vgc.game.action.ActionTypes;
+import net.vgc.game.action.ActionRegistry;
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.server.network.ServerPacketListener;
+import net.vgc.server.network.ServerPacketHandler;
 
 public class ServerActionPacket implements ServerPacket {
 	
@@ -15,17 +15,17 @@ public class ServerActionPacket implements ServerPacket {
 	
 	public ServerActionPacket(FriendlyByteBuffer buffer) {
 		int id = buffer.readInt();
-		this.action = ActionTypes.getType(id).decode(buffer);
+		this.action = ActionRegistry.getType(id).decode(buffer);
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeInt(this.action.getType().getId());
-		this.action.getData().encode(buffer);
+		buffer.writeInt(this.action.id());
+		this.action.data().encode(buffer);
 	}
-
+	
 	@Override
-	public void handle(ServerPacketListener listener) {
+	public void handle(ServerPacketHandler listener) {
 		// TODO Auto-generated method stub
 		
 	}

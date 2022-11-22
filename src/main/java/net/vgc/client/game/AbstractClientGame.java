@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -67,7 +67,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 	public final void nextPlayer(boolean random) {
 		LOGGER.warn("Can not set the next player on client");
 	}
-
+	
 	@Override
 	public final boolean removePlayer(GamePlayer player, boolean sendExit) {
 		LOGGER.warn("Can not remove player {} from game {} on client", player.getPlayer().getProfile().getName(), this.getType().getInfoName());
@@ -91,7 +91,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 		LOGGER.warn("Can not start a next match from the client");
 		return false;
 	}
-
+	
 	@Override
 	public void stopGame() {
 		LOGGER.info("Stopping the current game {}", this.getType().getInfoName());
@@ -106,5 +106,5 @@ public abstract class AbstractClientGame extends AbstractGame {
 	public final void broadcastPlayer(Packet<?> packet, GamePlayer gamePlayer) {
 		LOGGER.warn("Can not broadcast packet {} to player {} on client", packet.getClass().getSimpleName(), this.getName(gamePlayer));
 	}
-
+	
 }

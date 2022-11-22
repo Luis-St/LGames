@@ -3,7 +3,7 @@ package net.vgc.server.games.ttt.player;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -38,18 +38,18 @@ public class TTTServerPlayer extends AbstractServerGamePlayer {
 	public List<GameFigure> getFigures() {
 		return this.figures;
 	}
-
+	
 	@Override
 	public List<GameFieldPos> getWinPoses() {
 		return Lists.newArrayList();
 	}
-
+	
 	@Override
 	public final int getRollCount() {
 		LOGGER.warn("Fail to get roll count of player {}, since tic tac toe is not a dice game", this.getPlayer().getProfile().getName());
 		return -1;
 	}
-
+	
 	@Override
 	public final void setRollCount(int rollCount) {
 		LOGGER.warn("Fail to set roll count of player {} to {}, since tic tac toe is not a dice game", this.getPlayer().getProfile().getName(), rollCount);
@@ -64,7 +64,7 @@ public class TTTServerPlayer extends AbstractServerGamePlayer {
 		}
 		return null;
 	}
-
+	
 	@Override
 	public boolean equals(Object object) {
 		if (!super.equals(object)) {

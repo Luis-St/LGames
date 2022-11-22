@@ -5,19 +5,19 @@ import net.vgc.account.AccountServer;
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.AbstractPacketListener;
+import net.vgc.network.packet.AbstractPacketHandler;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
 
-public class AccountServerPacketListener extends AbstractPacketListener {
+public class AccountServerPacketHandler extends AbstractPacketHandler {
 	
 	private final AccountServer accountServer;
 	
-	public AccountServerPacketListener(AccountServer accountServer, NetworkSide networkSide) {
+	public AccountServerPacketHandler(AccountServer accountServer, NetworkSide networkSide) {
 		super(networkSide);
 		this.accountServer = accountServer;
 	}
-
+	
 	public void handleClientLogin(LoginType loginType, String name, String password) {
 		AccountAgent agent = this.accountServer.getAgent();
 		PlayerAccount account;

@@ -33,34 +33,34 @@ import javafx.stage.Stage;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.luis.fxutils.FxUtils;
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.tags.CompoundTag;
+import net.luis.utils.data.tag.tags.collection.ListTag;
 import net.vgc.Constans;
-import net.vgc.account.network.AccountServerPacketListener;
+import net.vgc.account.network.AccountServerPacketHandler;
 import net.vgc.account.window.AccountCreationWindow;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.common.application.GameApplication;
 import net.vgc.data.serialization.SerializationUtil;
-import net.vgc.data.tag.Tag;
-import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.data.tag.tags.collection.ListTag;
 import net.vgc.language.Language;
 import net.vgc.language.LanguageProvider;
 import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
-import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketDecoder;
 import net.vgc.network.packet.PacketEncoder;
+import net.vgc.network.packet.account.AccountPacket;
 import net.vgc.util.ExceptionHandler;
+import net.vgc.util.exception.InvalidNetworkSideException;
 
-public class AccountServer extends GameApplication<Packet<AccountServerPacketListener>> {
+public class AccountServer extends GameApplication<AccountPacket> {
 	
 	public static AccountServer getInstance() {
-		if (NetworkSide.ACCOUNT_SERVER.isOn()) {
+		if (NetworkSide.ACCOUNT.isOn()) {
 			return (AccountServer) instance;
 		}
-		throw new InvalidNetworkSideException(NetworkSide.ACCOUNT_SERVER);
+		throw new InvalidNetworkSideException(NetworkSide.ACCOUNT);
 	}
 	
 	private final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
@@ -165,7 +165,7 @@ public class AccountServer extends GameApplication<Packet<AccountServerPacketLis
 					}
 				}
 			} else {
-				LOGGER.warn("Fail to load player accounts from file {}, since tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());	
+				LOGGER.warn("Fail to load player accounts from file {}, since tag {} is not an instance of CompoundTag, but it is a type of {}", path, tag, tag.getClass().getSimpleName());
 			}
 		}
 		LOGGER.debug("Load {} accounts", accounts.size());
@@ -177,7 +177,7 @@ public class AccountServer extends GameApplication<Packet<AccountServerPacketLis
 			@Override
 			protected void initChannel(Channel channel) throws Exception {
 				ChannelPipeline pipeline = channel.pipeline();
-				Connection connection = new Connection(new AccountServerPacketListener(AccountServer.this, NetworkSide.ACCOUNT_SERVER));
+				Connection connection = new Connection(new AccountServerPacketHandler(AccountServer.this, NetworkSide.ACCOUNT));
 				pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
 				pipeline.addLast("decoder", new PacketDecoder());
 				pipeline.addLast("prepender", new ProtobufVarint32LengthFieldPrepender());
@@ -209,14 +209,14 @@ public class AccountServer extends GameApplication<Packet<AccountServerPacketLis
 		}
 		this.accountView.setRoot(treeItem);
 		this.accountView.setShowRoot(Constans.DEBUG);
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
-		Button createAccountButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.create"), this::createAccount);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 5.0, 5.0);
+		Button createAccountButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.create"), this::createAccount);
 		createAccountButton.setPrefWidth(110.0);
-		Button removeAccountButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.remove"), this::removeAccount);
+		Button removeAccountButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.remove"), this::removeAccount);
 		removeAccountButton.setPrefWidth(110.0);
-		Button refreshButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshScene);
+		Button refreshButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshScene);
 		refreshButton.setPrefWidth(110.0);
-		Button closeButton = FxUtil.makeButton(TranslationKey.createAndGet("account.window.close"), this::exit);
+		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), this::exit);
 		closeButton.setPrefWidth(110.0);
 		pane.addRow(0, createAccountButton, removeAccountButton, refreshButton, closeButton);
 		box.getChildren().addAll(this.accountView, pane);
@@ -268,7 +268,7 @@ public class AccountServer extends GameApplication<Packet<AccountServerPacketLis
 	
 	@Override
 	public NetworkSide getNetworkSide() {
-		return NetworkSide.ACCOUNT_SERVER;
+		return NetworkSide.ACCOUNT;
 	}
 	
 	public Path getGameDirectory() {

@@ -1,7 +1,14 @@
 package net.vgc.network.packet;
 
-public interface PacketHandler<T extends Packet<?>> {
+import net.vgc.network.Connection;
+import net.vgc.network.NetworkSide;
+
+public interface PacketHandler {
 	
-	void handlePacket(T packet);
+	Connection getConnection();
+	
+	void setConnection(Connection connection);
+	
+	NetworkSide getNetworkSide();
 	
 }

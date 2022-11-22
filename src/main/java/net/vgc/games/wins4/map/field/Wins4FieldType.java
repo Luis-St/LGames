@@ -5,7 +5,7 @@ import net.vgc.game.map.field.GameFieldType;
 public enum Wins4FieldType implements GameFieldType {
 	
 	DEFAULT("default", 0);
-
+	
 	private final String name;
 	private final int id;
 	
@@ -33,5 +33,5 @@ public enum Wins4FieldType implements GameFieldType {
 	public String toString() {
 		return this.name;
 	}
-
+	
 }

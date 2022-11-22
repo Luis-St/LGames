@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import net.vgc.network.Network;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
-public interface Packet<T extends PacketListener> {
+public interface Packet<T extends PacketHandler> {
 	
 	void encode(FriendlyByteBuffer buffer);
 	

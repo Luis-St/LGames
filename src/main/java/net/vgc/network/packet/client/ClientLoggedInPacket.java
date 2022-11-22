@@ -2,7 +2,7 @@ package net.vgc.network.packet.client;
 
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
-import net.vgc.client.network.ClientPacketListener;
+import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLoggedInPacket implements ClientPacket {
@@ -29,9 +29,9 @@ public class ClientLoggedInPacket implements ClientPacket {
 		buffer.write(this.account);
 		buffer.writeBoolean(this.successful);
 	}
-
+	
 	@Override
-	public void handle(ClientPacketListener listener) {
+	public void handle(ClientPacketHandler listener) {
 		listener.handleClientLoggedIn(this.loginType, this.account, this.successful);
 	}
 	

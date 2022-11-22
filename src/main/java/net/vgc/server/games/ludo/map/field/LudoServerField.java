@@ -14,12 +14,12 @@ public class LudoServerField extends AbstractServerGameField {
 	public LudoServerField(GameMap map, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos) {
 		super(map, fieldType, colorType, fieldPos);
 	}
-
+	
 	@Override
 	public boolean isHome() {
 		return this.getFieldType() == LudoFieldType.HOME;
 	}
-
+	
 	@Override
 	public boolean isStart() {
 		return this.getFieldPos().isStart();
@@ -39,5 +39,5 @@ public class LudoServerField extends AbstractServerGameField {
 	public String toString() {
 		return ToString.toString(this, "result");
 	}
-
+	
 }

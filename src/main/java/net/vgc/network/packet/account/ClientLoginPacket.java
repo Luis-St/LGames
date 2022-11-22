@@ -1,7 +1,7 @@
 package net.vgc.network.packet.account;
 
 import net.vgc.account.LoginType;
-import net.vgc.account.network.AccountServerPacketListener;
+import net.vgc.account.network.AccountServerPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientLoginPacket implements AccountPacket {
@@ -28,9 +28,9 @@ public class ClientLoginPacket implements AccountPacket {
 		buffer.writeString(this.name);
 		buffer.writeString(this.password);
 	}
-
+	
 	@Override
-	public void handle(AccountServerPacketListener listener) {
+	public void handle(AccountServerPacketHandler listener) {
 		listener.handleClientLogin(this.loginType, this.name, this.password);
 	}
 	

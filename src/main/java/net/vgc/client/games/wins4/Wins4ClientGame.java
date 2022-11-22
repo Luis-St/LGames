@@ -16,7 +16,7 @@ public class Wins4ClientGame extends AbstractClientGame {
 	public Wins4ClientGame(Client client, List<GamePlayerInfo> playerInfos) {
 		super(client, TTTClientMap::new, playerInfos, TTTClientPlayer::new);
 	}
-
+	
 	@Override
 	public GameType<Wins4ServerGame, Wins4ClientGame> getType() {
 		return GameTypes.WINS_4;

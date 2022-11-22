@@ -9,31 +9,28 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import com.google.common.collect.Lists;
 
 import net.vgc.game.Game;
+import net.vgc.game.action.data.gobal.EmptyData;
+import net.vgc.game.action.data.gobal.IntegerData;
+import net.vgc.game.action.data.specific.StartGameData;
+import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.game.type.GameType;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.AbstractPacketListener;
+import net.vgc.network.packet.AbstractPacketHandler;
 import net.vgc.network.packet.client.ClientJoinedPacket;
-import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
-import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
-import net.vgc.network.packet.client.game.ExitGamePacket;
-import net.vgc.network.packet.client.game.StartGamePacket;
-import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
-import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
-import net.vgc.network.packet.client.game.dice.RolledDicePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.dice.DiceHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
-public class ServerPacketListener extends AbstractPacketListener {
+public class ServerPacketHandler extends AbstractPacketHandler {
 	
 	private final DedicatedServer server;
 	
-	public ServerPacketListener(DedicatedServer server, NetworkSide networkSide) {
+	public ServerPacketHandler(DedicatedServer server, NetworkSide networkSide) {
 		super(networkSide);
 		this.server = server;
 	}
@@ -65,7 +62,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 						game.startGame();
 						for (ServerPlayer player : players) {
 							player.setPlaying(true);
-							player.connection.send(new StartGamePacket(gameType, this.createPlayerInfos(game.getPlayers())));
+							ActionTypes.START_GAME.send(player.connection, new StartGameData(gameType, this.createPlayerInfos(game.getPlayers())));
 						}
 						Util.runDelayed("DelayedSetStartPlayer", 250, () -> {
 							game.getStartPlayer();
@@ -73,11 +70,11 @@ public class ServerPacketListener extends AbstractPacketListener {
 					}
 				} else {
 					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getInfoName(), this.server.getGame().getType().getInfoName());
-					this.connection.send(new CancelPlayGameRequestPacket());
+					ActionTypes.CANCEL_PLAY_REQUEST.send(this.connection, new EmptyData());
 				}
 			} else {
 				LOGGER.warn("Fail to start game {}, since on player is already playing a game (this should normally not happen)", gameType.getName());
-				this.connection.send(new CancelPlayGameRequestPacket());
+				ActionTypes.CANCEL_PLAY_REQUEST.send(this.connection, new EmptyData());
 			}
 		} else {
 			if (mutable.isTrue()) {
@@ -85,7 +82,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 			} else {
 				LOGGER.warn("Fail to start game {}, since there was an error in a player profile", gameType.getInfoName());
 			}
-			this.connection.send(new CancelPlayGameRequestPacket());
+			ActionTypes.CANCEL_PLAY_REQUEST.send(this.connection, new EmptyData());
 		}
 	}
 	
@@ -105,20 +102,20 @@ public class ServerPacketListener extends AbstractPacketListener {
 				if (game != null) {
 					if (!game.nextMatch()) {
 						LOGGER.warn("Fail to start new match of game {}", game.getType().getInfoName());
-						this.connection.send(new CancelPlayAgainGameRequestPacket());
+						ActionTypes.CANCEL_PLAY_AGAIN_REQUEST.send(this.connection, new EmptyData());
 						game.stopGame();
 					}
 				} else {
 					LOGGER.warn("Fail to start new match, since there is no game running");
-					this.connection.send(new CancelPlayAgainGameRequestPacket());
+					ActionTypes.CANCEL_PLAY_AGAIN_REQUEST.send(this.connection, new EmptyData());
 				}
 			} else {
 				LOGGER.warn("Cancel request to start a new match, since the player {} has not the required permission");
-				this.connection.send(new CancelPlayAgainGameRequestPacket());
+				ActionTypes.CANCEL_PLAY_AGAIN_REQUEST.send(this.connection, new EmptyData());
 			}
 		} else {
 			LOGGER.warn("Fail to start a new match, since there was an error in a player profile {}", profile.getName());
-			this.connection.send(new CancelPlayAgainGameRequestPacket());
+			ActionTypes.CANCEL_PLAY_AGAIN_REQUEST.send(this.connection, new EmptyData());
 		}
 	}
 	
@@ -137,9 +134,9 @@ public class ServerPacketListener extends AbstractPacketListener {
 							count = diceHandler.roll(player);
 						}
 						LOGGER.info("Player {} rolled a {}", profile.getName(), count);
-						this.connection.send(new RolledDicePacket(count));
+						ActionTypes.ROLLED_DICE.send(this.connection, new IntegerData(count));
 						if (diceHandler.canRollAgain(player, count)) {
-							this.connection.send(new CanRollDiceAgainPacket());
+							ActionTypes.CAN_ROLL_DICE_AGAIN.send(this.connection, new EmptyData());
 						} else if (diceHandler.canPerformGameAction(player, count)) {
 							player.setRollCount(0);
 							diceHandler.performGameAction(player, count);
@@ -149,29 +146,29 @@ public class ServerPacketListener extends AbstractPacketListener {
 						}
 					} else {
 						LOGGER.warn("Player {} tries to roll the dice, but he is not be able to roll it", profile.getName());
-						this.connection.send(new CancelRollDiceRequestPacket());
+						ActionTypes.CANCEL_ROLL_DICE_REQUEST.send(this.connection, new EmptyData());
 						game.nextPlayer(false);
 					}
 				} else {
 					LOGGER.warn("Fail to roll dice, since game {} is not a dice game", game.getType().getInfoName());
-					this.connection.send(new CancelRollDiceRequestPacket());
+					ActionTypes.CANCEL_ROLL_DICE_REQUEST.send(this.connection, new EmptyData());
 					game.stopGame();
 				}
 			} else {
 				LOGGER.warn("Fail to roll dice, since the player {} does not play game {}", profile.getName(), game.getType().getInfoName());
-				this.connection.send(new CancelRollDiceRequestPacket());
+				ActionTypes.CANCEL_ROLL_DICE_REQUEST.send(this.connection, new EmptyData());
 				game.stopGame();
 			}
 		} else {
 			LOGGER.warn("Fail to roll dice, since there is no running game");
-			this.connection.send(new CancelRollDiceRequestPacket());
+			ActionTypes.CANCEL_ROLL_DICE_REQUEST.send(this.connection, new EmptyData());
 		}
 	}
 	
 	public void handleExitGameRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {
-			if(!game.removePlayer(game.getPlayerFor(profile), true)) {
+			if (!game.removePlayer(game.getPlayerFor(profile), true)) {
 				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getInfoName());
 			}
 		} else {
@@ -183,7 +180,7 @@ public class ServerPacketListener extends AbstractPacketListener {
 			}
 			ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 			if (player != null) {
-				player.connection.send(new ExitGamePacket());
+				ActionTypes.EXIT_GAME.send(this.connection, new EmptyData());
 			} else {
 				LOGGER.warn("Fail to remove player {} from game, since there is no running game", profile.getName());
 			}

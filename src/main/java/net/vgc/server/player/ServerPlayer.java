@@ -43,5 +43,5 @@ public class ServerPlayer extends Player {
 	public DedicatedServer getServer() {
 		return this.server;
 	}
-
+	
 }

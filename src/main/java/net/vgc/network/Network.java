@@ -5,10 +5,10 @@ import java.nio.file.Path;
 import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
 import net.vgc.network.packet.Packet;
-import net.vgc.network.packet.PacketHandler;
+import net.vgc.network.packet.PacketListener;
 import net.vgc.server.Server;
 
-public class Network implements PacketHandler<Packet<?>> {
+public class Network implements PacketListener<Packet<?>> {
 	
 	public static final Network INSTANCE = new Network();
 	
@@ -31,7 +31,7 @@ public class Network implements PacketHandler<Packet<?>> {
 			return Client.getInstance().getResourceDirectory();
 		} else if (NetworkSide.SERVER.isOn()) {
 			return Server.getInstance().getResourceDirectory();
-		} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
+		} else if (NetworkSide.ACCOUNT.isOn()) {
 			return AccountServer.getInstance().getResourceDirectory();
 		}
 		throw new IllegalStateException("Unknown network side: " + this.getNetworkSide());
@@ -42,7 +42,7 @@ public class Network implements PacketHandler<Packet<?>> {
 			return Client.getInstance().getResourceDirectory();
 		} else if (NetworkSide.SERVER.isOn()) {
 			return Server.getInstance().getResourceDirectory();
-		} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
+		} else if (NetworkSide.ACCOUNT.isOn()) {
 			return AccountServer.getInstance().getResourceDirectory();
 		}
 		throw new IllegalStateException("Unknown network side: " + this.getNetworkSide());

@@ -18,17 +18,17 @@ public abstract class AbstractGameMap implements GameMap {
 		this.game = game;
 		this.fields = Lists.newArrayList();
 	}
-
+	
 	@Override
 	public void init(List<GamePlayer> players) {
 		this.getFields().forEach(GameField::clear);
 	}
-
+	
 	@Override
 	public Game getGame() {
 		return this.game;
 	}
-
+	
 	@Override
 	public List<GameField> getFields() {
 		return ImmutableList.copyOf(this.fields);
@@ -37,5 +37,5 @@ public abstract class AbstractGameMap implements GameMap {
 	protected void addField(GameField field) {
 		this.fields.add(field);
 	}
-
+	
 }

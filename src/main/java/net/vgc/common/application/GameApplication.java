@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import io.netty.channel.epoll.Epoll;
 import javafx.animation.Timeline;
@@ -20,10 +19,10 @@ import net.vgc.language.LanguageProvider;
 import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.Packet;
-import net.vgc.network.packet.PacketHandler;
+import net.vgc.network.packet.PacketListener;
 import net.vgc.util.ExceptionHandler;
 
-public abstract class GameApplication<T extends Packet<?>> extends Application implements DataHandler, PacketHandler<T> {
+public abstract class GameApplication<T extends Packet<?>> extends Application implements DataHandler, PacketListener<T> {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	protected static final boolean NATIVE = Epoll.isAvailable();
@@ -32,7 +31,7 @@ public abstract class GameApplication<T extends Packet<?>> extends Application i
 	protected Stage stage;
 	private Random rng;
 	protected LaunchState launchState = LaunchState.UNKNOWN;
-	protected Path gameDirectory; 
+	protected Path gameDirectory;
 	protected Path resourceDirectory;
 	
 	public void init() throws Exception {

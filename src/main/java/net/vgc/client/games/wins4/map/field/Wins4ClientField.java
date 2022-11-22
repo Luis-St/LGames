@@ -47,28 +47,28 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 		LOGGER.warn("Fail to get field type of field {}, since 4 wins fields does not have a field type", this.getFieldPos().getPosition());
 		return super.getFieldType();
 	}
-
+	
 	@Override
 	public final GamePlayerType getColorType() {
 		LOGGER.warn("Fail to get field color type of field {}, since 4 wins fields does not have a field color type", this.getFieldPos().getPosition());
 		return super.getColorType();
 	}
-
+	
 	@Override
 	public boolean isHome() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isStart() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isStartFor(GameFigure figure) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isWin() {
 		return false;
@@ -77,7 +77,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 	@Override
 	public ImageView getFieldBackground() {
 		return switch (this.getResult()) {
-			case WIN -> this.makeImage("textures/wins4/field/field_background_win.png"); 
+			case WIN -> this.makeImage("textures/wins4/field/field_background_win.png");
 			case LOSE -> this.makeImage("textures/wins4/field/field_background_lose.png");
 			case DRAW -> this.makeImage("textures/wins4/field/field_background_draw.png");
 			default -> this.makeImage("textures/wins4/field/field_background.png");
@@ -88,7 +88,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 	public boolean canSelect() {
 		return this.isEmpty() && this.getResult() == GameResult.NO;
 	}
-
+	
 	@Override
 	public void updateFieldGraphic() {
 		ImageView fieldBackground = this.getFieldBackground();
@@ -114,5 +114,5 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 	public String toString() {
 		return ToString.toString(this, "fieldType", "colorType", "result");
 	}
-
+	
 }

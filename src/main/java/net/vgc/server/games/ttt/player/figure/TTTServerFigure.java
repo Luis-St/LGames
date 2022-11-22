@@ -13,12 +13,12 @@ public class TTTServerFigure extends AbstractGameFigure {
 	public TTTServerFigure(GamePlayer player, int count, UUID uuid) {
 		super(player, count, uuid);
 	}
-
+	
 	@Override
 	public GameFieldPos getHomePos() {
 		return TTTFieldPos.NO;
 	}
-
+	
 	@Override
 	public GameFieldPos getStartPos() {
 		return TTTFieldPos.NO;
@@ -28,5 +28,5 @@ public class TTTServerFigure extends AbstractGameFigure {
 	public String toString() {
 		return ToString.toString(this, "player");
 	}
-
+	
 }

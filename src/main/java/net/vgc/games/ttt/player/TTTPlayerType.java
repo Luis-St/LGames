@@ -10,8 +10,7 @@ import net.vgc.language.TranslationKey;
 
 public enum TTTPlayerType implements GamePlayerType {
 	
-	CROSS("cross", 0, 'X', new TranslationKey("screen.tic_tac_toe.cross_player"), "textures/tic_tac_toe/cross/cross"),
-	CIRCLE("circle", 1, 'O', new TranslationKey("screen.tic_tac_toe.circle_player"), "textures/tic_tac_toe/circle/circle"),
+	CROSS("cross", 0, 'X', new TranslationKey("screen.tic_tac_toe.cross_player"), "textures/tic_tac_toe/cross/cross"), CIRCLE("circle", 1, 'O', new TranslationKey("screen.tic_tac_toe.circle_player"), "textures/tic_tac_toe/circle/circle"),
 	NO("no", 2, 'N', new TranslationKey("screen.tic_tac_toe.no_player"), null);
 	
 	private final String name;
@@ -32,7 +31,7 @@ public enum TTTPlayerType implements GamePlayerType {
 	public String getName() {
 		return this.name;
 	}
-
+	
 	@Override
 	public int getId() {
 		return this.id;
@@ -46,7 +45,7 @@ public enum TTTPlayerType implements GamePlayerType {
 	public TranslationKey getTranslation() {
 		return this.translation;
 	}
-
+	
 	@Override
 	public List<TTTPlayerType> getOpponents() {
 		if (this == NO) {

@@ -2,7 +2,7 @@ package net.vgc.util;
 
 import java.util.Map;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.vgc.Main;
 
@@ -30,13 +30,13 @@ public class SimpleEntry<K, V> implements Map.Entry<K, V> {
 	public K getKey() {
 		return this.key;
 	}
-
+	
 	@Nullable
 	@Override
 	public V getValue() {
 		return this.value;
 	}
-
+	
 	@Nullable
 	@Override
 	public V setValue(V value) {
@@ -70,5 +70,5 @@ public class SimpleEntry<K, V> implements Map.Entry<K, V> {
 		}
 		return false;
 	}
-
+	
 }

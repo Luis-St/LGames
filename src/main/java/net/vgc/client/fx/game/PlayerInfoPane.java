@@ -5,8 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import net.luis.fxutils.FxUtils;
 import net.vgc.Constans;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
@@ -52,19 +52,19 @@ public class PlayerInfoPane extends GridPane {
 	}
 	
 	private GridPane makePlayerInfoPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 0.0, 5.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 0.0, 5.0);
 		pane.add(new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_info")), 0, 0);
 		return pane;
 	}
 	
 	private GridPane makeCurrentPlayerPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 5.0, 5.0);
 		pane.add(this.currentPlayerInfo, 0, 0);
 		return pane;
 	}
 	
 	private GridPane makePlayersPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 5.0, 5.0);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 5.0, 5.0);
 		int i = 0;
 		for (GamePlayer player : this.game.getPlayers()) {
 			pane.add(new Text(player.getPlayerType().getTranslation().getValue(this.getName(player))), 0, i++);

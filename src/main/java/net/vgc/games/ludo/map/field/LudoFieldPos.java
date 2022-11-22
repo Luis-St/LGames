@@ -1,6 +1,6 @@
 package net.vgc.games.ludo.map.field;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
@@ -46,11 +46,16 @@ public class LudoFieldPos implements GameFieldPos {
 	@Nullable
 	private static LudoFieldPos of(LudoPlayerType playerType, int pos) {
 		switch (playerType) {
-			case GREEN: return ofGreen(pos);
-			case YELLOW:  return ofYellow(pos);
-			case BLUE:  return ofBlue(pos);
-			case RED:  return ofRed(pos);
-			default: break;
+			case GREEN:
+				return ofGreen(pos);
+			case YELLOW:
+				return ofYellow(pos);
+			case BLUE:
+				return ofBlue(pos);
+			case RED:
+				return ofRed(pos);
+			default:
+				break;
 		}
 		LOGGER.warn("Fail to create field pos for ludo type {}", playerType);
 		return null;
@@ -92,7 +97,7 @@ public class LudoFieldPos implements GameFieldPos {
 	public int getRed() {
 		return this.red;
 	}
-
+	
 	@Override
 	public int getPositionFor(GamePlayerType playerType) {
 		if (playerType instanceof LudoPlayerType) {

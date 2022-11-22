@@ -6,14 +6,14 @@ import org.apache.logging.log4j.Logger;
 import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 
-public abstract class AbstractPacketListener implements PacketListener {
+public abstract class AbstractPacketHandler implements PacketHandler {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	private final NetworkSide networkSide;
 	protected Connection connection;
 	
-	public AbstractPacketListener(NetworkSide networkSide) {
+	public AbstractPacketHandler(NetworkSide networkSide) {
 		this.networkSide = networkSide;
 	}
 	
@@ -26,7 +26,7 @@ public abstract class AbstractPacketListener implements PacketListener {
 	public Connection getConnection() {
 		return this.connection;
 	}
-
+	
 	@Override
 	public void setConnection(Connection connection) {
 		this.connection = connection;
@@ -34,7 +34,7 @@ public abstract class AbstractPacketListener implements PacketListener {
 	
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof AbstractPacketListener packetListener) {
+		if (object instanceof AbstractPacketHandler packetListener) {
 			return packetListener.getClass() == this.getClass();
 		}
 		return false;

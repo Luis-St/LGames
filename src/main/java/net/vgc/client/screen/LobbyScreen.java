@@ -8,8 +8,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.screen.game.GameScreen;
@@ -38,7 +38,7 @@ public class LobbyScreen extends GameScreen {
 		this.playerMenu = new Menu(TranslationKey.createAndGet("server.window.players"));
 		this.gameMenu = new Menu(TranslationKey.createAndGet("screen.lobby.game"));
 		CustomMenuItem leaveItem = new CustomMenuItem();
-		leaveItem.setContent(FxUtil.makeButton(TranslationKey.createAndGet("screen.lobby.leave"), () -> {
+		leaveItem.setContent(FxUtils.makeButton(TranslationKey.createAndGet("screen.lobby.leave"), () -> {
 			this.client.removePlayer();
 			this.showScreen(new MenuScreen());
 		}));
@@ -100,10 +100,10 @@ public class LobbyScreen extends GameScreen {
 	
 	@Override
 	protected Pane createPane() {
-		GridPane gridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane gridPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		gridPane.addRow(0, this.tttButtonBox, this.ludoButtonBox, this.wins4ButtonBox);
 		this.refreshPlayers();
 		return new VBox(new MenuBar(this.playerMenu, this.gameMenu), gridPane);
 	}
-
+	
 }

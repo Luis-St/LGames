@@ -19,7 +19,7 @@ import net.vgc.util.ToString;
 import net.vgc.util.exception.InvalidValueException;
 
 public class LudoServerPlayer extends AbstractServerGamePlayer {
-
+	
 	private final List<GameFigure> figures;
 	
 	public LudoServerPlayer(Game game, Player player, GamePlayerType playerType, int figureCount) {
@@ -38,12 +38,12 @@ public class LudoServerPlayer extends AbstractServerGamePlayer {
 		}
 		return figures;
 	}
-
+	
 	@Override
 	public List<GameFigure> getFigures() {
 		return this.figures;
 	}
-
+	
 	@Override
 	public List<GameFieldPos> getWinPoses() {
 		return Lists.newArrayList(LudoFieldPos.of(0), LudoFieldPos.of(1), LudoFieldPos.of(2), LudoFieldPos.of(3));
@@ -63,5 +63,5 @@ public class LudoServerPlayer extends AbstractServerGamePlayer {
 	public String toString() {
 		return ToString.toString(this);
 	}
-
+	
 }

@@ -2,7 +2,7 @@ package net.vgc.language;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 

@@ -62,7 +62,7 @@ public class Wins4FieldPos implements GameFieldPos {
 		}
 		return NO;
 	}
-
+	
 	@Override
 	public int getPosition() {
 		return this.position;
@@ -80,7 +80,7 @@ public class Wins4FieldPos implements GameFieldPos {
 	public int getPositionFor(GamePlayerType playerType) {
 		return this.position;
 	}
-
+	
 	@Override
 	public boolean isStart() {
 		return false;
@@ -123,5 +123,5 @@ public class Wins4FieldPos implements GameFieldPos {
 		builder.append("column=").append(this.column).append("}");
 		return builder.toString();
 	}
-
+	
 }

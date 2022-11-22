@@ -6,8 +6,9 @@ import java.util.function.Function;
 
 import com.google.common.collect.Lists;
 
-import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.data.tag.tags.collection.ListTag;
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.tags.CompoundTag;
+import net.luis.utils.data.tag.tags.collection.ListTag;
 import net.vgc.language.TranslationKey;
 
 public class TagUtil {

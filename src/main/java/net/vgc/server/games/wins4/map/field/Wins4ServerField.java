@@ -15,34 +15,34 @@ public class Wins4ServerField extends AbstractServerGameField {
 	public Wins4ServerField(GameMap map, GameFieldPos fieldPos) {
 		super(map, Wins4FieldType.DEFAULT, Wins4PlayerType.NO, fieldPos);
 	}
-
+	
 	@Override
 	public final GameFieldType getFieldType() {
 		LOGGER.warn("Fail to get field type of field {}, since 4 wins fields does not have a field type", this.getFieldPos().getPosition());
 		return super.getFieldType();
 	}
-
+	
 	@Override
 	public final GamePlayerType getColorType() {
 		LOGGER.warn("Fail to get field color type of field {}, since 4 wins fields does not have a field color type", this.getFieldPos().getPosition());
 		return super.getColorType();
 	}
-
+	
 	@Override
 	public boolean isHome() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isStart() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isStartFor(GameFigure figure) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isWin() {
 		return false;
