@@ -10,13 +10,16 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.Lists;
 
 import net.vgc.client.game.AbstractClientGame;
+import net.vgc.game.action.Action;
+import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.specific.FieldInfoData;
+import net.vgc.game.action.type.ActionType;
+import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.type.GameType;
-import net.vgc.network.packet.Packet;
-import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.game.AbstractServerGame;
@@ -159,8 +162,7 @@ public interface Game {
 			}
 			this.getWinHandler().reset();
 			this.nextPlayer(true);
-			// rename/use actions instead of packets
-			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+			this.broadcastPlayers(ActionTypes.UPDATE_MAP, new FieldInfoData(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.getPlayers(), this::getName));
 			return true;
 		}
@@ -170,22 +172,23 @@ public interface Game {
 	
 	void stopGame();
 	
-	default void broadcastPlayer(Packet<?> packet, GamePlayer gamePlayer) {
+	default <T extends Action<V>, V extends ActionData> void broadcastPlayer(GamePlayer gamePlayer, ActionType<T, V> type, V data) {
 		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
-			player.connection.send(packet);
+			type.send(player.connection, data);
 		}
 	}
 	
-	default void broadcastPlayers(Packet<?> packet) {
+	default <T extends Action<V>, V extends ActionData> void broadcastPlayers(ActionType<T, V> type, V data) {
 		for (GamePlayer player : this.getPlayers()) {
-			this.broadcastPlayer(packet, player);
+			this.broadcastPlayer(player, type, data);
 		}
 	}
 	
-	default void broadcastPlayersExclude(Packet<?> packet, GamePlayer... gamePlayers) {
+	default <T extends Action<V>, V extends ActionData> void broadcastPlayersExclude(ActionType<T, V> type, V data, GamePlayer... gamePlayers) {
+		List<GamePlayer> excludePlayers = Lists.newArrayList(gamePlayers);
 		for (GamePlayer player : this.getPlayers()) {
-			if (!Lists.newArrayList(gamePlayers).contains(player)) {
-				this.broadcastPlayer(packet, player);
+			if (!excludePlayers.contains(player)) {
+				this.broadcastPlayer(player, type, data);
 			}
 		}
 	}

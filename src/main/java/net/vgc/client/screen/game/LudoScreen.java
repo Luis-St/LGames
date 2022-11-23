@@ -16,9 +16,6 @@ import net.vgc.game.action.data.specific.SelectFieldData;
 import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.LudoGameResultPacket;
-import net.vgc.network.packet.client.game.dice.RolledDicePacket;
 
 public class LudoScreen extends GameScreen {
 	
@@ -75,7 +72,7 @@ public class LudoScreen extends GameScreen {
 		
 	}
 	
-	@Override
+	/*@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
 		if (clientPacket instanceof RolledDicePacket packet) {
@@ -83,7 +80,7 @@ public class LudoScreen extends GameScreen {
 		} else if (clientPacket instanceof LudoGameResultPacket packet) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
-	}
+	}*/
 	
 	@Override
 	protected Pane createPane() {

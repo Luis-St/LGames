@@ -1,32 +1,23 @@
 package net.vgc.server.games.ludo;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
 
 import net.vgc.client.games.ludo.LudoClientGame;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
-import net.vgc.games.ludo.map.field.LudoFieldPos;
-import net.vgc.games.ludo.map.field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.game.dice.DiceHandler;
 import net.vgc.server.games.ludo.dice.LudoDiceHandler;
 import net.vgc.server.games.ludo.map.LudoServerMap;
-import net.vgc.server.games.ludo.map.field.LudoServerField;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
-import net.vgc.server.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.server.games.ludo.win.LudoWinHandler;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 public class LudoServerGame extends AbstractServerGame {
 	
@@ -84,8 +75,7 @@ public class LudoServerGame extends AbstractServerGame {
 	public DiceHandler getDiceHandler() {
 		return this.diceHandler;
 	}
-	
-	@Override
+	/*@Override
 	public void handlePacket(ServerPacket serverPacket) {
 		ServerGame.super.handlePacket(serverPacket);
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
@@ -141,7 +131,7 @@ public class LudoServerGame extends AbstractServerGame {
 				LOGGER.warn("Player {} tries to change the {} map at pos {} to {}, but it is not his turn", this.getName(player), fieldPos.getPosition(), player.getPlayerType());
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public String toString() {

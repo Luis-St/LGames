@@ -17,12 +17,6 @@ import net.vgc.game.action.data.specific.PlayRequestData;
 import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.type.GameType;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.PlayerAddPacket;
-import net.vgc.network.packet.client.PlayerRemovePacket;
-import net.vgc.network.packet.client.SyncPermissionPacket;
-import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
-import net.vgc.util.Util;
 
 public class PlayerSelectScreen extends Screen {
 	
@@ -85,7 +79,7 @@ public class PlayerSelectScreen extends Screen {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
@@ -104,7 +98,7 @@ public class PlayerSelectScreen extends Screen {
 				LOGGER.debug("Ignore player {}, since the player is already playing a game", player.getProfile().getName());
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	protected Pane createPane() {

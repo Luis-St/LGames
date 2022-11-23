@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import javafx.scene.image.ImageView;
-import net.vgc.client.fx.FxUtil;
+import net.luis.fxutils.FxUtils;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
 
@@ -59,7 +59,7 @@ public enum Wins4PlayerType implements GamePlayerType {
 		if (this.path == null) {
 			return null;
 		}
-		return FxUtil.makeImageView(this.path + ".png", width, height);
+		return FxUtils.makeImageView(this.path + ".png", width, height);
 	}
 	
 	@Override

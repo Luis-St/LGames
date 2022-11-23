@@ -16,8 +16,6 @@ import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.TTTGameResultPacket;
 
 public class TTTScreen extends GameScreen {
 	
@@ -67,13 +65,13 @@ public class TTTScreen extends GameScreen {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
 		if (clientPacket instanceof TTTGameResultPacket packet) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
-	}
+	}*/
 	
 	@Override
 	protected Pane createPane() {

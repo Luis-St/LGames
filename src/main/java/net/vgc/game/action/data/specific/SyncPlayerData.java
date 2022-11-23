@@ -1,33 +1,31 @@
-package net.vgc.network.packet.client;
+package net.vgc.game.action.data.specific;
 
-import net.vgc.client.network.ClientPacketHandler;
-import net.vgc.game.player.GamePlayer;
+import net.vgc.game.action.data.ActionData;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
-import net.vgc.player.Player;
 
-public class SyncPlayerDataPacket implements ClientPacket {
+/**
+ * 
+ * @author Luis Staudt
+ * 
+ */
+
+public class SyncPlayerData extends ActionData {
 	
 	private final GameProfile profile;
 	private final boolean playing;
 	private final PlayerScore score;
 	
-	public SyncPlayerDataPacket(GamePlayer player) {
-		this(player.getPlayer());
-	}
-	
-	public SyncPlayerDataPacket(Player player) {
-		this(player.getProfile(), player.isPlaying(), player.getScore());
-	}
-	
-	public SyncPlayerDataPacket(GameProfile profile, boolean playing, PlayerScore score) {
+	public SyncPlayerData(GameProfile profile, boolean playing, PlayerScore score) {
+		super();
 		this.profile = profile;
 		this.playing = playing;
 		this.score = score;
 	}
 	
-	public SyncPlayerDataPacket(FriendlyByteBuffer buffer) {
+	public SyncPlayerData(FriendlyByteBuffer buffer) {
+		super(buffer);
 		this.profile = buffer.read(GameProfile.class);
 		this.playing = buffer.readBoolean();
 		this.score = buffer.read(PlayerScore.class);
@@ -40,11 +38,6 @@ public class SyncPlayerDataPacket implements ClientPacket {
 		buffer.write(this.score);
 	}
 	
-	@Override
-	public void handle(ClientPacketHandler listener) {
-		listener.handleSyncPlayerData(this.profile, this.playing, this.score);
-	}
-	
 	public GameProfile getProfile() {
 		return this.profile;
 	}
@@ -55,6 +48,6 @@ public class SyncPlayerDataPacket implements ClientPacket {
 	
 	public PlayerScore getScore() {
 		return this.score;
-	}
+	} 
 	
 }

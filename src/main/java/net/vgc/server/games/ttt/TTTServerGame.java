@@ -1,28 +1,17 @@
 package net.vgc.server.games.ttt;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 import net.vgc.client.games.ttt.TTTClientGame;
-import net.vgc.game.GameResult;
-import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
-import net.vgc.games.ttt.TTTResultLine;
-import net.vgc.games.ttt.map.field.TTTFieldPos;
 import net.vgc.games.ttt.player.TTTPlayerType;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ttt.map.TTTServerMap;
-import net.vgc.server.games.ttt.map.field.TTTServerField;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
-import net.vgc.server.games.ttt.player.figure.TTTServerFigure;
 import net.vgc.server.games.ttt.win.TTTWinHandler;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 public class TTTServerGame extends AbstractServerGame {
 	
@@ -35,7 +24,7 @@ public class TTTServerGame extends AbstractServerGame {
 		return GameTypes.TIC_TAC_TOE;
 	}
 	
-	@Override
+	/*@Override
 	public void handlePacket(ServerPacket serverPacket) {
 		ServerGame.super.handlePacket(serverPacket);
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
@@ -95,7 +84,7 @@ public class TTTServerGame extends AbstractServerGame {
 		this.broadcastPlayer(new TTTGameResultPacket(result, resultLine), gamePlayer);
 		consumer.accept(player.getScore());
 		this.broadcastPlayers(new SyncPlayerDataPacket(player.getProfile(), true, player.getScore()));
-	}
+	}*/
 	
 	@Override
 	public String toString() {

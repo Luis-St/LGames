@@ -13,11 +13,13 @@ import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
+import net.vgc.game.action.Action;
+import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.type.ActionType;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.network.packet.Packet;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.game.dice.DiceHandler;
@@ -103,8 +105,8 @@ public abstract class AbstractClientGame extends AbstractGame {
 	}
 	
 	@Override
-	public final void broadcastPlayer(Packet<?> packet, GamePlayer gamePlayer) {
-		LOGGER.warn("Can not broadcast packet {} to player {} on client", packet.getClass().getSimpleName(), this.getName(gamePlayer));
+	public final <T extends Action<V>, V extends ActionData> void broadcastPlayer(GamePlayer gamePlayer, ActionType<T, V> type, V data) {
+		LOGGER.warn("Can not broadcast action {} to player {} on client", type.getName(), this.getName(gamePlayer));
 	}
 	
 }

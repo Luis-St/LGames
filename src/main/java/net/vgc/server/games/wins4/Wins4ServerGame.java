@@ -1,30 +1,17 @@
 package net.vgc.server.games.wins4;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 import net.vgc.client.games.wins4.Wins4ClientGame;
-import net.vgc.game.GameResult;
-import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
-import net.vgc.games.wins4.Wins4ResultLine;
-import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.games.wins4.player.Wins4PlayerType;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.server.games.wins4.map.Wins4ServerMap;
-import net.vgc.server.games.wins4.map.field.Wins4ServerField;
-import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
-import net.vgc.server.games.wins4.player.figure.Wins4ServerFigure;
 import net.vgc.server.games.wins4.win.Wins4WinHandler;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 public class Wins4ServerGame extends AbstractServerGame {
 	
@@ -37,7 +24,7 @@ public class Wins4ServerGame extends AbstractServerGame {
 		return GameTypes.WINS_4;
 	}
 	
-	@Override
+	/*@Override
 	public void handlePacket(ServerPacket serverPacket) {
 		ServerGame.super.handlePacket(serverPacket);
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
@@ -99,7 +86,7 @@ public class Wins4ServerGame extends AbstractServerGame {
 		this.broadcastPlayer(new Wins4GameResultPacket(result, resultLine), gamePlayer);
 		consumer.accept(player.getScore());
 		this.broadcastPlayers(new SyncPlayerDataPacket(player.getProfile(), true, player.getScore()));
-	}
+	}*/
 	
 	@Override
 	public String toString() {

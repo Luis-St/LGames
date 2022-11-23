@@ -9,13 +9,12 @@ import com.google.common.collect.Lists;
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
 import net.vgc.game.action.data.gobal.EmptyData;
+import net.vgc.game.action.data.gobal.ProfileData;
+import net.vgc.game.action.data.specific.SyncPlayerData;
 import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.player.Player;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.win.WinHandler;
@@ -68,7 +67,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 	public void setPlayer(GamePlayer player) {
 		super.setPlayer(player);
 		if (this.getPlayer() != null) {
-			this.broadcastPlayers(new CurrentPlayerUpdatePacket(this.getPlayer()));
+			this.broadcastPlayers(ActionTypes.UPDATE_CURRENT_PLAYER, new ProfileData(this.getPlayer().getPlayer().getProfile()));
 		}
 	}
 	
@@ -87,9 +86,8 @@ public abstract class AbstractServerGame extends AbstractGame {
 				if (!Mth.isInBounds(this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
 					this.stopGame();
 				}
-				this.broadcastPlayers(null);
 				player.getScore().reset();
-				this.broadcastPlayersExclude(new SyncPlayerDataPacket(player), gamePlayer);
+				this.broadcastPlayersExclude(ActionTypes.SYNC_PLAYER_DATA, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
 				return true;
 			} else {
 				LOGGER.warn("Fail to remove player {}, since the player is not a server player", this.getName(gamePlayer));
@@ -122,9 +120,10 @@ public abstract class AbstractServerGame extends AbstractGame {
 			}
 		}
 		for (GamePlayer gamePlayer : this.getPlayers()) {
-			this.broadcastPlayer(new StopGamePacket(), gamePlayer);
+			Player player = gamePlayer.getPlayer();
+			this.broadcastPlayer(gamePlayer, ActionTypes.STOP_GAME, new EmptyData());
 			gamePlayer.getPlayer().getScore().reset();
-			this.broadcastPlayersExclude(new SyncPlayerDataPacket(gamePlayer), gamePlayer);
+			this.broadcastPlayersExclude(ActionTypes.SYNC_PLAYER_DATA, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
 		}
 		this.getPlayers().clear();
 		this.getServer().setGame(null);
