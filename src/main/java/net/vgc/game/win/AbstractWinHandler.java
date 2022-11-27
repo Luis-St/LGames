@@ -1,4 +1,4 @@
-package net.vgc.server.game.win;
+package net.vgc.game.win;
 
 import java.util.List;
 

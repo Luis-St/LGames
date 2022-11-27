@@ -6,13 +6,13 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 
 import net.vgc.client.games.ludo.LudoClientGame;
+import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.games.ludo.player.LudoPlayerType;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
-import net.vgc.server.game.dice.DiceHandler;
 import net.vgc.server.games.ludo.dice.LudoDiceHandler;
 import net.vgc.server.games.ludo.map.LudoServerMap;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;

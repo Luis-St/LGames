@@ -16,14 +16,14 @@ import net.vgc.game.Game;
 import net.vgc.game.action.Action;
 import net.vgc.game.action.data.ActionData;
 import net.vgc.game.action.type.ActionType;
+import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.win.WinHandler;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
-import net.vgc.server.game.dice.DiceHandler;
-import net.vgc.server.game.win.WinHandler;
 import net.vgc.util.Util;
 import net.vgc.util.function.QuadFunction;
 

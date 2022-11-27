@@ -1,4 +1,4 @@
-package net.vgc.server.game.dice;
+package net.vgc.game.dice;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

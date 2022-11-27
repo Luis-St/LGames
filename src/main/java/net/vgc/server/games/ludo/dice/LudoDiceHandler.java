@@ -7,12 +7,12 @@ import com.google.common.collect.Lists;
 
 import net.vgc.game.action.data.gobal.EmptyData;
 import net.vgc.game.action.type.ActionTypes;
+import net.vgc.game.dice.Dice;
+import net.vgc.game.dice.DiceHandler;
+import net.vgc.game.dice.PlayerDiceInfo;
+import net.vgc.game.dice.SimpleDice;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.server.game.dice.Dice;
-import net.vgc.server.game.dice.DiceHandler;
-import net.vgc.server.game.dice.PlayerDiceInfo;
-import net.vgc.server.game.dice.SimpleDice;
 import net.vgc.server.games.ludo.LudoServerGame;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;

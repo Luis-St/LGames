@@ -4,7 +4,7 @@ import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.server.game.win.AbstractWinHandler;
+import net.vgc.game.win.AbstractWinHandler;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
 
 public class LudoWinHandler extends AbstractWinHandler {

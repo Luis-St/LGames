@@ -1,4 +1,4 @@
-package net.vgc.server.game.dice;
+package net.vgc.game.dice;
 
 import java.util.List;
 
