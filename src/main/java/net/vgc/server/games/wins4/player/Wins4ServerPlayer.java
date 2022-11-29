@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.util.ToString;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
@@ -15,7 +16,6 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.player.Player;
 import net.vgc.server.game.player.AbstractServerGamePlayer;
 import net.vgc.server.games.wins4.player.figure.Wins4ServerFigure;
-import net.vgc.util.ToString;
 
 public class Wins4ServerPlayer extends AbstractServerGamePlayer {
 	

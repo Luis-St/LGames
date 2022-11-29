@@ -3,14 +3,17 @@ package net.vgc.server.game;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.function.TriFunction;
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
 import net.vgc.game.action.data.gobal.EmptyData;
 import net.vgc.game.action.data.gobal.ProfileData;
 import net.vgc.game.action.data.specific.SyncPlayerData;
+import net.vgc.game.action.handler.ActionHandler;
 import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
@@ -21,7 +24,6 @@ import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Mth;
 import net.vgc.util.Util;
-import net.vgc.util.function.TriFunction;
 
 public abstract class AbstractServerGame extends AbstractGame {
 	
@@ -29,12 +31,12 @@ public abstract class AbstractServerGame extends AbstractGame {
 	private final WinHandler winHandler;
 	
 	protected <T extends GamePlayerType> AbstractServerGame(DedicatedServer server, BiFunction<DedicatedServer, Game, GameMap> mapFunction, List<ServerPlayer> players, T[] playerTypes, TriFunction<Game, Player, T, GamePlayer> playerFunction,
-		WinHandler winHandler) {
+		WinHandler winHandler, Function<Game, ActionHandler> actionHandlerFunction) {
 		super((game) -> {
 			return mapFunction.apply(server, game);
 		}, (game) -> {
 			return createGamePlayers(game, players, playerTypes, playerFunction);
-		});
+		}, actionHandlerFunction);
 		this.server = server;
 		this.winHandler = winHandler;
 	}
@@ -48,7 +50,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 			LOGGER.error("Fail to create game players list, since there are {} player types present but at least {} are required", playerTypes.length, players.size());
 			throw new IllegalStateException("Fail to create game players list, since there are " + playerTypes.length + " player types present but at least " + players.size() + " are required");
 		}
-		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(players, game::getName));
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(players, Player::getName));
 		List<GamePlayer> gamePlayers = Lists.newArrayList();
 		int i = 0;
 		for (ServerPlayer player : players) {
@@ -79,24 +81,24 @@ public abstract class AbstractServerGame extends AbstractGame {
 					ActionTypes.EXIT_GAME.send(player.connection, new EmptyData());
 				}
 				player.setPlaying(false);
-				LOGGER.info("Remove player {} from game {}", this.getName(player), this.getType().getName().toLowerCase());
+				LOGGER.info("Remove player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
 				if (Objects.equals(this.getPlayer(), gamePlayer)) {
 					this.nextPlayer(false);
 				}
 				if (!Mth.isInBounds(this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
-					this.stopGame();
+					this.stop();
 				}
 				player.getScore().reset();
-				this.broadcastPlayersExclude(ActionTypes.SYNC_PLAYER_DATA, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
+				this.broadcastPlayersExclude(ActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
 				return true;
 			} else {
-				LOGGER.warn("Fail to remove player {}, since the player is not a server player", this.getName(gamePlayer));
+				LOGGER.warn("Fail to remove player {}, since the player is not a server player", gamePlayer.getName());
 			}
 		} else if (gamePlayer != null) {
-			LOGGER.warn("Fail to remove player {}, since the player does not playing game {}", this.getName(gamePlayer), this.getType().getInfoName());
+			LOGGER.warn("Fail to remove player {}, since the player does not playing game {}", gamePlayer.getName(), this.getType().getInfoName());
 			if (gamePlayer.getPlayer().isPlaying()) {
 				gamePlayer.getPlayer().setPlaying(false);
-				LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", this.getName(gamePlayer));
+				LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", gamePlayer.getName());
 			}
 		}
 		return false;
@@ -108,14 +110,14 @@ public abstract class AbstractServerGame extends AbstractGame {
 	}
 	
 	@Override
-	public void stopGame() {
+	public void stop() {
 		for (ServerPlayer player : this.getServer().getPlayerList().getPlayers()) {
 			if (player.isPlaying()) {
 				if (Util.mapList(this.getPlayers(), GamePlayer::getPlayer).contains(player)) {
 					player.setPlaying(false);
 				} else {
 					player.setPlaying(false);
-					LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", this.getName(player));
+					LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getName());
 				}
 			}
 		}
@@ -123,7 +125,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 			Player player = gamePlayer.getPlayer();
 			this.broadcastPlayer(gamePlayer, ActionTypes.STOP_GAME, new EmptyData());
 			gamePlayer.getPlayer().getScore().reset();
-			this.broadcastPlayersExclude(ActionTypes.SYNC_PLAYER_DATA, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
+			this.broadcastPlayersExclude(ActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
 		}
 		this.getPlayers().clear();
 		this.getServer().setGame(null);

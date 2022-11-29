@@ -3,11 +3,13 @@ package net.vgc.client.game;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.function.QuadFunction;
 import net.vgc.client.Client;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.screen.LobbyScreen;
@@ -15,6 +17,7 @@ import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
 import net.vgc.game.action.Action;
 import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.handler.ActionHandler;
 import net.vgc.game.action.type.ActionType;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.GameMap;
@@ -25,18 +28,18 @@ import net.vgc.game.win.WinHandler;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.util.Util;
-import net.vgc.util.function.QuadFunction;
 
 public abstract class AbstractClientGame extends AbstractGame {
 	
 	private final Client client;
 	
-	protected AbstractClientGame(Client client, BiFunction<Client, Game, GameMap> mapFunction, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> playerFunction) {
+	protected AbstractClientGame(Client client, BiFunction<Client, Game, GameMap> mapFunction, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> playerFunction, 
+		Function<Game, ActionHandler> actionHandlerFunction) {
 		super((game) -> {
 			return mapFunction.apply(client, game);
 		}, (game) -> {
 			return createGamePlayers(client, game, playerInfos, playerFunction);
-		});
+		}, actionHandlerFunction);
 		this.client = client;
 	}
 	
@@ -95,7 +98,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 	}
 	
 	@Override
-	public void stopGame() {
+	public void stop() {
 		LOGGER.info("Stopping the current game {}", this.getType().getInfoName());
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			player.setPlaying(false);
@@ -106,7 +109,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 	
 	@Override
 	public final <T extends Action<V>, V extends ActionData> void broadcastPlayer(GamePlayer gamePlayer, ActionType<T, V> type, V data) {
-		LOGGER.warn("Can not broadcast action {} to player {} on client", type.getName(), this.getName(gamePlayer));
+		LOGGER.warn("Can not broadcast action {} to player {} on client", type.getName(), gamePlayer.getName());
 	}
 	
 }

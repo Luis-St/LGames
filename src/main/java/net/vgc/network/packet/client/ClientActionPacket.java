@@ -26,8 +26,7 @@ public class ClientActionPacket implements ClientPacket {
 	
 	@Override
 	public void handle(ClientPacketHandler listener) {
-		// TODO Auto-generated method stub
-		
+		listener.handleAction(this.action);
 	}
 	
 }

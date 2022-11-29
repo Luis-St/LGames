@@ -37,6 +37,7 @@ public abstract class Screen implements Showable, Tickable, InputHandler, Packet
 	}
 	
 	@Override
+	@Deprecated
 	public void handlePacket(ClientPacket clientPacket) {
 		
 	}

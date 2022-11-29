@@ -2,12 +2,12 @@ package net.vgc.client.games.ludo.player.figure;
 
 import java.util.UUID;
 
+import net.luis.utils.util.ToString;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.AbstractGameFigure;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldPos;
-import net.vgc.util.ToString;
 
 public class LudoClientFigure extends AbstractGameFigure {
 	
@@ -37,7 +37,7 @@ public class LudoClientFigure extends AbstractGameFigure {
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, "player");
+		return ToString.toString(this, true, "player");
 	}
 	
 }

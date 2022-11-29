@@ -7,10 +7,11 @@ import com.google.common.collect.Lists;
 import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
+import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.win.AbstractWinHandler;
-import net.vgc.games.ttt.TTTResultLine;
+import net.vgc.game.win.GameResultLine;
 import net.vgc.games.ttt.map.field.TTTFieldPos;
 import net.vgc.games.ttt.player.TTTPlayerType;
 import net.vgc.server.games.ttt.map.TTTServerMap;
@@ -19,15 +20,15 @@ import net.vgc.util.Util;
 
 public class TTTWinHandler extends AbstractWinHandler {
 	
-	private final List<TTTResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {
-		list.add(new TTTResultLine(TTTFieldPos.of(0), TTTFieldPos.of(1), TTTFieldPos.of(2)));
-		list.add(new TTTResultLine(TTTFieldPos.of(3), TTTFieldPos.of(4), TTTFieldPos.of(5)));
-		list.add(new TTTResultLine(TTTFieldPos.of(6), TTTFieldPos.of(7), TTTFieldPos.of(8)));
-		list.add(new TTTResultLine(TTTFieldPos.of(0), TTTFieldPos.of(3), TTTFieldPos.of(6)));
-		list.add(new TTTResultLine(TTTFieldPos.of(1), TTTFieldPos.of(4), TTTFieldPos.of(7)));
-		list.add(new TTTResultLine(TTTFieldPos.of(2), TTTFieldPos.of(5), TTTFieldPos.of(8)));
-		list.add(new TTTResultLine(TTTFieldPos.of(0), TTTFieldPos.of(4), TTTFieldPos.of(8)));
-		list.add(new TTTResultLine(TTTFieldPos.of(2), TTTFieldPos.of(4), TTTFieldPos.of(6)));
+	private final List<GameResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {
+		list.add(new GameResultLine(TTTFieldPos.of(0), TTTFieldPos.of(1), TTTFieldPos.of(2)));
+		list.add(new GameResultLine(TTTFieldPos.of(3), TTTFieldPos.of(4), TTTFieldPos.of(5)));
+		list.add(new GameResultLine(TTTFieldPos.of(6), TTTFieldPos.of(7), TTTFieldPos.of(8)));
+		list.add(new GameResultLine(TTTFieldPos.of(0), TTTFieldPos.of(3), TTTFieldPos.of(6)));
+		list.add(new GameResultLine(TTTFieldPos.of(1), TTTFieldPos.of(4), TTTFieldPos.of(7)));
+		list.add(new GameResultLine(TTTFieldPos.of(2), TTTFieldPos.of(5), TTTFieldPos.of(8)));
+		list.add(new GameResultLine(TTTFieldPos.of(0), TTTFieldPos.of(4), TTTFieldPos.of(8)));
+		list.add(new GameResultLine(TTTFieldPos.of(2), TTTFieldPos.of(4), TTTFieldPos.of(6)));
 	});
 	
 	@Override
@@ -52,33 +53,33 @@ public class TTTWinHandler extends AbstractWinHandler {
 	}
 	
 	private GamePlayerType getWinType(GameMap map) {
-		TTTResultLine resultLine = this.getResultLine(map);
-		if (resultLine != TTTResultLine.EMPTY) {
-			return this.getFieldType(map, resultLine.getFirstPos());
+		GameResultLine resultLine = this.getResultLine(map);
+		if (resultLine != GameResultLine.EMPTY) {
+			return this.getFieldType(map, resultLine.getPos(0));
 		}
 		return TTTPlayerType.NO;
 	}
 	
-	public TTTResultLine getResultLine(GameMap map) {
-		for (TTTResultLine resultLine : this.resultLines) {
+	public GameResultLine getResultLine(GameMap map) {
+		for (GameResultLine resultLine : this.resultLines) {
 			if (this.getLineWinType(map, resultLine) != TTTPlayerType.NO) {
 				return resultLine;
 			}
 		}
-		return TTTResultLine.EMPTY;
+		return GameResultLine.EMPTY;
 	}
 	
-	private GamePlayerType getLineWinType(GameMap map, TTTResultLine resultLine) {
-		GamePlayerType playerType = this.getFieldType(map, resultLine.getFirstPos());
+	private GamePlayerType getLineWinType(GameMap map, GameResultLine resultLine) {
+		GamePlayerType playerType = this.getFieldType(map, resultLine.getPos(0));
 		if (playerType != TTTPlayerType.NO) {
-			if (this.getFieldType(map, resultLine.getSecondPos()) == playerType && this.getFieldType(map, resultLine.getThirdPos()) == playerType) {
+			if (this.getFieldType(map, resultLine.getPos(1)) == playerType && this.getFieldType(map, resultLine.getPos(2)) == playerType) {
 				return playerType;
 			}
 		}
 		return TTTPlayerType.NO;
 	}
 	
-	private GamePlayerType getFieldType(GameMap map, TTTFieldPos fieldPos) {
+	private GamePlayerType getFieldType(GameMap map, GameFieldPos fieldPos) {
 		GameField field = map.getField(null, null, fieldPos);
 		if (field != null) {
 			if (field.isEmpty()) {

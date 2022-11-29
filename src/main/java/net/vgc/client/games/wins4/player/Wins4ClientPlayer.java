@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.util.ToString;
 import net.vgc.client.game.player.AbstractClientGamePlayer;
 import net.vgc.client.games.wins4.player.figure.Wins4ClientFigure;
 import net.vgc.game.Game;
@@ -13,7 +14,6 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.player.Player;
-import net.vgc.util.ToString;
 
 public class Wins4ClientPlayer extends AbstractClientGamePlayer {
 	

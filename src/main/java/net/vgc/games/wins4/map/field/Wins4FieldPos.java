@@ -68,10 +68,12 @@ public class Wins4FieldPos implements GameFieldPos {
 		return this.position;
 	}
 	
+	@Override
 	public int getRow() {
 		return this.row;
 	}
 	
+	@Override
 	public int getColumn() {
 		return this.column;
 	}

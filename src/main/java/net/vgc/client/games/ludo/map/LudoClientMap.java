@@ -308,45 +308,6 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 		return null;
 	}
 	
-	/*
-	 * @Override
-	 * public void handlePacket(ClientPacket clientPacket) {
-	 * if (clientPacket instanceof UpdateGameMapPacket packet) {
-	 * for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
-	 * GameProfile profile = fieldInfo.getProfile();
-	 * if (fieldInfo.getFieldPos() instanceof LudoFieldPos fieldPos) {
-	 * LudoClientField field = this.getField(fieldInfo.getFieldType(), fieldInfo.getPlayerType(), fieldPos);
-	 * if (field != null) {
-	 * if (field.isShadowed()) {
-	 * field.setShadowed(false);
-	 * }
-	 * LudoClientPlayer player = (LudoClientPlayer) this.game.getPlayerFor(profile);
-	 * if (player != null) {
-	 * LudoClientFigure figure = player.getFigure(fieldInfo.getFigureCount());
-	 * UUID uuid = figure.getUUID();
-	 * UUID serverUUID = fieldInfo.getFigureUUID();
-	 * if (uuid.equals(serverUUID)) {
-	 * field.setFigure(figure);
-	 * } else {
-	 * LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(),
-	 * uuid, serverUUID);
-	 * }
-	 * } else if (profile.equals(GameProfile.EMPTY)) {
-	 * field.setFigure(null);
-	 * } else {
-	 * LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
-	 * }
-	 * } else {
-	 * LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());
-	 * }
-	 * } else {
-	 * LOGGER.warn("Fail to update game field, since field pos is a instance of {}", fieldInfo.getFieldPos().getClass().getSimpleName());
-	 * }
-	 * }
-	 * }
-	 * }
-	 */
-	
 	@Override
 	public String toString() {
 		return "LudoClientMap";

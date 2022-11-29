@@ -1,5 +1,6 @@
 package net.vgc.server.games.wins4.map.field;
 
+import net.luis.utils.util.ToString;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
@@ -8,7 +9,6 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.games.wins4.player.Wins4PlayerType;
 import net.vgc.server.game.map.field.AbstractServerGameField;
-import net.vgc.util.ToString;
 
 public class Wins4ServerField extends AbstractServerGameField {
 	
@@ -50,7 +50,7 @@ public class Wins4ServerField extends AbstractServerGameField {
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, "fieldType", "colorType", "result");
+		return ToString.toString(this, true, "fieldType", "colorType", "result");
 	}
 	
 }

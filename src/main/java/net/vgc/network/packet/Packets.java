@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Maps;
 
+import net.luis.utils.util.ReflectionHelper;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
@@ -23,7 +24,6 @@ import net.vgc.network.packet.client.ServerClosedPacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
-import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 
 public class Packets {

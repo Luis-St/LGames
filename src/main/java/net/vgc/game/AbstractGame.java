@@ -3,6 +3,7 @@ package net.vgc.game;
 import java.util.List;
 import java.util.function.Function;
 
+import net.vgc.game.action.handler.ActionHandler;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.util.Util;
@@ -11,15 +12,17 @@ public abstract class AbstractGame implements Game {
 	
 	private final GameMap map;
 	private final List<GamePlayer> players;
+	private final ActionHandler actionHandler;
 	private GamePlayer player;
 	
-	protected AbstractGame(Function<Game, GameMap> mapFunction, Function<Game, List<GamePlayer>> playersFunction) {
+	protected AbstractGame(Function<Game, GameMap> mapFunction, Function<Game, List<GamePlayer>> playersFunction, Function<Game, ActionHandler> actionHandlerFunction) {
 		this.map = mapFunction.apply(this);
 		this.players = playersFunction.apply(this);
+		this.actionHandler = actionHandlerFunction.apply(this);
 	}
 	
 	@Override
-	public void initGame() {
+	public void init() {
 		this.map.init(this.players);
 	}
 	
@@ -40,8 +43,13 @@ public abstract class AbstractGame implements Game {
 	
 	@Override
 	public void setPlayer(GamePlayer player) {
-		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.getPlayer(), this::getName), Util.runIfNotNull(player, this::getName));
+		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.getPlayer(), GamePlayer::getName), Util.runIfNotNull(player, GamePlayer::getName));
 		this.player = player;
+	}
+	
+	@Override
+	public ActionHandler getActionHandler() {
+		return this.actionHandler;
 	}
 	
 }

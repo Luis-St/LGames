@@ -16,6 +16,7 @@ import net.vgc.game.action.data.specific.SelectFieldData;
 import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.packet.client.ClientPacket;
 
 public class LudoScreen extends GameScreen {
 	
@@ -72,15 +73,15 @@ public class LudoScreen extends GameScreen {
 		
 	}
 	
-	/*@Override
-	public void handlePacket(ClientPacket clientPacket) {
+	@Override
+	public void handlePacket(ClientPacket clientPacket) { // TODO: remove this system and replace it with a new one
 		this.playerInfo.update();
 		if (clientPacket instanceof RolledDicePacket packet) {
 			this.diceButton.setCount(packet.getCount());
 		} else if (clientPacket instanceof LudoGameResultPacket packet) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
-	}*/
+	}
 	
 	@Override
 	protected Pane createPane() {

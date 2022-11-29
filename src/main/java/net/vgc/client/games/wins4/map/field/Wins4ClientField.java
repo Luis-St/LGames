@@ -3,6 +3,7 @@ package net.vgc.client.games.wins4.map.field;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import net.luis.utils.util.ToString;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.LabelWrapper;
@@ -15,7 +16,6 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.games.wins4.player.Wins4PlayerType;
-import net.vgc.util.ToString;
 
 public class Wins4ClientField extends AbstractClientGameField implements LabelWrapper {
 	
@@ -112,7 +112,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, "fieldType", "colorType", "result");
+		return ToString.toString(this, true, "fieldType", "colorType", "result");
 	}
 	
 }

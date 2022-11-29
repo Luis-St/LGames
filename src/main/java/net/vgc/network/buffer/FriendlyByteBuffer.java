@@ -17,8 +17,8 @@ import com.google.common.collect.Maps;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.luis.utils.util.ReflectionHelper;
 import net.vgc.util.EnumRepresentable;
-import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 

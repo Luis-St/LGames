@@ -39,7 +39,7 @@ public interface GameMap {
 	}
 	
 	@Nullable
-	GameField getField(GameFieldType fieldType, @Nullable GamePlayerType playerType, GameFieldPos fieldPos);
+	GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, GameFieldPos fieldPos);
 	
 	@Nullable
 	GameField getNextField(GameFigure figure, int count);

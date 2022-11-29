@@ -5,6 +5,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import net.luis.utils.util.ToString;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
@@ -18,7 +19,6 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
-import net.vgc.util.ToString;
 
 public class LudoClientField extends AbstractClientGameField implements ToggleButtonWrapper {
 	
@@ -128,7 +128,7 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, "result");
+		return ToString.toString(this, true, "result");
 	}
 	
 }

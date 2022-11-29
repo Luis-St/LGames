@@ -31,6 +31,10 @@ public interface WinHandler {
 		return true;
 	}
 	
+	default GameResultLine getResultLine(GameMap map) {
+		return GameResultLine.EMPTY;
+	}
+	
 	void onPlayerFinished(GamePlayer player);
 	
 	List<GamePlayer> getFinishedPlayers();

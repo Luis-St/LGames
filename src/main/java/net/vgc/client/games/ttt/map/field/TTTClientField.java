@@ -3,6 +3,7 @@ package net.vgc.client.games.ttt.map.field;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
+import net.luis.utils.util.ToString;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
@@ -15,7 +16,6 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.games.ttt.player.TTTPlayerType;
-import net.vgc.util.ToString;
 
 public class TTTClientField extends AbstractClientGameField implements ToggleButtonWrapper {
 	
@@ -129,7 +129,7 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, "fieldType", "colorType", "result");
+		return ToString.toString(this, true, "fieldType", "colorType", "result");
 	}
 	
 }

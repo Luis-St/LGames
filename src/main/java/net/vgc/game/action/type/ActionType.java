@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.luis.utils.util.ToString;
 import net.vgc.game.action.Action;
 import net.vgc.game.action.ActionRegistry;
 import net.vgc.game.action.data.ActionData;
@@ -16,7 +17,6 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.client.ClientActionPacket;
 import net.vgc.network.packet.server.ServerActionPacket;
-import net.vgc.util.ToString;
 
 public class ActionType<T extends Action<V>, V extends ActionData> {
 	

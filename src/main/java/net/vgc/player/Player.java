@@ -25,6 +25,10 @@ public abstract class Player implements Tickable {
 		return this.profile;
 	}
 	
+	public String getName() {
+		return this.getProfile().getName();
+	}
+	
 	public PlayerScore getScore() {
 		return this.score;
 	}

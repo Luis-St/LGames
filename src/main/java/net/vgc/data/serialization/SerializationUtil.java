@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.vgc.util.ReflectionHelper;
+import net.luis.utils.util.ReflectionHelper;
 
 public class SerializationUtil {
 	

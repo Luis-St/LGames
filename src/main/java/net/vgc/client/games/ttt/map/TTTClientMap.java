@@ -153,68 +153,6 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		return null;
 	}
 	
-	/*
-	 * @Override
-	 * public void handlePacket(ClientPacket clientPacket) {
-	 * if (clientPacket instanceof UpdateGameMapPacket packet) {
-	 * for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
-	 * GameProfile profile = fieldInfo.getProfile();
-	 * if (fieldInfo.getFieldPos() instanceof TTTFieldPos fieldPos) {
-	 * TTTClientField field = this.getField(null, null, fieldPos);
-	 * if (field != null) {
-	 * if (field.isShadowed()) {
-	 * field.setShadowed(false);
-	 * }
-	 * if (field.getResult() != GameResult.NO) {
-	 * field.setResult(GameResult.NO);
-	 * }
-	 * TTTClientPlayer player = (TTTClientPlayer) this.game.getPlayerFor(profile);
-	 * if (player != null) {
-	 * TTTClientFigure figure = player.getFigure(fieldInfo.getFigureCount());
-	 * UUID uuid = figure.getUUID();
-	 * UUID serverUUID = fieldInfo.getFigureUUID();
-	 * if (uuid.equals(serverUUID)) {
-	 * field.setFigure(figure);
-	 * } else {
-	 * LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(),
-	 * uuid, serverUUID);
-	 * }
-	 * } else if (profile.equals(GameProfile.EMPTY)) {
-	 * field.setFigure(null);
-	 * } else {
-	 * LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
-	 * }
-	 * } else {
-	 * LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());
-	 * }
-	 * } else {
-	 * LOGGER.warn("Fail to update game field, since field pos is a instance of {}", fieldInfo.getFieldPos().getClass().getSimpleName());
-	 * }
-	 * }
-	 * } else if (clientPacket instanceof TTTGameResultPacket packet) {
-	 * GameResult result = packet.getResult();
-	 * if (result != GameResult.NO) {
-	 * TTTResultLine resultLine = packet.getResultLine();
-	 * if (result == GameResult.DRAW) {
-	 * for (TTTClientField field : this.fields) {
-	 * field.setResult(GameResult.DRAW);
-	 * }
-	 * } else {
-	 * if (resultLine != TTTResultLine.EMPTY) {
-	 * for (TTTFieldPos fieldPos : resultLine.getPoses()) {
-	 * this.getField(null, null, fieldPos).setResult(result);
-	 * }
-	 * } else {
-	 * LOGGER.warn("Fail to handle game result {}, since there is no result line", result);
-	 * }
-	 * }
-	 * } else {
-	 * LOGGER.warn("Fail to handle game result {}", result);
-	 * }
-	 * }
-	 * }
-	 */
-	
 	@Override
 	public String toString() {
 		return "TTTClientMap";

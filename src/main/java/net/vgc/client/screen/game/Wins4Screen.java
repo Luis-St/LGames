@@ -16,6 +16,7 @@ import net.vgc.game.action.type.ActionTypes;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.packet.client.ClientPacket;
 
 public class Wins4Screen extends GameScreen {
 	
@@ -70,13 +71,13 @@ public class Wins4Screen extends GameScreen {
 		}
 	}
 	
-	/*@Override
-	public void handlePacket(ClientPacket clientPacket) {
+	@Override
+	public void handlePacket(ClientPacket clientPacket) { // TODO: remove this system and replace it with a new one
 		this.playerInfo.update();
 		if (clientPacket instanceof Wins4GameResultPacket packet) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
-	}*/
+	}
 	
 	@Override
 	protected Pane createPane() {

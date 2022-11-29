@@ -1,6 +1,7 @@
 package net.vgc.game.player;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +23,10 @@ public interface GamePlayer {
 	
 	Player getPlayer();
 	
+	default String getName() {
+		return this.getPlayer().getName();
+	}
+	
 	GamePlayerType getPlayerType();
 	
 	default GameMap getMap() {
@@ -42,6 +47,16 @@ public interface GamePlayer {
 			}
 		}
 		LOGGER.warn("Fail to get figure for count {} from player {}", count, this.getPlayer().getProfile().getName());
+		return null;
+	}
+	
+	@Nullable
+	default GameFigure getFigure(BiPredicate<GameMap, GameFigure> predicate) {
+		for (GameFigure figure : this.getFigures()) {
+			if (predicate.test(this.getMap(), figure)) {
+				return figure;
+			}
+		}
 		return null;
 	}
 	

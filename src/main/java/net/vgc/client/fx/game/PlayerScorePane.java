@@ -8,12 +8,12 @@ import com.google.common.collect.Lists;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import net.luis.utils.util.SimpleEntry;
 import net.vgc.Constans;
 import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
 import net.vgc.player.Player;
-import net.vgc.util.SimpleEntry;
 
 public class PlayerScorePane extends GridPane {
 	
@@ -42,7 +42,7 @@ public class PlayerScorePane extends GridPane {
 			Player player = gamePlayer.getPlayer();
 			Text text = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_score", player.getProfile().getName(), this.scoreType.getValue(player)));
 			this.add(text, 0, i++);
-			this.playerScoreInfos.add(new SimpleEntry<GamePlayer, Text>(gamePlayer, text, true));
+			this.playerScoreInfos.add(new SimpleEntry<GamePlayer, Text>(gamePlayer, text));
 		}
 	}
 	

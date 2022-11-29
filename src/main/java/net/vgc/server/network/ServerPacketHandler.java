@@ -1,30 +1,15 @@
 package net.vgc.server.network;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
-import com.google.common.collect.Lists;
 
 import net.vgc.game.Game;
-import net.vgc.game.action.data.gobal.EmptyData;
-import net.vgc.game.action.data.gobal.IntegerData;
-import net.vgc.game.action.data.specific.StartGameData;
-import net.vgc.game.action.type.ActionTypes;
-import net.vgc.game.player.GamePlayer;
-import net.vgc.game.player.GamePlayerInfo;
-import net.vgc.game.player.figure.GameFigure;
-import net.vgc.game.type.GameType;
+import net.vgc.game.action.Action;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketHandler;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.dedicated.DedicatedServer;
-import net.vgc.server.game.dice.DiceHandler;
-import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 public class ServerPacketHandler extends AbstractPacketHandler {
 	
@@ -44,7 +29,16 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 		this.server.leavePlayer(this.connection, this.server.getPlayerList().getPlayer(uuid));
 	}
 	
-	public <S extends Game, C extends Game> void handlePlayGameRequest(GameType<S, C> gameType, List<GameProfile> profiles) {
+	public void handleAction(Action<?> action) {
+		Game game = this.server.getGame();
+		if (game != null) {
+			Objects.requireNonNull(game.getActionHandler(), "The action handler of a game must not be null").handle(action);
+		} else {
+			// TODO: add all other handlers
+		}
+	}
+	
+	/*public <S extends Game, C extends Game> void handlePlayGameRequest(GameType<S, C> gameType, List<GameProfile> profiles) {
 		MutableBoolean mutable = new MutableBoolean(false);
 		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(profiles).stream().filter((player) -> {
 			if (player.isPlaying()) {
@@ -84,17 +78,17 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 			}
 			ActionTypes.CANCEL_PLAY_REQUEST.send(this.connection, new EmptyData());
 		}
-	}
+	}*/
 	
-	protected List<GamePlayerInfo> createPlayerInfos(List<GamePlayer> players) {
+	/*protected List<GamePlayerInfo> createPlayerInfos(List<GamePlayer> players) {
 		List<GamePlayerInfo> playerInfos = Lists.newArrayList();
 		for (GamePlayer player : players) {
 			playerInfos.add(new GamePlayerInfo(player.getPlayer().getProfile(), player.getPlayerType(), Util.mapList(player.getFigures(), GameFigure::getUUID)));
 		}
 		return playerInfos;
-	}
+	}*/
 	
-	public void handlePlayAgainGameRequest(GameProfile profile) {
+	/*public void handlePlayAgainGameRequest(GameProfile profile) {
 		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (player != null) {
 			if (this.server.isAdmin(player)) {
@@ -117,9 +111,9 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 			LOGGER.warn("Fail to start a new match, since there was an error in a player profile {}", profile.getName());
 			ActionTypes.CANCEL_PLAY_AGAIN_REQUEST.send(this.connection, new EmptyData());
 		}
-	}
+	}*/
 	
-	public void handleRollDiceRequest(GameProfile profile) {
+	/*public void handleRollDiceRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {
 			GamePlayer player = game.getPlayerFor(profile);
@@ -163,9 +157,9 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 			LOGGER.warn("Fail to roll dice, since there is no running game");
 			ActionTypes.CANCEL_ROLL_DICE_REQUEST.send(this.connection, new EmptyData());
 		}
-	}
+	}*/
 	
-	public void handleExitGameRequest(GameProfile profile) {
+	/*public void handleExitGameRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {
 			if (!game.removePlayer(game.getPlayerFor(profile), true)) {
@@ -185,6 +179,6 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 				LOGGER.warn("Fail to remove player {} from game, since there is no running game", profile.getName());
 			}
 		}
-	}
+	}*/
 	
 }

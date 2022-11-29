@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.util.ToString;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
@@ -15,7 +16,6 @@ import net.vgc.player.Player;
 import net.vgc.server.game.player.AbstractServerGamePlayer;
 import net.vgc.server.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.util.Mth;
-import net.vgc.util.ToString;
 import net.vgc.util.exception.InvalidValueException;
 
 public class LudoServerPlayer extends AbstractServerGamePlayer {

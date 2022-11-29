@@ -4,6 +4,7 @@ import net.vgc.game.action.data.gobal.EmptyData;
 import net.vgc.game.action.data.gobal.IntegerData;
 import net.vgc.game.action.data.gobal.ProfileData;
 import net.vgc.game.action.data.specific.FieldInfoData;
+import net.vgc.game.action.data.specific.GameResultData;
 import net.vgc.game.action.data.specific.PlayRequestData;
 import net.vgc.game.action.data.specific.SelectFieldData;
 import net.vgc.game.action.data.specific.StartGameData;
@@ -28,6 +29,7 @@ public class ActionTypes {
 	public static final SimpleActionType<IntegerData> ROLLED_DICE = SimpleActionType.toClient("rolled_dice", 13, IntegerData::new);
 	public static final SimpleActionType<EmptyData> CAN_ROLL_DICE_AGAIN = SimpleActionType.toClient("can_roll_dice_again", 14, EmptyData::new);
 	public static final SimpleActionType<EmptyData> CANCEL_ROLL_DICE_REQUEST = SimpleActionType.toClient("cancel_roll_dice_request", 15, EmptyData::new);
-	public static final SimpleActionType<SyncPlayerData> SYNC_PLAYER_DATA = SimpleActionType.toClient("sync_player_data", 16, SyncPlayerData::new);
+	public static final SimpleActionType<SyncPlayerData> SYNC_PLAYER = SimpleActionType.toClient("sync_player", 16, SyncPlayerData::new);
+	public static final SimpleActionType<GameResultData> GAME_RESULT = SimpleActionType.toClient("game_result", 17, GameResultData::new);
 	
 }

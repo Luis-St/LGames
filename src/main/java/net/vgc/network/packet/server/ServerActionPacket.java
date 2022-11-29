@@ -26,8 +26,7 @@ public class ServerActionPacket implements ServerPacket {
 	
 	@Override
 	public void handle(ServerPacketHandler listener) {
-		// TODO Auto-generated method stub
-		
+		listener.handleAction(this.action);
 	}
 	
 }

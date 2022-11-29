@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
@@ -13,6 +14,7 @@ import net.vgc.client.game.AbstractClientGame;
 import net.vgc.game.action.Action;
 import net.vgc.game.action.data.ActionData;
 import net.vgc.game.action.data.specific.FieldInfoData;
+import net.vgc.game.action.handler.ActionHandler;
 import net.vgc.game.action.type.ActionType;
 import net.vgc.game.action.type.ActionTypes;
 import net.vgc.game.dice.DiceHandler;
@@ -33,25 +35,17 @@ public interface Game {
 	
 	public static final Logger LOGGER = LogManager.getLogger();
 	
-	default void initGame() {
+	default void init() {
 		
 	}
 	
-	default void startGame() {
+	default void start() {
 		
 	}
 	
 	GameType<? extends AbstractServerGame, ? extends AbstractClientGame> getType();
 	
 	GameMap getMap();
-	
-	default String getName(Player player) {
-		return player.getProfile().getName();
-	}
-	
-	default String getName(GamePlayer player) {
-		return this.getName(player.getPlayer());
-	}
 	
 	List<GamePlayer> getPlayers();
 	
@@ -63,7 +57,7 @@ public interface Game {
 			}
 		}
 		if (enemies.isEmpty()) {
-			LOGGER.warn("Fail to get enemies for player {}", this.getName(gamePlayer));
+			LOGGER.warn("Fail to get enemies for player {}", gamePlayer.getName());
 		}
 		return enemies;
 	}
@@ -127,7 +121,7 @@ public interface Game {
 							this.setPlayer(players.get(index));
 						}
 					} else {
-						LOGGER.warn("Fail to get next player, since the player {} does not exists", this.getName(player));
+						LOGGER.warn("Fail to get next player, since the player {} does not exists", player.getName());
 						this.setPlayer(players.get(0));
 					}
 				}
@@ -153,6 +147,9 @@ public interface Game {
 		return null;
 	}
 	
+	@NotNull
+	ActionHandler getActionHandler();
+	
 	default boolean nextMatch() {
 		if (Mth.isInBounds(this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
 			this.getMap().reset();
@@ -163,14 +160,14 @@ public interface Game {
 			this.getWinHandler().reset();
 			this.nextPlayer(true);
 			this.broadcastPlayers(ActionTypes.UPDATE_MAP, new FieldInfoData(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
-			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.getPlayers(), this::getName));
+			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.getPlayers(), GamePlayer::getName));
 			return true;
 		}
 		LOGGER.warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
 		return false;
 	}
 	
-	void stopGame();
+	void stop();
 	
 	default <T extends Action<V>, V extends ActionData> void broadcastPlayer(GamePlayer gamePlayer, ActionType<T, V> type, V data) {
 		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {

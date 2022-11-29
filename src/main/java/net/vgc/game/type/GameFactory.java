@@ -21,13 +21,13 @@ public class GameFactory<S extends Game, C extends Game> {
 	
 	public S createServerGame(DedicatedServer server, List<ServerPlayer> players) {
 		S game = this.serverFactory.apply(server, players);
-		game.initGame();
+		game.init();
 		return game;
 	}
 	
 	public C createClientGame(Client client, List<GamePlayerInfo> playerInfos) {
 		C game = this.clientFactory.apply(client, playerInfos);
-		game.initGame();
+		game.init();
 		return game;
 	}
 	
