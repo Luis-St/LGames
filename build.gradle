@@ -10,8 +10,8 @@ repositories {
 	maven {
 		url "https://libraries.minecraft.net"
 	}
-	maven  {
-		url uri("${projectDir}/maven repositories")
+	maven {
+		url uri("${projectDir}/maven/repositories")
 	}
 }
 
@@ -31,7 +31,7 @@ println("Java: " + System.getProperty("java.version") + " JVM: " + System.getPro
 
 dependencies {
 	// Local
-	implementation "org.controlsfx:ControlsFX:1.0" // Fx
+	implementation "org.controlsfx:ControlsFX:1.1" // Fx
 	implementation "net.luis:Lutils:1.1" // Utility
 	implementation "net.luis.fxutils:FxUtils:1.7" // Fx Utility
 	// Google
