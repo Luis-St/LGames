@@ -13,8 +13,8 @@ import net.vgc.game.Game;
 import net.vgc.game.action.data.gobal.EmptyData;
 import net.vgc.game.action.data.gobal.ProfileData;
 import net.vgc.game.action.data.specific.SyncPlayerData;
-import net.vgc.game.action.handler.ActionHandler;
-import net.vgc.game.action.type.ActionTypes;
+import net.vgc.game.action.handler.GameActionHandler;
+import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
@@ -31,7 +31,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 	private final WinHandler winHandler;
 	
 	protected <T extends GamePlayerType> AbstractServerGame(DedicatedServer server, BiFunction<DedicatedServer, Game, GameMap> mapFunction, List<ServerPlayer> players, T[] playerTypes, TriFunction<Game, Player, T, GamePlayer> playerFunction,
-		WinHandler winHandler, Function<Game, ActionHandler> actionHandlerFunction) {
+		WinHandler winHandler, Function<Game, GameActionHandler> actionHandlerFunction) {
 		super((game) -> {
 			return mapFunction.apply(server, game);
 		}, (game) -> {
@@ -69,7 +69,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 	public void setPlayer(GamePlayer player) {
 		super.setPlayer(player);
 		if (this.getPlayer() != null) {
-			this.broadcastPlayers(ActionTypes.UPDATE_CURRENT_PLAYER, new ProfileData(this.getPlayer().getPlayer().getProfile()));
+			this.broadcastPlayers(GameActionTypes.UPDATE_CURRENT_PLAYER, new ProfileData(this.getPlayer().getPlayer().getProfile()));
 		}
 	}
 	
@@ -78,7 +78,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 		if (this.getPlayers().remove(gamePlayer)) {
 			if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
 				if (sendExit) {
-					ActionTypes.EXIT_GAME.send(player.connection, new EmptyData());
+					GameActionTypes.EXIT_GAME.send(player.connection, new EmptyData());
 				}
 				player.setPlaying(false);
 				LOGGER.info("Remove player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
@@ -89,7 +89,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 					this.stop();
 				}
 				player.getScore().reset();
-				this.broadcastPlayersExclude(ActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
+				this.broadcastPlayersExclude(GameActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
 				return true;
 			} else {
 				LOGGER.warn("Fail to remove player {}, since the player is not a server player", gamePlayer.getName());
@@ -123,9 +123,9 @@ public abstract class AbstractServerGame extends AbstractGame {
 		}
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			Player player = gamePlayer.getPlayer();
-			this.broadcastPlayer(gamePlayer, ActionTypes.STOP_GAME, new EmptyData());
+			this.broadcastPlayer(gamePlayer, GameActionTypes.STOP_GAME, new EmptyData());
 			gamePlayer.getPlayer().getScore().reset();
-			this.broadcastPlayersExclude(ActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
+			this.broadcastPlayersExclude(GameActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
 		}
 		this.getPlayers().clear();
 		this.getServer().setGame(null);

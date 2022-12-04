@@ -1,15 +1,16 @@
 package net.vgc.game.action.type;
 
 import java.util.Objects;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.luis.utils.function.TriFunction;
 import net.luis.utils.util.ToString;
-import net.vgc.game.action.Action;
+import net.vgc.game.action.GameAction;
+import net.vgc.game.action.GameActionHandleType;
 import net.vgc.game.action.ActionRegistry;
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.GameActionData;
 import net.vgc.network.Connection;
 import net.vgc.network.ConnectionHandler;
 import net.vgc.network.NetworkDirection;
@@ -18,17 +19,19 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.client.ClientActionPacket;
 import net.vgc.network.packet.server.ServerActionPacket;
 
-public class ActionType<T extends Action<V>, V extends ActionData> {
+public class GameActionType<T extends GameAction<V>, V extends GameActionData> {
 	
 	private final String name;
 	private final int id;
+	private final GameActionHandleType handleType;
 	private final NetworkDirection networkDirection;
-	private final BiFunction<Integer, V, T> actionFactory;
+	private final TriFunction<Integer, GameActionHandleType, V, T> actionFactory;
 	private final Function<FriendlyByteBuffer, V> dataFactory;
 	
-	public ActionType(String name, int id, NetworkDirection networkDirection, BiFunction<Integer, V, T> actionFactory, Function<FriendlyByteBuffer, V> dataFactory) {
+	public GameActionType(String name, int id, GameActionHandleType handleType, NetworkDirection networkDirection, TriFunction<Integer, GameActionHandleType, V, T> actionFactory, Function<FriendlyByteBuffer, V> dataFactory) {
 		this.name = Objects.requireNonNull(StringUtils.trimToNull(name), "The name of an action type must not be null");
 		this.id = id;
+		this.handleType = handleType;
 		this.networkDirection = Objects.requireNonNull(networkDirection, "The network direction of an action type must not be null");
 		this.actionFactory = Objects.requireNonNull(actionFactory, "The factory of an action type must not be null");
 		this.dataFactory = Objects.requireNonNull(dataFactory, "The data factory of an action type must not be null");
@@ -43,12 +46,16 @@ public class ActionType<T extends Action<V>, V extends ActionData> {
 		return this.id;
 	}
 	
+	public GameActionHandleType getHandleType() {
+		return this.handleType;
+	}
+	
 	public NetworkDirection getNetworkDirection() {
 		return this.networkDirection;
 	}
 	
 	public T create(V data) {
-		return this.actionFactory.apply(this.id, data);
+		return this.actionFactory.apply(this.id, this.handleType, data);
 	}
 	
 	public void send(ConnectionHandler handler, V data) {

@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.vgc.game.Game;
-import net.vgc.game.action.Action;
+import net.vgc.game.action.GameAction;
 import net.vgc.game.map.GameMap;
 
 /**
@@ -13,7 +13,7 @@ import net.vgc.game.map.GameMap;
  *
  */
 
-public interface ActionHandler {
+public interface GameActionHandler {
 	
 	public static final Logger LOGGER = LogManager.getLogger();
 	
@@ -23,6 +23,6 @@ public interface ActionHandler {
 		return this.getGame().getMap();
 	}
 	
-	void handle(Action<?> action);
+	boolean handle(GameAction<?> action);
 	
 }

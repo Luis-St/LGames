@@ -11,12 +11,12 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.Lists;
 
 import net.vgc.client.game.AbstractClientGame;
-import net.vgc.game.action.Action;
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.GameAction;
+import net.vgc.game.action.data.GameActionData;
 import net.vgc.game.action.data.specific.FieldInfoData;
-import net.vgc.game.action.handler.ActionHandler;
-import net.vgc.game.action.type.ActionType;
-import net.vgc.game.action.type.ActionTypes;
+import net.vgc.game.action.handler.GameActionHandler;
+import net.vgc.game.action.type.GameActionType;
+import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
@@ -148,7 +148,7 @@ public interface Game {
 	}
 	
 	@NotNull
-	ActionHandler getActionHandler();
+	GameActionHandler getActionHandler();
 	
 	default boolean nextMatch() {
 		if (Mth.isInBounds(this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
@@ -159,7 +159,7 @@ public interface Game {
 			}
 			this.getWinHandler().reset();
 			this.nextPlayer(true);
-			this.broadcastPlayers(ActionTypes.UPDATE_MAP, new FieldInfoData(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+			this.broadcastPlayers(GameActionTypes.UPDATE_MAP, new FieldInfoData(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.getPlayers(), GamePlayer::getName));
 			return true;
 		}
@@ -169,19 +169,19 @@ public interface Game {
 	
 	void stop();
 	
-	default <T extends Action<V>, V extends ActionData> void broadcastPlayer(GamePlayer gamePlayer, ActionType<T, V> type, V data) {
+	default <T extends GameAction<V>, V extends GameActionData> void broadcastPlayer(GamePlayer gamePlayer, GameActionType<T, V> type, V data) {
 		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
 			type.send(player.connection, data);
 		}
 	}
 	
-	default <T extends Action<V>, V extends ActionData> void broadcastPlayers(ActionType<T, V> type, V data) {
+	default <T extends GameAction<V>, V extends GameActionData> void broadcastPlayers(GameActionType<T, V> type, V data) {
 		for (GamePlayer player : this.getPlayers()) {
 			this.broadcastPlayer(player, type, data);
 		}
 	}
 	
-	default <T extends Action<V>, V extends ActionData> void broadcastPlayersExclude(ActionType<T, V> type, V data, GamePlayer... gamePlayers) {
+	default <T extends GameAction<V>, V extends GameActionData> void broadcastPlayersExclude(GameActionType<T, V> type, V data, GamePlayer... gamePlayers) {
 		List<GamePlayer> excludePlayers = Lists.newArrayList(gamePlayers);
 		for (GamePlayer player : this.getPlayers()) {
 			if (!excludePlayers.contains(player)) {

@@ -1,6 +1,6 @@
 package net.vgc.game.action.data.specific;
 
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.GameActionData;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
@@ -11,7 +11,7 @@ import net.vgc.player.GameProfile;
  * 
  */
 
-public class SyncPlayerData extends ActionData {
+public class SyncPlayerData extends GameActionData {
 	
 	private final GameProfile profile;
 	private final boolean playing;

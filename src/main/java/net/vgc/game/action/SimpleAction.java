@@ -1,9 +1,9 @@
 package net.vgc.game.action;
 
 import net.luis.utils.util.ToString;
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.GameActionData;
 
-public record SimpleAction<T extends ActionData> (int id, T data) implements Action<T> {
+public record SimpleAction<T extends GameActionData> (int id, GameActionHandleType handleType, T data) implements GameAction<T> {
 	
 	@Override
 	public String toString() {

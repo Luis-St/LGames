@@ -1,9 +1,9 @@
 package net.vgc.game.action.data.gobal;
 
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.GameActionData;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
-public class EmptyData extends ActionData {
+public class EmptyData extends GameActionData {
 	
 	public EmptyData() {
 		super();

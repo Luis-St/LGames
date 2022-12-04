@@ -2,13 +2,13 @@ package net.vgc.game.action.data;
 
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
-public abstract class ActionData {
+public abstract class GameActionData {
 	
-	protected ActionData() {
+	protected GameActionData() {
 		
 	}
 	
-	protected ActionData(FriendlyByteBuffer buffer) {
+	protected GameActionData(FriendlyByteBuffer buffer) {
 		
 	}
 	

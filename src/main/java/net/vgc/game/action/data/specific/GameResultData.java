@@ -1,8 +1,11 @@
 package net.vgc.game.action.data.specific;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.luis.utils.util.ReflectionHelper;
 import net.vgc.game.GameResult;
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.GameActionData;
+import net.vgc.game.win.GameResultLine;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
@@ -12,7 +15,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
  *
  */
 
-public class GameResultData extends ActionData {
+public class GameResultData extends GameActionData {
 	
 	private final GameResult result;
 	private final Encodable object;
@@ -52,6 +55,14 @@ public class GameResultData extends ActionData {
 	
 	public Encodable getObject() {
 		return this.object;
+	}
+	
+	@Nullable
+	public GameResultLine getResultLine() {
+		if (this.object instanceof GameResultLine resultLine) {
+			return resultLine;
+		}
+		return null;
 	}
 	
 }

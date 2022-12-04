@@ -9,7 +9,7 @@ import net.vgc.client.fx.Box;
 import net.vgc.client.game.dice.DiceRenderState;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.game.action.data.gobal.ProfileData;
-import net.vgc.game.action.type.ActionTypes;
+import net.vgc.game.action.type.GameActionTypes;
 
 public class DiceButton extends Button {
 	
@@ -32,7 +32,7 @@ public class DiceButton extends Button {
 		this.setOnAction((event) -> {
 			LocalPlayer player = this.client.getPlayer();
 			if (player.isCurrent() && player.canRollDice()) {
-				ActionTypes.DICE_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.client.getPlayer().getProfile()));
+				GameActionTypes.DICE_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.client.getPlayer().getProfile()));
 			}
 		});
 	}

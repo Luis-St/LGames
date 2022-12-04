@@ -2,19 +2,17 @@ package net.vgc.client.screen;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import javafx.scene.layout.Pane;
 import net.vgc.Main;
 import net.vgc.client.Client;
-import net.vgc.client.fx.InputHandler;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Showable;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.PacketListener;
-import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.util.Tickable;
 
-public abstract class Screen implements Showable, Tickable, InputHandler, PacketListener<ClientPacket> {
+public abstract class Screen implements Showable, Tickable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
 	
@@ -36,9 +34,7 @@ public abstract class Screen implements Showable, Tickable, InputHandler, Packet
 		
 	}
 	
-	@Override
-	@Deprecated
-	public void handlePacket(ClientPacket clientPacket) {
+	public void onUpdate(@Nullable String updateKey, @Nullable Object object) {
 		
 	}
 	

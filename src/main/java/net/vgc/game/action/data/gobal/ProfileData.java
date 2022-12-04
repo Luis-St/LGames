@@ -1,10 +1,10 @@
 package net.vgc.game.action.data.gobal;
 
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.GameActionData;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 
-public class ProfileData extends ActionData {
+public class ProfileData extends GameActionData {
 	
 	private final GameProfile profile;
 	

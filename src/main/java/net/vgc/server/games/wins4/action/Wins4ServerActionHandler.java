@@ -9,14 +9,14 @@ import com.google.common.collect.Lists;
 
 import net.vgc.game.Game;
 import net.vgc.game.GameResult;
-import net.vgc.game.action.Action;
+import net.vgc.game.action.GameAction;
 import net.vgc.game.action.data.gobal.EmptyData;
 import net.vgc.game.action.data.specific.FieldInfoData;
 import net.vgc.game.action.data.specific.GameResultData;
 import net.vgc.game.action.data.specific.SelectFieldData;
 import net.vgc.game.action.data.specific.SyncPlayerData;
-import net.vgc.game.action.handler.AbstractActionHandler;
-import net.vgc.game.action.type.ActionTypes;
+import net.vgc.game.action.handler.AbstractGameActionHandler;
+import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
@@ -36,37 +36,39 @@ import net.vgc.util.Util;
  *
  */
 
-public class Wins4ServerActionHandler extends AbstractActionHandler {
+public class Wins4ServerActionHandler extends AbstractGameActionHandler {
 	
 	public Wins4ServerActionHandler(Game game) {
 		super(game);
 	}
 	
 	@Override
-	public void handle(Action<?> action) {
-		if (action.type() == ActionTypes.SELECT_FIELD && action.data() instanceof SelectFieldData data) {
-			this.handleSelectField(data);
+	public boolean handle(GameAction<?> action) {
+		if (action.type() == GameActionTypes.SELECT_FIELD && action.data() instanceof SelectFieldData data) {
+			return this.handleSelectField(data);
 		}
+		LOGGER.warn("Fail to handle action of type {}", action.type().getName());
+		return false;
 	}
 	
-	private void handleSelectField(SelectFieldData data) {
+	private boolean handleSelectField(SelectFieldData data) {
 		GameFieldPos fieldPos = data.getFieldPos();
 		GamePlayer player = this.getGame().getPlayerFor(data.getProfile());
 		if (!Objects.equals(this.getGame().getPlayer(), player)) {
 			LOGGER.warn("Player {} tries to change the {} map at pos {} to {}, but it is not his turn", player.getName(), fieldPos.getPosition(), player.getPlayerType());
-			return;
+			return false;
 		}
 		Optional<GameField> optionalField = Util.reverseList(this.getFieldsForColumn(fieldPos.getColumn())).stream().filter(GameField::isEmpty).findFirst();
 		if (!optionalField.isPresent()) {
 			LOGGER.warn("Fail to get empty field in column {}", fieldPos.getColumn());
-			this.getGame().broadcastPlayer(player, ActionTypes.CAN_SELECT_FIELD, new EmptyData());
-			return;
+			this.getGame().broadcastPlayer(player, GameActionTypes.CAN_SELECT_FIELD, new EmptyData());
+			return false;
 		}
 		GameField field = optionalField.orElseThrow(NullPointerException::new);
 		if (!field.isEmpty()) {
 			LOGGER.warn("The field {} should be empty but there is a figure of player {} of it", fieldPos.getPosition(), player.getName());
 			this.getGame().stop();
-			return;
+			return false;
 		}
 		GameFigure figure = player.getFigure((map, gameFigure) -> {
 			return map.getField(gameFigure) == null;
@@ -74,10 +76,10 @@ public class Wins4ServerActionHandler extends AbstractActionHandler {
 		if (figure == null) {
 			LOGGER.warn("Fail to get unplaced figure for player {}, since all figures have been placed", player.getName());
 			this.getGame().stop();
-			return;
+			return false;
 		}
 		field.setFigure(figure);
-		this.getGame().broadcastPlayer(player, ActionTypes.UPDATE_MAP, new FieldInfoData(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+		this.getGame().broadcastPlayer(player, GameActionTypes.UPDATE_MAP, new FieldInfoData(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 		WinHandler winHandler = this.getGame().getWinHandler();
 		if (winHandler.hasPlayerFinished(player)) {
 			winHandler.onPlayerFinished(player);
@@ -102,6 +104,7 @@ public class Wins4ServerActionHandler extends AbstractActionHandler {
 		} else {
 			this.getGame().nextPlayer(false);
 		}
+		return true;
 	}
 	
 	private List<GameField> getFieldsForColumn(int column) {
@@ -117,9 +120,9 @@ public class Wins4ServerActionHandler extends AbstractActionHandler {
 	
 	private void updateAndBroadcast(GamePlayer gamePlayer, GameResult result, GameResultLine resultLine, Consumer<PlayerScore> consumer) {
 		Player player = gamePlayer.getPlayer();
-		this.getGame().broadcastPlayer(gamePlayer, ActionTypes.GAME_RESULT, new GameResultData(result, resultLine));
+		this.getGame().broadcastPlayer(gamePlayer, GameActionTypes.GAME_RESULT, new GameResultData(result, resultLine));
 		consumer.accept(player.getScore());
-		this.getGame().broadcastPlayers(ActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), true, player.getScore()));
+		this.getGame().broadcastPlayers(GameActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), true, player.getScore()));
 	}
 	
 }

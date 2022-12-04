@@ -15,13 +15,12 @@ import net.vgc.language.Language;
 import net.vgc.language.LanguageProvider;
 import net.vgc.language.Languages;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidNetworkSideException;
 
-public class Server extends GameApplication<ServerPacket> implements Tickable {
+public class Server extends GameApplication implements Tickable {
 	
 	public static Server getInstance() {
 		if (NetworkSide.SERVER.isOn()) {
@@ -147,21 +146,6 @@ public class Server extends GameApplication<ServerPacket> implements Tickable {
 	@Override
 	public NetworkSide getNetworkSide() {
 		return NetworkSide.SERVER;
-	}
-	
-	@Override
-	public void handlePacket(ServerPacket packet) {
-		if (this.server != null) {
-			this.server.handlePacket(packet);
-		} else {
-			String s = "Fail to handle packet of type " + packet.getClass().getSimpleName() + ", since {}";
-			switch (this.launchState) {
-				case UNKNOWN, STARTING -> LOGGER.warn(s, "the server has not been started yet");
-				case STOPPING -> LOGGER.debug(s, "the server is currently shutting down");
-				case STOPPED -> LOGGER.debug(s, "the server is already terminated");
-				default -> LOGGER.error(s, "a critical error occurred and the server has been terminated");
-			}
-		}
 	}
 	
 	@Override

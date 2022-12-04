@@ -46,15 +46,13 @@ import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.PacketDecoder;
 import net.vgc.network.packet.PacketEncoder;
-import net.vgc.network.packet.PacketListener;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.ExceptionHandler;
 import net.vgc.util.Tickable;
 
-public class DedicatedServer implements Tickable, PacketListener<ServerPacket> {
+public class DedicatedServer implements Tickable {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final boolean NATIVE = Epoll.isAvailable();
@@ -204,11 +202,6 @@ public class DedicatedServer implements Tickable, PacketListener<ServerPacket> {
 	@Override
 	public void tick() {
 		this.playerList.tick();
-	}
-	
-	@Override
-	public void handlePacket(ServerPacket packet) {
-		
 	}
 	
 	public String getHost() {

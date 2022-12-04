@@ -6,7 +6,7 @@ import java.util.Objects;
 import com.google.common.collect.Lists;
 
 import net.vgc.game.action.data.gobal.EmptyData;
-import net.vgc.game.action.type.ActionTypes;
+import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.dice.Dice;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.dice.PlayerDiceInfo;
@@ -92,7 +92,7 @@ public class LudoDiceHandler implements DiceHandler {
 	@Override
 	public void performGameAction(GamePlayer gamePlayer, int count) {
 		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
-			ActionTypes.CAN_SELECT_FIELD.send(player.connection, new EmptyData());
+			GameActionTypes.CAN_SELECT_FIELD.send(player.connection, new EmptyData());
 		}
 	}
 	

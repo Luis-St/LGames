@@ -2,10 +2,11 @@ package net.vgc.client.games.wins4.action;
 
 import net.vgc.game.Game;
 import net.vgc.game.GameResult;
-import net.vgc.game.action.Action;
+import net.vgc.game.action.GameAction;
 import net.vgc.game.action.data.specific.FieldInfoData;
-import net.vgc.game.action.handler.AbstractActionHandler;
-import net.vgc.game.action.type.ActionTypes;
+import net.vgc.game.action.data.specific.GameResultData;
+import net.vgc.game.action.handler.AbstractGameActionHandler;
+import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;
@@ -19,36 +20,24 @@ import net.vgc.player.GameProfile;
  *
  */
 
-public class Wins4ClientActionHandler extends AbstractActionHandler {
-
+public class Wins4ClientActionHandler extends AbstractGameActionHandler {
+	
 	public Wins4ClientActionHandler(Game game) {
 		super(game);
 	}
 	
 	@Override
-	public void handle(Action<?> action) {
-		if (action.type() == ActionTypes.UPDATE_MAP && action.data() instanceof FieldInfoData data) {
-			this.handleUpdateMap(data);
+	public boolean handle(GameAction<?> action) {
+		if (action.type() == GameActionTypes.UPDATE_MAP && action.data() instanceof FieldInfoData data) {
+			return this.handleUpdateMap(data);
+		} else if (action.type() == GameActionTypes.GAME_RESULT && action.data() instanceof GameResultData data) {
+			return this.handleGameResult(data);
 		}
+		LOGGER.warn("Fail to handle action of type {}", action.type().getName());
+		return false;
 	}
 	
-	/*
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		if (clientPacket instanceof Wins4GameResultPacket packet) {
-			GameResult result = packet.getResult();
-			if (result != GameResult.NO) {
-				for (Wins4ClientField field : this.fields) {
-					field.setResult(result);
-				}
-			} else {
-				LOGGER.warn("Fail to handle game result {}", result);
-			}
-		}
-	}
-	 */
-	
-	private void handleUpdateMap(FieldInfoData data) {
+	private boolean handleUpdateMap(FieldInfoData data) {
 		for (GameFieldInfo fieldInfo : data.getFieldInfos()) {
 			GameProfile profile = fieldInfo.getProfile();
 			GameFieldPos fieldPos = fieldInfo.getFieldPos();
@@ -74,13 +63,27 @@ public class Wins4ClientActionHandler extends AbstractActionHandler {
 				}
 				GameFigure figure = player.getFigure(fieldInfo.getFigureCount());
 				if (!figure.getUUID().equals(fieldInfo.getFigureUUID())) {
-					LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), figure.getUUID(), fieldInfo.getFigureUUID());
+					LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), figure.getUUID(),
+						fieldInfo.getFigureUUID());
 					continue;
 				} else {
 					field.setFigure(figure);
 				}
 			}
 		}
+		return true;
+	}
+	
+	private boolean handleGameResult(GameResultData data) {
+		GameResult result = data.getResult();
+		if (result == GameResult.NO) {
+			LOGGER.warn("Fail to handle game result {}", result);
+			return false;
+		}
+		for (GameField field : this.getMap().getFields()) {
+			field.setResult(result);
+		}
+		return true;
 	}
 	
 }

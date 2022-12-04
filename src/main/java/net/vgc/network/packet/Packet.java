@@ -1,7 +1,9 @@
 package net.vgc.network.packet;
 
 import javafx.application.Platform;
+import net.vgc.client.screen.update.ScreenUpdateFactory;
 import net.vgc.network.Network;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public interface Packet<T extends PacketHandler> {
@@ -11,11 +13,12 @@ public interface Packet<T extends PacketHandler> {
 	default void handleLater(T listener) {
 		if (Platform.isFxApplicationThread()) {
 			this.handle(listener);
-			Network.INSTANCE.handlePacket(this);
 		} else {
 			Platform.runLater(() -> {
 				this.handle(listener);
-				Network.INSTANCE.handlePacket(this);
+				Network.INSTANCE.executeOn(NetworkSide.CLIENT, () -> {
+					ScreenUpdateFactory.onUpdate();
+				});
 			});
 		}
 	}

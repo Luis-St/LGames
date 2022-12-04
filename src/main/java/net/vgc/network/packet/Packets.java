@@ -24,6 +24,7 @@ import net.vgc.network.packet.client.ServerClosedPacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
+import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.Util;
 
 public class Packets {
@@ -42,6 +43,7 @@ public class Packets {
 		map.put(i++, PlayerAddPacket.class);
 		map.put(i++, PlayerRemovePacket.class);
 		map.put(i++, SyncPermissionPacket.class);
+		map.put(i++, PlayGameRequestPacket.class);
 		map.put(i++, ServerClosedPacket.class);
 	});
 	

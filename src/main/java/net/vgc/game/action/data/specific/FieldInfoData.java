@@ -2,11 +2,11 @@ package net.vgc.game.action.data.specific;
 
 import java.util.List;
 
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.GameActionData;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
-public class FieldInfoData extends ActionData {
+public class FieldInfoData extends GameActionData {
 	
 	private final List<GameFieldInfo> fieldInfos;
 	

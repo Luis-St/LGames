@@ -1,5 +1,7 @@
 package net.vgc.client.screen;
 
+import org.jetbrains.annotations.Nullable;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Menu;
@@ -13,12 +15,9 @@ import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.screen.game.GameScreen;
+import net.vgc.client.screen.update.ScreenUpdateKeys;
 import net.vgc.game.type.GameTypes;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.PlayerAddPacket;
-import net.vgc.network.packet.client.PlayerRemovePacket;
-import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.util.Util;
 
 public class LobbyScreen extends GameScreen {
@@ -70,8 +69,8 @@ public class LobbyScreen extends GameScreen {
 	}
 	
 	@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
+	public void onUpdate(@Nullable String updateKey, @Nullable Object object) {
+		if (ScreenUpdateKeys.PLAYER_UPDATE_POST.equals(updateKey)) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
 			this.tttButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 			this.ludoButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());

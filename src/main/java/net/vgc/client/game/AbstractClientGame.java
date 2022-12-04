@@ -15,10 +15,10 @@ import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
-import net.vgc.game.action.Action;
-import net.vgc.game.action.data.ActionData;
-import net.vgc.game.action.handler.ActionHandler;
-import net.vgc.game.action.type.ActionType;
+import net.vgc.game.action.GameAction;
+import net.vgc.game.action.data.GameActionData;
+import net.vgc.game.action.handler.GameActionHandler;
+import net.vgc.game.action.type.GameActionType;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
@@ -34,7 +34,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 	private final Client client;
 	
 	protected AbstractClientGame(Client client, BiFunction<Client, Game, GameMap> mapFunction, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> playerFunction, 
-		Function<Game, ActionHandler> actionHandlerFunction) {
+		Function<Game, GameActionHandler> actionHandlerFunction) {
 		super((game) -> {
 			return mapFunction.apply(client, game);
 		}, (game) -> {
@@ -108,7 +108,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 	}
 	
 	@Override
-	public final <T extends Action<V>, V extends ActionData> void broadcastPlayer(GamePlayer gamePlayer, ActionType<T, V> type, V data) {
+	public final <T extends GameAction<V>, V extends GameActionData> void broadcastPlayer(GamePlayer gamePlayer, GameActionType<T, V> type, V data) {
 		LOGGER.warn("Can not broadcast action {} to player {} on client", type.getName(), gamePlayer.getName());
 	}
 	

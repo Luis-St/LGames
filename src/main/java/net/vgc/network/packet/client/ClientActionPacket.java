@@ -1,15 +1,15 @@
 package net.vgc.network.packet.client;
 
 import net.vgc.client.network.ClientPacketHandler;
-import net.vgc.game.action.Action;
+import net.vgc.game.action.GameAction;
 import net.vgc.game.action.ActionRegistry;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
 public class ClientActionPacket implements ClientPacket {
 	
-	private final Action<?> action;
+	private final GameAction<?> action;
 	
-	public ClientActionPacket(Action<?> action) {
+	public ClientActionPacket(GameAction<?> action) {
 		this.action = action;
 	}
 	

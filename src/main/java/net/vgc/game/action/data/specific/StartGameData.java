@@ -2,13 +2,13 @@ package net.vgc.game.action.data.specific;
 
 import java.util.List;
 
-import net.vgc.game.action.data.ActionData;
+import net.vgc.game.action.data.GameActionData;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
-public class StartGameData extends ActionData {
+public class StartGameData extends GameActionData {
 	
 	private final GameType<?, ?> gameType;
 	private final List<GamePlayerInfo> playerInfos;

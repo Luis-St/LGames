@@ -1,7 +1,8 @@
 package net.vgc.client.screen;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -13,10 +14,11 @@ import javafx.scene.layout.Pane;
 import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.game.action.data.specific.PlayRequestData;
-import net.vgc.game.action.type.ActionTypes;
+import net.vgc.client.screen.update.ScreenUpdateKeys;
 import net.vgc.game.type.GameType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.packet.server.PlayGameRequestPacket;
+import net.vgc.util.Util;
 
 public class PlayerSelectScreen extends Screen {
 	
@@ -70,7 +72,7 @@ public class PlayerSelectScreen extends Screen {
 					this.playerList.getSelectionModel().clearSelection();
 				} else {
 					LOGGER.debug("Send play game request to server");
-					ActionTypes.PLAY_REQUEST.send(this.client.getServerHandler(), new PlayRequestData(this.gameType, players.stream().map(AbstractClientPlayer::getProfile).collect(Collectors.toList())));
+					this.client.getServerHandler().send(new PlayGameRequestPacket(this.gameType, players));
 				}
 			}
 		} else {
@@ -79,13 +81,10 @@ public class PlayerSelectScreen extends Screen {
 		}
 	}
 	
-	/*@Override
-	public void handlePacket(ClientPacket clientPacket) {
-		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
+	@Override
+	public void onUpdate(@Nullable String updateKey, @Nullable Object object) {
+		if (ScreenUpdateKeys.PLAYER_UPDATE_POST.equals(updateKey)) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
-		} else if (clientPacket instanceof CancelPlayGameRequestPacket) {
-			LOGGER.info("The game request was canceled by the server");
-			this.handleBack();
 		}
 	}
 	
@@ -98,7 +97,7 @@ public class PlayerSelectScreen extends Screen {
 				LOGGER.debug("Ignore player {}, since the player is already playing a game", player.getProfile().getName());
 			}
 		}
-	}*/
+	}
 	
 	@Override
 	protected Pane createPane() {

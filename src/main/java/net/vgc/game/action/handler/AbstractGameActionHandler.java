@@ -8,11 +8,11 @@ import net.vgc.game.Game;
  *
  */
 
-public abstract class AbstractActionHandler implements ActionHandler {
+public abstract class AbstractGameActionHandler implements GameActionHandler {
 	
 	private final Game game;
 	
-	public AbstractActionHandler(Game game) {
+	public AbstractGameActionHandler(Game game) {
 		this.game = game;
 	}
 	

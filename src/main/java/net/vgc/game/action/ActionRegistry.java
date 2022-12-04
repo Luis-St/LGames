@@ -6,13 +6,13 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Maps;
 
-import net.vgc.game.action.type.ActionType;
+import net.vgc.game.action.type.GameActionType;
 
 public class ActionRegistry {
 	
-	private static final Map<Integer, ActionType<?, ?>> ACTION_TYPES = Maps.newHashMap();
+	private static final Map<Integer, GameActionType<?, ?>> ACTION_TYPES = Maps.newHashMap();
 	
-	public static void register(ActionType<?, ?> type) {
+	public static void register(GameActionType<?, ?> type) {
 		if (ACTION_TYPES.containsKey(type.getId())) {
 			throw new IllegalArgumentException("An action type with ID " + type.getId() + " is already registered");
 		} else {
@@ -21,7 +21,7 @@ public class ActionRegistry {
 	}
 	
 	@Nullable
-	public static ActionType<?, ?> getType(int id) {
+	public static GameActionType<?, ?> getType(int id) {
 		return ACTION_TYPES.get(id);
 	}
 	

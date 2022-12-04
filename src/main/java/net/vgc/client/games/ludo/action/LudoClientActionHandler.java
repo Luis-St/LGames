@@ -1,10 +1,10 @@
 package net.vgc.client.games.ludo.action;
 
 import net.vgc.game.Game;
-import net.vgc.game.action.Action;
+import net.vgc.game.action.GameAction;
 import net.vgc.game.action.data.specific.FieldInfoData;
-import net.vgc.game.action.handler.AbstractActionHandler;
-import net.vgc.game.action.type.ActionTypes;
+import net.vgc.game.action.handler.AbstractGameActionHandler;
+import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;
@@ -18,20 +18,22 @@ import net.vgc.player.GameProfile;
  *
  */
 
-public class LudoClientActionHandler extends AbstractActionHandler {
+public class LudoClientActionHandler extends AbstractGameActionHandler {
 	
 	public LudoClientActionHandler(Game game) {
 		super(game);
 	}
 	
 	@Override
-	public void handle(Action<?> action) {
-		if (action.type() == ActionTypes.UPDATE_MAP && action.data() instanceof FieldInfoData data) {
-			this.handleUpdateMap(data);
+	public boolean handle(GameAction<?> action) {
+		if (action.type() == GameActionTypes.UPDATE_MAP && action.data() instanceof FieldInfoData data) {
+			return this.handleUpdateMap(data);
 		}
+		LOGGER.warn("Fail to handle action of type {}", action.type().getName());
+		return false;
 	}
 	
-	private void handleUpdateMap(FieldInfoData data) {
+	private boolean handleUpdateMap(FieldInfoData data) {
 		for (GameFieldInfo fieldInfo : data.getFieldInfos()) {
 			GameProfile profile = fieldInfo.getProfile();
 			GameFieldPos fieldPos = fieldInfo.getFieldPos();
@@ -54,13 +56,15 @@ public class LudoClientActionHandler extends AbstractActionHandler {
 				}
 				GameFigure figure = player.getFigure(fieldInfo.getFigureCount());
 				if (!figure.getUUID().equals(fieldInfo.getFigureUUID())) {
-					LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), figure.getUUID(), fieldInfo.getFigureUUID());
+					LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), figure.getUUID(),
+						fieldInfo.getFigureUUID());
 					continue;
 				} else {
 					field.setFigure(figure);
 				}
 			}
 		}
+		return true;
 	}
 	
 }
