@@ -37,7 +37,7 @@ public class LudoServerField extends AbstractServerGameField {
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, true, "result");
+		return ToString.toString(this, "result");
 	}
 	
 }

@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.math.Mth;
 import net.vgc.game.Game;
 import net.vgc.game.GameResult;
 import net.vgc.game.action.GameAction;
@@ -27,7 +28,6 @@ import net.vgc.game.win.WinHandler;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.player.Player;
-import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 /**

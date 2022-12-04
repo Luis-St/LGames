@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.math.Mth;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
@@ -18,7 +19,6 @@ import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.ludo.map.field.LudoServerField;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
-import net.vgc.util.Mth;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidValueException;
 

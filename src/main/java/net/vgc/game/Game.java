@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.math.Mth;
 import net.vgc.client.game.AbstractClientGame;
 import net.vgc.game.action.GameAction;
 import net.vgc.game.action.data.GameActionData;
@@ -28,7 +29,6 @@ import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 public interface Game {

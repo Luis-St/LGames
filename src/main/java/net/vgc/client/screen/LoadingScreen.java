@@ -7,9 +7,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import net.luis.fxutils.FxUtils;
+import net.luis.utils.math.Mth;
 import net.vgc.client.fx.Box;
 import net.vgc.language.TranslationKey;
-import net.vgc.util.Mth;
 
 public class LoadingScreen extends Screen {
 	

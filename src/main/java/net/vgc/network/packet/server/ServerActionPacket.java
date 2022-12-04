@@ -1,7 +1,7 @@
 package net.vgc.network.packet.server;
 
-import net.vgc.game.action.GameAction;
 import net.vgc.game.action.ActionRegistry;
+import net.vgc.game.action.GameAction;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.server.network.ServerPacketHandler;
 

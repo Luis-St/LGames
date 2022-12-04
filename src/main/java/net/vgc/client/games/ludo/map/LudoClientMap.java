@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import net.luis.utils.math.Mth;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
@@ -26,7 +27,6 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldPos;
 import net.vgc.games.ludo.map.field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
-import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrapper {

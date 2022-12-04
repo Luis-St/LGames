@@ -50,7 +50,7 @@ public class Wins4ServerField extends AbstractServerGameField {
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, true, "fieldType", "colorType", "result");
+		return ToString.toString(this, "fieldType", "colorType", "result");
 	}
 	
 }

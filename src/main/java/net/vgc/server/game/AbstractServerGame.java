@@ -8,6 +8,7 @@ import java.util.function.Function;
 import com.google.common.collect.Lists;
 
 import net.luis.utils.function.TriFunction;
+import net.luis.utils.math.Mth;
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
 import net.vgc.game.action.data.gobal.EmptyData;
@@ -22,7 +23,6 @@ import net.vgc.game.win.WinHandler;
 import net.vgc.player.Player;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 public abstract class AbstractServerGame extends AbstractGame {

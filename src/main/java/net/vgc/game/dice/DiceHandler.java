@@ -5,10 +5,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.luis.utils.math.Mth;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 public interface DiceHandler {

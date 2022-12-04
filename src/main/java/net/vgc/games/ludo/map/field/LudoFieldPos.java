@@ -2,11 +2,11 @@ package net.vgc.games.ludo.map.field;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.luis.utils.math.Mth;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.games.ludo.player.LudoPlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.util.Mth;
 import net.vgc.util.annotation.DecodingConstructor;
 
 public class LudoFieldPos implements GameFieldPos {

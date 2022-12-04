@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.luis.utils.math.Mth;
 import net.vgc.client.Client;
 import net.vgc.client.screen.game.GameScreen;
 import net.vgc.game.Game;
@@ -13,7 +14,6 @@ import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.network.NetworkSide;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Mth;
 
 public class GameType<S extends Game, C extends Game> {
 	

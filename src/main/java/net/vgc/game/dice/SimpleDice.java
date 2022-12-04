@@ -2,7 +2,7 @@ package net.vgc.game.dice;
 
 import java.util.Random;
 
-import net.vgc.util.Mth;
+import net.luis.utils.math.Mth;
 import net.vgc.util.exception.InvalidValueException;
 
 public class SimpleDice implements Dice {

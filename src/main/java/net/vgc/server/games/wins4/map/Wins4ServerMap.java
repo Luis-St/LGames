@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.math.Mth;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
@@ -17,7 +18,6 @@ import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.wins4.map.field.Wins4ServerField;
-import net.vgc.util.Mth;
 
 public class Wins4ServerMap extends AbstractServerGameMap {
 	

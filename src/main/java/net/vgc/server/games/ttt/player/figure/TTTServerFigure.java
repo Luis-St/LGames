@@ -26,7 +26,7 @@ public class TTTServerFigure extends AbstractGameFigure {
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, true, "player");
+		return ToString.toString(this, "player");
 	}
 	
 }

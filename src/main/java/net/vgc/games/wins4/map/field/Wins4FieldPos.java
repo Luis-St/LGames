@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.math.Mth;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.util.Mth;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 

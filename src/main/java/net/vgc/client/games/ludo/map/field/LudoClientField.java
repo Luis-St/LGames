@@ -128,7 +128,7 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, true, "result");
+		return ToString.toString(this, "result");
 	}
 	
 }

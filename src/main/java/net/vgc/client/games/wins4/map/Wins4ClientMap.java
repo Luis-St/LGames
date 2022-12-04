@@ -11,6 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import net.luis.fxutils.FxUtils;
+import net.luis.utils.math.Mth;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.IndexToggleButton;
 import net.vgc.client.fx.game.wrapper.StackPaneWrapper;
@@ -23,7 +24,6 @@ import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
-import net.vgc.util.Mth;
 import net.vgc.util.Util;
 
 public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWrapper {
