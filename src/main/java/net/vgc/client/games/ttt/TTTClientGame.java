@@ -12,6 +12,12 @@ import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.server.games.ttt.TTTServerGame;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTClientGame extends AbstractClientGame {
 	
 	public TTTClientGame(Client client, List<GamePlayerInfo> playerInfos) {

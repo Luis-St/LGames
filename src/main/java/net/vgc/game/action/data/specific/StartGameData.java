@@ -8,6 +8,12 @@ import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class StartGameData extends GameActionData {
 	
 	private final GameType<?, ?> gameType;

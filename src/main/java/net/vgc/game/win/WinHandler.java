@@ -9,6 +9,12 @@ import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface WinHandler {
 	
 	public static final Logger LOGGER = LogManager.getLogger();

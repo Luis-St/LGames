@@ -2,6 +2,12 @@ package net.vgc.util.streams;
 
 import java.io.OutputStream;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class DebugPrintStream extends InfoPrintStream {
 	
 	public DebugPrintStream(String name, OutputStream stream) {

@@ -10,6 +10,12 @@ import com.google.common.collect.Maps;
 import net.vgc.language.Language;
 import net.vgc.language.Languages;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class SettingValueTypes {
 	
 	private static final Map<Integer, SettingValueType<?>> INT_TO_TYPE = Maps.newHashMap();

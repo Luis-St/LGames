@@ -20,6 +20,12 @@ import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidNetworkSideException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Server extends GameApplication implements Tickable {
 	
 	public static Server getInstance() {

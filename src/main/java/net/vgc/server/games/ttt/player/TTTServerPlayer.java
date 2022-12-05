@@ -15,6 +15,12 @@ import net.vgc.player.Player;
 import net.vgc.server.game.player.AbstractServerGamePlayer;
 import net.vgc.server.games.ttt.player.figure.TTTServerFigure;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTServerPlayer extends AbstractServerGamePlayer {
 	
 	private final List<GameFigure> figures;

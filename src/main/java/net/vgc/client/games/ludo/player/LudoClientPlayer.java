@@ -16,6 +16,12 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldPos;
 import net.vgc.player.Player;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoClientPlayer extends AbstractClientGamePlayer {
 	
 	private final List<GameFigure> figures;

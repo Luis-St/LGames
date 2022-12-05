@@ -9,6 +9,12 @@ import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.GameFigure;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractClientGameMap extends AbstractGameMap {
 	
 	private final Client client;

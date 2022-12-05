@@ -4,6 +4,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface LabelWrapper {
 	
 	Label getLabel();

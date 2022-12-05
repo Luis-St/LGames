@@ -9,6 +9,12 @@ import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayerType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractServerGameField extends AbstractGameField {
 	
 	protected AbstractServerGameField(GameMap map, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos) {

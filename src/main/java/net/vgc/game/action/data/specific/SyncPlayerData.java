@@ -48,6 +48,6 @@ public class SyncPlayerData extends GameActionData {
 	
 	public PlayerScore getScore() {
 		return this.score;
-	} 
+	}
 	
 }

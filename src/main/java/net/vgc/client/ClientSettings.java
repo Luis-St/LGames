@@ -11,6 +11,12 @@ import net.vgc.language.LanguageProvider;
 import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientSettings extends AbstractSettings {
 	
 	public static final Setting<Language> LANGUAGE = new Setting<>(new TranslationKey("settings.language.name"), new TranslationKey("settings.language.description"), SettingValueTypes.LANGUAGE, Languages.EN_US, Languages.LANGUAGES);

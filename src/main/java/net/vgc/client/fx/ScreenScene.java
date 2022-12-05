@@ -5,6 +5,12 @@ import javafx.scene.Scene;
 import net.vgc.client.screen.Screen;
 import net.vgc.util.Tickable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ScreenScene extends Scene implements Tickable {
 	
 	private final Screen screen;

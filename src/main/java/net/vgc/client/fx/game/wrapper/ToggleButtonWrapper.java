@@ -7,6 +7,12 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface ToggleButtonWrapper {
 	
 	ToggleButton getToggleButton();

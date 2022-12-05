@@ -8,6 +8,12 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class GamePlayerInfo implements Encodable {
 	
 	private final GameProfile profile;

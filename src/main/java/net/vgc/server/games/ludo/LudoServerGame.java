@@ -20,6 +20,12 @@ import net.vgc.server.games.ludo.player.LudoServerPlayer;
 import net.vgc.server.games.ludo.win.LudoWinHandler;
 import net.vgc.server.player.ServerPlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoServerGame extends AbstractServerGame {
 	
 	private final LudoDiceHandler diceHandler;

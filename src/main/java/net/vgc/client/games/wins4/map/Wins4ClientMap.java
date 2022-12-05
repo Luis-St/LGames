@@ -26,6 +26,12 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWrapper {
 	
 	private final ToggleGroup group;

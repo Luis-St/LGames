@@ -14,6 +14,12 @@ import net.vgc.server.games.wins4.map.Wins4ServerMap;
 import net.vgc.server.games.wins4.win.Wins4WinHandler;
 import net.vgc.server.player.ServerPlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4ServerGame extends AbstractServerGame {
 	
 	public Wins4ServerGame(DedicatedServer server, List<ServerPlayer> players) {

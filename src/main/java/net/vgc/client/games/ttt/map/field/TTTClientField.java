@@ -17,6 +17,12 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.games.ttt.player.TTTPlayerType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTClientField extends AbstractClientGameField implements ToggleButtonWrapper {
 	
 	private final ToggleButton button;

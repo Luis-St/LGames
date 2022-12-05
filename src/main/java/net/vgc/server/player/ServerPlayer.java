@@ -8,6 +8,12 @@ import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.dedicated.DedicatedServer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ServerPlayer extends Player {
 	
 	private final DedicatedServer server;

@@ -4,6 +4,12 @@ import java.nio.file.Path;
 
 import net.vgc.network.Network;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Language {
 	
 	private final String name;

@@ -19,6 +19,12 @@ import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.wins4.map.field.Wins4ServerField;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4ServerMap extends AbstractServerGameMap {
 	
 	public Wins4ServerMap(DedicatedServer server, Game game) {

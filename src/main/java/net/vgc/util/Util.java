@@ -26,6 +26,12 @@ import net.vgc.Constans;
 import net.vgc.util.streams.DebugPrintStream;
 import net.vgc.util.streams.InfoPrintStream;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Util {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

@@ -19,6 +19,12 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public final class PlayerAccount implements Encodable, Serializable {
 	
 	public static final PlayerAccount UNKNOWN = new PlayerAccount("Unknown", "unknown", Util.EMPTY_UUID, false);

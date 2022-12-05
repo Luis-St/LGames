@@ -9,6 +9,12 @@ import net.vgc.games.ludo.player.LudoPlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoFieldPos implements GameFieldPos {
 	
 	private final int green;

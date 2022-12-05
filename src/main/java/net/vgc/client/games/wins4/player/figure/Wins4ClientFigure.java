@@ -8,6 +8,12 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.AbstractGameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4ClientFigure extends AbstractGameFigure {
 	
 	public Wins4ClientFigure(GamePlayer player, int count, UUID uuid) {

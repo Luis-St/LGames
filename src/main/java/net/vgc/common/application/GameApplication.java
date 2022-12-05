@@ -20,6 +20,12 @@ import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.util.ExceptionHandler;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class GameApplication extends Application implements DataHandler {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();

@@ -14,6 +14,12 @@ import net.vgc.client.fx.ButtonBox;
 import net.vgc.language.Language;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class SettingsScreen extends Screen {
 	
 	private final Screen backScreen;

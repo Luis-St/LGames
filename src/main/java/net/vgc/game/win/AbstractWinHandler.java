@@ -6,6 +6,12 @@ import com.google.common.collect.Lists;
 
 import net.vgc.game.player.GamePlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractWinHandler implements WinHandler {
 	
 	protected final List<GamePlayer> winningPlayers = Lists.newArrayList();

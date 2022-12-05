@@ -21,6 +21,12 @@ import net.vgc.language.Languages;
 import net.vgc.language.Translation;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Test {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

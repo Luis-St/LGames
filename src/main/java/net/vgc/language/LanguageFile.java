@@ -11,6 +11,12 @@ import net.vgc.data.codec.CodecConstructor;
 import net.vgc.data.codec.CodecGetter;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LanguageFile {
 	
 	public static final Codec<LanguageFile> CODEC = RecordCodecBuilder.create((instance) -> {

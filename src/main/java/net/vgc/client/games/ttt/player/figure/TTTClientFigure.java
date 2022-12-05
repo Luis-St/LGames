@@ -8,6 +8,12 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.AbstractGameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldPos;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTClientFigure extends AbstractGameFigure {
 	
 	public TTTClientFigure(GamePlayer player, int count, UUID uuid) {

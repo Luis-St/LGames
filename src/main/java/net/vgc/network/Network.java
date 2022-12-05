@@ -6,6 +6,12 @@ import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
 import net.vgc.server.Server;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Network {
 	
 	public static final Network INSTANCE = new Network();

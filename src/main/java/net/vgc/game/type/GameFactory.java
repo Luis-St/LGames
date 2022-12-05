@@ -9,6 +9,12 @@ import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class GameFactory<S extends Game, C extends Game> {
 	
 	private final BiFunction<DedicatedServer, List<ServerPlayer>, S> serverFactory;

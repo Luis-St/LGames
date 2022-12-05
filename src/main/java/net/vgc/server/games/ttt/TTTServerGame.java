@@ -14,6 +14,12 @@ import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.server.games.ttt.win.TTTWinHandler;
 import net.vgc.server.player.ServerPlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTServerGame extends AbstractServerGame {
 	
 	public TTTServerGame(DedicatedServer server, List<ServerPlayer> players) {

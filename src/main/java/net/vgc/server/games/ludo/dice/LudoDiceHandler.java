@@ -17,6 +17,12 @@ import net.vgc.server.games.ludo.LudoServerGame;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoDiceHandler implements DiceHandler {
 	
 	private final LudoServerGame game;

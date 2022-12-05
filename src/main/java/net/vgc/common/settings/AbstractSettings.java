@@ -11,6 +11,12 @@ import net.luis.utils.data.tag.TagUtil;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.data.serialization.Serializable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractSettings implements Serializable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();

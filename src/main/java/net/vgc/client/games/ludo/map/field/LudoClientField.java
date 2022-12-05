@@ -20,6 +20,12 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoClientField extends AbstractClientGameField implements ToggleButtonWrapper {
 	
 	private final ToggleButton button;

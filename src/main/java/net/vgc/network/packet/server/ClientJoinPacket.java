@@ -5,6 +5,12 @@ import java.util.UUID;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.server.network.ServerPacketHandler;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientJoinPacket implements ServerPacket {
 	
 	private final String name;

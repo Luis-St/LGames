@@ -4,6 +4,12 @@ import java.util.UUID;
 
 import net.vgc.game.player.GamePlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractGameFigure implements GameFigure {
 	
 	private final GamePlayer player;

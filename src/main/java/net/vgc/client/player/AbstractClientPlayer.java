@@ -4,6 +4,12 @@ import net.vgc.game.score.PlayerScore;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractClientPlayer extends Player {
 	
 	private boolean admin = false;

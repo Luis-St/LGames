@@ -2,6 +2,12 @@ package net.vgc.network;
 
 import net.vgc.util.EnumRepresentable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum NetworkSide implements EnumRepresentable {
 	
 	CLIENT("client", 0), SERVER("server", 1), ACCOUNT("account", 2);

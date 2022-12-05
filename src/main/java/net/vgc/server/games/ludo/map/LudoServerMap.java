@@ -22,6 +22,12 @@ import net.vgc.server.games.ludo.player.LudoServerPlayer;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidValueException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoServerMap extends AbstractServerGameMap {
 	
 	private final List<GameField> homeFields;

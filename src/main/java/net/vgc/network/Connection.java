@@ -20,6 +20,12 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.util.exception.SkipPacketException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

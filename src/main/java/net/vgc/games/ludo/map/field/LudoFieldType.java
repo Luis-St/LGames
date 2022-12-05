@@ -2,6 +2,12 @@ package net.vgc.games.ludo.map.field;
 
 import net.vgc.game.map.field.GameFieldType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum LudoFieldType implements GameFieldType {
 	
 	DEFAULT("default", 0), HOME("home", 1), WIN("win", 2);

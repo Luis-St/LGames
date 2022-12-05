@@ -20,6 +20,12 @@ import net.vgc.server.games.wins4.map.Wins4ServerMap;
 import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4WinHandler extends AbstractWinHandler {
 	
 	private final List<GameResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {

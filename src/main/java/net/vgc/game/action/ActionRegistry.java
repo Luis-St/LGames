@@ -8,6 +8,12 @@ import com.google.common.collect.Maps;
 
 import net.vgc.game.action.type.GameActionType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ActionRegistry {
 	
 	private static final Map<Integer, GameActionType<?, ?>> ACTION_TYPES = Maps.newHashMap();

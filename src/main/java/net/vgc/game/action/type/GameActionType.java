@@ -19,6 +19,12 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.client.ClientActionPacket;
 import net.vgc.network.packet.server.ServerActionPacket;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class GameActionType<T extends GameAction<V>, V extends GameActionData> {
 	
 	private final String name;

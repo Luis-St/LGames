@@ -25,6 +25,12 @@ import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LoginWindow {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

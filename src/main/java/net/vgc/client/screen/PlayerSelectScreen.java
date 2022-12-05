@@ -20,6 +20,12 @@ import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class PlayerSelectScreen extends Screen {
 	
 	private final GameType<?, ?> gameType;

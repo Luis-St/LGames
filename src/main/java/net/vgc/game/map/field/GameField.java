@@ -12,6 +12,12 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface GameField {
 	
 	public static final Logger LOGGER = LogManager.getLogger();

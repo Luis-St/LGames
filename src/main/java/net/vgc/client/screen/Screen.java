@@ -12,6 +12,12 @@ import net.vgc.client.fx.Showable;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.Tickable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class Screen implements Showable, Tickable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);

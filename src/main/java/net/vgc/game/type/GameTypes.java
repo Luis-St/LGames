@@ -18,6 +18,12 @@ import net.vgc.server.games.ludo.LudoServerGame;
 import net.vgc.server.games.ttt.TTTServerGame;
 import net.vgc.server.games.wins4.Wins4ServerGame;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class GameTypes {
 	
 	private static final List<GameType<?, ?>> GAME_TYPES = Lists.newArrayList();

@@ -26,6 +26,13 @@ import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.Util;
+import net.vgc.util.exception.InvalidPacketException;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class Packets {
 	

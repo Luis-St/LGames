@@ -18,6 +18,12 @@ import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.ttt.map.field.TTTServerField;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTServerMap extends AbstractServerGameMap {
 	
 	public TTTServerMap(DedicatedServer server, Game game) {

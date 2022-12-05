@@ -5,6 +5,12 @@ import net.vgc.game.player.AbstractGamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.player.Player;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractServerGamePlayer extends AbstractGamePlayer {
 	
 	private int rollCount = 0;

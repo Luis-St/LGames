@@ -19,6 +19,12 @@ import net.vgc.language.TranslationKey;
 import net.vgc.network.NetworkSide;
 import net.vgc.server.Server;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ErrorWindow {
 	
 	private static final Logger LOGGER = LogManager.getLogger(ErrorWindow.class);

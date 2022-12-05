@@ -9,6 +9,12 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldType;
 import net.vgc.server.game.map.field.AbstractServerGameField;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoServerField extends AbstractServerGameField {
 	
 	public LudoServerField(GameMap map, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos) {

@@ -15,6 +15,12 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.player.Player;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTClientPlayer extends AbstractClientGamePlayer {
 	
 	private final List<GameFigure> figures;

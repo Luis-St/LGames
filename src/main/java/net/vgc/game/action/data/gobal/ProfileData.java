@@ -4,6 +4,12 @@ import net.vgc.game.action.data.GameActionData;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ProfileData extends GameActionData {
 	
 	private final GameProfile profile;

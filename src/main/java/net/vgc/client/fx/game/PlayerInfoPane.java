@@ -12,6 +12,12 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class PlayerInfoPane extends GridPane {
 	
 	private final Game game;

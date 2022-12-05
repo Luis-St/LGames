@@ -17,6 +17,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class FxTest extends Application {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

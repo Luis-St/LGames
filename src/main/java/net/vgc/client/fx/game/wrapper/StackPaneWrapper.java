@@ -6,6 +6,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface StackPaneWrapper {
 	
 	StackPane getStackPane();

@@ -4,6 +4,12 @@ import net.vgc.account.LoginType;
 import net.vgc.account.network.AccountServerPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientLoginPacket implements AccountPacket {
 	
 	private final LoginType loginType;

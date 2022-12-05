@@ -12,6 +12,12 @@ import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class MenuScreen extends Screen {
 	
 	private Button loginButton;

@@ -5,6 +5,12 @@ import net.vgc.game.player.AbstractGamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.player.Player;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractClientGamePlayer extends AbstractGamePlayer {
 	
 	protected AbstractClientGamePlayer(Game game, Player player, GamePlayerType playerType) {

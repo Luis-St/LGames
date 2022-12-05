@@ -6,6 +6,12 @@ import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface Packet<T extends PacketHandler> {
 	
 	void encode(FriendlyByteBuffer buffer);

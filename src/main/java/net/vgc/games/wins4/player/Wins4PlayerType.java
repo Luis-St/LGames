@@ -9,6 +9,12 @@ import net.luis.fxutils.FxUtils;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum Wins4PlayerType implements GamePlayerType {
 	
 	YELLOW("yellow", 0, new TranslationKey("screen.win4.yellow_player"), "textures/wins4/figure/figure_yellow"), RED("red", 1, new TranslationKey("screen.win4.red_player"), "textures/wins4/figure/figure_red"),

@@ -11,6 +11,12 @@ import net.vgc.client.player.LocalPlayer;
 import net.vgc.game.action.data.gobal.ProfileData;
 import net.vgc.game.action.type.GameActionTypes;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class DiceButton extends Button {
 	
 	private final Client client;

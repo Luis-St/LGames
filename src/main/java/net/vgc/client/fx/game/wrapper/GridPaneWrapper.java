@@ -5,6 +5,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface GridPaneWrapper {
 	
 	GridPane getGridPane();

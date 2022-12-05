@@ -11,6 +11,12 @@ import net.luis.utils.math.Mth;
 import net.vgc.client.fx.Box;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LoadingScreen extends Screen {
 	
 	private Box<Text> vgcTextBox;

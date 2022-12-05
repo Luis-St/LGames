@@ -21,6 +21,12 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketHandler;
 import net.vgc.player.GameProfile;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientPacketHandler extends AbstractPacketHandler {
 	
 	private final Client client;

@@ -25,6 +25,12 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldPos;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
 	private final ToggleGroup group;

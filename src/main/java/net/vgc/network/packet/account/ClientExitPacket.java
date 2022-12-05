@@ -4,6 +4,12 @@ import net.vgc.account.PlayerAccount;
 import net.vgc.account.network.AccountServerPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientExitPacket implements AccountPacket {
 	
 	private final PlayerAccount account;

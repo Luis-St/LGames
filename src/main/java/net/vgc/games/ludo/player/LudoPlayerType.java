@@ -9,6 +9,12 @@ import net.luis.fxutils.FxUtils;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum LudoPlayerType implements GamePlayerType {
 	
 	GREEN("green", 0, new TranslationKey("screen.ludo.green_player"), "textures/ludo/figure/figure_green"), YELLOW("yellow", 1, new TranslationKey("screen.ludo.yellow_player"), "textures/ludo/figure/figure_yellow"),

@@ -6,6 +6,12 @@ import org.apache.logging.log4j.Logger;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.Encodable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface GameFieldPos extends Encodable {
 	
 	public static final Logger LOGGER = LogManager.getLogger();

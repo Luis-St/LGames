@@ -19,6 +19,12 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class MultiplayerScreen extends Screen {
 	
 	private final Screen backScreen;

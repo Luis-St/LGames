@@ -6,6 +6,12 @@ import org.apache.logging.log4j.Logger;
 import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractPacketHandler implements PacketHandler {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();

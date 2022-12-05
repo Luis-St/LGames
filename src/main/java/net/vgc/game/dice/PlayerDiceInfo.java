@@ -2,6 +2,12 @@ package net.vgc.game.dice;
 
 import net.vgc.game.player.GamePlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class PlayerDiceInfo {
 	
 	private final GamePlayer player;

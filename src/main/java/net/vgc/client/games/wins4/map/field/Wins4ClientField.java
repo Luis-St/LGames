@@ -17,6 +17,12 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.games.wins4.player.Wins4PlayerType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4ClientField extends AbstractClientGameField implements LabelWrapper {
 	
 	private final Label label;

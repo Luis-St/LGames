@@ -18,6 +18,12 @@ import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.exception.InvalidValueException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Setting<T> implements Serializable {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

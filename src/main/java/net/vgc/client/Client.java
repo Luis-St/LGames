@@ -39,6 +39,12 @@ import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidNetworkSideException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Client extends GameApplication implements Tickable, Screenable {
 	
 	public static Client getInstance() {

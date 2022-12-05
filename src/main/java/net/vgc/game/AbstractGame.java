@@ -8,6 +8,12 @@ import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractGame implements Game {
 	
 	private final GameMap map;

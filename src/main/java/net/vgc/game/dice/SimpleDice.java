@@ -5,6 +5,12 @@ import java.util.Random;
 import net.luis.utils.math.Mth;
 import net.vgc.util.exception.InvalidValueException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class SimpleDice implements Dice {
 	
 	private final int min;

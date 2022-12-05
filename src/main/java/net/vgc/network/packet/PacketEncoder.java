@@ -11,6 +11,12 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.exception.SkipPacketException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

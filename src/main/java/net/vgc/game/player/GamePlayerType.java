@@ -8,6 +8,12 @@ import javafx.scene.image.ImageView;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.EnumRepresentable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface GamePlayerType extends EnumRepresentable {
 	
 	TranslationKey getTranslation();

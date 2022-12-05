@@ -20,6 +20,12 @@ import net.vgc.game.type.GameTypes;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LobbyScreen extends GameScreen {
 	
 	private Menu playerMenu;

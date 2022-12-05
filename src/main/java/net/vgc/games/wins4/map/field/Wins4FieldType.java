@@ -2,6 +2,12 @@ package net.vgc.games.wins4.map.field;
 
 import net.vgc.game.map.field.GameFieldType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum Wins4FieldType implements GameFieldType {
 	
 	DEFAULT("default", 0);

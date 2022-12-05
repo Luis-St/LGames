@@ -25,6 +25,12 @@ import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractServerGame extends AbstractGame {
 	
 	private final DedicatedServer server;

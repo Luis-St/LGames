@@ -8,6 +8,12 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientJoinedPacket implements ClientPacket {
 	
 	private final List<GameProfile> profiles;

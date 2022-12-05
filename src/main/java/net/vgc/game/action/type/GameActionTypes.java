@@ -13,6 +13,12 @@ import net.vgc.game.action.data.specific.SelectFieldData;
 import net.vgc.game.action.data.specific.StartGameData;
 import net.vgc.game.action.data.specific.SyncPlayerData;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class GameActionTypes {
 	
 	public static final SimpleGameActionType<ProfileData> DICE_REQUEST = SimpleGameActionType.toServer("dice_request", 0, GLOBAL, ProfileData::new);

@@ -20,6 +20,12 @@ import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoScreen extends GameScreen {
 	
 	private final LudoClientGame game;

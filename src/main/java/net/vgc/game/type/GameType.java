@@ -15,6 +15,12 @@ import net.vgc.network.NetworkSide;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class GameType<S extends Game, C extends Game> {
 	
 	private final String name;

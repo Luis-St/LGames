@@ -9,6 +9,12 @@ import net.vgc.network.packet.AbstractPacketHandler;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class AccountServerPacketHandler extends AbstractPacketHandler {
 	
 	private final AccountServer accountServer;

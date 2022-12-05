@@ -9,6 +9,12 @@ import net.vgc.game.player.figure.AbstractGameFigure;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldPos;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoServerFigure extends AbstractGameFigure {
 	
 	public LudoServerFigure(GamePlayer player, int count, UUID uuid) {

@@ -11,6 +11,12 @@ import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractClientGameField extends AbstractGameField {
 	
 	private final Client client;

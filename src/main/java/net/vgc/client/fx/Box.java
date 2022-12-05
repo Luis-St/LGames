@@ -5,6 +5,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Box<T extends Node> extends VBox {
 	
 	private final T node;

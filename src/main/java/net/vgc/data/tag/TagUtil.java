@@ -11,6 +11,12 @@ import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.collection.ListTag;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TagUtil {
 	
 	public static CompoundTag writeUUID(UUID uuid) {

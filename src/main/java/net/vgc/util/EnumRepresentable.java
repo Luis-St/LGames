@@ -4,6 +4,12 @@ import org.jetbrains.annotations.Nullable;
 
 import net.vgc.Main;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface EnumRepresentable {
 	
 	String getName();

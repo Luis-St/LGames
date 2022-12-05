@@ -29,11 +29,17 @@ import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractClientGame extends AbstractGame {
 	
 	private final Client client;
 	
-	protected AbstractClientGame(Client client, BiFunction<Client, Game, GameMap> mapFunction, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> playerFunction, 
+	protected AbstractClientGame(Client client, BiFunction<Client, Game, GameMap> mapFunction, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> playerFunction,
 		Function<Game, GameActionHandler> actionHandlerFunction) {
 		super((game) -> {
 			return mapFunction.apply(client, game);

@@ -17,6 +17,12 @@ import net.vgc.player.Player;
 import net.vgc.server.game.player.AbstractServerGamePlayer;
 import net.vgc.server.games.wins4.player.figure.Wins4ServerFigure;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4ServerPlayer extends AbstractServerGamePlayer {
 	
 	private final List<GameFigure> figures;

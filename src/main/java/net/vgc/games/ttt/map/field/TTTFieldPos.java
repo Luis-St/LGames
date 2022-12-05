@@ -6,6 +6,12 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTFieldPos implements GameFieldPos {
 	
 	public static final TTTFieldPos NO = new TTTFieldPos(-1, -1, -1);

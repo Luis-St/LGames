@@ -2,6 +2,12 @@ package net.vgc.language;
 
 import java.util.Objects;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Translation {
 	
 	private final String key;

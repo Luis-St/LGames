@@ -7,6 +7,12 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.win.AbstractWinHandler;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoWinHandler extends AbstractWinHandler {
 	
 	@Override

@@ -52,6 +52,12 @@ import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.ExceptionHandler;
 import net.vgc.util.Tickable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class DedicatedServer implements Tickable {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

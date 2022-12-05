@@ -17,6 +17,12 @@ import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4Screen extends GameScreen {
 	
 	private final Wins4ClientGame game;

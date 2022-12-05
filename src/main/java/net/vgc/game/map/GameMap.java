@@ -14,6 +14,12 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface GameMap {
 	
 	public static final Logger LOGGER = LogManager.getLogger();

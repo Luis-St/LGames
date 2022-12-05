@@ -17,6 +17,12 @@ import net.vgc.game.map.field.GameField;
 import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTScreen extends GameScreen {
 	
 	private final TTTClientGame game;

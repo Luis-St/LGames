@@ -5,6 +5,12 @@ import net.vgc.account.PlayerAccount;
 import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientLoggedInPacket implements ClientPacket {
 	
 	private final LoginType loginType;

@@ -7,6 +7,12 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.server.network.ServerPacketHandler;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientLeavePacket implements ServerPacket {
 	
 	private final UUID uuid;

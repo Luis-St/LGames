@@ -10,6 +10,12 @@ import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.games.wins4.player.Wins4PlayerType;
 import net.vgc.server.game.map.field.AbstractServerGameField;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4ServerField extends AbstractServerGameField {
 	
 	public Wins4ServerField(GameMap map, GameFieldPos fieldPos) {

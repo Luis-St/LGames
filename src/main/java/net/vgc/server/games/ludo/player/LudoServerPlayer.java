@@ -18,6 +18,12 @@ import net.vgc.server.game.player.AbstractServerGamePlayer;
 import net.vgc.server.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.util.exception.InvalidValueException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoServerPlayer extends AbstractServerGamePlayer {
 	
 	private final List<GameFigure> figures;

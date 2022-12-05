@@ -12,6 +12,12 @@ import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.server.games.ludo.LudoServerGame;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoClientGame extends AbstractClientGame {
 	
 	public LudoClientGame(Client client, List<GamePlayerInfo> playerInfos) {

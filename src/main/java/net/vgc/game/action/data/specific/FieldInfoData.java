@@ -6,6 +6,12 @@ import net.vgc.game.action.data.GameActionData;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class FieldInfoData extends GameActionData {
 	
 	private final List<GameFieldInfo> fieldInfos;

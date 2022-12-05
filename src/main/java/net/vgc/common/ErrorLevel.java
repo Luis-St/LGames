@@ -3,6 +3,12 @@ package net.vgc.common;
 import javafx.scene.paint.Color;
 import net.vgc.util.EnumRepresentable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum ErrorLevel implements EnumRepresentable {
 	
 	NO("no", 0, Color.BLACK), WARN("warn", 1, Color.YELLOW), ERROR("error", 2, Color.ORANGE), CRITICAL("critical", 3, Color.RED);

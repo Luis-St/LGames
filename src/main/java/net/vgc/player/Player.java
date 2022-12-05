@@ -3,6 +3,12 @@ package net.vgc.player;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.util.Tickable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class Player implements Tickable {
 	
 	private final GameProfile profile;

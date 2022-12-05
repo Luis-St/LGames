@@ -17,6 +17,12 @@ import com.mojang.serialization.JsonOps;
 
 import net.vgc.data.json.JsonHelper;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LanguageProvider {
 	
 	public static final LanguageProvider INSTANCE = new LanguageProvider();

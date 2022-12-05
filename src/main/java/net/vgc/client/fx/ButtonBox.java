@@ -4,6 +4,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ButtonBox extends Box<Button> {
 	
 	private final Runnable action;

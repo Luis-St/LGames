@@ -2,6 +2,12 @@ package net.vgc.game;
 
 import net.vgc.util.EnumRepresentable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum GameResult implements EnumRepresentable {
 	
 	WIN("win", 0), LOSE("lose", 1), DRAW("draw", 2), NO("no", 3);

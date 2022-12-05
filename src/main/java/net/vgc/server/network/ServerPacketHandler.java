@@ -29,6 +29,12 @@ import net.vgc.server.game.action.GlobalServerActionHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ServerPacketHandler extends AbstractPacketHandler {
 	
 	private final DedicatedServer server;

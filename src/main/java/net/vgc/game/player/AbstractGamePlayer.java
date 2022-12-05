@@ -3,6 +3,12 @@ package net.vgc.game.player;
 import net.vgc.game.Game;
 import net.vgc.player.Player;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractGamePlayer implements GamePlayer {
 	
 	private final Game game;

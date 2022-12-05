@@ -29,6 +29,12 @@ import net.vgc.games.ludo.map.field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
 	private final ToggleGroup group;

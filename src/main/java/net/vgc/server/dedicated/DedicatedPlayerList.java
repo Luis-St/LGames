@@ -22,6 +22,12 @@ import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class DedicatedPlayerList implements Tickable {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

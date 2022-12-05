@@ -5,6 +5,12 @@ import net.vgc.game.map.AbstractGameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.server.dedicated.DedicatedServer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractServerGameMap extends AbstractGameMap {
 	
 	private final DedicatedServer server;

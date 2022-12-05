@@ -13,6 +13,12 @@ import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.util.ReflectionHelper;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class SerializationUtil {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

@@ -2,6 +2,12 @@ package net.vgc.games.ttt.map.field;
 
 import net.vgc.game.map.field.GameFieldType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum TTTFieldType implements GameFieldType {
 	
 	DEFAULT("default", 0);

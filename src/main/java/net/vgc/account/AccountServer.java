@@ -53,6 +53,12 @@ import net.vgc.network.packet.PacketEncoder;
 import net.vgc.util.ExceptionHandler;
 import net.vgc.util.exception.InvalidNetworkSideException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class AccountServer extends GameApplication {
 	
 	public static AccountServer getInstance() {

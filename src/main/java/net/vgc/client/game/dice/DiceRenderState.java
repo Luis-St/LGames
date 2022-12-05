@@ -6,6 +6,12 @@ import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
 import net.vgc.util.EnumRepresentable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum DiceRenderState implements EnumRepresentable {
 	
 	ZERO("zero", 0, "textures/dice/dice"), ONE("one", 1, "textures/dice/dice_1"), TWO("two", 2, "textures/dice/dice_2"), THREE("three", 3, "textures/dice/dice_3"), FOUR("four", 4, "textures/dice/dice_4"), FIVE("five", 5, "textures/dice/dice_5"),

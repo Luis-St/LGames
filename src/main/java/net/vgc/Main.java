@@ -13,6 +13,12 @@ import net.vgc.client.Client;
 import net.vgc.server.Server;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Main {
 	
 	public static final Logger LOGGER = LogManager.getLogger(Main.class);

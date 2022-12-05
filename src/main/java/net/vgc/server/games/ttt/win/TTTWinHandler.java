@@ -18,6 +18,12 @@ import net.vgc.server.games.ttt.map.TTTServerMap;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTWinHandler extends AbstractWinHandler {
 	
 	private final List<GameResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {

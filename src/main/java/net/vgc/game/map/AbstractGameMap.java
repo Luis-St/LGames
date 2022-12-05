@@ -9,6 +9,12 @@ import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractGameMap implements GameMap {
 	
 	private final Game game;

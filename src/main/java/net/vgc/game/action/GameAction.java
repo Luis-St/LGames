@@ -5,6 +5,12 @@ import java.util.Objects;
 import net.vgc.game.action.data.GameActionData;
 import net.vgc.game.action.type.GameActionType;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface GameAction<T extends GameActionData> {
 	
 	int id();

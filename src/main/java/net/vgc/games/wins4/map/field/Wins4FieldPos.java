@@ -11,6 +11,12 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4FieldPos implements GameFieldPos {
 	
 	public static final Wins4FieldPos NO = new Wins4FieldPos(-1, -1, -1);

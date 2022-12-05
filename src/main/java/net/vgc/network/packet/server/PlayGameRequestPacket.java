@@ -40,7 +40,7 @@ public class PlayGameRequestPacket implements ServerPacket {
 			buffer.write(profile);
 		});
 	}
-
+	
 	@Override
 	public void handle(ServerPacketHandler handler) {
 		handler.handlePlayGameRequest(this.gameType, this.profiles);
@@ -53,5 +53,5 @@ public class PlayGameRequestPacket implements ServerPacket {
 	public List<GameProfile> getProfiles() {
 		return this.profiles;
 	}
-
+	
 }

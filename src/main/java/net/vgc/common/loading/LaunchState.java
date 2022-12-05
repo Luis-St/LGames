@@ -2,6 +2,12 @@ package net.vgc.common.loading;
 
 import net.vgc.util.EnumRepresentable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum LaunchState implements EnumRepresentable {
 	
 	STARTING("starting", 0), STARTED("started", 1), STOPPING("stopping", 2), STOPPED("stopped", 3), UNKNOWN("unknown", 4);

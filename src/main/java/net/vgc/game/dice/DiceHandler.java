@@ -11,6 +11,12 @@ import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface DiceHandler {
 	
 	public static final Logger LOGGER = LogManager.getLogger();

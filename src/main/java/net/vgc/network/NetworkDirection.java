@@ -5,6 +5,12 @@ import net.vgc.network.packet.account.AccountPacket;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.server.ServerPacket;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum NetworkDirection {
 	
 	SERVER_TO_CLIENT("server_to_client", NetworkSide.SERVER, NetworkSide.CLIENT) {

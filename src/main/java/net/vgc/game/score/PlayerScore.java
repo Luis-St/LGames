@@ -9,6 +9,12 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class PlayerScore implements Encodable {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

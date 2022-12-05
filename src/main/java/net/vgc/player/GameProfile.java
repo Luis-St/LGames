@@ -10,6 +10,12 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class GameProfile implements Encodable, Serializable {
 	
 	public static final GameProfile EMPTY = new GameProfile("empty", Util.EMPTY_UUID);

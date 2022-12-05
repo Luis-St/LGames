@@ -7,6 +7,12 @@ import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class AbstractGameField implements GameField {
 	
 	private final GameMap map;

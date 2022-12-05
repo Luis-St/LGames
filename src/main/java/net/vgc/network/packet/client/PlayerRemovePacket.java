@@ -4,6 +4,12 @@ import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class PlayerRemovePacket implements ClientPacket {
 	
 	private final GameProfile profile;

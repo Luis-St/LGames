@@ -20,6 +20,12 @@ import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class AccountCreationWindow {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

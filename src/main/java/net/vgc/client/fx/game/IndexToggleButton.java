@@ -2,6 +2,12 @@ package net.vgc.client.fx.game;
 
 import javafx.scene.control.ToggleButton;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class IndexToggleButton extends ToggleButton {
 	
 	private final int index;

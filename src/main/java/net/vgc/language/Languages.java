@@ -6,6 +6,12 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Languages {
 	
 	public static final List<Language> LANGUAGES = Lists.newArrayList();

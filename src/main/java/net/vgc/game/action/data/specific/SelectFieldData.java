@@ -6,6 +6,12 @@ import net.vgc.game.map.field.GameFieldType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class SelectFieldData extends GameActionData {
 	
 	private final GameProfile profile;

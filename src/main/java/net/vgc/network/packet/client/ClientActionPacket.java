@@ -5,6 +5,12 @@ import net.vgc.game.action.ActionRegistry;
 import net.vgc.game.action.GameAction;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientActionPacket implements ClientPacket {
 	
 	private final GameAction<?> action;

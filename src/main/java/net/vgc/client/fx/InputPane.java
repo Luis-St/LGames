@@ -7,6 +7,12 @@ import javafx.scene.text.Text;
 import net.luis.fxutils.FxUtils;
 import net.vgc.Constans;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class InputPane extends GridPane {
 	
 	private final Text inputText;

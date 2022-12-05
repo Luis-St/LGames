@@ -22,6 +22,12 @@ import net.vgc.util.EnumRepresentable;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class FriendlyByteBuffer {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

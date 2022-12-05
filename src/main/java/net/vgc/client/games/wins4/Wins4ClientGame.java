@@ -12,6 +12,12 @@ import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.server.games.wins4.Wins4ServerGame;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Wins4ClientGame extends AbstractClientGame {
 	
 	public Wins4ClientGame(Client client, List<GamePlayerInfo> playerInfos) {

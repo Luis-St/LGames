@@ -31,6 +31,12 @@ import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public interface Game {
 	
 	public static final Logger LOGGER = LogManager.getLogger();

@@ -8,6 +8,12 @@ import javafx.scene.image.ImageView;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum TTTPlayerType implements GamePlayerType {
 	
 	CROSS("cross", 0, 'X', new TranslationKey("screen.tic_tac_toe.cross_player"), "textures/tic_tac_toe/cross/cross"), CIRCLE("circle", 1, 'O', new TranslationKey("screen.tic_tac_toe.circle_player"), "textures/tic_tac_toe/circle/circle"),

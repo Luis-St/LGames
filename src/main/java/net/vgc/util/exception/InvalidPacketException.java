@@ -1,4 +1,10 @@
-package net.vgc.network.packet;
+package net.vgc.util.exception;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class InvalidPacketException extends RuntimeException {
 	

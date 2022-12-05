@@ -10,6 +10,12 @@ import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.games.ttt.player.TTTPlayerType;
 import net.vgc.server.game.map.field.AbstractServerGameField;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TTTServerField extends AbstractServerGameField {
 	
 	public TTTServerField(GameMap map, GameFieldPos fieldPos) {
