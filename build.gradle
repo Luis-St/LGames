@@ -51,7 +51,7 @@ dependencies {
 	implementation "org.jetbrains:annotations:23.0.0" // Annotations
 }
 
-task clientRun(type:JavaExec) {
+task runClient(type:JavaExec) {
 	group = "runs"
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
@@ -61,17 +61,17 @@ task clientRun(type:JavaExec) {
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task serverRun(type:JavaExec) {
+task runServer(type:JavaExec) {
 	group = "runs"
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--server", "--gameDir", file("run/server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8080", "--language", "en_us")
-	args("--admin", "00000000-aae0-9a05-0000-000061e6a80d")
+	args("--admin", "00000000-0000-31c4-0000-00000000282a")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task accountRun(type:JavaExec) {
+task runAccount(type:JavaExec) {
 	group = "runs"
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
@@ -80,7 +80,7 @@ task accountRun(type:JavaExec) {
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task testRun(type:JavaExec) {
+task runTest(type:JavaExec) {
 	group = "test runs"
 	main = "net.vgc.Test"
 	classpath = sourceSets.main.runtimeClasspath
@@ -88,7 +88,7 @@ task testRun(type:JavaExec) {
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task fxTestRun(type:JavaExec) {
+task runFxTest(type:JavaExec) {
 	group = "test runs"
 	main = "net.vgc.FxTest"
 	classpath = sourceSets.main.runtimeClasspath

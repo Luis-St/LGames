@@ -65,9 +65,7 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 		GameActionHandler specificHandler = null;
 		Game game = this.server.getGame();
 		if (game != null) {
-			if (!Objects.requireNonNull(game.getActionHandler(), "The action handler of a game must not be null").handle(action)) {
-				LOGGER.warn("Fail to handle a action");
-			}
+			specificHandler = Objects.requireNonNull(game.getActionHandler(), "The action handler of a game must not be null");
 		}
 		if (!action.handleType().handle(action, specificHandler, this.actionHandler)) {
 			LOGGER.warn("Fail to handle a action of type {}", action.type().getName());

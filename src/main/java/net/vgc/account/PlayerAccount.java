@@ -13,6 +13,7 @@ import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.Constans;
 import net.vgc.data.serialization.Serializable;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
@@ -97,14 +98,14 @@ public final class PlayerAccount implements Encodable, Serializable {
 			Text text = new Text(this.obfuscated());
 			ToggleButton button = new ToggleButton();
 			button.setToggleGroup(new ToggleGroup());
-			button.setGraphic(FxUtils.makeImageView("textures/password_invisible.png", 20.0, 20.0));
+			button.setGraphic(FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve("textures/password_invisible.png").toString(), 20.0, 20.0));
 			button.setOnAction((event) -> {
 				if (button.isSelected()) {
 					text.setText(this.password);
-					button.setGraphic(FxUtils.makeImageView("textures/password_visible.png", 20.0, 20.0));
+					button.setGraphic(FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve("textures/password_visible.png").toString(), 20.0, 20.0));
 				} else {
 					text.setText(this.obfuscated());
-					button.setGraphic(FxUtils.makeImageView("textures/password_invisible.png", 20.0, 20.0));
+					button.setGraphic(FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve("textures/password_invisible.png").toString(), 20.0, 20.0));
 				}
 			});
 			pane.add(text, 1, 1);

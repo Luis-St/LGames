@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.Maps;
 
 import net.vgc.game.action.type.GameActionType;
+import net.vgc.game.action.type.GameActionTypes;
 
 /**
  *
@@ -16,7 +17,7 @@ import net.vgc.game.action.type.GameActionType;
 
 public class ActionRegistry {
 	
-	private static final Map<Integer, GameActionType<?, ?>> ACTION_TYPES = Maps.newHashMap();
+	public static final Map<Integer, GameActionType<?, ?>> ACTION_TYPES = Maps.newHashMap();
 	
 	public static void register(GameActionType<?, ?> type) {
 		if (ACTION_TYPES.containsKey(type.getId())) {
@@ -28,6 +29,7 @@ public class ActionRegistry {
 	
 	@Nullable
 	public static GameActionType<?, ?> getType(int id) {
+		GameActionTypes.init();
 		return ACTION_TYPES.get(id);
 	}
 	

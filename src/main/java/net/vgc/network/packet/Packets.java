@@ -15,6 +15,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
+import net.vgc.network.packet.client.ClientActionPacket;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
@@ -25,6 +26,7 @@ import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.network.packet.server.PlayGameRequestPacket;
+import net.vgc.network.packet.server.ServerActionPacket;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidPacketException;
 
@@ -52,6 +54,8 @@ public class Packets {
 		map.put(i++, SyncPermissionPacket.class);
 		map.put(i++, PlayGameRequestPacket.class);
 		map.put(i++, ServerClosedPacket.class);
+		map.put(i++, ClientActionPacket.class);
+		map.put(i++, ServerActionPacket.class);
 	});
 	
 	@Nullable
@@ -87,7 +91,7 @@ public class Packets {
 					throw new InvalidPacketException("Packet " + clazz.getSimpleName() + " does not have a FriendlyByteBuffer constructor");
 				}
 			} catch (Exception e) {
-				LOGGER.error("Fail to get create packet of type {} for id {}", clazz.getSimpleName(), id);
+				LOGGER.error("Fail to create packet of type {} for id {}", clazz.getSimpleName(), id);
 				throw new RuntimeException(e);
 			}
 		}

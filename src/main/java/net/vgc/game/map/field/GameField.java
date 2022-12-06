@@ -73,7 +73,6 @@ public interface GameField {
 	
 	default void clear() {
 		this.clearFigure();
-		this.clearShadow();
 	}
 	
 	@Nullable

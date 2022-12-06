@@ -10,6 +10,7 @@ import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
+import net.vgc.network.Network;
 
 /**
  *
@@ -42,7 +43,7 @@ public abstract class AbstractClientGameField extends AbstractGameField {
 	}
 	
 	protected ImageView makeImage(String path, double scale) {
-		return FxUtils.makeImageView(path, this.getSize() * scale, this.getSize() * scale);
+		return FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve(path).toString(), this.getSize() * scale, this.getSize() * scale);
 	}
 	
 	@Override
@@ -66,6 +67,12 @@ public abstract class AbstractClientGameField extends AbstractGameField {
 	public void setShadowed(boolean shadowed) {
 		this.shadowed = shadowed;
 		this.updateFieldGraphic();
+	}
+	
+	@Override
+	public void clear() {
+		this.clearFigure();
+		this.clearShadow();
 	}
 	
 }

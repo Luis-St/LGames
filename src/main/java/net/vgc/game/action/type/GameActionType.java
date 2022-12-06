@@ -91,7 +91,7 @@ public class GameActionType<T extends GameAction<V>, V extends GameActionData> {
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this);
+		return ToString.toString(this, "actionFactory", "dataFactory");
 	}
 	
 }
