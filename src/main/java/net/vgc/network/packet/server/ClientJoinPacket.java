@@ -33,8 +33,8 @@ public class ClientJoinPacket implements ServerPacket {
 	}
 	
 	@Override
-	public void handle(ServerPacketHandler listener) {
-		listener.handleClientJoin(this.name, this.uuid);
+	public void handle(ServerPacketHandler handler) {
+		handler.handleClientJoin(this.name, this.uuid);
 	}
 	
 	public String getName() {

@@ -27,8 +27,8 @@ public class ClientLoggedOutPacket implements ClientPacket {
 	}
 	
 	@Override
-	public void handle(ClientPacketHandler listener) {
-		listener.handleClientLoggedOut(this.successful);
+	public void handle(ClientPacketHandler handler) {
+		handler.handleClientLoggedOut(this.successful);
 	}
 	
 	public boolean isSuccessful() {

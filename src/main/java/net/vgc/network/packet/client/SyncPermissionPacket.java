@@ -28,8 +28,8 @@ public class SyncPermissionPacket implements ClientPacket {
 	}
 	
 	@Override
-	public void handle(ClientPacketHandler listener) {
-		listener.handleSyncPermission(this.profile);
+	public void handle(ClientPacketHandler handler) {
+		handler.handleSyncPermission(this.profile);
 	}
 	
 	public GameProfile getProfile() {

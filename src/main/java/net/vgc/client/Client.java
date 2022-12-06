@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.Lists;
 
 import javafx.animation.Timeline;
+import javafx.scene.Scene;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -20,6 +21,7 @@ import net.vgc.Constans;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
+import net.vgc.client.game.map.AbstractClientGameMap;
 import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
@@ -33,6 +35,7 @@ import net.vgc.game.Game;
 import net.vgc.network.ConnectionHandler;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.account.ClientExitPacket;
+import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Tickable;
@@ -45,7 +48,7 @@ import net.vgc.util.exception.InvalidNetworkSideException;
  *
  */
 
-public class Client extends GameApplication implements Tickable, Screenable {
+public class Client extends GameApplication<ClientPacket> implements Tickable, Screenable {
 	
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
@@ -194,6 +197,22 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	@Override
 	public NetworkSide getNetworkSide() {
 		return NetworkSide.CLIENT;
+	}
+	
+	@Override
+	public void handlePacket(ClientPacket packet) {
+		Scene scene = this.stage.getScene();
+		if (scene != null && scene instanceof ScreenScene screenScene) {
+			Screen screen = screenScene.getScreen();
+			if (screen != null) {
+				screen.handlePacket(packet);
+			} else {
+				LOGGER.warn("Fail to handle packet of type {} in screen, since there is no screen set", packet.getClass().getSimpleName());
+			}
+		}
+		if (this.game != null && this.game.getMap() instanceof AbstractClientGameMap map) {
+			map.handlePacket(packet); // Avoid instance of check and direct call -> call global -> annotation?
+		}
 	}
 	
 	@Override

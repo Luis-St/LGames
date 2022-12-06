@@ -37,8 +37,8 @@ public class ClientLoggedInPacket implements ClientPacket {
 	}
 	
 	@Override
-	public void handle(ClientPacketHandler listener) {
-		listener.handleClientLoggedIn(this.loginType, this.account, this.successful);
+	public void handle(ClientPacketHandler handler) {
+		handler.handleClientLoggedIn(this.loginType, this.account, this.successful);
 	}
 	
 	public LoginType getLoginType() {

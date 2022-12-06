@@ -10,12 +10,13 @@ import net.vgc.client.fx.game.PlayerInfoPane;
 import net.vgc.client.fx.game.PlayerScorePane;
 import net.vgc.client.games.wins4.Wins4ClientGame;
 import net.vgc.client.games.wins4.map.Wins4ClientMap;
-import net.vgc.game.action.data.gobal.ProfileData;
-import net.vgc.game.action.data.specific.SelectFieldData;
-import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.server.game.ExitGameRequestPacket;
+import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
+import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
 /**
  *
@@ -47,12 +48,12 @@ public class Wins4Screen extends GameScreen {
 	}
 	
 	private void handleLeave() {
-		GameActionTypes.EXIT_GAME_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.getPlayer().getProfile()));
+		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
 	}
 	
 	private void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
-			GameActionTypes.PLAY_AGAIN_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.getPlayer().getProfile()));
+			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
 			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
@@ -66,13 +67,21 @@ public class Wins4Screen extends GameScreen {
 		}
 		if (column != -1) {
 			if (this.getPlayer().isCurrent()) {
-				GameActionTypes.SELECT_FIELD.send(this.client.getServerHandler(), new SelectFieldData(this.getPlayer().getProfile(), Wins4FieldType.DEFAULT, Wins4FieldPos.of(0, column)));
+				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), Wins4FieldType.DEFAULT, Wins4FieldPos.of(0, column)));
 				this.getPlayer().setCurrent(false);
 			} else {
 				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());
 			}
 		} else {
 			LOGGER.info("No field selected");
+		}
+	}
+	
+	@Override
+	public void handlePacket(ClientPacket clientPacket) {
+		this.playerInfo.update();
+		if (clientPacket instanceof Wins4GameResultPacket packet) {
+			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}
 	

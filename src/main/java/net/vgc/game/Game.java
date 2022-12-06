@@ -5,19 +5,12 @@ import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
 import net.luis.utils.math.Mth;
 import net.vgc.client.game.AbstractClientGame;
-import net.vgc.game.action.GameAction;
-import net.vgc.game.action.data.GameActionData;
-import net.vgc.game.action.data.specific.FieldInfoData;
-import net.vgc.game.action.handler.GameActionHandler;
-import net.vgc.game.action.type.GameActionType;
-import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
@@ -25,6 +18,8 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.type.GameType;
 import net.vgc.game.win.WinHandler;
+import net.vgc.network.packet.Packet;
+import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.game.AbstractServerGame;
@@ -153,9 +148,6 @@ public interface Game {
 		return null;
 	}
 	
-	@NotNull
-	GameActionHandler getActionHandler();
-	
 	default boolean nextMatch() {
 		if (Mth.isInBounds(this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
 			this.getMap().reset();
@@ -165,7 +157,7 @@ public interface Game {
 			}
 			this.getWinHandler().reset();
 			this.nextPlayer(true);
-			this.broadcastPlayers(GameActionTypes.UPDATE_MAP, new FieldInfoData(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.getPlayers(), GamePlayer::getName));
 			return true;
 		}
@@ -175,23 +167,22 @@ public interface Game {
 	
 	void stop();
 	
-	default <T extends GameAction<V>, V extends GameActionData> void broadcastPlayer(GamePlayer gamePlayer, GameActionType<T, V> type, V data) {
+	default void broadcastPlayer(Packet<?> packet, GamePlayer gamePlayer) {
 		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
-			type.send(player.connection, data);
+			player.connection.send(packet);
 		}
 	}
 	
-	default <T extends GameAction<V>, V extends GameActionData> void broadcastPlayers(GameActionType<T, V> type, V data) {
+	default void broadcastPlayers(Packet<?> packet) {
 		for (GamePlayer player : this.getPlayers()) {
-			this.broadcastPlayer(player, type, data);
+			this.broadcastPlayer(packet, player);
 		}
 	}
 	
-	default <T extends GameAction<V>, V extends GameActionData> void broadcastPlayersExclude(GameActionType<T, V> type, V data, GamePlayer... gamePlayers) {
-		List<GamePlayer> excludePlayers = Lists.newArrayList(gamePlayers);
+	default void broadcastPlayersExclude(Packet<?> packet, GamePlayer... gamePlayers) {
 		for (GamePlayer player : this.getPlayers()) {
-			if (!excludePlayers.contains(player)) {
-				this.broadcastPlayer(player, type, data);
+			if (!Lists.newArrayList(gamePlayers).contains(player)) {
+				this.broadcastPlayer(packet, player);
 			}
 		}
 	}

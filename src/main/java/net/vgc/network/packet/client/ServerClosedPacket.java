@@ -25,8 +25,8 @@ public class ServerClosedPacket implements ClientPacket {
 	}
 	
 	@Override
-	public void handle(ClientPacketHandler listener) {
-		listener.handleServerClosed();
+	public void handle(ClientPacketHandler handler) {
+		handler.handleServerClosed();
 	}
 	
 }

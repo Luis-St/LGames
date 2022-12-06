@@ -8,6 +8,7 @@ package net.vgc.network.packet;
 
 public interface PacketListener<T extends Packet<?>> {
 	
+	@Deprecated // Rename
 	void handlePacket(T packet);
 	
 }

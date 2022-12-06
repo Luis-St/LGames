@@ -3,7 +3,6 @@ package net.vgc.server.game;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import com.google.common.collect.Lists;
 
@@ -11,15 +10,16 @@ import net.luis.utils.function.TriFunction;
 import net.luis.utils.math.Mth;
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
-import net.vgc.game.action.data.gobal.EmptyData;
-import net.vgc.game.action.data.gobal.ProfileData;
-import net.vgc.game.action.data.specific.SyncPlayerData;
-import net.vgc.game.action.handler.GameActionHandler;
-import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.win.WinHandler;
+import net.vgc.network.packet.PacketListener;
+import net.vgc.network.packet.client.SyncPlayerDataPacket;
+import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
+import net.vgc.network.packet.client.game.ExitGamePacket;
+import net.vgc.network.packet.client.game.StopGamePacket;
+import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.Player;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
@@ -31,18 +31,17 @@ import net.vgc.util.Util;
  *
  */
 
-public abstract class AbstractServerGame extends AbstractGame {
+public abstract class AbstractServerGame extends AbstractGame implements PacketListener<ServerPacket> {
 	
 	private final DedicatedServer server;
 	private final WinHandler winHandler;
 	
-	protected <T extends GamePlayerType> AbstractServerGame(DedicatedServer server, BiFunction<DedicatedServer, Game, GameMap> mapFunction, List<ServerPlayer> players, T[] playerTypes, TriFunction<Game, Player, T, GamePlayer> playerFunction,
-		WinHandler winHandler, Function<Game, GameActionHandler> actionHandlerFunction) {
+	protected <T extends GamePlayerType> AbstractServerGame(DedicatedServer server, BiFunction<DedicatedServer, Game, GameMap> mapFunction, List<ServerPlayer> players, T[] playerTypes, TriFunction<Game, Player, T, GamePlayer> playerFunction, WinHandler winHandler) {
 		super((game) -> {
 			return mapFunction.apply(server, game);
 		}, (game) -> {
 			return createGamePlayers(game, players, playerTypes, playerFunction);
-		}, actionHandlerFunction);
+		});
 		this.server = server;
 		this.winHandler = winHandler;
 	}
@@ -75,7 +74,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 	public void setPlayer(GamePlayer player) {
 		super.setPlayer(player);
 		if (this.getPlayer() != null) {
-			this.broadcastPlayers(GameActionTypes.UPDATE_CURRENT_PLAYER, new ProfileData(this.getPlayer().getPlayer().getProfile()));
+			this.broadcastPlayers(new CurrentPlayerUpdatePacket(this.getPlayer()));
 		}
 	}
 	
@@ -84,7 +83,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 		if (this.getPlayers().remove(gamePlayer)) {
 			if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
 				if (sendExit) {
-					GameActionTypes.EXIT_GAME.send(player.connection, new EmptyData());
+					player.connection.send(new ExitGamePacket());
 				}
 				player.setPlaying(false);
 				LOGGER.info("Remove player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
@@ -95,7 +94,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 					this.stop();
 				}
 				player.getScore().reset();
-				this.broadcastPlayersExclude(GameActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
+				this.broadcastPlayersExclude(new SyncPlayerDataPacket(player), gamePlayer);
 				return true;
 			} else {
 				LOGGER.warn("Fail to remove player {}, since the player is not a server player", gamePlayer.getName());
@@ -128,10 +127,9 @@ public abstract class AbstractServerGame extends AbstractGame {
 			}
 		}
 		for (GamePlayer gamePlayer : this.getPlayers()) {
-			Player player = gamePlayer.getPlayer();
-			this.broadcastPlayer(gamePlayer, GameActionTypes.STOP_GAME, new EmptyData());
+			this.broadcastPlayer(new StopGamePacket(), gamePlayer);
 			gamePlayer.getPlayer().getScore().reset();
-			this.broadcastPlayersExclude(GameActionTypes.SYNC_PLAYER, new SyncPlayerData(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
+			this.broadcastPlayersExclude(new SyncPlayerDataPacket(gamePlayer), gamePlayer);
 		}
 		this.getPlayers().clear();
 		this.getServer().setGame(null);

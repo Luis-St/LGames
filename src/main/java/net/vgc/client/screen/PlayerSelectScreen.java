@@ -2,8 +2,6 @@ package net.vgc.client.screen;
 
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
 
 import javafx.geometry.Pos;
@@ -14,9 +12,13 @@ import javafx.scene.layout.Pane;
 import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.client.screen.update.ScreenUpdateKeys;
 import net.vgc.game.type.GameType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.PlayerAddPacket;
+import net.vgc.network.packet.client.PlayerRemovePacket;
+import net.vgc.network.packet.client.SyncPermissionPacket;
+import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.Util;
 
@@ -88,9 +90,12 @@ public class PlayerSelectScreen extends Screen {
 	}
 	
 	@Override
-	public void onUpdate(@Nullable String updateKey, @Nullable Object object) {
-		if (ScreenUpdateKeys.PLAYER_UPDATE_POST.equals(updateKey)) {
+	public void handlePacket(ClientPacket clientPacket) {
+		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
+		} else if (clientPacket instanceof CancelPlayGameRequestPacket) {
+			LOGGER.info("The game request was canceled by the server");
+			this.handleBack();
 		}
 	}
 	

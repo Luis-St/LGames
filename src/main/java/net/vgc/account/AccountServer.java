@@ -48,6 +48,7 @@ import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
+import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.PacketDecoder;
 import net.vgc.network.packet.PacketEncoder;
 import net.vgc.util.ExceptionHandler;
@@ -59,7 +60,7 @@ import net.vgc.util.exception.InvalidNetworkSideException;
  *
  */
 
-public class AccountServer extends GameApplication {
+public class AccountServer extends GameApplication<Packet<AccountServerPacketHandler>> {
 	
 	public static AccountServer getInstance() {
 		if (NetworkSide.ACCOUNT.isOn()) {

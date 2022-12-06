@@ -28,8 +28,8 @@ public class PlayerAddPacket implements ClientPacket {
 	}
 	
 	@Override
-	public void handle(ClientPacketHandler listener) {
-		listener.handlePlayerAdd(this.profile);
+	public void handle(ClientPacketHandler handler) {
+		handler.handlePlayerAdd(this.profile);
 	}
 	
 	public GameProfile getProfile() {

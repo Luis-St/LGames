@@ -1,7 +1,5 @@
 package net.vgc.client.screen.game;
 
-import org.jetbrains.annotations.Nullable;
-
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -13,12 +11,13 @@ import net.vgc.client.fx.game.PlayerInfoPane;
 import net.vgc.client.fx.game.PlayerScorePane;
 import net.vgc.client.games.ludo.LudoClientGame;
 import net.vgc.client.games.ludo.map.LudoClientMap;
-import net.vgc.client.screen.update.ScreenUpdateKeys;
-import net.vgc.game.action.data.gobal.ProfileData;
-import net.vgc.game.action.data.specific.SelectFieldData;
-import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.game.dice.RolledDicePacket;
+import net.vgc.network.packet.server.game.ExitGameRequestPacket;
+import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
+import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
 /**
  *
@@ -52,12 +51,12 @@ public class LudoScreen extends GameScreen {
 	}
 	
 	private void handleLeave() {
-		GameActionTypes.EXIT_GAME_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.getPlayer().getProfile()));
+		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
 	}
 	
 	private void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
-			GameActionTypes.PLAY_AGAIN_REQUEST.send(this.client.getServerHandler(), new ProfileData(this.getPlayer().getProfile()));
+			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
 			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
@@ -66,7 +65,7 @@ public class LudoScreen extends GameScreen {
 		GameField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().canSelect()) {
-				GameActionTypes.SELECT_FIELD.send(this.client.getServerHandler(), new SelectFieldData(this.getPlayer().getProfile(), field.getFieldType(), field.getFieldPos()));
+				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), field.getFieldType(), field.getFieldPos()));
 				this.getPlayer().setCanSelect(false);
 			} else {
 				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());
@@ -82,11 +81,11 @@ public class LudoScreen extends GameScreen {
 	}
 	
 	@Override
-	public void onUpdate(@Nullable String updateKey, @Nullable Object object) {
+	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
-		if (ScreenUpdateKeys.DICE_UPDATE.equals(updateKey)) {
-			this.diceButton.setCount((int) object);
-		} else if (ScreenUpdateKeys.GAME_RESULT_UPDATE.equals(updateKey)) {
+		if (clientPacket instanceof RolledDicePacket packet) {
+			this.diceButton.setCount(packet.getCount());
+		} else if (clientPacket instanceof LudoGameResultPacket packet) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}

@@ -31,8 +31,8 @@ public class ClientLeavePacket implements ServerPacket {
 	}
 	
 	@Override
-	public void handle(ServerPacketHandler listener) {
-		listener.handleClientLeave(this.uuid);
+	public void handle(ServerPacketHandler handler) {
+		handler.handleClientLeave(this.uuid);
 	}
 	
 	public UUID getUUID() {

@@ -28,8 +28,8 @@ public class ClientLogoutPacket implements AccountPacket {
 	}
 	
 	@Override
-	public void handle(AccountServerPacketHandler listener) {
-		listener.handleClientLogout(this.account.getName(), this.account.getPassword());
+	public void handle(AccountServerPacketHandler handler) {
+		handler.handleClientLogout(this.account.getName(), this.account.getPassword());
 	}
 	
 	public PlayerAccount getAccount() {

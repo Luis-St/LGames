@@ -3,7 +3,6 @@ package net.vgc.client.game;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -15,16 +14,13 @@ import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
-import net.vgc.game.action.GameAction;
-import net.vgc.game.action.data.GameActionData;
-import net.vgc.game.action.handler.GameActionHandler;
-import net.vgc.game.action.type.GameActionType;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.win.WinHandler;
+import net.vgc.network.packet.Packet;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.util.Util;
@@ -39,13 +35,12 @@ public abstract class AbstractClientGame extends AbstractGame {
 	
 	private final Client client;
 	
-	protected AbstractClientGame(Client client, BiFunction<Client, Game, GameMap> mapFunction, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> playerFunction,
-		Function<Game, GameActionHandler> actionHandlerFunction) {
+	protected AbstractClientGame(Client client, BiFunction<Client, Game, GameMap> mapFunction, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> playerFunction) {
 		super((game) -> {
 			return mapFunction.apply(client, game);
 		}, (game) -> {
 			return createGamePlayers(client, game, playerInfos, playerFunction);
-		}, actionHandlerFunction);
+		});
 		this.client = client;
 	}
 	
@@ -114,8 +109,8 @@ public abstract class AbstractClientGame extends AbstractGame {
 	}
 	
 	@Override
-	public final <T extends GameAction<V>, V extends GameActionData> void broadcastPlayer(GamePlayer gamePlayer, GameActionType<T, V> type, V data) {
-		LOGGER.warn("Can not broadcast action {} to player {} on client", type.getName(), gamePlayer.getName());
+	public final void broadcastPlayer(Packet<?> packet, GamePlayer gamePlayer) {
+		LOGGER.warn("Can not broadcast packet {} to player {} on client", packet.getClass().getSimpleName(), gamePlayer.getName());
 	}
 	
 }

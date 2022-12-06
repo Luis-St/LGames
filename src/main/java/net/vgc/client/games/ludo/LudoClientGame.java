@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.vgc.client.Client;
 import net.vgc.client.game.AbstractClientGame;
-import net.vgc.client.games.ludo.action.LudoClientActionHandler;
 import net.vgc.client.games.ludo.map.LudoClientMap;
 import net.vgc.client.games.ludo.player.LudoClientPlayer;
 import net.vgc.game.player.GamePlayerInfo;
@@ -21,7 +20,7 @@ import net.vgc.server.games.ludo.LudoServerGame;
 public class LudoClientGame extends AbstractClientGame {
 	
 	public LudoClientGame(Client client, List<GamePlayerInfo> playerInfos) {
-		super(client, LudoClientMap::new, playerInfos, LudoClientPlayer::new, LudoClientActionHandler::new);
+		super(client, LudoClientMap::new, playerInfos, LudoClientPlayer::new);
 	}
 	
 	@Override

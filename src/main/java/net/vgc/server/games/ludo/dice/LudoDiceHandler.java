@@ -5,14 +5,13 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
-import net.vgc.game.action.data.gobal.EmptyData;
-import net.vgc.game.action.type.GameActionTypes;
 import net.vgc.game.dice.Dice;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.dice.PlayerDiceInfo;
 import net.vgc.game.dice.SimpleDice;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
+import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
 import net.vgc.server.games.ludo.LudoServerGame;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
@@ -98,7 +97,7 @@ public class LudoDiceHandler implements DiceHandler {
 	@Override
 	public void performGameAction(GamePlayer gamePlayer, int count) {
 		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
-			GameActionTypes.CAN_SELECT_FIELD.send(player.connection, new EmptyData());
+			player.connection.send(new CanSelectGameFieldPacket());
 		}
 	}
 	

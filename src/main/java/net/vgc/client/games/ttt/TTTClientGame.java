@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.vgc.client.Client;
 import net.vgc.client.game.AbstractClientGame;
-import net.vgc.client.games.ttt.action.TTTClientActionHandler;
 import net.vgc.client.games.ttt.map.TTTClientMap;
 import net.vgc.client.games.ttt.player.TTTClientPlayer;
 import net.vgc.game.player.GamePlayerInfo;
@@ -21,7 +20,7 @@ import net.vgc.server.games.ttt.TTTServerGame;
 public class TTTClientGame extends AbstractClientGame {
 	
 	public TTTClientGame(Client client, List<GamePlayerInfo> playerInfos) {
-		super(client, TTTClientMap::new, playerInfos, TTTClientPlayer::new, TTTClientActionHandler::new);
+		super(client, TTTClientMap::new, playerInfos, TTTClientPlayer::new);
 	}
 	
 	@Override

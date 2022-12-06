@@ -28,8 +28,8 @@ public class PlayerRemovePacket implements ClientPacket {
 	}
 	
 	@Override
-	public void handle(ClientPacketHandler listener) {
-		listener.handlePlayerRemove(this.profile);
+	public void handle(ClientPacketHandler handler) {
+		handler.handlePlayerRemove(this.profile);
 	}
 	
 	public GameProfile getProfile() {

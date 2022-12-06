@@ -4,6 +4,8 @@ import java.nio.file.Path;
 
 import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
+import net.vgc.network.packet.Packet;
+import net.vgc.network.packet.PacketListener;
 import net.vgc.server.Server;
 
 /**
@@ -12,7 +14,7 @@ import net.vgc.server.Server;
  *
  */
 
-public class Network {
+public class Network implements PacketListener<Packet<?>> {
 	
 	public static final Network INSTANCE = new Network();
 	
@@ -56,6 +58,11 @@ public class Network {
 		if (networkSide.isOn()) {
 			action.run();
 		}
+	}
+	
+	@Override
+	public void handlePacket(Packet<?> packet) {
+		this.networkSide.handlePacket(packet);
 	}
 	
 }

@@ -1,25 +1,27 @@
 package net.vgc.client.network;
 
 import java.util.List;
-import java.util.Objects;
 
+import net.luis.utils.math.Mth;
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.Client;
-import net.vgc.client.game.action.GlobalClientActionHandler;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.player.RemotePlayer;
 import net.vgc.client.screen.LobbyScreen;
 import net.vgc.client.screen.MenuScreen;
-import net.vgc.client.screen.update.ScreenUpdateFactory;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.game.Game;
-import net.vgc.game.action.GameAction;
-import net.vgc.game.action.handler.GameActionHandler;
+import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.GamePlayerInfo;
+import net.vgc.game.score.PlayerScore;
+import net.vgc.game.type.GameType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.AbstractPacketHandler;
 import net.vgc.player.GameProfile;
+import net.vgc.player.Player;
+import net.vgc.util.Util;
 
 /**
  *
@@ -30,12 +32,10 @@ import net.vgc.player.GameProfile;
 public class ClientPacketHandler extends AbstractPacketHandler {
 	
 	private final Client client;
-	private final GlobalClientActionHandler actionHandler;
 	
 	public ClientPacketHandler(Client client, NetworkSide networkSide) {
 		super(networkSide);
 		this.client = client;
-		this.actionHandler = new GlobalClientActionHandler(this.client);
 	}
 	
 	public void handleClientLoggedIn(LoginType loginType, PlayerAccount account, boolean successful) {
@@ -49,28 +49,24 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					}
-						break;
+					} break;
 					case USER_LOGIN: {
 						LOGGER.debug("Successfully logged in");
 						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					}
-						break;
+					} break;
 					case GUEST_LOGIN: {
 						LOGGER.debug("Successfully logged in as a guest");
 						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					}
-						break;
+					} break;
 					case UNKNOWN: {
 						LOGGER.warn("Fail to log in");
-					}
-						break;
+					} break;
 				}
 			} else {
 				LOGGER.warn("Fail to log in");
@@ -104,8 +100,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handlePlayerAdd(GameProfile profile) {
-		ScreenUpdateFactory.onPlayerUpdatePre(profile);
+	public void handlePlayerAdd(GameProfile profile) {;
 		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			if (this.client.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
@@ -116,21 +111,17 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		} else {
 			this.client.addRemotePlayer(new RemotePlayer(profile));
 		}
-		ScreenUpdateFactory.onPlayerUpdatePost(profile);
 	}
 	
 	public void handlePlayerRemove(GameProfile profile) {
-		ScreenUpdateFactory.onPlayerUpdatePre(profile);
 		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			this.client.removePlayer();
 		} else {
 			this.client.removeRemotePlayer(new RemotePlayer(profile));
 		}
-		ScreenUpdateFactory.onPlayerUpdatePost(profile);
 	}
 	
 	public void handleSyncPermission(GameProfile profile) {
-		ScreenUpdateFactory.onPlayerUpdatePre(profile);
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player.getProfile().equals(profile)) {
 				player.setAdmin(true);
@@ -139,19 +130,129 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 				player.setAdmin(false);
 			}
 		}
-		ScreenUpdateFactory.onPlayerUpdatePost(profile);
 		LOGGER.info("Sync admins");
 	}
 	
-	public void handleAction(GameAction<?> action) {
-		GameActionHandler specificHandler = null;
-		Game game = this.client.getGame();
-		if (game != null) {
-			specificHandler = Objects.requireNonNull(game.getActionHandler(), "The action handler of a game must not be null");
+	public void handleSyncPlayerData(GameProfile profile, boolean playing, PlayerScore score) {
+		AbstractClientPlayer player = this.client.getPlayer(profile);
+		if (player != null) {
+			player.setPlaying(playing);
+			player.getScore().sync(score);
+			LOGGER.info("Synchronize data from server of player {}", profile.getName());
+		} else {
+			LOGGER.warn("Fail to synchronize data from server to player {}, since the player does not exists", profile.getName());
 		}
-		if (!action.handleType().handle(action, specificHandler, this.actionHandler)) {
-			LOGGER.warn("Fail to handle a action of type {}", action.type().getName());
+	}
+	
+	public void handleCancelRollDiceRequest() {
+		LOGGER.info("Roll dice request was canceled from the server");
+		this.client.getPlayer().setCanRollDice(false);
+	}
+	
+	public void handleRolledDice(int count) {
+		LocalPlayer player = this.client.getPlayer();
+		if (Mth.isInBounds(count, 1, 6)) {
+			player.setCount(count);
+			player.setCanRollDice(false);
+		} else {
+			player.setCount(-1);
+			player.setCanRollDice(false);
 		}
+	}
+	
+	public void handleCanRollDiceAgain() {
+		this.client.getPlayer().setCanRollDice(true);
+	}
+	
+	public void handleCurrentPlayerUpdate(GameProfile profile) {
+		boolean flag = false;
+		if (this.client.getGame() != null) {
+			Game game = this.client.getGame();
+			for (AbstractClientPlayer player : this.client.getPlayers()) {
+				if (player.getProfile().equals(profile)) {
+					game.setPlayer(game.getPlayerFor(player));
+					player.setCurrent(true);
+					flag = true;
+					if (player instanceof LocalPlayer localPlayer) {
+						localPlayer.setCanRollDice(true);
+					}
+				} else {
+					player.setCurrent(false);
+				}
+			}
+			if (!flag) {
+				LOGGER.warn("Fail to update the current player to {}, since the player does not exists", profile.getName());
+			}
+		} else {
+			LOGGER.warn("Fail to update the current player to {}, since there is no active game", profile.getName());
+		}
+	}
+	
+	public <S extends Game, C extends Game> void handleStartGame(GameType<S, C> gameType, List<GamePlayerInfo> playerInfos) {
+		if (this.client.getGame() == null) {
+			C game = gameType.createClientGame(this.client, playerInfos);
+			game.start();
+			boolean flag = false;
+			for (Player player : Util.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
+				player.setPlaying(true);
+				if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
+					flag = true;
+				}
+			}
+			if (flag) {
+				gameType.openScreen(this.client, game);
+				LOGGER.info("Start game {}", gameType.getInfoName());
+				this.client.setGame(game);
+			} else {
+				LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", gameType.getInfoName());
+				this.client.setScreen(new LobbyScreen());
+			}
+		}
+	}
+	
+	public void handleCanSelectGameField() {
+		LocalPlayer player = this.client.getPlayer();
+		if (player.isCurrent()) {
+			player.setCanSelect(true);
+		}
+	}
+	
+	public void handleGameActionFailed() {
+		this.client.getPlayer().setCurrent(true);
+	}
+	
+	public void handleCancelPlayAgainGameRequest() {
+		LOGGER.warn("The request to play again was canceled by the server");
+	}
+	
+	public void handleExitGame() {
+		LOGGER.info("Exit the current game");
+		if (this.client.getPlayer().isPlaying()) {
+			this.client.getPlayer().setPlaying(false);
+			this.client.getPlayer().getScore().reset();
+			if (this.client.getGame() != null) {
+				this.client.setGame(null);
+			} else {
+				LOGGER.warn("Received a exit game packet, but there is no active game");
+			}
+		} else {
+			LOGGER.info("Received a exit game packet, but the local player is not playing a game");
+		}
+		this.client.setScreen(new LobbyScreen());
+	}
+	
+	public void handleStopGame() {;
+		LOGGER.info("Stopping the current game");
+		for (AbstractClientPlayer player : this.client.getPlayers()) {
+			player.setPlaying(false);
+			player.getScore().reset();
+		}
+		if (this.client.getGame() != null) {
+			this.client.setGame(null);
+		} else {
+			LOGGER.warn("Received a stop game packet, but there is no active game");
+		}
+		this.client.setScreen(new LobbyScreen());
 	}
 	
 	public void handleServerClosed() {

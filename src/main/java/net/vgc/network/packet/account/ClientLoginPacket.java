@@ -36,8 +36,8 @@ public class ClientLoginPacket implements AccountPacket {
 	}
 	
 	@Override
-	public void handle(AccountServerPacketHandler listener) {
-		listener.handleClientLogin(this.loginType, this.name, this.password);
+	public void handle(AccountServerPacketHandler handler) {
+		handler.handleClientLogin(this.loginType, this.name, this.password);
 	}
 	
 	public LoginType getLoginType() {

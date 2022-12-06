@@ -1,24 +1,42 @@
 package net.vgc.server.games.ludo;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
 import net.vgc.client.games.ludo.LudoClientGame;
 import net.vgc.game.dice.DiceHandler;
+import net.vgc.game.map.field.GameField;
+import net.vgc.game.getMap().field.GameField;
 import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.figure.GameFigure;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
+import net.vgc.games.ludo.getMap().field.LudoFieldPos;
+import net.vgc.games.ludo.getMap().field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
+import net.vgc.network.packet.client.SyncPlayerDataPacket;
+import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
+import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
+import net.vgc.network.packet.server.ServerPacket;
+import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
-import net.vgc.server.games.ludo.action.LudoServerActionHandler;
 import net.vgc.server.games.ludo.dice.LudoDiceHandler;
 import net.vgc.server.games.ludo.map.LudoServerMap;
+import net.vgc.server.games.ludo.getMap().LudoServerMap;
+import net.vgc.server.games.ludo.getMap().field.LudoServerField;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
+import net.vgc.server.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.server.games.ludo.win.LudoWinHandler;
 import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.Util;
 
 /**
  *
@@ -33,7 +51,7 @@ public class LudoServerGame extends AbstractServerGame {
 	public LudoServerGame(DedicatedServer server, List<ServerPlayer> players) {
 		super(server, LudoServerMap::new, players, LudoPlayerType.values(), (game, player, playerType) -> {
 			return new LudoServerPlayer(game, player, playerType, 4);
-		}, new LudoWinHandler(), LudoServerActionHandler::new);
+		}, new LudoWinHandler());
 		this.diceHandler = new LudoDiceHandler(this, 1, 6);
 	}
 	
@@ -81,6 +99,61 @@ public class LudoServerGame extends AbstractServerGame {
 	@Override
 	public DiceHandler getDiceHandler() {
 		return this.diceHandler;
+	}
+	
+	@Override
+	public void handlePacket(ServerPacket serverPacket) {
+		if (serverPacket instanceof SelectGameFieldPacket packet) {
+			GamePlayer player = this.getPlayerFor(packet.getProfile());
+			if (Objects.equals(this.getPlayer(), player)) {
+				int count = this.diceHandler.getLastCount(player);
+				if (count != -1) {
+					GameField currentField = this.getMap().getField(packet.getFieldType(), player.getPlayerType(), packet.getFieldPos());
+					if (!currentField.isEmpty()) {
+						GameFigure figure = currentField.getFigure();
+						GameField nextField = this.getMap().getNextField(figure, count);
+						if (nextField != null) {
+							if (this.getMap().moveFigureTo(figure, nextField)) {
+								this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+								if (this.getWinHandler().hasPlayerFinished(player)) {
+									this.getWinHandler().onPlayerFinished(player);
+									if (this.getWinHandler().getWinOrder().size() - this.getPlayers().size() > 1) {
+										this.nextPlayer(false);
+									} else {
+										LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Util.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
+										for (GamePlayer gamePlayer : this.getPlayers()) {
+											PlayerScore score = gamePlayer.getPlayer().getScore();
+											score.setScore(this.getWinHandler().getScoreFor(this, gamePlayer));
+											this.broadcastPlayers(new SyncPlayerDataPacket(gamePlayer.getPlayer().getProfile(), true, score));
+										}
+										this.broadcastPlayers(new LudoGameResultPacket());
+									}
+								} else if (this.diceHandler.canRollAfterMove(player, currentField, nextField, count)) {
+									player.setRollCount(1);
+									this.broadcastPlayer(new CanRollDiceAgainPacket(), player);
+								} else {
+									this.nextPlayer(false);
+								}
+							} else {
+								LOGGER.warn("Fail to move figure {} of player {} to field {}", figure.getCount(), player.getName(), nextField.getFieldPos().getPosition());
+								this.broadcastPlayer(new CanSelectGameFieldPacket(), player);
+							}
+						} else {
+							LOGGER.warn("Fail to move figure {} of player {}, since there is no next field for the figure", figure.getCount(), player.getName());
+							this.broadcastPlayer(new CanSelectGameFieldPacket(), player);
+						}
+					} else {
+						LOGGER.warn("Fail to get a figure of player {} from field {}, since the field is empty", player.getName(), currentField.getFieldPos().getPosition());
+						this.broadcastPlayer(new CanSelectGameFieldPacket(), player);
+					}
+				} else {
+					LOGGER.warn("Fail to move figure of player {}, since the player has not rolled the dice yet", player.getName());
+					this.stop();
+				}
+			} else {
+				LOGGER.warn("Player {} tries to change the {} map at pos {} to {}, but it is not his turn", player.getName(), packet.getFieldPos().getPosition(), player.getPlayerType());
+			}
+		}
 	}
 	
 	@Override

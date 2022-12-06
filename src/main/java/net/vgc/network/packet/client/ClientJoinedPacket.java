@@ -36,8 +36,8 @@ public class ClientJoinedPacket implements ClientPacket {
 	}
 	
 	@Override
-	public void handle(ClientPacketHandler listener) {
-		listener.handleClientJoined(this.profiles);
+	public void handle(ClientPacketHandler handler) {
+		handler.handleClientJoined(this.profiles);
 	}
 	
 	public List<GameProfile> getProfiles() {
