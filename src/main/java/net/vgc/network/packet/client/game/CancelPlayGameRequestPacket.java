@@ -24,10 +24,10 @@ public class CancelPlayGameRequestPacket implements ClientPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		
 	}
-
+	
 }

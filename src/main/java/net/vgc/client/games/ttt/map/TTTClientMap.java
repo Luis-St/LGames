@@ -17,18 +17,19 @@ import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
 import net.vgc.client.game.map.AbstractClientGameMap;
 import net.vgc.client.games.ttt.map.field.TTTClientField;
-import net.vgc.client.games.ttt.player.TTTClientPlayer;
-import net.vgc.client.games.ttt.player.figure.TTTClientFigure;
 import net.vgc.game.Game;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
+import net.vgc.game.win.GameResultLine;
 import net.vgc.games.ttt.map.field.TTTFieldPos;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.player.GameProfile;
 
@@ -171,48 +172,45 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
 				GameProfile profile = fieldInfo.getProfile();
-				if (fieldInfo.getFieldPos() instanceof TTTFieldPos fieldPos) {
-					TTTClientField field = this.getField(null, null, fieldPos);
-					if (field != null) {
-						if (field.isShadowed()) {
-							field.setShadowed(false);
-						}
-						if (field.getResult() != GameResult.NO) {
-							field.setResult(GameResult.NO);
-						}
-						TTTClientPlayer player = (TTTClientPlayer) this.game.getPlayerFor(profile);
-						if (player != null) {
-							TTTClientFigure figure = player.getFigure(fieldInfo.getFigureCount());
-							UUID uuid = figure.getUUID();
-							UUID serverUUID = fieldInfo.getFigureUUID();
-							if (uuid.equals(serverUUID)) {
-								field.setFigure(figure);
-							} else {
-								LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
-							}
-						} else if (profile.equals(GameProfile.EMPTY)) {
-							field.setFigure(null);
+				GameFieldPos fieldPos = fieldInfo.getFieldPos();
+				GameField field = this.getField(null, null, fieldPos);
+				if (field != null) {
+					if (field.isShadowed()) {
+						field.setShadowed(false);
+					}
+					if (field.getResult() != GameResult.NO) {
+						field.setResult(GameResult.NO);
+					}
+					GamePlayer player = this.getGame().getPlayerFor(profile);
+					if (player != null) {
+						GameFigure figure = player.getFigure(fieldInfo.getFigureCount());
+						UUID uuid = figure.getUUID();
+						UUID serverUUID = fieldInfo.getFigureUUID();
+						if (uuid.equals(serverUUID)) {
+							field.setFigure(figure);
 						} else {
-							LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
+							LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
 						}
+					} else if (profile.equals(GameProfile.EMPTY)) {
+						field.setFigure(null);
 					} else {
-						LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());
+						LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
 					}
 				} else {
-					LOGGER.warn("Fail to update game field, since field pos is a instance of {}", fieldInfo.getFieldPos().getClass().getSimpleName());
+					LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());
 				}
 			}
-		} else if (clientPacket instanceof TTTGameResultPacket packet) {
+		} else if (clientPacket instanceof GameResultPacket packet) {
 			GameResult result = packet.getResult();
 			if (result != GameResult.NO) {
-				TTTResultLine resultLine = packet.getResultLine();
+				GameResultLine resultLine = packet.getResultLine();
 				if (result == GameResult.DRAW) {
-					for (TTTClientField field : this.fields) {
+					for (GameField field : this.getFields()) {
 						field.setResult(GameResult.DRAW);
 					}
 				} else {
-					if (resultLine != TTTResultLine.EMPTY) {
-						for (TTTFieldPos fieldPos : resultLine.getPoses()) {
+					if (resultLine != GameResultLine.EMPTY) {
+						for (GameFieldPos fieldPos : resultLine.getPositions()) {
 							this.getField(null, null, fieldPos).setResult(result);
 						}
 					} else {

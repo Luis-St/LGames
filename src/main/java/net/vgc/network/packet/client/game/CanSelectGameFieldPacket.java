@@ -19,12 +19,12 @@ public class CanSelectGameFieldPacket implements ClientPacket {
 	public CanSelectGameFieldPacket(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleCanSelectGameField();

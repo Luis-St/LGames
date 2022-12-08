@@ -8,7 +8,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import net.luis.fxutils.FxUtils;
-import net.luis.utils.data.tag.TagUtil;
+import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.Constans;
 import net.vgc.data.serialization.Serializable;
@@ -54,7 +54,7 @@ public final class PlayerAccount implements Encodable, Serializable {
 	public PlayerAccount(CompoundTag tag) {
 		this.name = tag.getString("name");
 		this.password = tag.getString("password");
-		this.uuid = TagUtil.readUUID(tag.getCompound("uuid"));
+		this.uuid = TagUtils.readUUID(tag.getCompound("uuid"));
 		this.guest = tag.getBoolean("guest");
 	}
 	
@@ -156,7 +156,7 @@ public final class PlayerAccount implements Encodable, Serializable {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("name", this.name);
 		tag.putString("password", this.password);
-		tag.put("uuid", TagUtil.writeUUID(this.uuid));
+		tag.put("uuid", TagUtils.writeUUID(this.uuid));
 		tag.putBoolean("guest", this.guest);
 		return tag;
 	}

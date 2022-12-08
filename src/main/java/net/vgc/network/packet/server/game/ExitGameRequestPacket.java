@@ -27,7 +27,7 @@ public class ExitGameRequestPacket implements ServerPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
 	}
-
+	
 	@Override
 	public void handle(ServerPacketHandler handler) {
 		handler.handleExitGameRequest(this.profile);
@@ -36,5 +36,5 @@ public class ExitGameRequestPacket implements ServerPacket {
 	public GameProfile getProfile() {
 		return this.profile;
 	}
-
+	
 }

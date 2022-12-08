@@ -5,20 +5,24 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.Nullable;
+import com.google.common.collect.Lists;
 
+import net.luis.utils.math.Mth;
 import net.vgc.client.games.wins4.Wins4ClientGame;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.figure.GameFigure;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.game.win.GameResultLine;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
+import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.games.wins4.player.Wins4PlayerType;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.GameActionFailedPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
@@ -27,9 +31,6 @@ import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.server.games.wins4.map.Wins4ServerMap;
-import net.vgc.server.games.wins4.map.field.Wins4ServerField;
-import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
-import net.vgc.server.games.wins4.player.figure.Wins4ServerFigure;
 import net.vgc.server.games.wins4.win.Wins4WinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
@@ -56,11 +57,13 @@ public class Wins4ServerGame extends AbstractServerGame {
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
 			GamePlayer player = this.getPlayerFor(packet.getProfile());
 			if (Objects.equals(this.getPlayer(), player)) {
-				Optional<Wins4ServerField> optionalField = Util.reverseList(this.getMap().getFieldsForColumn(packet.getFieldPos().getColumn())).stream().filter(Wins4ServerField::isEmpty).findFirst();
+				Optional<GameField> optionalField = Util.reverseList(this.getFieldsForColumn(packet.getFieldPos().getColumn())).stream().filter(GameField::isEmpty).findFirst();
 				if (optionalField.isPresent()) {
-					Wins4ServerField field = optionalField.orElseThrow(NullPointerException::new);
+					GameField field = optionalField.orElseThrow(NullPointerException::new);
 					if (field.isEmpty()) {
-						Wins4ServerFigure figure = player.getUnplacedFigure();
+						GameFigure figure = player.getFigure((map, gameFigure) -> {
+							return map.getField(gameFigure) == null;
+						});
 						if (figure != null) {
 							field.setFigure(figure);
 							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
@@ -71,13 +74,13 @@ public class Wins4ServerGame extends AbstractServerGame {
 								LOGGER.debug("Result line of player {} is {}", player.getName(), resultLine);
 								if (resultLine != GameResultLine.EMPTY) {
 									for (GamePlayer gamePlayer : this.getPlayers()) {
-										if (gamePlayer.equals(player))  {
+										if (gamePlayer.equals(player)) {
 											this.handlePlayerGameResult(gamePlayer, GameResult.WIN, resultLine, PlayerScore::increaseWin);
 										} else {
 											this.handlePlayerGameResult(gamePlayer, GameResult.LOSE, resultLine, PlayerScore::increaseLose);
 										}
 									}
-								} else  {
+								} else {
 									LOGGER.warn("Player {} finished the game but there is no result line", player.getName());
 									this.stop();
 								}
@@ -106,9 +109,20 @@ public class Wins4ServerGame extends AbstractServerGame {
 		}
 	}
 	
-	private void handlePlayerGameResult(Wins4ServerPlayer gamePlayer, GameResult result, GameResultLine resultLine, Consumer<PlayerScore> consumer) {
+	private List<GameField> getFieldsForColumn(int column) {
+		if (Mth.isInBounds(column, 0, 6)) {
+			List<GameField> fields = Lists.newArrayList();
+			for (int i = 0; i < 6; i++) {
+				fields.add(this.getMap().getField(Wins4FieldType.DEFAULT, null, Wins4FieldPos.of(i, column)));
+			}
+			return fields;
+		}
+		return Lists.newArrayList();
+	}
+	
+	private void handlePlayerGameResult(GamePlayer gamePlayer, GameResult result, GameResultLine resultLine, Consumer<PlayerScore> consumer) {
 		Player player = gamePlayer.getPlayer();
-		this.broadcastPlayer(new Wins4GameResultPacket(result, resultLine), gamePlayer);
+		this.broadcastPlayer(new GameResultPacket(result, resultLine), gamePlayer);
 		consumer.accept(player.getScore());
 		this.broadcastPlayers(new SyncPlayerDataPacket(player.getProfile(), true, player.getScore()));
 	}

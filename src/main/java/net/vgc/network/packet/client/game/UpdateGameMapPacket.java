@@ -31,7 +31,7 @@ public class UpdateGameMapPacket implements ClientPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeList(this.fieldInfos, buffer::write);
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		
@@ -40,5 +40,5 @@ public class UpdateGameMapPacket implements ClientPacket {
 	public List<GameFieldInfo> getFieldInfos() {
 		return this.fieldInfos;
 	}
-
+	
 }

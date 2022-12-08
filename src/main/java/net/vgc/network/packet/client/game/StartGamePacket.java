@@ -37,7 +37,7 @@ public class StartGamePacket implements ClientPacket {
 		buffer.writeString(this.gameType.getName());
 		buffer.writeList(this.playerInfos, buffer::write);
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleStartGame(this.gameType, this.playerInfos);

@@ -19,12 +19,12 @@ public class CanRollDiceAgainPacket implements ClientPacket {
 	public CanRollDiceAgainPacket(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleCanRollDiceAgain();

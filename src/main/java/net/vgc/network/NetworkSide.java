@@ -18,7 +18,6 @@ import net.vgc.util.EnumRepresentable;
 
 public enum NetworkSide implements EnumRepresentable, PacketListener<Packet<?>> {
 	
-
 	CLIENT("client", 0) {
 		@Override
 		public void handlePacket(Packet<?> packet) {

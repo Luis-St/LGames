@@ -42,7 +42,7 @@ public class UpdateGameFieldPacket implements ClientPacket {
 		buffer.writeInt(this.figureCount);
 		buffer.writeUUID(this.figureUUID);
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		

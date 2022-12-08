@@ -29,6 +29,7 @@ import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.GameActionFailedPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.StartGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.network.packet.client.game.UpdateGameFieldPacket;
@@ -84,9 +85,7 @@ public class Packets {
 		map.put(i++, CanSelectGameFieldPacket.class);
 		map.put(i++, UpdateGameFieldPacket.class);
 		map.put(i++, UpdateGameMapPacket.class);
-//		map.put(i++, TTTGameResultPacket.class);
-//		map.put(i++, LudoGameResultPacket.class);
-//		map.put(i++, Wins4GameResultPacket.class);
+		map.put(i++, GameResultPacket.class);
 		map.put(i++, ExitGameRequestPacket.class);
 		map.put(i++, ExitGamePacket.class);
 		map.put(i++, StopGamePacket.class);

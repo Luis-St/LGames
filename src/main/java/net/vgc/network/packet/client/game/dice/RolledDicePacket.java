@@ -10,7 +10,6 @@ import net.vgc.network.packet.client.ClientPacket;
  *
  */
 
-
 public class RolledDicePacket implements ClientPacket {
 	
 	private final int count;
@@ -27,7 +26,7 @@ public class RolledDicePacket implements ClientPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeInt(this.count);
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleRolledDice(this.count);

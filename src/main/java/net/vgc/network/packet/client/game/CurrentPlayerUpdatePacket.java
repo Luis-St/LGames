@@ -28,7 +28,7 @@ public class CurrentPlayerUpdatePacket implements ClientPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleCurrentPlayerUpdate(this.profile);
@@ -37,5 +37,5 @@ public class CurrentPlayerUpdatePacket implements ClientPacket {
 	public GameProfile getProfile() {
 		return this.profile;
 	}
-
+	
 }

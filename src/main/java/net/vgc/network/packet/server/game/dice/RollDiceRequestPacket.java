@@ -11,7 +11,6 @@ import net.vgc.server.network.ServerPacketHandler;
  *
  */
 
-
 public class RollDiceRequestPacket implements ServerPacket {
 	
 	private final GameProfile profile;
@@ -23,12 +22,12 @@ public class RollDiceRequestPacket implements ServerPacket {
 	public RollDiceRequestPacket(FriendlyByteBuffer buffer) {
 		this.profile = buffer.read(GameProfile.class);
 	}
-
+	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
 	}
-
+	
 	@Override
 	public void handle(ServerPacketHandler handler) {
 		handler.handleRollDiceRequest(this.profile);

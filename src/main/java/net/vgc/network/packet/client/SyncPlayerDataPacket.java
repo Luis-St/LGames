@@ -45,7 +45,7 @@ public class SyncPlayerDataPacket implements ClientPacket {
 		buffer.writeBoolean(this.playing);
 		buffer.write(this.score);
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleSyncPlayerData(this.profile, this.playing, this.score);
@@ -62,5 +62,5 @@ public class SyncPlayerDataPacket implements ClientPacket {
 	public PlayerScore getScore() {
 		return this.score;
 	}
-
+	
 }

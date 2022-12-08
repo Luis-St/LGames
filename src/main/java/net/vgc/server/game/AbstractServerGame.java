@@ -36,7 +36,8 @@ public abstract class AbstractServerGame extends AbstractGame implements PacketL
 	private final DedicatedServer server;
 	private final WinHandler winHandler;
 	
-	protected <T extends GamePlayerType> AbstractServerGame(DedicatedServer server, BiFunction<DedicatedServer, Game, GameMap> mapFunction, List<ServerPlayer> players, T[] playerTypes, TriFunction<Game, Player, T, GamePlayer> playerFunction, WinHandler winHandler) {
+	protected <T extends GamePlayerType> AbstractServerGame(DedicatedServer server, BiFunction<DedicatedServer, Game, GameMap> mapFunction, List<ServerPlayer> players, T[] playerTypes, TriFunction<Game, Player, T, GamePlayer> playerFunction,
+		WinHandler winHandler) {
 		super((game) -> {
 			return mapFunction.apply(server, game);
 		}, (game) -> {

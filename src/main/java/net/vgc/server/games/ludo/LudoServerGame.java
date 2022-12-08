@@ -4,24 +4,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
 
 import net.vgc.client.games.ludo.LudoClientGame;
+import net.vgc.game.GameResult;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.field.GameField;
-import net.vgc.game.getMap().field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
-import net.vgc.games.ludo.getMap().field.LudoFieldPos;
-import net.vgc.games.ludo.getMap().field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.server.ServerPacket;
@@ -30,10 +27,7 @@ import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ludo.dice.LudoDiceHandler;
 import net.vgc.server.games.ludo.map.LudoServerMap;
-import net.vgc.server.games.ludo.getMap().LudoServerMap;
-import net.vgc.server.games.ludo.getMap().field.LudoServerField;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
-import net.vgc.server.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.server.games.ludo.win.LudoWinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
@@ -126,7 +120,7 @@ public class LudoServerGame extends AbstractServerGame {
 											score.setScore(this.getWinHandler().getScoreFor(this, gamePlayer));
 											this.broadcastPlayers(new SyncPlayerDataPacket(gamePlayer.getPlayer().getProfile(), true, score));
 										}
-										this.broadcastPlayers(new LudoGameResultPacket());
+										this.broadcastPlayers(new GameResultPacket(GameResult.NO, null));
 									}
 								} else if (this.diceHandler.canRollAfterMove(player, currentField, nextField, count)) {
 									player.setRollCount(1);

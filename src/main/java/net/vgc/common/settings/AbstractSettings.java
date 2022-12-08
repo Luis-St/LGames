@@ -7,9 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.luis.utils.data.tag.Tag;
-import net.luis.utils.data.tag.TagUtil;
+import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.data.serialization.Serializable;
+import net.vgc.data.tag.TagUtil;
 
 /**
  *
@@ -24,7 +25,7 @@ public abstract class AbstractSettings implements Serializable {
 	private final List<Setting<?>> settings;
 	
 	protected AbstractSettings(CompoundTag tag) {
-		this(TagUtil.readList(tag.getList("settings", Tag.COMPOUND_TAG), (settingTag) -> {
+		this(TagUtils.readList(tag.getList("settings", Tag.COMPOUND_TAG), (settingTag) -> {
 			return new Setting<>((CompoundTag) settingTag);
 		}));
 	}

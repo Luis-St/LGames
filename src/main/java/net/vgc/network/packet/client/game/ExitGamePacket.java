@@ -22,12 +22,12 @@ public class ExitGamePacket implements ClientPacket {
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-
+		
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleExitGame();
 	}
-
+	
 }

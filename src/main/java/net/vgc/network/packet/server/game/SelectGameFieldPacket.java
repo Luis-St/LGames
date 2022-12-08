@@ -37,7 +37,7 @@ public class SelectGameFieldPacket implements ServerPacket {
 		buffer.writeEnumInterface(this.fieldType);
 		buffer.writeInterface(this.fieldPos);
 	}
-
+	
 	@Override
 	public void handle(ServerPacketHandler handler) {
 		
@@ -54,5 +54,5 @@ public class SelectGameFieldPacket implements ServerPacket {
 	public GameFieldPos getFieldPos() {
 		return this.fieldPos;
 	}
-
+	
 }

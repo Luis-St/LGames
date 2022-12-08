@@ -14,6 +14,7 @@ import net.vgc.client.games.ludo.map.LudoClientMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
@@ -85,7 +86,7 @@ public class LudoScreen extends GameScreen {
 		this.playerInfo.update();
 		if (clientPacket instanceof RolledDicePacket packet) {
 			this.diceButton.setCount(packet.getCount());
-		} else if (clientPacket instanceof LudoGameResultPacket packet) {
+		} else if (clientPacket instanceof GameResultPacket packet) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}

@@ -19,12 +19,12 @@ public class CancelPlayAgainGameRequestPacket implements ClientPacket {
 	public CancelPlayAgainGameRequestPacket(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleCancelPlayAgainGameRequest();

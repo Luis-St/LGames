@@ -8,6 +8,7 @@ import net.vgc.client.games.ttt.TTTClientGame;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
+import net.vgc.game.player.figure.GameFigure;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
@@ -15,6 +16,7 @@ import net.vgc.game.win.GameResultLine;
 import net.vgc.games.ttt.player.TTTPlayerType;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.GameActionFailedPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
@@ -23,7 +25,6 @@ import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ttt.map.TTTServerMap;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
-import net.vgc.server.games.ttt.player.figure.TTTServerFigure;
 import net.vgc.server.games.ttt.win.TTTWinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
@@ -53,7 +54,9 @@ public class TTTServerGame extends AbstractServerGame {
 				GameField field = this.getMap().getField(null, null, packet.getFieldPos());
 				if (field != null) {
 					if (field.isEmpty()) {
-						TTTServerFigure figure = player.getUnplacedFigure();
+						GameFigure figure = player.getFigure((map, gameFigure) -> {
+							return map.getField(gameFigure) == null;
+						});
 						if (figure != null) {
 							field.setFigure(figure);
 							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
@@ -63,7 +66,7 @@ public class TTTServerGame extends AbstractServerGame {
 								GameResultLine resultLine = this.getWinHandler().getResultLine(this.getMap());
 								if (resultLine != GameResultLine.EMPTY) {
 									for (GamePlayer gamePlayer : this.getPlayers()) {
-										if (gamePlayer.equals(player))  {
+										if (gamePlayer.equals(player)) {
 											this.handlePlayerGameResult(gamePlayer, GameResult.WIN, resultLine, PlayerScore::increaseWin);
 										} else {
 											this.handlePlayerGameResult(gamePlayer, GameResult.LOSE, resultLine, PlayerScore::increaseLose);
@@ -98,9 +101,9 @@ public class TTTServerGame extends AbstractServerGame {
 		}
 	}
 	
-	private void handlePlayerGameResult(TTTServerPlayer gamePlayer, GameResult result, GameResultLine resultLine, Consumer<PlayerScore> consumer) {
+	private void handlePlayerGameResult(GamePlayer gamePlayer, GameResult result, GameResultLine resultLine, Consumer<PlayerScore> consumer) {
 		Player player = gamePlayer.getPlayer();
-		this.broadcastPlayer(new TTTGameResultPacket(result, resultLine), gamePlayer);
+		this.broadcastPlayer(new GameResultPacket(result, resultLine), gamePlayer);
 		consumer.accept(player.getScore());
 		this.broadcastPlayers(new SyncPlayerDataPacket(player.getProfile(), true, player.getScore()));
 	}

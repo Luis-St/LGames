@@ -27,7 +27,7 @@ public class PlayAgainGameRequestPacket implements ServerPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
 	}
-
+	
 	@Override
 	public void handle(ServerPacketHandler handler) {
 		handler.handlePlayAgainGameRequest(this.profile);
@@ -36,5 +36,5 @@ public class PlayAgainGameRequestPacket implements ServerPacket {
 	public GameProfile getProfile() {
 		return this.profile;
 	}
-
+	
 }

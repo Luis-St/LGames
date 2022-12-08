@@ -177,7 +177,7 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 	public void handleExitGameRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {
-			if(!game.removePlayer(game.getPlayerFor(profile), true)) {
+			if (!game.removePlayer(game.getPlayerFor(profile), true)) {
 				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getInfoName());
 			}
 		} else {

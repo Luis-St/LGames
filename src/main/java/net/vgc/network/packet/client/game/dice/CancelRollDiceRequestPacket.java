@@ -10,7 +10,6 @@ import net.vgc.network.packet.client.ClientPacket;
  *
  */
 
-
 public class CancelRollDiceRequestPacket implements ClientPacket {
 	
 	public CancelRollDiceRequestPacket() {
@@ -20,12 +19,12 @@ public class CancelRollDiceRequestPacket implements ClientPacket {
 	public CancelRollDiceRequestPacket(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		
 	}
-
+	
 	@Override
 	public void handle(ClientPacketHandler handler) {
 		handler.handleCancelRollDiceRequest();

@@ -49,24 +49,28 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} break;
+					}
+						break;
 					case USER_LOGIN: {
 						LOGGER.debug("Successfully logged in");
 						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} break;
+					}
+						break;
 					case GUEST_LOGIN: {
 						LOGGER.debug("Successfully logged in as a guest");
 						this.client.login(account);
 						if (loginWindow != null) {
 							loginWindow.handleLoggedIn(loginType);
 						}
-					} break;
+					}
+						break;
 					case UNKNOWN: {
 						LOGGER.warn("Fail to log in");
-					} break;
+					}
+						break;
 				}
 			} else {
 				LOGGER.warn("Fail to log in");
@@ -100,7 +104,8 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handlePlayerAdd(GameProfile profile) {;
+	public void handlePlayerAdd(GameProfile profile) {
+		;
 		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			if (this.client.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
@@ -241,7 +246,8 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
-	public void handleStopGame() {;
+	public void handleStopGame() {
+		;
 		LOGGER.info("Stopping the current game");
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			player.setPlaying(false);
