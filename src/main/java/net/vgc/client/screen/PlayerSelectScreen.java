@@ -14,11 +14,14 @@ import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.game.type.GameType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.Util;
 
@@ -28,6 +31,7 @@ import net.vgc.util.Util;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class PlayerSelectScreen extends Screen {
 	
 	private final GameType<?, ?> gameType;
@@ -89,7 +93,7 @@ public class PlayerSelectScreen extends Screen {
 		}
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);

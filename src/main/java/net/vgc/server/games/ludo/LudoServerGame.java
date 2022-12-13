@@ -16,11 +16,14 @@ import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.games.ludo.player.LudoPlayerType;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
 import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.server.dedicated.DedicatedServer;
@@ -38,6 +41,7 @@ import net.vgc.util.Util;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getServer#getGame")
 public class LudoServerGame extends AbstractServerGame {
 	
 	private final LudoDiceHandler diceHandler;
@@ -95,7 +99,7 @@ public class LudoServerGame extends AbstractServerGame {
 		return this.diceHandler;
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ServerPacket serverPacket) {
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
 			GamePlayer player = this.getPlayerFor(packet.getProfile());

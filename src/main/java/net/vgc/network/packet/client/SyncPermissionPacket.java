@@ -2,6 +2,7 @@ package net.vgc.network.packet.client;
 
 import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
 
 /**
@@ -32,6 +33,7 @@ public class SyncPermissionPacket implements ClientPacket {
 		handler.handleSyncPermission(this.profile);
 	}
 	
+	@PacketGetter
 	public GameProfile getProfile() {
 		return this.profile;
 	}

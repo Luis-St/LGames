@@ -1,8 +1,8 @@
 package net.vgc.network.packet;
 
 import javafx.application.Platform;
-import net.vgc.network.Network;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketInvoker;
 
 /**
  *
@@ -17,11 +17,11 @@ public interface Packet<T extends PacketHandler> {
 	default void handleLater(T listener) {
 		if (Platform.isFxApplicationThread()) {
 			this.handle(listener);
-			Network.INSTANCE.handlePacket(this);
+			PacketInvoker.invoke(this);
 		} else {
 			Platform.runLater(() -> {
 				this.handle(listener);
-				Network.INSTANCE.handlePacket(this);
+				PacketInvoker.invoke(this);
 			});
 		}
 	}

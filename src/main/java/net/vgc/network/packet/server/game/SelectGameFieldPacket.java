@@ -3,6 +3,7 @@ package net.vgc.network.packet.server.game;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketHandler;
@@ -43,14 +44,17 @@ public class SelectGameFieldPacket implements ServerPacket {
 		
 	}
 	
+	@PacketGetter
 	public GameProfile getProfile() {
 		return this.profile;
 	}
 	
+	@PacketGetter
 	public GameFieldType getFieldType() {
 		return this.fieldType;
 	}
 	
+	@PacketGetter
 	public GameFieldPos getFieldPos() {
 		return this.fieldPos;
 	}

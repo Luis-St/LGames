@@ -28,9 +28,12 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
 
@@ -40,6 +43,7 @@ import net.vgc.util.Util;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
 public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWrapper {
 	
 	private final ToggleGroup group;
@@ -170,7 +174,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		return -1;
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {

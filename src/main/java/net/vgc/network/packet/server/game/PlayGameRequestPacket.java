@@ -7,6 +7,7 @@ import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.server.network.ServerPacketHandler;
@@ -47,10 +48,12 @@ public class PlayGameRequestPacket implements ServerPacket {
 		handler.handlePlayGameRequest(this.gameType, this.profiles);
 	}
 	
+	@PacketGetter
 	public GameType<?, ?> getGameType() {
 		return this.gameType;
 	}
 	
+	@PacketGetter
 	public List<GameProfile> getProfiles() {
 		return this.profiles;
 	}

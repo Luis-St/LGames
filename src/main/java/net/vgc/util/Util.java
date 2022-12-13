@@ -50,7 +50,6 @@ public class Util {
 		return timeline;
 	}
 	
-	@Deprecated // check the delayed packet sending
 	public static void runDelayed(String name, int millis, Runnable action) {
 		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(millis), name, (event) -> {
 			action.run();

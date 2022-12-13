@@ -3,6 +3,7 @@ package net.vgc.network.packet.client.game.dice;
 import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.listener.PacketGetter;
 
 /**
  *
@@ -32,6 +33,7 @@ public class RolledDicePacket implements ClientPacket {
 		handler.handleRolledDice(this.count);
 	}
 	
+	@PacketGetter
 	public int getCount() {
 		return this.count;
 	}

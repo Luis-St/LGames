@@ -4,6 +4,7 @@ import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 
 /**
  *
@@ -41,14 +42,17 @@ public class ClientLoggedInPacket implements ClientPacket {
 		handler.handleClientLoggedIn(this.loginType, this.account, this.successful);
 	}
 	
+	@PacketGetter
 	public LoginType getLoginType() {
 		return this.loginType;
 	}
 	
+	@PacketGetter
 	public PlayerAccount getAccount() {
 		return this.account;
 	}
 	
+	@PacketGetter
 	public boolean isSuccessful() {
 		return this.successful;
 	}

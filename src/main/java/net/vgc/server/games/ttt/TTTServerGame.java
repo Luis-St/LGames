@@ -14,10 +14,13 @@ import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.game.win.GameResultLine;
 import net.vgc.games.ttt.player.TTTPlayerType;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.GameActionFailedPacket;
 import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.player.Player;
@@ -35,6 +38,7 @@ import net.vgc.util.Util;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getServer#getGame")
 public class TTTServerGame extends AbstractServerGame {
 	
 	public TTTServerGame(DedicatedServer server, List<ServerPlayer> players) {
@@ -46,7 +50,7 @@ public class TTTServerGame extends AbstractServerGame {
 		return GameTypes.TIC_TAC_TOE;
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ServerPacket serverPacket) {
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
 			GamePlayer player = this.getPlayerFor(packet.getProfile());

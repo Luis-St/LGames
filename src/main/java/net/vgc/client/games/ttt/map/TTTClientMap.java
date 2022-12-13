@@ -28,9 +28,12 @@ import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.game.win.GameResultLine;
 import net.vgc.games.ttt.map.field.TTTFieldPos;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 
 /**
@@ -39,6 +42,7 @@ import net.vgc.player.GameProfile;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
 public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
 	private final ToggleGroup group;
@@ -167,7 +171,7 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		return null;
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {

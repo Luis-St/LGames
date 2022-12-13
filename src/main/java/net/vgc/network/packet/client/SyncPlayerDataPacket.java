@@ -4,6 +4,7 @@ import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 
@@ -51,14 +52,17 @@ public class SyncPlayerDataPacket implements ClientPacket {
 		handler.handleSyncPlayerData(this.profile, this.playing, this.score);
 	}
 	
+	@PacketGetter
 	public GameProfile getProfile() {
 		return this.profile;
 	}
 	
+	@PacketGetter
 	public boolean isPlaying() {
 		return this.playing;
 	}
 	
+	@PacketGetter
 	public PlayerScore getScore() {
 		return this.score;
 	}

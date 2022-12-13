@@ -15,10 +15,13 @@ import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.screen.game.GameScreen;
 import net.vgc.game.type.GameTypes;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.util.Util;
 
 /**
@@ -27,6 +30,7 @@ import net.vgc.util.Util;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class LobbyScreen extends GameScreen {
 	
 	private Menu playerMenu;
@@ -75,7 +79,7 @@ public class LobbyScreen extends GameScreen {
 		}
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);

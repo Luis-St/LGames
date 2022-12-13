@@ -13,9 +13,12 @@ import net.vgc.client.games.ludo.LudoClientGame;
 import net.vgc.client.games.ludo.map.LudoClientMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
@@ -26,6 +29,7 @@ import net.vgc.network.packet.server.game.SelectGameFieldPacket;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class LudoScreen extends GameScreen {
 	
 	private final LudoClientGame game;
@@ -81,7 +85,7 @@ public class LudoScreen extends GameScreen {
 		
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
 		if (clientPacket instanceof RolledDicePacket packet) {

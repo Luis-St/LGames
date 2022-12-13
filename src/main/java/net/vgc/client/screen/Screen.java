@@ -9,8 +9,6 @@ import net.vgc.client.Client;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Showable;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.PacketListener;
-import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.util.Tickable;
 
 /**
@@ -19,7 +17,7 @@ import net.vgc.util.Tickable;
  *
  */
 
-public abstract class Screen implements Showable, Tickable, PacketListener<ClientPacket> {
+public abstract class Screen implements Showable, Tickable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
 	
@@ -38,11 +36,6 @@ public abstract class Screen implements Showable, Tickable, PacketListener<Clien
 	
 	@Override
 	public void tick() {
-		
-	}
-	
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
 		
 	}
 	

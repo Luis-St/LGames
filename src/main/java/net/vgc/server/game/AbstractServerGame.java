@@ -14,12 +14,10 @@ import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.win.WinHandler;
-import net.vgc.network.packet.PacketListener;
 import net.vgc.network.packet.client.SyncPlayerDataPacket;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
-import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.Player;
 import net.vgc.server.dedicated.DedicatedServer;
 import net.vgc.server.player.ServerPlayer;
@@ -31,7 +29,7 @@ import net.vgc.util.Util;
  *
  */
 
-public abstract class AbstractServerGame extends AbstractGame implements PacketListener<ServerPacket> {
+public abstract class AbstractServerGame extends AbstractGame {
 	
 	private final DedicatedServer server;
 	private final WinHandler winHandler;

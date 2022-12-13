@@ -3,6 +3,7 @@ package net.vgc.network.packet.account;
 import net.vgc.account.PlayerAccount;
 import net.vgc.account.network.AccountServerPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 
 /**
  *
@@ -32,6 +33,7 @@ public class ClientExitPacket implements AccountPacket {
 		handler.handleClientLogoutExit(this.account.getName(), this.account.getPassword());
 	}
 	
+	@PacketGetter
 	public PlayerAccount getAccount() {
 		return this.account;
 	}

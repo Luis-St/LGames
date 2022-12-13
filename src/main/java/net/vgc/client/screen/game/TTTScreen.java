@@ -13,8 +13,11 @@ import net.vgc.client.games.ttt.map.TTTClientMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.GameResultPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
@@ -25,6 +28,7 @@ import net.vgc.network.packet.server.game.SelectGameFieldPacket;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class TTTScreen extends GameScreen {
 	
 	private final TTTClientGame game;
@@ -73,7 +77,7 @@ public class TTTScreen extends GameScreen {
 		}
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
 		if (clientPacket instanceof GameResultPacket packet) {

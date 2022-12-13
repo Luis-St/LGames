@@ -4,6 +4,7 @@ import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
 
 /**
@@ -34,6 +35,7 @@ public class CurrentPlayerUpdatePacket implements ClientPacket {
 		handler.handleCurrentPlayerUpdate(this.profile);
 	}
 	
+	@PacketGetter
 	public GameProfile getProfile() {
 		return this.profile;
 	}

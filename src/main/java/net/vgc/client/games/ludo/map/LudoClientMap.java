@@ -29,8 +29,11 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldPos;
 import net.vgc.games.ludo.map.field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
 
@@ -40,6 +43,7 @@ import net.vgc.util.Util;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
 public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
 	private final ToggleGroup group;
@@ -319,7 +323,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 		return null;
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {

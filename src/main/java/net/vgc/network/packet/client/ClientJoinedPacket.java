@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
 
@@ -40,6 +41,7 @@ public class ClientJoinedPacket implements ClientPacket {
 		handler.handleClientJoined(this.profiles);
 	}
 	
+	@PacketGetter
 	public List<GameProfile> getProfiles() {
 		return this.profiles;
 	}

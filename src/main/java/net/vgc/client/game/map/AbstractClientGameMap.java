@@ -8,8 +8,6 @@ import net.vgc.game.map.AbstractGameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.GameFigure;
-import net.vgc.network.packet.PacketListener;
-import net.vgc.network.packet.client.ClientPacket;
 
 /**
  *
@@ -17,7 +15,7 @@ import net.vgc.network.packet.client.ClientPacket;
  *
  */
 
-public abstract class AbstractClientGameMap extends AbstractGameMap implements PacketListener<ClientPacket> {
+public abstract class AbstractClientGameMap extends AbstractGameMap {
 	
 	private final Client client;
 	

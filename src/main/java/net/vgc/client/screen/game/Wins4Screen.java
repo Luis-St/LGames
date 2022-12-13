@@ -13,8 +13,11 @@ import net.vgc.client.games.wins4.map.Wins4ClientMap;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.game.GameResultPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
@@ -25,6 +28,7 @@ import net.vgc.network.packet.server.game.SelectGameFieldPacket;
  *
  */
 
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class Wins4Screen extends GameScreen {
 	
 	private final Wins4ClientGame game;
@@ -78,7 +82,7 @@ public class Wins4Screen extends GameScreen {
 		}
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
 		if (clientPacket instanceof GameResultPacket packet) {

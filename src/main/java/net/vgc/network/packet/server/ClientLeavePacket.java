@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import net.vgc.account.PlayerAccount;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.server.network.ServerPacketHandler;
 import net.vgc.util.Util;
 
@@ -35,6 +36,7 @@ public class ClientLeavePacket implements ServerPacket {
 		handler.handleClientLeave(this.uuid);
 	}
 	
+	@PacketGetter
 	public UUID getUUID() {
 		return this.uuid;
 	}
