@@ -6,7 +6,7 @@ import net.vgc.language.TranslationKey;
 import net.vgc.network.Connection;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 
 /**
  *
@@ -16,10 +16,10 @@ import net.vgc.server.dedicated.DedicatedServer;
 
 public class ServerPlayer extends Player {
 	
-	private final DedicatedServer server;
+	private final Server server;
 	public Connection connection;
 	
-	public ServerPlayer(GameProfile profile, PlayerScore score, DedicatedServer server) {
+	public ServerPlayer(GameProfile profile, PlayerScore score, Server server) {
 		super(profile, score);
 		this.server = server;
 	}
@@ -46,7 +46,7 @@ public class ServerPlayer extends Player {
 		this.server.refreshPlayers();
 	}
 	
-	public DedicatedServer getServer() {
+	public Server getServer() {
 		return this.server;
 	}
 	

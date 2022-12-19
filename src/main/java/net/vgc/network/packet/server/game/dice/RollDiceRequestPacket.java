@@ -4,7 +4,6 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
-import net.vgc.server.network.ServerPacketHandler;
 
 /**
  *
@@ -27,11 +26,6 @@ public class RollDiceRequestPacket implements ServerPacket {
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
-	}
-	
-	@Override
-	public void handle(ServerPacketHandler handler) {
-		handler.handleRollDiceRequest(this.profile);
 	}
 	
 	@PacketGetter

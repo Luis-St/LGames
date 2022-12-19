@@ -179,7 +179,7 @@ public class LoginWindow {
 		return pane;
 	}
 	
-	private void connectAndSend(Packet<?> packet) {
+	private void connectAndSend(Packet packet) {
 		ConnectionHandler handler = this.client.getAccountHandler();
 		if (!handler.isConnected()) {
 			try {

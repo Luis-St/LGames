@@ -109,7 +109,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 	}
 	
 	@Override
-	public final void broadcastPlayer(Packet<?> packet, GamePlayer gamePlayer) {
+	public final void broadcastPlayer(Packet packet, GamePlayer gamePlayer) {
 		LOGGER.warn("Can not broadcast packet {} to player {} on client", packet.getClass().getSimpleName(), gamePlayer.getName());
 	}
 	

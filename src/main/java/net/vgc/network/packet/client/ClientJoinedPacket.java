@@ -3,7 +3,6 @@ package net.vgc.network.packet.client;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
@@ -34,11 +33,6 @@ public class ClientJoinedPacket implements ClientPacket {
 		buffer.writeList(this.profiles, (profile) -> {
 			buffer.write(profile);
 		});
-	}
-	
-	@Override
-	public void handle(ClientPacketHandler handler) {
-		handler.handleClientJoined(this.profiles);
 	}
 	
 	@PacketGetter

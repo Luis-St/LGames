@@ -30,7 +30,7 @@ import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.player.Player;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.server.games.wins4.map.Wins4ServerMap;
@@ -44,10 +44,10 @@ import net.vgc.util.Util;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getServer#getGame")
+@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getGame")
 public class Wins4ServerGame extends AbstractServerGame {
 	
-	public Wins4ServerGame(DedicatedServer server, List<ServerPlayer> players) {
+	public Wins4ServerGame(Server server, List<ServerPlayer> players) {
 		super(server, Wins4ServerMap::new, players, Wins4PlayerType.values(), TTTServerPlayer::new, new Wins4WinHandler());
 	}
 	

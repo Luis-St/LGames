@@ -26,7 +26,7 @@ import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ludo.dice.LudoDiceHandler;
 import net.vgc.server.games.ludo.map.LudoServerMap;
@@ -41,12 +41,12 @@ import net.vgc.util.Util;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getServer#getGame")
+@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getGame")
 public class LudoServerGame extends AbstractServerGame {
 	
 	private final LudoDiceHandler diceHandler;
 	
-	public LudoServerGame(DedicatedServer server, List<ServerPlayer> players) {
+	public LudoServerGame(Server server, List<ServerPlayer> players) {
 		super(server, LudoServerMap::new, players, LudoPlayerType.values(), (game, player, playerType) -> {
 			return new LudoServerPlayer(game, player, playerType, 4);
 		}, new LudoWinHandler());

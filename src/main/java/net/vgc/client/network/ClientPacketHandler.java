@@ -2,6 +2,9 @@ package net.vgc.client.network;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.luis.utils.math.Mth;
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
@@ -18,7 +21,27 @@ import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.AbstractPacketHandler;
+import net.vgc.network.packet.PacketHandler;
+import net.vgc.network.packet.client.ClientJoinedPacket;
+import net.vgc.network.packet.client.ClientLoggedInPacket;
+import net.vgc.network.packet.client.ClientLoggedOutPacket;
+import net.vgc.network.packet.client.PlayerAddPacket;
+import net.vgc.network.packet.client.PlayerRemovePacket;
+import net.vgc.network.packet.client.ServerClosedPacket;
+import net.vgc.network.packet.client.SyncPermissionPacket;
+import net.vgc.network.packet.client.SyncPlayerDataPacket;
+import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
+import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
+import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
+import net.vgc.network.packet.client.game.ExitGamePacket;
+import net.vgc.network.packet.client.game.GameActionFailedPacket;
+import net.vgc.network.packet.client.game.StartGamePacket;
+import net.vgc.network.packet.client.game.StopGamePacket;
+import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
+import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
+import net.vgc.network.packet.client.game.dice.RolledDicePacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.util.Util;
@@ -29,15 +52,18 @@ import net.vgc.util.Util;
  *
  */
 
-public class ClientPacketHandler extends AbstractPacketHandler {
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getPacketHandler")
+public class ClientPacketHandler implements PacketHandler {
+	
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private final Client client;
 	
-	public ClientPacketHandler(Client client, NetworkSide networkSide) {
-		super(networkSide);
+	public ClientPacketHandler(Client client) {
 		this.client = client;
 	}
 	
+	@PacketListener(ClientLoggedInPacket.class)
 	public void handleClientLoggedIn(LoginType loginType, PlayerAccount account, boolean successful) {
 		LoginWindow loginWindow = this.client.getLoginWindow();
 		if (!this.client.isLoggedIn()) {
@@ -80,6 +106,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(ClientLoggedOutPacket.class)
 	public void handleClientLoggedOut(boolean successful) {
 		LoginWindow loginWindow = this.client.getLoginWindow();
 		if (successful) {
@@ -93,6 +120,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(ClientJoinedPacket.class)
 	public void handleClientJoined(List<GameProfile> profiles) {
 		for (GameProfile profile : profiles) {
 			if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
@@ -104,6 +132,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
+	@PacketListener(PlayerAddPacket.class)
 	public void handlePlayerAdd(GameProfile profile) {
 		;
 		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
@@ -118,6 +147,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(PlayerRemovePacket.class)
 	public void handlePlayerRemove(GameProfile profile) {
 		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
 			this.client.removePlayer();
@@ -126,6 +156,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(SyncPermissionPacket.class)
 	public void handleSyncPermission(GameProfile profile) {
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player.getProfile().equals(profile)) {
@@ -138,6 +169,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		LOGGER.info("Sync admins");
 	}
 	
+	@PacketListener(SyncPlayerDataPacket.class)
 	public void handleSyncPlayerData(GameProfile profile, boolean playing, PlayerScore score) {
 		AbstractClientPlayer player = this.client.getPlayer(profile);
 		if (player != null) {
@@ -149,11 +181,13 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(CancelRollDiceRequestPacket.class)
 	public void handleCancelRollDiceRequest() {
 		LOGGER.info("Roll dice request was canceled from the server");
 		this.client.getPlayer().setCanRollDice(false);
 	}
 	
+	@PacketListener(RolledDicePacket.class)
 	public void handleRolledDice(int count) {
 		LocalPlayer player = this.client.getPlayer();
 		if (Mth.isInBounds(count, 1, 6)) {
@@ -165,10 +199,12 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(CanRollDiceAgainPacket.class)
 	public void handleCanRollDiceAgain() {
 		this.client.getPlayer().setCanRollDice(true);
 	}
 	
+	@PacketListener(CurrentPlayerUpdatePacket.class)
 	public void handleCurrentPlayerUpdate(GameProfile profile) {
 		boolean flag = false;
 		if (this.client.getGame() != null) {
@@ -193,6 +229,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(StartGamePacket.class)
 	public <S extends Game, C extends Game> void handleStartGame(GameType<S, C> gameType, List<GamePlayerInfo> playerInfos) {
 		if (this.client.getGame() == null) {
 			C game = gameType.createClientGame(this.client, playerInfos);
@@ -215,6 +252,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(CanSelectGameFieldPacket.class)
 	public void handleCanSelectGameField() {
 		LocalPlayer player = this.client.getPlayer();
 		if (player.isCurrent()) {
@@ -222,14 +260,17 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(GameActionFailedPacket.class)
 	public void handleGameActionFailed() {
 		this.client.getPlayer().setCurrent(true);
 	}
 	
+	@PacketListener(CancelPlayAgainGameRequestPacket.class)
 	public void handleCancelPlayAgainGameRequest() {
 		LOGGER.warn("The request to play again was canceled by the server");
 	}
 	
+	@PacketListener(ExitGamePacket.class)
 	public void handleExitGame() {
 		LOGGER.info("Exit the current game");
 		if (this.client.getPlayer().isPlaying()) {
@@ -246,8 +287,8 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
+	@PacketListener(StopGamePacket.class)
 	public void handleStopGame() {
-		;
 		LOGGER.info("Stopping the current game");
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			player.setPlaying(false);
@@ -261,6 +302,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
 		this.client.setScreen(new LobbyScreen());
 	}
 	
+	@PacketListener(ServerClosedPacket.class)
 	public void handleServerClosed() {
 		this.client.getServerHandler().close();
 		this.client.removePlayer();

@@ -28,7 +28,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
 		if (i != 0) {
 			FriendlyByteBuffer buffer = new FriendlyByteBuffer(input);
 			int id = buffer.readInt();
-			Packet<?> packet = Packets.getPacket(id, buffer);
+			Packet packet = Packets.getPacket(id, buffer);
 			if (packet == null) {
 				LOGGER.error("Fail to get packet for id {}", id);
 				throw new IOException("Fail to get packet for id: " + id);

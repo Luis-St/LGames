@@ -2,10 +2,10 @@ package net.vgc.network.packet.client.game;
 
 import java.util.List;
 
-import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.listener.PacketGetter;
 
 /**
  *
@@ -32,11 +32,7 @@ public class UpdateGameMapPacket implements ClientPacket {
 		buffer.writeList(this.fieldInfos, buffer::write);
 	}
 	
-	@Override
-	public void handle(ClientPacketHandler handler) {
-		
-	}
-	
+	@PacketGetter
 	public List<GameFieldInfo> getFieldInfos() {
 		return this.fieldInfos;
 	}

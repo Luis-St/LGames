@@ -24,7 +24,7 @@ import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.player.Player;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ttt.map.TTTServerMap;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
@@ -38,10 +38,10 @@ import net.vgc.util.Util;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getServer#getGame")
+@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getGame")
 public class TTTServerGame extends AbstractServerGame {
 	
-	public TTTServerGame(DedicatedServer server, List<ServerPlayer> players) {
+	public TTTServerGame(Server server, List<ServerPlayer> players) {
 		super(server, TTTServerMap::new, players, TTTPlayerType.values(), TTTServerPlayer::new, new TTTWinHandler());
 	}
 	

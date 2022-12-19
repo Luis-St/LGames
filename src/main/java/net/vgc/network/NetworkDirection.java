@@ -15,25 +15,25 @@ public enum NetworkDirection {
 	
 	SERVER_TO_CLIENT("server_to_client", NetworkSide.SERVER, NetworkSide.CLIENT) {
 		@Override
-		public boolean canSendPacket(Packet<?> packet) {
+		public boolean canSendPacket(Packet packet) {
 			return packet instanceof ClientPacket;
 		}
 	},
 	CLIENT_TO_SERVER("client_to_server", NetworkSide.CLIENT, NetworkSide.SERVER) {
 		@Override
-		public boolean canSendPacket(Packet<?> packet) {
+		public boolean canSendPacket(Packet packet) {
 			return packet instanceof ServerPacket;
 		}
 	},
 	ACCOUNT_TO_CLIENT("account_to_client", NetworkSide.ACCOUNT, NetworkSide.CLIENT) {
 		@Override
-		public boolean canSendPacket(Packet<?> packet) {
+		public boolean canSendPacket(Packet packet) {
 			return packet instanceof ClientPacket;
 		}
 	},
 	CLIENT_TO_ACCOUNT("client_to_account", NetworkSide.CLIENT, NetworkSide.ACCOUNT) {
 		@Override
-		public boolean canSendPacket(Packet<?> packet) {
+		public boolean canSendPacket(Packet packet) {
 			return packet instanceof AccountPacket;
 		}
 	};
@@ -60,7 +60,7 @@ public enum NetworkDirection {
 		return this.to;
 	}
 	
-	public abstract boolean canSendPacket(Packet<?> packet);
+	public abstract boolean canSendPacket(Packet packet);
 	
 	@Override
 	public String toString() {

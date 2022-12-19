@@ -56,7 +56,7 @@ import net.vgc.util.exception.InvalidPacketException;
 public class Packets {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final Map<Integer, Class<? extends Packet<?>>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
+	private static final Map<Integer, Class<? extends Packet>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
 		int i = 0;
 		map.put(i++, ClientLoginPacket.class);
 		map.put(i++, ClientLogoutPacket.class);
@@ -93,8 +93,8 @@ public class Packets {
 	});
 	
 	@Nullable
-	public static Class<? extends Packet<?>> byId(int id) {
-		Class<? extends Packet<?>> clazz = PACKETS.get(id);
+	public static Class<? extends Packet> byId(int id) {
+		Class<? extends Packet> clazz = PACKETS.get(id);
 		if (clazz != null) {
 			return clazz;
 		}
@@ -102,8 +102,8 @@ public class Packets {
 		return null;
 	}
 	
-	public static int getId(Class<? extends Packet<?>> clazz) {
-		for (Entry<Integer, Class<? extends Packet<?>>> entry : PACKETS.entrySet()) {
+	public static int getId(Class<? extends Packet> clazz) {
+		for (Entry<Integer, Class<? extends Packet>> entry : PACKETS.entrySet()) {
 			if (entry.getValue() == clazz) {
 				return entry.getKey();
 			}
@@ -113,12 +113,12 @@ public class Packets {
 	}
 	
 	@Nullable
-	public static Packet<?> getPacket(int id, FriendlyByteBuffer buffer) {
-		Class<? extends Packet<?>> clazz = byId(id);
+	public static Packet getPacket(int id, FriendlyByteBuffer buffer) {
+		Class<? extends Packet> clazz = byId(id);
 		if (clazz != null) {
 			try {
 				if (ReflectionHelper.hasConstructor(clazz, FriendlyByteBuffer.class)) {
-					Constructor<? extends Packet<?>> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
+					Constructor<? extends Packet> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
 					return constructor.newInstance(buffer);
 				} else {
 					LOGGER.error("Packet {} does not have a constructor with FriendlyByteBuffer as parameter", clazz.getSimpleName());

@@ -15,7 +15,7 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.wins4.map.field.Wins4ServerField;
 
@@ -27,7 +27,7 @@ import net.vgc.server.games.wins4.map.field.Wins4ServerField;
 
 public class Wins4ServerMap extends AbstractServerGameMap {
 	
-	public Wins4ServerMap(DedicatedServer server, Game game) {
+	public Wins4ServerMap(Server server, Game game) {
 		super(server, game);
 		this.addFields();
 	}

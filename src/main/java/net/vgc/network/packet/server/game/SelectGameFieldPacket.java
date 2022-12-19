@@ -6,7 +6,6 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
-import net.vgc.server.network.ServerPacketHandler;
 
 /**
  *
@@ -37,11 +36,6 @@ public class SelectGameFieldPacket implements ServerPacket {
 		buffer.write(this.profile);
 		buffer.writeEnumInterface(this.fieldType);
 		buffer.writeInterface(this.fieldPos);
-	}
-	
-	@Override
-	public void handle(ServerPacketHandler handler) {
-		
 	}
 	
 	@PacketGetter

@@ -2,10 +2,10 @@ package net.vgc.network.packet.client.game;
 
 import java.util.UUID;
 
-import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
 
 /**
@@ -43,23 +43,22 @@ public class UpdateGameFieldPacket implements ClientPacket {
 		buffer.writeUUID(this.figureUUID);
 	}
 	
-	@Override
-	public void handle(ClientPacketHandler handler) {
-		
-	}
-	
+	@PacketGetter
 	public GameFieldPos getFieldPos() {
 		return this.fieldPos;
 	}
 	
+	@PacketGetter
 	public GameProfile getProfile() {
 		return this.profile;
 	}
 	
+	@PacketGetter
 	public int getFigureCount() {
 		return this.figureCount;
 	}
 	
+	@PacketGetter
 	public UUID getFigureUUID() {
 		return this.figureUUID;
 	}

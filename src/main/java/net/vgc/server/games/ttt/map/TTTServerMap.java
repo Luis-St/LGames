@@ -14,7 +14,7 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldPos;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.ttt.map.field.TTTServerField;
 
@@ -26,7 +26,7 @@ import net.vgc.server.games.ttt.map.field.TTTServerField;
 
 public class TTTServerMap extends AbstractServerGameMap {
 	
-	public TTTServerMap(DedicatedServer server, Game game) {
+	public TTTServerMap(Server server, Game game) {
 		super(server, game);
 		this.addFields();
 	}

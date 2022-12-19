@@ -19,7 +19,7 @@ import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.player.Player;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
@@ -31,11 +31,10 @@ import net.vgc.util.Util;
 
 public abstract class AbstractServerGame extends AbstractGame {
 	
-	private final DedicatedServer server;
+	private final Server server;
 	private final WinHandler winHandler;
 	
-	protected <T extends GamePlayerType> AbstractServerGame(DedicatedServer server, BiFunction<DedicatedServer, Game, GameMap> mapFunction, List<ServerPlayer> players, T[] playerTypes, TriFunction<Game, Player, T, GamePlayer> playerFunction,
-		WinHandler winHandler) {
+	protected <T extends GamePlayerType> AbstractServerGame(Server server, BiFunction<Server, Game, GameMap> mapFunction, List<ServerPlayer> players, T[] playerTypes, TriFunction<Game, Player, T, GamePlayer> playerFunction, WinHandler winHandler) {
 		super((game) -> {
 			return mapFunction.apply(server, game);
 		}, (game) -> {
@@ -65,7 +64,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 		return gamePlayers;
 	}
 	
-	public DedicatedServer getServer() {
+	public Server getServer() {
 		return this.server;
 	}
 	

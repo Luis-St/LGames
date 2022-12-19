@@ -17,14 +17,13 @@ import net.vgc.util.exception.SkipPacketException;
  *
  */
 
-public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+public class PacketEncoder extends MessageToByteEncoder<Packet> {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	protected void encode(ChannelHandlerContext context, Packet<?> packet, ByteBuf output) throws Exception {
-		int id = Packets.getId((Class<? extends Packet<?>>) packet.getClass());
+	protected void encode(ChannelHandlerContext context, Packet packet, ByteBuf output) throws Exception {
+		int id = Packets.getId((Class<? extends Packet>) packet.getClass());
 		if (id == -1) {
 			LOGGER.error("Can not encode packet {}", packet.getClass().getSimpleName());
 			throw new IOException("Can not encode packet " + packet.getClass().getSimpleName() + ", since it is not registered");

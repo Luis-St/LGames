@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 import com.google.common.collect.Lists;
 
@@ -57,12 +56,13 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	
 	private final Timeline ticker = Util.createTicker("ClientTicker", this);
 	private final List<AbstractClientPlayer> players = Lists.newArrayList();
-	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", () -> new ClientPacketHandler(Client.this, NetworkSide.CLIENT), (connection) -> {
+	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
 		connection.send(new ClientLeavePacket(this.account));
 	});
-	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", () -> new ClientPacketHandler(Client.this, NetworkSide.CLIENT), (connection) -> {
+	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
 		connection.send(new ClientExitPacket(this.account));
 	});
+	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
 	private boolean instantLoading;
 	private boolean safeLoading;
 	private LoginWindow loginWindow;
@@ -72,16 +72,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	private String accountHost;
 	private int accountPort;
 	private Game game;
-	
-	
-	@TestOnly
-	private final TestNonStaticListener listener = new TestNonStaticListener();
-	
-	@TestOnly
-	public TestNonStaticListener getListener() {
-		return this.listener;
-	}
-	
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -210,6 +200,10 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	@Override
 	protected Timeline getTicker() {
 		return this.ticker;
+	}
+	
+	public ClientPacketHandler getPacketHandler() {
+		return this.packetHandler;
 	}
 	
 	public boolean isInstantLoading() {

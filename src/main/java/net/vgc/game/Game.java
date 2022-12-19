@@ -167,19 +167,19 @@ public interface Game {
 	
 	void stop();
 	
-	default void broadcastPlayer(Packet<?> packet, GamePlayer gamePlayer) {
+	default void broadcastPlayer(Packet packet, GamePlayer gamePlayer) {
 		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
 			player.connection.send(packet);
 		}
 	}
 	
-	default void broadcastPlayers(Packet<?> packet) {
+	default void broadcastPlayers(Packet packet) {
 		for (GamePlayer player : this.getPlayers()) {
 			this.broadcastPlayer(packet, player);
 		}
 	}
 	
-	default void broadcastPlayersExclude(Packet<?> packet, GamePlayer... gamePlayers) {
+	default void broadcastPlayersExclude(Packet packet, GamePlayer... gamePlayers) {
 		for (GamePlayer player : this.getPlayers()) {
 			if (!Lists.newArrayList(gamePlayers).contains(player)) {
 				this.broadcastPlayer(packet, player);

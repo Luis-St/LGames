@@ -38,7 +38,7 @@ import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.collection.ListTag;
 import net.vgc.Constans;
-import net.vgc.account.network.AccountServerPacketHandler;
+import net.vgc.account.network.AccountPacketHandler;
 import net.vgc.account.window.AccountCreationWindow;
 import net.vgc.common.application.GameApplication;
 import net.vgc.data.serialization.SerializationUtil;
@@ -72,6 +72,7 @@ public class AccountServer extends GameApplication {
 		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
 	private final List<Connection> connections = Lists.newArrayList();
 	private final List<Channel> channels = Lists.newArrayList();
+	private final AccountPacketHandler packetHandler = new AccountPacketHandler(this);
 	private TreeView<String> accountView;
 	private String host;
 	private int port;
@@ -182,7 +183,7 @@ public class AccountServer extends GameApplication {
 			@Override
 			protected void initChannel(Channel channel) throws Exception {
 				ChannelPipeline pipeline = channel.pipeline();
-				Connection connection = new Connection(new AccountServerPacketHandler(AccountServer.this, NetworkSide.ACCOUNT));
+				Connection connection = new Connection();
 				pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
 				pipeline.addLast("decoder", new PacketDecoder());
 				pipeline.addLast("prepender", new ProtobufVarint32LengthFieldPrepender());
@@ -274,6 +275,10 @@ public class AccountServer extends GameApplication {
 	@Override
 	public NetworkSide getNetworkSide() {
 		return NetworkSide.ACCOUNT;
+	}
+	
+	public AccountPacketHandler getPacketHandler() {
+		return this.packetHandler;
 	}
 	
 	public Path getGameDirectory() {

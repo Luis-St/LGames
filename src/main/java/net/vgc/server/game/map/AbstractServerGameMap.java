@@ -3,7 +3,7 @@ package net.vgc.server.game.map;
 import net.vgc.game.Game;
 import net.vgc.game.map.AbstractGameMap;
 import net.vgc.game.map.field.GameField;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 
 /**
  *
@@ -13,9 +13,9 @@ import net.vgc.server.dedicated.DedicatedServer;
 
 public abstract class AbstractServerGameMap extends AbstractGameMap {
 	
-	private final DedicatedServer server;
+	private final Server server;
 	
-	protected AbstractServerGameMap(DedicatedServer server, Game game) {
+	protected AbstractServerGameMap(Server server, Game game) {
 		super(game);
 		this.server = server;
 	}
@@ -25,7 +25,7 @@ public abstract class AbstractServerGameMap extends AbstractGameMap {
 		LOGGER.warn("Can not initialize the client map settings on server");
 	}
 	
-	public DedicatedServer getServer() {
+	public Server getServer() {
 		return this.server;
 	}
 	

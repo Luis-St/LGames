@@ -5,6 +5,7 @@ import static net.vgc.network.packet.listener.PacketInvokHelper.getInstanceObjec
 import static net.vgc.network.packet.listener.PacketInvokHelper.getListeners;
 import static net.vgc.network.packet.listener.PacketInvokHelper.getPacketObjects;
 import static net.vgc.network.packet.listener.PacketInvokHelper.getSubscribers;
+import static net.vgc.network.packet.listener.PacketInvokHelper.setConnectionInstance;
 import static net.vgc.network.packet.listener.PacketInvokHelper.validateSignature;
 
 import java.lang.reflect.Method;
@@ -12,6 +13,7 @@ import java.lang.reflect.Modifier;
 
 import net.luis.utils.util.ReflectionHelper;
 import net.vgc.common.application.GameApplication;
+import net.vgc.network.Connection;
 import net.vgc.network.Network;
 import net.vgc.network.packet.Packet;
 
@@ -23,25 +25,28 @@ import net.vgc.network.packet.Packet;
 
 public class PacketInvoker {
 	
-	public static void invoke(Packet<?> packet) {
+	public static void invoke(Connection connection, Packet packet) {
+		ReflectionHelper.enableExceptionLogging();
 		GameApplication application = Network.INSTANCE.getApplication();
 		for (Class<?> clazz : getSubscribers(application.getNetworkSide())) {
 			Object instanceObject = getInstanceObject(application, clazz, clazz.getAnnotation(PacketSubscriber.class));
 			for (Method method : getListeners(clazz, packet)) {
 				if (Modifier.isStatic(method.getModifiers())) {
-					invokeStatic(application, packet, method);
+					invokeStatic(connection, application, packet, method);
 				} else if (instanceObject != null) {
 					if (instanceObject.getClass() == method.getDeclaringClass()) {
-						invokeNonStatic(packet, instanceObject, method);
+						invokeNonStatic(connection, packet, instanceObject, method);
 					} else {
 						throw new RuntimeException("The instance class does not declare a method " + method.getDeclaringClass().getName() + "#" + method.getName());
 					}
 				}
 			}
 		}
+		ReflectionHelper.disableExceptionLogging();
 	}
 	
-	private static void invokeStatic(GameApplication application, Packet<?> packet, Method method) {
+	private static void invokeStatic(Connection connection, GameApplication application, Packet packet, Method method) {
+		setConnectionInstance(connection, method.getDeclaringClass(), null);
 		Object[] objects = getPacketObjects(application, packet, method);
 		int parameterCount = method.getParameterCount();
 		if (parameterCount == 0) {
@@ -65,9 +70,11 @@ public class PacketInvoker {
 				throw createException(method, objects);
 			}
 		}
+		setConnectionInstance(null, method.getDeclaringClass(), null);
 	}
 	
-	private static void invokeNonStatic(Packet<?> packet, Object instanceObject, Method method) {
+	private static void invokeNonStatic(Connection connection, Packet packet, Object instanceObject, Method method) {
+		setConnectionInstance(connection, method.getDeclaringClass(), instanceObject);
 		Object[] objects = getPacketObjects(null, packet, method);
 		int parameterCount = method.getParameterCount();
 		if (parameterCount == 0) {
@@ -86,6 +93,7 @@ public class PacketInvoker {
 				throw createException(method, objects);
 			}
 		}
+		setConnectionInstance(null, method.getDeclaringClass(), instanceObject);
 	}
 	
 }

@@ -1,6 +1,5 @@
 package net.vgc.network.packet.client.game;
 
-import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
 
@@ -22,11 +21,6 @@ public class CancelPlayGameRequestPacket implements ClientPacket {
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		
-	}
-	
-	@Override
-	public void handle(ClientPacketHandler handler) {
 		
 	}
 	

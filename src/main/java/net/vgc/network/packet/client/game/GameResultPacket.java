@@ -3,12 +3,12 @@ package net.vgc.network.packet.client.game;
 import org.jetbrains.annotations.Nullable;
 
 import net.luis.utils.util.ReflectionHelper;
-import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.game.GameResult;
 import net.vgc.game.win.GameResultLine;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.listener.PacketGetter;
 
 /**
  *
@@ -48,20 +48,18 @@ public class GameResultPacket implements ClientPacket {
 		}
 	}
 	
-	@Override
-	public void handle(ClientPacketHandler handler) {
-		
-	}
-	
+	@PacketGetter
 	public GameResult getResult() {
 		return this.result;
 	}
 	
+	@PacketGetter
 	public Encodable getObject() {
 		return this.object;
 	}
 	
 	@Nullable
+	@PacketGetter
 	public GameResultLine getResultLine() {
 		if (this.object instanceof GameResultLine resultLine) {
 			return resultLine;

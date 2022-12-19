@@ -1,5 +1,6 @@
 package net.vgc.network.packet.listener;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -12,10 +13,11 @@ import org.apache.commons.lang3.ClassUtils;
 
 import com.google.common.collect.Lists;
 
-import net.luis.utils.util.ClasspathInspector;
+import net.luis.utils.util.ClassPathInspector;
 import net.luis.utils.util.ReflectionHelper;
 import net.luis.utils.util.SimpleEntry;
 import net.vgc.common.application.GameApplication;
+import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.Packet;
 
@@ -28,14 +30,14 @@ import net.vgc.network.packet.Packet;
 class PacketInvokHelper {
 	
 	static List<Class<?>> getSubscribers(NetworkSide side) {
-		return ClasspathInspector.getClasses().stream().filter((clazz) -> {
+		return ClassPathInspector.getClasses().stream().filter((clazz) -> {
 			return clazz.isAnnotationPresent(PacketSubscriber.class);
 		}).filter((clazz) -> {
 			return Lists.newArrayList(clazz.getAnnotation(PacketSubscriber.class).value()).contains(side);
 		}).collect(Collectors.toList());
 	}
 	
-	static List<Method> getListeners(Class<?> clazz, Packet<?> packet) {
+	static List<Method> getListeners(Class<?> clazz, Packet packet) {
 		return Lists.newArrayList(clazz.getDeclaredMethods()).stream().filter((method) -> {
 			return method.isAnnotationPresent(PacketListener.class);
 		}).filter((method) -> {
@@ -85,7 +87,25 @@ class PacketInvokHelper {
 		return instanceObject.getClass() == clazz ? instanceObject : null;
 	}
 	
-	private static GetterInfo[] getObjectGetters(Packet<?> packet) {
+	private static Field getConnectionField(Class<?> clazz) {
+		if (ReflectionHelper.hasField(clazz, "connection")) {
+			Field field = ReflectionHelper.getField(clazz, "connection");
+			if (field.getType() == Connection.class) {
+				return field;
+			}
+			return null;
+		}
+		return null;
+	}
+	
+	static void setConnectionInstance(Connection connection, Class<?> clazz, Object instanceObject) {
+		Field field = getConnectionField(clazz);
+		if (field != null) {
+			ReflectionHelper.set(field, instanceObject, connection);
+		}
+	}
+	
+	private static GetterInfo[] getObjectGetters(Packet packet) {
 		return Lists.newArrayList(packet.getClass().getDeclaredMethods()).stream().filter((method) -> {
 			return method.isAnnotationPresent(PacketGetter.class);
 		}).map((method) -> {
@@ -122,7 +142,7 @@ class PacketInvokHelper {
 			Class<?> parameter = method.getParameterTypes()[i];
 			String parameterName = method.getParameters()[i].getName();
 			for (Entry<GetterInfo, Object> entry : objects) {
-				if (entry.getValue().getClass() != ClassUtils.primitiveToWrapper(parameter)) {
+				if (!ClassUtils.primitiveToWrapper(parameter).isInstance(entry.getValue())) {
 					continue;
 				} else if (entry.getKey().parameterName().equals(parameterName)) {
 					parameters.add(entry.getValue());
@@ -150,7 +170,7 @@ class PacketInvokHelper {
 		return objects.size() > objectClasses.size();
 	}
 	
-	static Object[] getPacketObjects(GameApplication application, Packet<?> packet, Method method) {
+	static Object[] getPacketObjects(GameApplication application, Packet packet, Method method) {
 		List<Entry<GetterInfo, Object>> objects = Lists.newArrayList();
 		for (GetterInfo getterInfo : getObjectGetters(packet)) {
 			Object object = Objects.requireNonNull(ReflectionHelper.invoke(packet.getClass(), getterInfo.getterName(), packet), "Getter " + getterInfo.getterName() + " in packet " + packet.getClass().getName() + " must not return null");
@@ -176,9 +196,10 @@ class PacketInvokHelper {
 	}
 	
 	static RuntimeException createException(Method method, Object... objects) {
+		String name = method.getDeclaringClass().getSimpleName() + "#" + method.getName();
 		String expectedParameters = Arrays.asList(method.getParameterTypes()).stream().map(Class::getName).toList().toString();
 		String obtainedParameters = Arrays.asList(objects).stream().map(Object::getClass).map(Class::getName).toList().toString();
-		return new RuntimeException("Invalid method signature, expected parameter " + expectedParameters + " but " + obtainedParameters + " was passed");
+		return new RuntimeException("Invalid method signature of method " + name + ", expected parameter " + expectedParameters + " but " + obtainedParameters + " was passed");
 	}
 	
 	private static record GetterInfo(String parameterName, String getterName) {

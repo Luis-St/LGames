@@ -86,7 +86,7 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	private void connectAndSend(String host, int port, Packet<?> packet) {
+	private void connectAndSend(String host, int port, Packet packet) {
 		ConnectionHandler handler = this.client.getServerHandler();
 		try {
 			handler.connect(host, port);

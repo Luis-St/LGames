@@ -1,4 +1,4 @@
-package net.vgc.server.dedicated;
+package net.vgc.server.players;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +18,7 @@ import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.ServerClosedPacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.player.GameProfile;
+import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
@@ -28,14 +29,14 @@ import net.vgc.util.Util;
  *
  */
 
-public class DedicatedPlayerList implements Tickable {
+public class PlayerList implements Tickable {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private final DedicatedServer server;
+	private final Server server;
 	private final List<ServerPlayer> players;
 	
-	public DedicatedPlayerList(DedicatedServer server) {
+	public PlayerList(Server server) {
 		this.server = server;
 		this.players = Lists.newArrayList();
 	}
@@ -129,7 +130,7 @@ public class DedicatedPlayerList implements Tickable {
 		return this.players.stream().map(ServerPlayer::getProfile).collect(Collectors.toList());
 	}
 	
-	private void broadcast(Packet<?> packet, ServerPlayer player) {
+	private void broadcast(Packet packet, ServerPlayer player) {
 		if (player.connection.isConnected()) {
 			player.connection.send(packet);
 		} else if (this.players.contains(player)) {
@@ -139,19 +140,19 @@ public class DedicatedPlayerList implements Tickable {
 		}
 	}
 	
-	public void broadcastAll(Packet<?> packet) {
+	public void broadcastAll(Packet packet) {
 		for (int i = 0; i < this.players.size(); i++) {
 			this.broadcast(packet, this.players.get(i));
 		}
 	}
 	
-	public void broadcastAll(List<ServerPlayer> players, Packet<?> packet) {
+	public void broadcastAll(List<ServerPlayer> players, Packet packet) {
 		for (ServerPlayer player : players) {
 			this.broadcast(packet, player);
 		}
 	}
 	
-	public void broadcastAllExclude(Packet<?> packet, ServerPlayer... players) {
+	public void broadcastAllExclude(Packet packet, ServerPlayer... players) {
 		for (int i = 0; i < this.players.size(); i++) {
 			ServerPlayer player = this.players.get(i);
 			if (!Lists.newArrayList(players).contains(player)) {

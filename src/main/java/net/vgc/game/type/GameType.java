@@ -12,7 +12,7 @@ import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.network.NetworkSide;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
 
 /**
@@ -66,7 +66,7 @@ public class GameType<S extends Game, C extends Game> {
 	}
 	
 	@Nullable
-	public S createServerGame(DedicatedServer server, List<ServerPlayer> players) {
+	public S createServerGame(Server server, List<ServerPlayer> players) {
 		if (this.hasEnoughPlayers(players.size())) {
 			return this.gameFactory.createServerGame(server, players);
 		}

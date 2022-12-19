@@ -5,6 +5,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
@@ -14,8 +16,9 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.game.type.GameType;
+import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.AbstractPacketHandler;
+import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
@@ -24,8 +27,16 @@ import net.vgc.network.packet.client.game.StartGamePacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
+import net.vgc.network.packet.server.ClientJoinPacket;
+import net.vgc.network.packet.server.ClientLeavePacket;
+import net.vgc.network.packet.server.PlayGameRequestPacket;
+import net.vgc.network.packet.server.game.ExitGameRequestPacket;
+import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
+import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
 import net.vgc.player.GameProfile;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
@@ -35,24 +46,30 @@ import net.vgc.util.Util;
  *
  */
 
-public class ServerPacketHandler extends AbstractPacketHandler {
+@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getPacketHandler")
+public class ServerPacketHandler implements PacketHandler {
 	
-	private final DedicatedServer server;
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	public ServerPacketHandler(DedicatedServer server, NetworkSide networkSide) {
-		super(networkSide);
+	private final Server server;
+	private Connection connection;
+	
+	public ServerPacketHandler(Server server) {
 		this.server = server;
 	}
 	
+	@PacketListener(ClientJoinPacket.class)
 	public void handleClientJoin(String name, UUID uuid) {
 		this.server.enterPlayer(this.connection, new GameProfile(name, uuid));
 		this.connection.send(new ClientJoinedPacket(this.server.getPlayerList().getPlayers()));
 	}
 	
+	@PacketListener(ClientLeavePacket.class)
 	public void handleClientLeave(UUID uuid) {
 		this.server.leavePlayer(this.connection, this.server.getPlayerList().getPlayer(uuid));
 	}
 	
+	@PacketListener(PlayGameRequestPacket.class)
 	public <S extends Game, C extends Game> void handlePlayGameRequest(GameType<S, C> gameType, List<GameProfile> profiles) {
 		MutableBoolean mutable = new MutableBoolean(false);
 		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(profiles).stream().filter((player) -> {
@@ -103,6 +120,7 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 		return playerInfos;
 	}
 	
+	@PacketListener(PlayAgainGameRequestPacket.class)
 	public void handlePlayAgainGameRequest(GameProfile profile) {
 		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (player != null) {
@@ -128,6 +146,7 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(RollDiceRequestPacket.class)
 	public void handleRollDiceRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {
@@ -174,6 +193,7 @@ public class ServerPacketHandler extends AbstractPacketHandler {
 		}
 	}
 	
+	@PacketListener(ExitGameRequestPacket.class)
 	public void handleExitGameRequest(GameProfile profile) {
 		Game game = this.server.getGame();
 		if (game != null) {

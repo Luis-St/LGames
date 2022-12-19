@@ -15,7 +15,7 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ludo.map.field.LudoFieldPos;
 import net.vgc.games.ludo.map.field.LudoFieldType;
 import net.vgc.games.ludo.player.LudoPlayerType;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.server.Server;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.ludo.map.field.LudoServerField;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
@@ -33,7 +33,7 @@ public class LudoServerMap extends AbstractServerGameMap {
 	private final List<GameField> homeFields;
 	private final List<GameField> winFields;
 	
-	public LudoServerMap(DedicatedServer server, Game game) {
+	public LudoServerMap(Server server, Game game) {
 		super(server, game);
 		this.homeFields = Lists.newArrayList();
 		this.winFields = Lists.newArrayList();

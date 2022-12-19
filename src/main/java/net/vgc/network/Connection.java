@@ -17,7 +17,6 @@ import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.vgc.network.packet.Packet;
-import net.vgc.network.packet.PacketHandler;
 import net.vgc.util.exception.SkipPacketException;
 
 /**
@@ -26,21 +25,15 @@ import net.vgc.util.exception.SkipPacketException;
  *
  */
 
-public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
+public class Connection extends SimpleChannelInboundHandler<Packet> {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private final PacketHandler handler;
 	private final List<Connection.PacketHolder> waitingPackets = new ArrayList<>();
 	private Channel channel;
 	private int sentPackets;
 	private int receivedPackets;
 	private int failedPackets;
-	
-	public Connection(PacketHandler handler) {
-		this.handler = handler;
-		this.handler.setConnection(this);
-	}
 	
 	@Override
 	public void channelActive(ChannelHandlerContext context) throws Exception {
@@ -48,11 +41,11 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 	}
 	
 	@Override
-	protected void channelRead0(ChannelHandlerContext context, Packet<?> packet) throws Exception {
+	protected void channelRead0(ChannelHandlerContext context, Packet packet) throws Exception {
 		if (this.channel.isOpen()) {
 			try {
 				LOGGER.debug("Received packet of type {}", packet.getClass().getSimpleName());
-				this.handle(this.handler, packet);
+				packet.handleLater(this);
 				++this.receivedPackets;
 			} catch (ClassCastException e) {
 				LOGGER.warn("Fail to handle packet of type {}", packet.getClass().getSimpleName());
@@ -77,28 +70,19 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected <T extends PacketHandler> void handle(PacketHandler handler, Packet<T> packet) {
-		packet.handleLater((T) handler);
-	}
-	
 	public Channel getChannel() {
 		return this.channel;
-	}
-	
-	public PacketHandler getHandler() {
-		return this.handler;
 	}
 	
 	public boolean isConnected() {
 		return this.channel != null && this.channel.isOpen();
 	}
 	
-	public void send(Packet<?> packet) {
+	public void send(Packet packet) {
 		this.send(packet, null);
 	}
 	
-	public void send(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> handler) {
+	public void send(Packet packet, GenericFutureListener<? extends Future<? super Void>> handler) {
 		if (this.isConnected()) {
 			this.flush();
 			this.sendPacket(packet, handler, false);
@@ -108,7 +92,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		}
 	}
 	
-	private void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> handler, boolean waiting) {
+	private void sendPacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> handler, boolean waiting) {
 		ChannelFuture channelFuture = this.channel.writeAndFlush(packet);
 		LOGGER.debug("Send{}packet of type {}", waiting ? " waiting " : " ", packet.getClass().getSimpleName());
 		if (handler != null) {
@@ -149,8 +133,6 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 				return false;
 			} else if (this.failedPackets != connection.failedPackets) {
 				return false;
-			} else if (!this.handler.equals(connection.handler)) {
-				return false;
 			} else {
 				return this.channel.equals(connection.channel);
 			}
@@ -158,7 +140,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
 		return false;
 	}
 	
-	private static record PacketHolder(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener) {
+	private static record PacketHolder(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
 		
 	}
 	
