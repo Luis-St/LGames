@@ -25,6 +25,7 @@ javafx {
 compileJava {
 	sourceCompatibility = "17"
 	targetCompatibility = "17"
+	options.compilerArgs << "-parameters"
 }
 
 println("Java: " + System.getProperty("java.version") + " JVM: " + System.getProperty("java.vm.version") + "Java Runtime:" + System.getProperty("java.runtime.version"))
@@ -32,7 +33,7 @@ println("Java: " + System.getProperty("java.version") + " JVM: " + System.getPro
 dependencies {
 	// Local
 	implementation "org.controlsfx:ControlsFX:1.1" // Fx
-	implementation "net.luis:Lutils:1.3" // Utility
+	implementation "net.luis:LUtils:1.3" // Utility
 	implementation "net.luis.fxutils:FxUtils:1.7" // Fx Utility
 	// Google
 	implementation "com.google.guava:guava:31.0.1-jre" // Utility
@@ -67,7 +68,7 @@ task runServer(type:JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--server", "--gameDir", file("run/server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8080", "--language", "en_us")
-	args("--admin", "00000000-0000-31c4-0000-00000000282a")
+	args("--admin", "00000000-0000-014b-0000-00000000017d")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
