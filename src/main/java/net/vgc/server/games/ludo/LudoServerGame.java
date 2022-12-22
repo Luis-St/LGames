@@ -59,6 +59,12 @@ public class LudoServerGame extends AbstractServerGame {
 	}
 	
 	@Override
+	public void setPlayer(GamePlayer player) {
+		player.setRollCount(player.hasAllFiguresAt(GameField::isHome) ? 3 : 1);
+		super.setPlayer(player);
+	}
+	
+	@Override
 	public void nextPlayer(boolean random) {
 		List<? extends GamePlayer> players = Lists.newArrayList(this.getPlayers());
 		players.removeIf(this.getWinHandler().getWinOrder()::contains);

@@ -2,18 +2,22 @@ package net.vgc.client.games.ludo.map;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import net.luis.utils.math.Mth;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
+import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
 import net.vgc.client.game.map.AbstractClientGameMap;
 import net.vgc.client.games.ludo.map.field.LudoClientField;
 import net.vgc.client.games.ludo.player.LudoClientPlayer;
@@ -74,8 +78,12 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			LocalPlayer player = this.getClient().getPlayer();
 			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
-				if (newValue instanceof LudoClientField field && field.canSelect() && field.getFigure().getPlayerType() == this.getGame().getPlayerType(this.getGame().getPlayerFor(player))) {
-					
+				if (newValue instanceof ToggleButton button && button.getUserData() instanceof LudoClientField field) {
+					if (field.canSelect() && field.getFigure().getPlayerType() == this.getGame().getPlayerType(this.getGame().getPlayerFor(player))) {
+						
+					} else {
+						this.group.selectToggle(null);
+					}
 				} else {
 					this.group.selectToggle(null);
 				}
@@ -162,7 +170,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 		this.addField(LudoFieldType.WIN, LudoPlayerType.RED, LudoFieldPos.of(0), 5, 9);
 	}
 	
-	protected void addField(LudoFieldType fieldType, LudoPlayerType colorType, LudoFieldPos fieldPos, int column, int row) {
+	private void addField(LudoFieldType fieldType, LudoPlayerType colorType, LudoFieldPos fieldPos, int column, int row) {
 		LudoClientField field = new LudoClientField(this.getClient(), this, this.group, fieldType, colorType, fieldPos, 67.0);
 		field.setOnAction((event) -> {
 			LocalPlayer player = this.getClient().getPlayer();
@@ -203,6 +211,11 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 				throw new RuntimeException("Can not add a game player of type " + gamePlayer.getClass().getSimpleName() + " to a ludo game");
 			}
 		}
+	}
+	
+	@Override
+	public List<GameField> getFields() {
+		return Stream.of(super.getFields(), this.homeFields, this.winFields).flatMap(List::stream).collect(ImmutableList.toImmutableList());
 	}
 	
 	@Override
@@ -311,12 +324,15 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 	@Override
 	public GameField getSelectedField() {
 		Toggle toggle = this.group.getSelectedToggle();
-		if (toggle instanceof LudoClientField field) {
-			if (!field.isEmpty()) {
-				return field;
-			} else {
-				LOGGER.warn("Fail to get the selected field, since the selected field does not have a figure on it");
-				return null;
+		LOGGER.debug("Toggle {}", toggle);
+		for (GameField field : this.getFields()) {
+			if (field instanceof ToggleButtonWrapper wrapper && wrapper.getToggleButton() == toggle) {
+				if (!field.isEmpty()) {
+					return field;
+				} else {
+					LOGGER.warn("Fail to get the selected field, since the selected field does not have a figure on it");
+					return null;
+				}
 			}
 		}
 		LOGGER.info("Fail to get the selected field, since there is no field selected");

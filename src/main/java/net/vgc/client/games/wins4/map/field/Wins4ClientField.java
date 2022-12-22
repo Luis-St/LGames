@@ -10,12 +10,15 @@ import net.vgc.client.fx.game.wrapper.LabelWrapper;
 import net.vgc.client.game.map.field.AbstractClientGameField;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.GameMap;
+import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.games.wins4.player.Wins4PlayerType;
+import net.vgc.player.GameProfile;
+import net.vgc.util.Util;
 
 /**
  *
@@ -35,6 +38,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 	
 	@Override
 	public Label getLabel() {
+		this.label.setUserData(this);
 		return this.label;
 	}
 	
@@ -114,6 +118,15 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 			}
 			this.setGraphic(pane);
 		}
+	}
+	
+	@Override
+	public GameFieldInfo getFieldInfo() {
+		if (this.isEmpty()) {
+			return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+		}
+		GameFigure figure = this.getFigure();
+		return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	
 	@Override

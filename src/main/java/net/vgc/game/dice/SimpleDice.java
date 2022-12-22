@@ -37,7 +37,7 @@ public class SimpleDice implements Dice {
 		} else if (this.min == 0) {
 			return this.rng.nextInt(this.max) + 1;
 		}
-		return Mth.randomInt(this.rng, this.min, this.max);
+		return Mth.randomInclusiveInt(this.rng, this.min, this.max);
 	}
 	
 	@Override

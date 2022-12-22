@@ -1,10 +1,13 @@
 package net.vgc.game.map;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+
+import com.google.common.collect.ImmutableList;
 
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
@@ -33,6 +36,10 @@ public interface GameMap {
 	Game getGame();
 	
 	List<GameField> getFields();
+	
+	default List<GameField> getFields(Predicate<GameField> predicate) {
+		return this.getFields().stream().filter(predicate).collect(ImmutableList.toImmutableList());
+	}
 	
 	@Nullable
 	default GameField getField(GameFigure figure) {

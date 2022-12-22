@@ -1,7 +1,9 @@
 package net.vgc.server.games.ludo.map;
 
 import java.util.List;
+import java.util.stream.Stream;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import net.luis.utils.math.Mth;
@@ -90,6 +92,11 @@ public class LudoServerMap extends AbstractServerGameMap {
 			return LudoPlayerType.RED;
 		}
 		throw new InvalidValueException("Fail to get field color for index " + i);
+	}
+	
+	@Override
+	public List<GameField> getFields() {
+		return Stream.of(super.getFields(), this.homeFields, this.winFields).flatMap(List::stream).collect(ImmutableList.toImmutableList());
 	}
 	
 	@Override

@@ -44,7 +44,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 		this.client = client;
 	}
 	
-	protected static List<GamePlayer> createGamePlayers(Client client, Game game, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> function) {
+	private static List<GamePlayer> createGamePlayers(Client client, Game game, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> function) {
 		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(playerInfos, GamePlayerInfo::getProfile, GameProfile::getName));
 		List<GamePlayer> gamePlayers = Lists.newArrayList();
 		for (GamePlayerInfo playerInfo : playerInfos) {

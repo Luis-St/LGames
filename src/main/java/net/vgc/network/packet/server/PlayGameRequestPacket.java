@@ -18,8 +18,8 @@ import net.vgc.player.GameProfile;
 
 public class PlayGameRequestPacket implements ServerPacket {
 	
-	protected final GameType<?, ?> gameType;
-	protected final List<GameProfile> profiles;
+	private final GameType<?, ?> gameType;
+	private final List<GameProfile> profiles;
 	
 	public PlayGameRequestPacket(GameType<?, ?> gameType, List<AbstractClientPlayer> players) {
 		this.gameType = gameType;

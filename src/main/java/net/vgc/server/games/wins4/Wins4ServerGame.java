@@ -32,8 +32,8 @@ import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.player.Player;
 import net.vgc.server.Server;
 import net.vgc.server.game.AbstractServerGame;
-import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.server.games.wins4.map.Wins4ServerMap;
+import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
 import net.vgc.server.games.wins4.win.Wins4WinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
@@ -48,7 +48,7 @@ import net.vgc.util.Util;
 public class Wins4ServerGame extends AbstractServerGame {
 	
 	public Wins4ServerGame(Server server, List<ServerPlayer> players) {
-		super(server, Wins4ServerMap::new, players, Wins4PlayerType.values(), TTTServerPlayer::new, new Wins4WinHandler());
+		super(server, Wins4ServerMap::new, players, Wins4PlayerType.values(), Wins4ServerPlayer::new, new Wins4WinHandler());
 	}
 	
 	@Override

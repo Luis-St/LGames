@@ -32,7 +32,6 @@ import net.vgc.network.packet.client.game.GameActionFailedPacket;
 import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.StartGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
-import net.vgc.network.packet.client.game.UpdateGameFieldPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
@@ -83,7 +82,6 @@ public class Packets {
 		map.put(i++, GameActionFailedPacket.class);
 		map.put(i++, SelectGameFieldPacket.class);
 		map.put(i++, CanSelectGameFieldPacket.class);
-		map.put(i++, UpdateGameFieldPacket.class);
 		map.put(i++, UpdateGameMapPacket.class);
 		map.put(i++, GameResultPacket.class);
 		map.put(i++, ExitGameRequestPacket.class);

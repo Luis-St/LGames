@@ -32,7 +32,7 @@ public class GameTypes {
 	public static final GameType<TTTServerGame, TTTClientGame> TIC_TAC_TOE = register(new GameType<>("Tic Tac Toe", 2, 2, new GameFactory<>(TTTServerGame::new, TTTClientGame::new), TTTScreen::new));
 	public static final GameType<Wins4ServerGame, Wins4ClientGame> WINS_4 = register(new GameType<>("4 Wins", 2, 2, new GameFactory<>(Wins4ServerGame::new, Wins4ClientGame::new), Wins4Screen::new));
 	
-	protected static <S extends AbstractServerGame, C extends AbstractClientGame> GameType<S, C> register(GameType<S, C> gameType) {
+	private static <S extends AbstractServerGame, C extends AbstractClientGame> GameType<S, C> register(GameType<S, C> gameType) {
 		GAME_TYPES.add(gameType);
 		return gameType;
 	}

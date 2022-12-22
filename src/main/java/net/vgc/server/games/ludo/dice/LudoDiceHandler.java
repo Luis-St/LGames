@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
+import net.vgc.game.Game;
 import net.vgc.game.dice.Dice;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.dice.PlayerDiceInfo;
@@ -12,7 +13,6 @@ import net.vgc.game.dice.SimpleDice;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
-import net.vgc.server.games.ludo.LudoServerGame;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
 
@@ -24,13 +24,13 @@ import net.vgc.util.Util;
 
 public class LudoDiceHandler implements DiceHandler {
 	
-	private final LudoServerGame game;
+	private final Game game;
 	private final int min;
 	private final int max;
 	private final Dice dice;
 	private final List<PlayerDiceInfo> countHistory;
 	
-	public LudoDiceHandler(LudoServerGame game, int min, int max) {
+	public LudoDiceHandler(Game game, int min, int max) {
 		this.game = game;
 		this.min = min;
 		this.max = max;
@@ -39,7 +39,7 @@ public class LudoDiceHandler implements DiceHandler {
 	}
 	
 	@Override
-	public LudoServerGame getGame() {
+	public Game getGame() {
 		return this.game;
 	}
 	
@@ -78,7 +78,7 @@ public class LudoDiceHandler implements DiceHandler {
 		return this.handleRolled(player, this.dice.rollPreferred(value, rolls));
 	}
 	
-	protected int handleRolled(GamePlayer player, int count) {
+	private int handleRolled(GamePlayer player, int count) {
 		this.countHistory.add(new PlayerDiceInfo(player, count));
 		player.setRollCount(player.getRollCount() - 1);
 		return count;

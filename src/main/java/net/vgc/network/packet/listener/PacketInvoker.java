@@ -26,7 +26,7 @@ import net.vgc.network.packet.Packet;
 public class PacketInvoker {
 	
 	public static void invoke(Connection connection, Packet packet) {
-		ReflectionHelper.enableExceptionLogging();
+		ReflectionHelper.enableExceptionThrowing();
 		GameApplication application = Network.INSTANCE.getApplication();
 		for (Class<?> clazz : getSubscribers(application.getNetworkSide())) {
 			Object instanceObject = getInstanceObject(application, clazz, clazz.getAnnotation(PacketSubscriber.class));
@@ -42,7 +42,7 @@ public class PacketInvoker {
 				}
 			}
 		}
-		ReflectionHelper.disableExceptionLogging();
+		ReflectionHelper.disableExceptionThrowing();
 	}
 	
 	private static void invokeStatic(Connection connection, GameApplication application, Packet packet, Method method) {

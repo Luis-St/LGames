@@ -81,10 +81,10 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		}
 	}
 	
-	protected void addField(Wins4FieldPos fieldPos) {
+	private void addField(Wins4FieldPos fieldPos) {
 		Wins4ClientField field = new Wins4ClientField(this.getClient(), this, fieldPos, 120.0);
 		this.fieldPane.add(field.getLabel(), fieldPos.getColumn(), fieldPos.getRow());
-		this.getFields().add(field);
+		this.addField(field);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			this.getFields().stream().filter(GameField::isShadowed).forEach(GameField::clearShadow);
 		});
@@ -96,11 +96,11 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		}
 	}
 	
-	protected void mergePanes() {
+	private void mergePanes() {
 		this.getChildren().addAll(this.fieldPane, this.interactionPane);
 	}
 	
-	protected void addInteraction(int index, int column, int row) {
+	private void addInteraction(int index, int column, int row) {
 		IndexToggleButton button = new IndexToggleButton(index);
 		button.setToggleGroup(this.group);
 		button.setBackground(null);

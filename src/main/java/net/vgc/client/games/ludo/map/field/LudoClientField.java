@@ -40,6 +40,7 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 	
 	@Override
 	public ToggleButton getToggleButton() {
+		this.button.setUserData(this);
 		return this.button;
 	}
 	
@@ -101,7 +102,7 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 	@Override
 	public final GameResult getResult() {
 		LOGGER.warn("Fail to get the game result of field {}, since ludo fields does not have a game result", this.getFieldPos().getPosition());
-		return super.getResult();
+		return GameResult.NO;
 	}
 	
 	@Override
@@ -134,7 +135,7 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, "result");
+		return ToString.toString(this, "result", "button", "group");
 	}
 	
 }

@@ -2,13 +2,16 @@ package net.vgc.server.games.ttt.map.field;
 
 import net.luis.utils.util.ToString;
 import net.vgc.game.map.GameMap;
+import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.games.ttt.player.TTTPlayerType;
+import net.vgc.player.GameProfile;
 import net.vgc.server.game.map.field.AbstractServerGameField;
+import net.vgc.util.Util;
 
 /**
  *
@@ -52,6 +55,15 @@ public class TTTServerField extends AbstractServerGameField {
 	@Override
 	public boolean isWin() {
 		return false;
+	}
+	
+	@Override
+	public GameFieldInfo getFieldInfo() {
+		if (this.isEmpty()) {
+			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+		}
+		GameFigure figure = this.getFigure();
+		return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	
 	@Override

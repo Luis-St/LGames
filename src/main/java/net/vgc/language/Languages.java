@@ -18,7 +18,7 @@ public class Languages {
 	public static final Language EN_US = register(new Language("American English", "en_us"));
 	public static final Language DE_DE = register(new Language("Deutsch", "de_de"));
 	
-	protected static Language register(Language language) {
+	private static Language register(Language language) {
 		LANGUAGES.add(language);
 		return language;
 	}

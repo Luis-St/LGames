@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -15,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import net.vgc.Constans;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
+import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
 import net.vgc.client.game.map.AbstractClientGameMap;
 import net.vgc.client.games.ttt.map.field.TTTClientField;
 import net.vgc.game.Game;
@@ -45,7 +47,7 @@ import net.vgc.player.GameProfile;
 @PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
 public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
-	private final ToggleGroup group;
+	private final ToggleGroup group;	
 	private final GridPane gridPane;
 	
 	public TTTClientMap(Client client, Game game) {
@@ -70,11 +72,9 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		this.setPadding(new Insets(20.0));
 		this.setGridLinesVisible(Constans.DEBUG);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-			if (oldValue instanceof TTTClientField oldField) {
-				if (newValue instanceof TTTClientField newField) {
-					if (oldField.isShadowed()) {
-						oldField.setShadowed(false);
-					}
+			if (oldValue instanceof ToggleButton oldButton && oldButton.getUserData() instanceof TTTClientField oldField) {
+				if (newValue instanceof ToggleButton newButton && newButton.getUserData() instanceof TTTClientField newField) {
+					
 				} else {
 					oldField.setSelected(true);
 				}
@@ -96,7 +96,7 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		this.addField(TTTFieldPos.of(8), 4, 4);
 	}
 	
-	protected void addField(TTTFieldPos fieldPos, int column, int row) {
+	private void addField(TTTFieldPos fieldPos, int column, int row) {
 		TTTClientField field = new TTTClientField(this.getClient(), this, this.group, fieldPos, 150.0);
 		field.setOnAction((event) -> {
 			if (this.getClient().getPlayer().isCurrent()) {
@@ -126,7 +126,7 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		this.addBorder(10, 160, 3, 4);
 	}
 	
-	protected void addBorder(int width, int height, int column, int row) {
+	private void addBorder(int width, int height, int column, int row) {
 		this.add(new Rectangle(width, height, Color.BLACK), column, row);
 	}
 	
@@ -159,12 +159,14 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 	@Override
 	public GameField getSelectedField() {
 		Toggle toggle = this.group.getSelectedToggle();
-		if (toggle instanceof TTTClientField field) {
-			if (field.isEmpty()) {
-				return field;
-			} else {
-				LOGGER.warn("Fail to get the selected field, since the selected field can not have a figure on it");
-				return null;
+		for (GameField field : this.getFields()) {
+			if (field instanceof ToggleButtonWrapper wrapper && wrapper.getToggleButton() == toggle) {
+				if (field.isEmpty()) {
+					return field;
+				} else {
+					LOGGER.warn("Fail to get the selected field, since the selected field can not have a figure on it");
+					return null;
+				}
 			}
 		}
 		LOGGER.info("Fail to get the selected field, since there is no field selected");

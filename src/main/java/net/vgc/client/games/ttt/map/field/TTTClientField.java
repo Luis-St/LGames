@@ -10,12 +10,15 @@ import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
 import net.vgc.client.game.map.field.AbstractClientGameField;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.GameMap;
+import net.vgc.game.map.field.GameFieldInfo;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.games.ttt.player.TTTPlayerType;
+import net.vgc.player.GameProfile;
+import net.vgc.util.Util;
 
 /**
  *
@@ -36,6 +39,12 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 	}
 	
 	@Override
+	public ToggleButton getToggleButton() {
+		this.button.setUserData(this);
+		return this.button;
+	}
+	
+	@Override
 	public void init() {
 		this.setToggleGroup(this.group);
 		this.setPrefSize(this.getSize(), this.getSize());
@@ -44,11 +53,6 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 			this.setBackground(null);
 		}
 		this.updateFieldGraphic();
-	}
-	
-	@Override
-	public ToggleButton getToggleButton() {
-		return this.button;
 	}
 	
 	@Override
@@ -121,7 +125,7 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 		}
 	}
 	
-	protected ImageView getFigureTexture() {
+	private ImageView getFigureTexture() {
 		if (this.getFigure().getPlayerType() instanceof TTTPlayerType playerType) {
 			return switch (this.getResult()) {
 				case WIN -> this.makeImage(playerType.getPath() + "_win.png", 0.95);
@@ -134,8 +138,17 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 	}
 	
 	@Override
+	public GameFieldInfo getFieldInfo() {
+		if (this.isEmpty()) {
+			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+		}
+		GameFigure figure = this.getFigure();
+		return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
+	}
+	
+	@Override
 	public String toString() {
-		return ToString.toString(this, "fieldType", "colorType", "result");
+		return ToString.toString(this, "fieldType", "colorType", "result", "button", "group");
 	}
 	
 }
