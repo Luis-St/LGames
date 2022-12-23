@@ -3,49 +3,85 @@ package net.vgc.game;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
-import net.vgc.client.game.ClientGame;
+import com.google.common.collect.Lists;
+
+import net.luis.utils.math.Mth;
+import net.vgc.client.game.AbstractClientGame;
+import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.GameMap;
+import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.type.GameType;
+import net.vgc.game.win.WinHandler;
+import net.vgc.network.packet.Packet;
+import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
-import net.vgc.server.game.ServerGame;
-import net.vgc.server.game.dice.DiceHandler;
+import net.vgc.server.game.AbstractServerGame;
+import net.vgc.server.player.ServerPlayer;
+import net.vgc.util.Util;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public interface Game {
 	
 	public static final Logger LOGGER = LogManager.getLogger();
 	
-	void initGame();
+	default void init() {
+		
+	}
 	
-	void startGame();
+	default void start() {
+		
+	}
 	
-	GameType<? extends ServerGame, ? extends ClientGame> getType();
+	GameType<? extends AbstractServerGame, ? extends AbstractClientGame> getType();
 	
 	GameMap getMap();
 	
-	default String getName(Player player) {
-		return player.getProfile().getName();
+	List<GamePlayer> getPlayers();
+	
+	default List<GamePlayer> getEnemies(GamePlayer gamePlayer) {
+		List<GamePlayer> enemies = Lists.newArrayList();
+		for (GamePlayer player : this.getPlayers()) {
+			if (!player.equals(gamePlayer)) {
+				enemies.add(player);
+			}
+		}
+		if (enemies.isEmpty()) {
+			LOGGER.warn("Fail to get enemies for player {}", gamePlayer.getName());
+		}
+		return enemies;
 	}
 	
-	default String getName(GamePlayer player) {
-		return this.getName(player.getPlayer());
+	@Nullable
+	default GamePlayer getPlayerFor(Player player) {
+		for (GamePlayer gamePlayer : this.getPlayers()) {
+			if (gamePlayer.getPlayer().equals(player)) {
+				return gamePlayer;
+			}
+		}
+		return null;
 	}
 	
-	List<? extends GamePlayer> getPlayers();
-	
-	List<? extends GamePlayer> getEnemies(GamePlayer player);
-	
 	@Nullable
-	GamePlayer getPlayerFor(Player player);
-	
-	@Nullable
-	GamePlayer getPlayerFor(GameProfile profile);
+	default GamePlayer getPlayerFor(GameProfile profile) {
+		for (GamePlayer gamePlayer : this.getPlayers()) {
+			if (gamePlayer.getPlayer().getProfile().equals(profile)) {
+				return gamePlayer;
+			}
+		}
+		return null;
+	}
 	
 	@Nullable
 	default GamePlayerType getPlayerType(GamePlayer player) {
@@ -58,33 +94,36 @@ public interface Game {
 	}
 	
 	@Nullable
-	GamePlayer getCurrentPlayer();
+	GamePlayer getPlayer();
 	
-	void setCurrentPlayer(GamePlayer player);
+	void setPlayer(GamePlayer player);
 	
-	GamePlayer getStartPlayer();
+	default GamePlayer getStartPlayer() {
+		this.nextPlayer(true);
+		return this.getPlayer();
+	}
 	
 	default void nextPlayer(boolean random) {
 		List<? extends GamePlayer> players = this.getPlayers();
 		if (!players.isEmpty()) {
 			if (random) {
-				this.setCurrentPlayer(players.get(new Random().nextInt(players.size())));
+				this.setPlayer(players.get(new Random().nextInt(players.size())));
 			} else {
-				GamePlayer player = this.getCurrentPlayer();
+				GamePlayer player = this.getPlayer();
 				if (player == null) {
-					this.setCurrentPlayer(players.get(0));
+					this.setPlayer(players.get(0));
 				} else {
 					int index = players.indexOf(player);
 					if (index != -1) {
 						index++;
 						if (index >= players.size()) {
-							this.setCurrentPlayer(players.get(0));
+							this.setPlayer(players.get(0));
 						} else {
-							this.setCurrentPlayer(players.get(index));
+							this.setPlayer(players.get(index));
 						}
 					} else {
-						LOGGER.warn("Fail to get next player, since the player {} does not exists", this.getName(player));
-						this.setCurrentPlayer(players.get(0));
+						LOGGER.warn("Fail to get next player, since the player {} does not exists", player.getName());
+						this.setPlayer(players.get(0));
 					}
 				}
 			}
@@ -104,8 +143,48 @@ public interface Game {
 		return null;
 	}
 	
-	boolean nextMatch();
+	@Nullable
+	default WinHandler getWinHandler() {
+		return null;
+	}
 	
-	void stopGame();
+	default boolean nextMatch() {
+		if (Mth.isInBounds(this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
+			this.getMap().reset();
+			this.getMap().init(this.getPlayers());
+			if (this.isDiceGame()) {
+				this.getDiceHandler().reset();
+			}
+			this.getWinHandler().reset();
+			this.nextPlayer(true);
+			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.getPlayers(), GamePlayer::getName));
+			return true;
+		}
+		LOGGER.warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
+		return false;
+	}
+	
+	void stop();
+	
+	default void broadcastPlayer(Packet packet, GamePlayer gamePlayer) {
+		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
+			player.connection.send(packet);
+		}
+	}
+	
+	default void broadcastPlayers(Packet packet) {
+		for (GamePlayer player : this.getPlayers()) {
+			this.broadcastPlayer(packet, player);
+		}
+	}
+	
+	default void broadcastPlayersExclude(Packet packet, GamePlayer... gamePlayers) {
+		for (GamePlayer player : this.getPlayers()) {
+			if (!Lists.newArrayList(gamePlayers).contains(player)) {
+				this.broadcastPlayer(packet, player);
+			}
+		}
+	}
 	
 }

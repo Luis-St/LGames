@@ -8,26 +8,36 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.screen.game.GameScreen;
+import net.vgc.game.type.GameTypes;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
-import net.vgc.game.GameTypes;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class LobbyScreen extends GameScreen {
 	
-	protected Menu playerMenu;
-	protected Menu gameMenu;
-	protected ButtonBox tttButtonBox;
-	protected ButtonBox ludoButtonBox;
-	protected ButtonBox wins4ButtonBox;
+	private Menu playerMenu;
+	private Menu gameMenu;
+	private ButtonBox tttButtonBox;
+	private ButtonBox ludoButtonBox;
+	private ButtonBox wins4ButtonBox;
 	
 	public LobbyScreen() {
 		
@@ -38,7 +48,7 @@ public class LobbyScreen extends GameScreen {
 		this.playerMenu = new Menu(TranslationKey.createAndGet("server.window.players"));
 		this.gameMenu = new Menu(TranslationKey.createAndGet("screen.lobby.game"));
 		CustomMenuItem leaveItem = new CustomMenuItem();
-		leaveItem.setContent(FxUtil.makeButton(TranslationKey.createAndGet("screen.lobby.leave"), () -> {
+		leaveItem.setContent(FxUtils.makeButton(TranslationKey.createAndGet("screen.lobby.leave"), () -> {
 			this.client.removePlayer();
 			this.showScreen(new MenuScreen());
 		}));
@@ -51,25 +61,25 @@ public class LobbyScreen extends GameScreen {
 		this.wins4ButtonBox.getNode().setDisable(!this.client.getPlayer().isAdmin());
 	}
 	
-	protected void handleTTT() {
+	private void handleTTT() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.showScreen(new PlayerSelectScreen(GameTypes.TIC_TAC_TOE, this));
 		}
 	}
 	
-	protected void handleLudo() {
+	private void handleLudo() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.showScreen(new PlayerSelectScreen(GameTypes.LUDO, this));
 		}
 	}
 	
-	protected void handleWins4() {
+	private void handleWins4() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.showScreen(new PlayerSelectScreen(GameTypes.WINS_4, this));
 		}
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
@@ -79,7 +89,7 @@ public class LobbyScreen extends GameScreen {
 		}
 	}
 	
-	protected void refreshPlayers() {
+	private void refreshPlayers() {
 		this.playerMenu.getItems().clear();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (player instanceof LocalPlayer) {
@@ -100,10 +110,10 @@ public class LobbyScreen extends GameScreen {
 	
 	@Override
 	protected Pane createPane() {
-		GridPane gridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane gridPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		gridPane.addRow(0, this.tttButtonBox, this.ludoButtonBox, this.wins4ButtonBox);
 		this.refreshPlayers();
 		return new VBox(new MenuBar(this.playerMenu, this.gameMenu), gridPane);
 	}
-
+	
 }

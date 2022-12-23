@@ -1,12 +1,18 @@
 package net.vgc.network.packet.client;
 
-import net.vgc.client.network.ClientPacketListener;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class PlayerAddPacket implements ClientPacket {
 	
-	protected final GameProfile profile;
+	private final GameProfile profile;
 	
 	public PlayerAddPacket(GameProfile profile) {
 		this.profile = profile;
@@ -21,11 +27,7 @@ public class PlayerAddPacket implements ClientPacket {
 		buffer.write(this.profile);
 	}
 	
-	@Override
-	public void handle(ClientPacketListener listener) {
-		listener.handlePlayerAdd(this.profile);
-	}
-	
+	@PacketGetter
 	public GameProfile getProfile() {
 		return this.profile;
 	}

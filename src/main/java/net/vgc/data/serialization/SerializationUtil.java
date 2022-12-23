@@ -5,18 +5,23 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
-import net.vgc.data.tag.Tag;
-import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.util.ReflectionHelper;
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.tags.CompoundTag;
+import net.luis.utils.util.ReflectionHelper;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class SerializationUtil {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Nullable
 	public static <T extends Serializable> T deserialize(Class<T> clazz, Path path) {
@@ -41,7 +46,7 @@ public class SerializationUtil {
 				return ReflectionHelper.newInstance(clazz, tag);
 			}
 			Method method = getMethod(clazz);
-			if (method != null)  {
+			if (method != null) {
 				if (Modifier.isStatic(method.getModifiers())) {
 					return (T) ReflectionHelper.invoke(method, null, tag);
 				} else {
@@ -66,7 +71,7 @@ public class SerializationUtil {
 		return null;
 	}
 	
-	protected static <T extends Serializable> Method getMethod(Class<T> clazz) throws Exception {
+	private static <T extends Serializable> Method getMethod(Class<T> clazz) throws Exception {
 		Method method = null;
 		if (ReflectionHelper.hasMethod(clazz, "load", CompoundTag.class)) {
 			method = ReflectionHelper.getMethod(clazz, "load", CompoundTag.class);

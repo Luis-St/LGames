@@ -4,15 +4,20 @@ import java.nio.file.Path;
 
 import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
-import net.vgc.network.packet.Packet;
-import net.vgc.network.packet.PacketHandler;
+import net.vgc.common.application.GameApplication;
 import net.vgc.server.Server;
 
-public class Network implements PacketHandler<Packet<?>> {
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+public class Network {
 	
 	public static final Network INSTANCE = new Network();
 	
-	protected NetworkSide networkSide;
+	private NetworkSide networkSide;
 	
 	private Network() {
 		
@@ -26,12 +31,23 @@ public class Network implements PacketHandler<Packet<?>> {
 		this.networkSide = networkSide;
 	}
 	
+	public GameApplication getApplication() {
+		if (NetworkSide.CLIENT.isOn()) {
+			return Client.getInstance();
+		} else if (NetworkSide.SERVER.isOn()) {
+			return Server.getInstance();
+		} else if (NetworkSide.ACCOUNT.isOn()) {
+			return AccountServer.getInstance();
+		}
+		throw new IllegalStateException("Unknown network side: " + this.getNetworkSide());
+	}
+	
 	public Path getGameDirectory() {
 		if (NetworkSide.CLIENT.isOn()) {
 			return Client.getInstance().getResourceDirectory();
 		} else if (NetworkSide.SERVER.isOn()) {
 			return Server.getInstance().getResourceDirectory();
-		} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
+		} else if (NetworkSide.ACCOUNT.isOn()) {
 			return AccountServer.getInstance().getResourceDirectory();
 		}
 		throw new IllegalStateException("Unknown network side: " + this.getNetworkSide());
@@ -42,7 +58,7 @@ public class Network implements PacketHandler<Packet<?>> {
 			return Client.getInstance().getResourceDirectory();
 		} else if (NetworkSide.SERVER.isOn()) {
 			return Server.getInstance().getResourceDirectory();
-		} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
+		} else if (NetworkSide.ACCOUNT.isOn()) {
 			return AccountServer.getInstance().getResourceDirectory();
 		}
 		throw new IllegalStateException("Unknown network side: " + this.getNetworkSide());
@@ -52,11 +68,6 @@ public class Network implements PacketHandler<Packet<?>> {
 		if (networkSide.isOn()) {
 			action.run();
 		}
-	}
-	
-	@Override
-	public void handlePacket(Packet<?> packet) {
-		this.networkSide.handlePacket(packet);
 	}
 	
 }

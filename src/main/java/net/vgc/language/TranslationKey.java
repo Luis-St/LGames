@@ -6,9 +6,15 @@ import com.google.common.collect.Lists;
 
 import net.vgc.Main;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class TranslationKey {
 	
-	protected final String key;
+	private final String key;
 	
 	public TranslationKey(String key) {
 		this.key = key;

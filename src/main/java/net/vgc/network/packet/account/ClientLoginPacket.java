@@ -1,14 +1,20 @@
 package net.vgc.network.packet.account;
 
 import net.vgc.account.LoginType;
-import net.vgc.account.network.AccountServerPacketListener;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class ClientLoginPacket implements AccountPacket {
 	
-	protected final LoginType loginType;
-	protected final String name;
-	protected final String password;
+	private final LoginType loginType;
+	private final String name;
+	private final String password;
 	
 	public ClientLoginPacket(LoginType loginType, String name, String password) {
 		this.loginType = loginType;
@@ -28,20 +34,18 @@ public class ClientLoginPacket implements AccountPacket {
 		buffer.writeString(this.name);
 		buffer.writeString(this.password);
 	}
-
-	@Override
-	public void handle(AccountServerPacketListener listener) {
-		listener.handleClientLogin(this.loginType, this.name, this.password);
-	}
 	
+	@PacketGetter
 	public LoginType getLoginType() {
 		return this.loginType;
 	}
 	
+	@PacketGetter
 	public String getName() {
 		return this.name;
 	}
 	
+	@PacketGetter
 	public String getPassword() {
 		return this.password;
 	}

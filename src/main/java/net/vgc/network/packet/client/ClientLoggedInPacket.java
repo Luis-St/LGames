@@ -2,14 +2,20 @@ package net.vgc.network.packet.client;
 
 import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
-import net.vgc.client.network.ClientPacketListener;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class ClientLoggedInPacket implements ClientPacket {
 	
-	protected final LoginType loginType;
-	protected final PlayerAccount account;
-	protected final boolean successful;
+	private final LoginType loginType;
+	private final PlayerAccount account;
+	private final boolean successful;
 	
 	public ClientLoggedInPacket(LoginType loginType, PlayerAccount account, boolean successful) {
 		this.loginType = loginType;
@@ -29,20 +35,18 @@ public class ClientLoggedInPacket implements ClientPacket {
 		buffer.write(this.account);
 		buffer.writeBoolean(this.successful);
 	}
-
-	@Override
-	public void handle(ClientPacketListener listener) {
-		listener.handleClientLoggedIn(this.loginType, this.account, this.successful);
-	}
 	
+	@PacketGetter
 	public LoginType getLoginType() {
 		return this.loginType;
 	}
 	
+	@PacketGetter
 	public PlayerAccount getAccount() {
 		return this.account;
 	}
 	
+	@PacketGetter
 	public boolean isSuccessful() {
 		return this.successful;
 	}

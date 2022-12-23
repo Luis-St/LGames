@@ -1,15 +1,31 @@
 package net.vgc.network.packet.client;
 
-import net.vgc.client.network.ClientPacketListener;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
+import net.vgc.player.Player;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class SyncPlayerDataPacket implements ClientPacket {
 	
-	protected final GameProfile profile;
-	protected final boolean playing;
-	protected final PlayerScore score;
+	private final GameProfile profile;
+	private final boolean playing;
+	private final PlayerScore score;
+	
+	public SyncPlayerDataPacket(GamePlayer player) {
+		this(player.getPlayer());
+	}
+	
+	public SyncPlayerDataPacket(Player player) {
+		this(player.getProfile(), player.isPlaying(), player.getScore());
+	}
 	
 	public SyncPlayerDataPacket(GameProfile profile, boolean playing, PlayerScore score) {
 		this.profile = profile;
@@ -29,22 +45,20 @@ public class SyncPlayerDataPacket implements ClientPacket {
 		buffer.writeBoolean(this.playing);
 		buffer.write(this.score);
 	}
-
-	@Override
-	public void handle(ClientPacketListener listener) {
-		listener.handleSyncPlayerData(this.profile, this.playing, this.score);
-	}
 	
+	@PacketGetter
 	public GameProfile getProfile() {
 		return this.profile;
 	}
 	
+	@PacketGetter
 	public boolean isPlaying() {
 		return this.playing;
 	}
 	
+	@PacketGetter
 	public PlayerScore getScore() {
 		return this.score;
 	}
-
+	
 }

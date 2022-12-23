@@ -4,12 +4,18 @@ import java.util.UUID;
 
 import net.vgc.account.PlayerAccount;
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.server.network.ServerPacketListener;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.util.Util;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class ClientLeavePacket implements ServerPacket {
 	
-	protected final UUID uuid;
+	private final UUID uuid;
 	
 	public ClientLeavePacket(PlayerAccount account) {
 		this.uuid = account == null ? Util.EMPTY_UUID : account.getUUID();
@@ -23,12 +29,8 @@ public class ClientLeavePacket implements ServerPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeUUID(this.uuid);
 	}
-
-	@Override
-	public void handle(ServerPacketListener listener) {
-		listener.handleClientLeave(this.uuid);
-	}
 	
+	@PacketGetter
 	public UUID getUUID() {
 		return this.uuid;
 	}

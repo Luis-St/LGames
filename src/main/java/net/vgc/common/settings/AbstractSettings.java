@@ -6,19 +6,26 @@ import java.util.function.BiConsumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.TagUtils;
+import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.data.serialization.Serializable;
-import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.TagUtil;
-import net.vgc.data.tag.tags.CompoundTag;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public abstract class AbstractSettings implements Serializable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final List<Setting<?>> settings;
+	private final List<Setting<?>> settings;
 	
 	protected AbstractSettings(CompoundTag tag) {
-		this(TagUtil.readList(tag.getList("settings", Tag.COMPOUND_TAG), (settingTag) -> {
+		this(TagUtils.readList(tag.getList("settings", Tag.COMPOUND_TAG), (settingTag) -> {
 			return new Setting<>((CompoundTag) settingTag);
 		}));
 	}

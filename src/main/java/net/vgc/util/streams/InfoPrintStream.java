@@ -6,6 +6,12 @@ import java.io.PrintStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class InfoPrintStream extends PrintStream {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
@@ -27,7 +33,7 @@ public class InfoPrintStream extends PrintStream {
 	}
 	
 	protected void log(String string) {
-		LOGGER.info("[{}]: {}", this.name, string);
+		LOGGER.info("[{}] {}", this.name, string);
 	}
-
+	
 }

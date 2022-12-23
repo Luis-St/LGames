@@ -2,22 +2,28 @@ package net.vgc.player;
 
 import java.util.UUID;
 
+import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.data.serialization.Serializable;
 import net.vgc.data.tag.TagUtil;
-import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class GameProfile implements Encodable, Serializable {
 	
 	public static final GameProfile EMPTY = new GameProfile("empty", Util.EMPTY_UUID);
 	
-	protected final String name;
-	protected final UUID uuid;
+	private final String name;
+	private final UUID uuid;
 	
-	public GameProfile(String name, UUID uuid)  {
+	public GameProfile(String name, UUID uuid) {
 		this.name = name;
 		this.uuid = uuid;
 	}

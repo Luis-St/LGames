@@ -1,27 +1,72 @@
 package net.vgc.server;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 
+import org.jetbrains.annotations.Nullable;
+
+import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.luis.fxutils.FxUtils;
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.Constans;
 import net.vgc.common.application.GameApplication;
+import net.vgc.game.Game;
+import net.vgc.game.player.GamePlayer;
+import net.vgc.game.score.PlayerScore;
 import net.vgc.language.Language;
 import net.vgc.language.LanguageProvider;
 import net.vgc.language.Languages;
-import net.vgc.network.InvalidNetworkSideException;
+import net.vgc.language.TranslationKey;
+import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
-import net.vgc.network.packet.server.ServerPacket;
-import net.vgc.server.dedicated.DedicatedServer;
+import net.vgc.network.packet.PacketDecoder;
+import net.vgc.network.packet.PacketEncoder;
+import net.vgc.player.GameProfile;
+import net.vgc.server.network.ServerPacketHandler;
+import net.vgc.server.player.ServerPlayer;
+import net.vgc.server.players.PlayerList;
+import net.vgc.util.ExceptionHandler;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
+import net.vgc.util.exception.InvalidNetworkSideException;
 
-public class Server extends GameApplication<ServerPacket> implements Tickable {
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+public class Server extends GameApplication implements Tickable {
 	
 	public static Server getInstance() {
 		if (NetworkSide.SERVER.isOn()) {
@@ -30,11 +75,19 @@ public class Server extends GameApplication<ServerPacket> implements Tickable {
 		throw new InvalidNetworkSideException(NetworkSide.SERVER);
 	}
 	
-	protected final Timeline ticker = Util.createTicker("ServerTicker", this);
-	protected String host;
-	protected int port;
-	protected UUID admin;
-	protected DedicatedServer server;
+	private final Timeline ticker = Util.createTicker("ServerTicker", this);
+	private final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
+		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
+	private final List<Channel> channels = Lists.newArrayList();
+	private final List<Connection> connections = Lists.newArrayList();
+	private final ServerPacketHandler packetHandler = new ServerPacketHandler(this);
+	private final PlayerList playerList = new PlayerList(this);
+	private String host;
+	private int port;
+	private UUID admin;
+	private ServerPlayer adminPlayer;
+	private TreeItem<String> playersTreeItem;
+	private Game game;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -100,33 +153,100 @@ public class Server extends GameApplication<ServerPacket> implements Tickable {
 	}
 	
 	@Override
+	public void load() throws IOException {
+		if (!Files.exists(this.gameDirectory)) {
+			Files.createDirectories(this.gameDirectory.getParent());
+			LOGGER.debug("Create server directory");
+		}
+		Path path = this.gameDirectory.resolve("server.data");
+		if (Files.exists(path)) {
+			Tag loadTag = Tag.load(path);
+			if (loadTag instanceof CompoundTag tag) {
+				
+			} else {
+				LOGGER.warn("Fail to load server from {}, since tag {} is not a instance of CompoundTag but it is a tag of type {}", path, loadTag, loadTag.getClass().getSimpleName());
+			}
+		}
+	}
+	
+	@Override
 	protected void setupStage() {
 		try {
-			this.server = new DedicatedServer(this.host, this.port, this.gameDirectory);
-			this.server.init();
-			if (this.admin != null) {
-				if (this.server.getAdmin() == null) {
-					this.server.setAdmin(this.admin);
-				} else if (!this.admin.equals(this.server.getAdmin())) {
-					LOGGER.warn("Fail to set admin to {}, since the admin is already set to {}", this.admin, this.server.getAdmin());
-				}
-			}
-			this.server.displayServer(this.stage);
+			this.stage.setScene(this.makeScene());
+			this.stage.setTitle(TranslationKey.createAndGet("server.constans.name"));
+			this.stage.setResizable(false);
+			this.stage.show();
 		} catch (Exception e) {
 			LOGGER.error("Something went wrong while creating virtual game collection server");
 			throw new RuntimeException("Fail to creating virtual game collection server", e);
 		}
 		try {
-			this.server.startServer();
+			new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
+				@Override
+				protected void initChannel(Channel channel) throws Exception {
+					ChannelPipeline pipeline = channel.pipeline();
+					Connection connection = new Connection();
+					pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
+					pipeline.addLast("decoder", new PacketDecoder());
+					pipeline.addLast("prepender", new ProtobufVarint32LengthFieldPrepender());
+					pipeline.addLast("encoder", new PacketEncoder());
+					pipeline.addLast("handler", connection);
+					Server.this.channels.add(channel);
+					Server.this.connections.add(connection);
+					LOGGER.debug("Client connected with address {}", channel.remoteAddress().toString().replace("/", ""));
+				}
+			}).localAddress(this.host, this.port).bind().syncUninterruptibly().channel();
+			LOGGER.info("Launch dedicated virtual game collection server on host {} with port {}", this.host, this.port);
 		} catch (Exception e) {
 			LOGGER.error("Something went wrong while launching virtual game collection server");
 			throw new RuntimeException("Fail to launch virtual game collection server", e);
 		}
 	}
 	
+	private Scene makeScene() {
+		VBox box = new VBox();
+		TreeView<String> serverTree = new TreeView<>();
+		TreeItem<String> treeItem = new TreeItem<String>(TranslationKey.createAndGet("server.window.server"));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_host", this.host)));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_port", this.port)));
+		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_admin", this.admin)));
+		this.playersTreeItem = new TreeItem<String>(TranslationKey.createAndGet("server.window.players"));
+		for (ServerPlayer player : this.playerList.getPlayers()) {
+			this.playersTreeItem.getChildren().add(player.display());
+		}
+		treeItem.getChildren().add(this.playersTreeItem);
+		serverTree.setRoot(treeItem);
+		serverTree.setShowRoot(Constans.DEBUG);
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 5.0, 5.0);
+		Button settingsButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.menu.settings"), this::openSettings);
+		settingsButton.setPrefWidth(150.0);
+		Button refreshButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshPlayers);
+		refreshButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
+		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), Platform::exit);
+		closeButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
+		if (Constans.IDE) {
+			pane.addRow(0, settingsButton, refreshButton, closeButton);
+		} else {
+			pane.addRow(0, refreshButton, closeButton);
+		}
+		box.getChildren().addAll(serverTree, pane);
+		return new Scene(box, 450.0, 400.0);
+	}
+	
+	private void openSettings() {
+		LOGGER.debug("Settings");
+	}
+	
+	public void refreshPlayers() {
+		this.playersTreeItem.getChildren().removeIf((string) -> true);
+		for (ServerPlayer player : this.playerList.getPlayers()) {
+			this.playersTreeItem.getChildren().add(player.display());
+		}
+	}
+	
 	@Override
 	public void tick() {
-		this.server.tick();
+		this.playerList.tick();
 	}
 	
 	@Override
@@ -150,23 +270,12 @@ public class Server extends GameApplication<ServerPacket> implements Tickable {
 	}
 	
 	@Override
-	public void handlePacket(ServerPacket packet) {
-		if (this.server != null) {
-			this.server.handlePacket(packet);
-		} else {
-			String s = "Fail to handle packet of type " + packet.getClass().getSimpleName() + ", since {}";
-			switch (this.launchState) {
-				case UNKNOWN, STARTING -> LOGGER.warn(s, "the server has not been started yet");
-				case STOPPING -> LOGGER.debug(s, "the server is currently shutting down");
-				case STOPPED -> LOGGER.debug(s, "the server is already terminated");
-				default -> LOGGER.error(s, "a critical error occurred and the server has been terminated");
-			}
-		}
-	}
-	
-	@Override
 	protected Timeline getTicker() {
 		return this.ticker;
+	}
+	
+	public ServerPacketHandler getPacketHandler() {
+		return this.packetHandler;
 	}
 	
 	public Path getGameDirectory() {
@@ -177,15 +286,84 @@ public class Server extends GameApplication<ServerPacket> implements Tickable {
 		return this.resourceDirectory;
 	}
 	
-	public DedicatedServer getServer() {
-		return this.server;
+	public UUID getAdmin() {
+		return this.admin;
+	}
+	
+	public boolean isAdmin(ServerPlayer player) {
+		return player.getProfile().getUUID().equals(this.admin);
+	}
+	
+	@Nullable
+	public ServerPlayer getAdminPlayer() {
+		if (this.playerList != null && this.adminPlayer == null) {
+			this.adminPlayer = this.playerList.getPlayer(this.admin);
+		}
+		return this.adminPlayer;
+	}
+	
+	public PlayerList getPlayerList() {
+		return this.playerList;
+	}
+	
+	public Game getGame() {
+		return this.game;
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
+	}
+	
+	public void enterPlayer(Connection connection, GameProfile profile) {
+		ServerPlayer player = new ServerPlayer(profile, new PlayerScore(profile), this);
+		this.playerList.addPlayer(connection, player);
+		if (this.admin != null && this.admin.equals(profile.getUUID())) {
+			if (this.adminPlayer == null) {
+				LOGGER.info("Server admin joined the server");
+				this.adminPlayer = player;
+			} else {
+				LOGGER.error("Unable to set admin player to {}, since he is already set {}", player, this.adminPlayer);
+				throw new IllegalStateException("Multiple server admins are not allowed");
+			}
+		}
+	}
+	
+	public void leavePlayer(Connection connection, ServerPlayer player) {
+		if (this.channels.contains(connection.getChannel()) && this.connections.contains(connection)) {
+			this.channels.remove(connection.getChannel());
+			this.connections.remove(connection);
+			LOGGER.debug("Remove channel and connection for player {}", player != null ? player.getProfile().getName() : "");
+		}
+		if (player != null) {
+			this.playerList.removePlayer(player);
+			if (this.admin != null && this.admin.equals(player.getProfile().getUUID()) && this.adminPlayer != null) {
+				LOGGER.info("Server admin left the server");
+				this.adminPlayer = null;
+			}
+			if (this.game != null) {
+				GamePlayer gamePlayer = this.game.getPlayerFor(player);
+				if (gamePlayer != null) {
+					this.game.removePlayer(gamePlayer, false);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void save() throws IOException {
+		Tag.save(this.gameDirectory.resolve("server.data"), new CompoundTag());
+		LOGGER.debug("Save server data");
 	}
 	
 	@Override
 	protected void handleStop() throws Exception {
 		this.ticker.stop();
-		this.server.stopServer();
-		this.server = null;
+		this.adminPlayer = null;
+		this.playerList.removeAllPlayers();
+		this.connections.clear();
+		this.channels.forEach(Channel::close);
+		this.channels.clear();
+		this.group.shutdownGracefully();
 	}
 	
 }

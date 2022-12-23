@@ -7,27 +7,34 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import net.luis.fxutils.FxUtils;
+import net.luis.utils.data.tag.TagUtils;
+import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.Constans;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.data.serialization.Serializable;
-import net.vgc.data.tag.TagUtil;
-import net.vgc.data.tag.tags.CompoundTag;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
-public final class PlayerAccount implements Encodable, Serializable  {
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+public final class PlayerAccount implements Encodable, Serializable {
 	
 	public static final PlayerAccount UNKNOWN = new PlayerAccount("Unknown", "unknown", Util.EMPTY_UUID, false);
 	
-	protected final String name;
-	protected final String password;
-	protected final UUID uuid;
-	protected final boolean guest;
-	protected boolean taken;
+	private final String name;
+	private final String password;
+	private final UUID uuid;
+	private final boolean guest;
+	private boolean taken;
 	
 	public PlayerAccount(String name, String password, UUID uuid, boolean guest) {
 		this.name = name;
@@ -47,7 +54,7 @@ public final class PlayerAccount implements Encodable, Serializable  {
 	public PlayerAccount(CompoundTag tag) {
 		this.name = tag.getString("name");
 		this.password = tag.getString("password");
-		this.uuid = TagUtil.readUUID(tag.getCompound("uuid"));
+		this.uuid = TagUtils.readUUID(tag.getCompound("uuid"));
 		this.guest = tag.getBoolean("guest");
 	}
 	
@@ -63,7 +70,7 @@ public final class PlayerAccount implements Encodable, Serializable  {
 		return treeItem;
 	}
 	
-	protected String obfuscated() {
+	private String obfuscated() {
 		String obfuscated = "";
 		for (int i = 0; i < this.password.length(); i++) {
 			obfuscated += "?";
@@ -76,14 +83,14 @@ public final class PlayerAccount implements Encodable, Serializable  {
 	}
 	
 	public String getPassword() {
-		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this.equals(UNKNOWN)) {
+		if (NetworkSide.ACCOUNT.isOn() || Constans.IDE || this.equals(UNKNOWN)) {
 			return this.password;
 		}
 		return this.obfuscated();
 	}
 	
 	public boolean isObfuscated() {
-		return !(NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this.equals(UNKNOWN));
+		return !(NetworkSide.ACCOUNT.isOn() || Constans.IDE || this.equals(UNKNOWN));
 	}
 	
 	public void displayPassword(GridPane pane) {
@@ -91,14 +98,14 @@ public final class PlayerAccount implements Encodable, Serializable  {
 			Text text = new Text(this.obfuscated());
 			ToggleButton button = new ToggleButton();
 			button.setToggleGroup(new ToggleGroup());
-			button.setGraphic(FxUtil.makeImageView("textures/password_invisible.png", 20.0, 20.0));
-			button.setOnAction((event) ->  {
+			button.setGraphic(FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve("textures/password_invisible.png").toString(), 20.0, 20.0));
+			button.setOnAction((event) -> {
 				if (button.isSelected()) {
 					text.setText(this.password);
-					button.setGraphic(FxUtil.makeImageView("textures/password_visible.png", 20.0, 20.0));
+					button.setGraphic(FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve("textures/password_visible.png").toString(), 20.0, 20.0));
 				} else {
 					text.setText(this.obfuscated());
-					button.setGraphic(FxUtil.makeImageView("textures/password_invisible.png", 20.0, 20.0));
+					button.setGraphic(FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve("textures/password_invisible.png").toString(), 20.0, 20.0));
 				}
 			});
 			pane.add(text, 1, 1);
@@ -149,7 +156,7 @@ public final class PlayerAccount implements Encodable, Serializable  {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("name", this.name);
 		tag.putString("password", this.password);
-		tag.put("uuid", TagUtil.writeUUID(this.uuid));
+		tag.put("uuid", TagUtils.writeUUID(this.uuid));
 		tag.putBoolean("guest", this.guest);
 		return tag;
 	}
@@ -166,7 +173,7 @@ public final class PlayerAccount implements Encodable, Serializable  {
 	public String toString() {
 		StringBuilder builder = new StringBuilder("PlayerAccount{");
 		builder.append("name=").append(this.name).append(",");
-		if (NetworkSide.ACCOUNT_SERVER.isOn() || Constans.IDE || this.equals(UNKNOWN)) {
+		if (NetworkSide.ACCOUNT.isOn() || Constans.IDE || this.equals(UNKNOWN)) {
 			builder.append("password=").append(this.password).append(",");
 		} else {
 			builder.append("password=").append(this.obfuscated()).append(",");

@@ -1,8 +1,14 @@
 package net.vgc.util;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.vgc.Main;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public interface EnumRepresentable {
 	

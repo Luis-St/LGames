@@ -6,21 +6,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
 import javafx.animation.Timeline;
-import javafx.scene.Scene;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.Constans;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
-import net.vgc.client.game.ClientGame;
-import net.vgc.client.network.ClientPacketListener;
+import net.vgc.client.network.ClientPacketHandler;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.client.player.RemotePlayer;
@@ -29,19 +29,23 @@ import net.vgc.client.screen.MenuScreen;
 import net.vgc.client.screen.Screen;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.common.application.GameApplication;
-import net.vgc.data.tag.Tag;
-import net.vgc.data.tag.tags.CompoundTag;
+import net.vgc.game.Game;
 import net.vgc.network.ConnectionHandler;
-import net.vgc.network.InvalidNetworkSideException;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.account.ClientExitPacket;
-import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
+import net.vgc.util.exception.InvalidNetworkSideException;
 
-public class Client extends GameApplication<ClientPacket> implements Tickable, Screenable {
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+public class Client extends GameApplication implements Tickable, Screenable {
 	
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
@@ -50,23 +54,24 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 		throw new InvalidNetworkSideException(NetworkSide.CLIENT);
 	}
 	
-	protected final Timeline ticker = Util.createTicker("ClientTicker", this);
-	protected final List<AbstractClientPlayer> players = Lists.newArrayList();
-	protected final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", () -> new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
+	private final Timeline ticker = Util.createTicker("ClientTicker", this);
+	private final List<AbstractClientPlayer> players = Lists.newArrayList();
+	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
 		connection.send(new ClientLeavePacket(this.account));
 	});
-	protected final ConnectionHandler accountHandler = new ConnectionHandler("account server", () ->  new ClientPacketListener(this, NetworkSide.CLIENT), (connection) -> {
+	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
 		connection.send(new ClientExitPacket(this.account));
 	});
-	protected boolean instantLoading;
-	protected boolean safeLoading;
-	protected LoginWindow loginWindow;
-	protected PlayerAccount account;
-	protected LocalPlayer player;
-	protected ClientSettings settings;
-	protected String accountHost;
-	protected int accountPort;
-	protected ClientGame game;
+	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
+	private boolean instantLoading;
+	private boolean safeLoading;
+	private LoginWindow loginWindow;
+	private PlayerAccount account;
+	private LocalPlayer player;
+	private ClientSettings settings;
+	private String accountHost;
+	private int accountPort;
+	private Game game;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -169,14 +174,7 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 		} else if (!this.stage.getTitle().trim().isEmpty()) {
 			this.stage.setTitle("");
 		}
-		this.setScene(screen.show());
-	}
-	
-	protected void setScene(Scene scene) {
-		if (scene instanceof ScreenScene screenScene) {
-			screenScene.setInputListeners();
-		}
-		this.stage.setScene(scene);
+		this.stage.setScene(screen.show());
 	}
 	
 	@Override
@@ -200,24 +198,12 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 	}
 	
 	@Override
-	public void handlePacket(ClientPacket packet) {
-		Scene scene = this.stage.getScene();
-		if (scene != null && scene instanceof ScreenScene screenScene) {
-			Screen screen = screenScene.getScreen();
-			if (screen != null) {
-				screen.handlePacket(packet);
-			} else {
-				LOGGER.warn("Fail to handle packet of type {} in screen, since there is no screen set", packet.getClass().getSimpleName());
-			}
-		}
-		if (this.game != null) {
-			this.game.handlePacket(packet);
-		}
-	}
-	
-	@Override
 	protected Timeline getTicker() {
 		return this.ticker;
+	}
+	
+	public ClientPacketHandler getPacketHandler() {
+		return this.packetHandler;
 	}
 	
 	public boolean isInstantLoading() {
@@ -335,11 +321,11 @@ public class Client extends GameApplication<ClientPacket> implements Tickable, S
 		return this.accountPort;
 	}
 	
-	public ClientGame getGame() {
+	public Game getGame() {
 		return this.game;
 	}
 	
-	public void setGame(ClientGame game) {
+	public void setGame(Game game) {
 		this.game = game;
 	}
 	

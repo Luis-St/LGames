@@ -6,11 +6,11 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import net.luis.fxutils.FxUtils;
 import net.vgc.Constans;
 import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxAnimationUtil;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.InputPane;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.language.TranslationKey;
@@ -19,14 +19,20 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class MultiplayerScreen extends Screen {
 	
-	protected final Screen backScreen;
-	protected InputPane hostInputPane;
-	protected InputPane portInputPane;
-	protected ButtonBox connectButtonBox;
-	protected ButtonBox connectLocalButtonBox;
-	protected ButtonBox backButtonBox;
+	private final Screen backScreen;
+	private InputPane hostInputPane;
+	private InputPane portInputPane;
+	private ButtonBox connectButtonBox;
+	private ButtonBox connectLocalButtonBox;
+	private ButtonBox backButtonBox;
 	
 	public MultiplayerScreen(Screen backScreen) {
 		this.backScreen = backScreen;
@@ -41,11 +47,11 @@ public class MultiplayerScreen extends Screen {
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
 	
-	protected boolean canConnect() {
+	private boolean canConnect() {
 		if (this.client.isLoggedIn()) {
 			return true;
 		} else {
-			if (this.client.getLoginWindow() == null)  {
+			if (this.client.getLoginWindow() == null) {
 				LoginWindow window = new LoginWindow(this.client, new Stage());
 				window.show();
 			}
@@ -53,7 +59,7 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	protected void handleConnect() {
+	private void handleConnect() {
 		if (this.canConnect()) {
 			String host = StringUtils.trimToEmpty(this.hostInputPane.getText());
 			String port = StringUtils.trimToEmpty(this.portInputPane.getText());
@@ -71,7 +77,7 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	protected void handleConnectLocal() {
+	private void handleConnectLocal() {
 		if (this.canConnect()) {
 			this.hostInputPane.setText("127.0.0.1");
 			this.portInputPane.setText("8080");
@@ -80,7 +86,7 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	protected void connectAndSend(String host, int port, Packet<?> packet) {
+	private void connectAndSend(String host, int port, Packet packet) {
 		ConnectionHandler handler = this.client.getServerHandler();
 		try {
 			handler.connect(host, port);
@@ -96,14 +102,14 @@ public class MultiplayerScreen extends Screen {
 		}
 	}
 	
-	protected void handleBack() {
+	private void handleBack() {
 		this.showScreen(this.backScreen);
 	}
 	
 	@Override
 	protected Pane createPane() {
-		GridPane outerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		GridPane innerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane outerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane innerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		if (Constans.IDE) {
 			innerPane.addColumn(0, this.connectButtonBox, this.connectLocalButtonBox, this.backButtonBox);
 		} else {
@@ -112,5 +118,5 @@ public class MultiplayerScreen extends Screen {
 		outerPane.addColumn(0, this.hostInputPane, this.portInputPane, innerPane);
 		return outerPane;
 	}
-
+	
 }

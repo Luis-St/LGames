@@ -3,15 +3,21 @@ package net.vgc.network.packet.server.game;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.network.packet.server.ServerPacket;
 import net.vgc.player.GameProfile;
-import net.vgc.server.network.ServerPacketListener;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class SelectGameFieldPacket implements ServerPacket {
 	
-	protected final GameProfile profile;
-	protected final GameFieldType fieldType;
-	protected final GameFieldPos fieldPos;
+	private final GameProfile profile;
+	private final GameFieldType fieldType;
+	private final GameFieldPos fieldPos;
 	
 	public SelectGameFieldPacket(GameProfile profile, GameFieldType fieldType, GameFieldPos fieldPos) {
 		this.profile = profile;
@@ -31,22 +37,20 @@ public class SelectGameFieldPacket implements ServerPacket {
 		buffer.writeEnumInterface(this.fieldType);
 		buffer.writeInterface(this.fieldPos);
 	}
-
-	@Override
-	public void handle(ServerPacketListener listener) {
-		
-	}
 	
+	@PacketGetter
 	public GameProfile getProfile() {
 		return this.profile;
 	}
 	
+	@PacketGetter
 	public GameFieldType getFieldType() {
 		return this.fieldType;
 	}
 	
+	@PacketGetter
 	public GameFieldPos getFieldPos() {
 		return this.fieldPos;
 	}
-
+	
 }

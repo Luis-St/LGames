@@ -6,15 +6,18 @@ import org.apache.logging.log4j.Logger;
 import javafx.scene.layout.Pane;
 import net.vgc.Main;
 import net.vgc.client.Client;
-import net.vgc.client.fx.InputHandler;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Showable;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.util.Tickable;
 
-public abstract class Screen implements Showable, Tickable, InputHandler, PacketHandler<ClientPacket> {
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+public abstract class Screen implements Showable, Tickable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(Main.class);
 	
@@ -33,11 +36,6 @@ public abstract class Screen implements Showable, Tickable, InputHandler, Packet
 	
 	@Override
 	public void tick() {
-		
-	}
-	
-	@Override
-	public void handlePacket(ClientPacket clientPacket) {
 		
 	}
 	

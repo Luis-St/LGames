@@ -11,14 +11,20 @@ import net.vgc.data.codec.CodecConstructor;
 import net.vgc.data.codec.CodecGetter;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class LanguageFile {
 	
 	public static final Codec<LanguageFile> CODEC = RecordCodecBuilder.create((instance) -> {
 		return instance.group(Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("keys").forGetter(LanguageFile::getLanguageKeyMap)).apply(instance, LanguageFile::new);
 	});
 	
-	protected final List<Translation> translations;
-	protected Language language;
+	private final List<Translation> translations;
+	private Language language;
 	
 	public LanguageFile(List<Translation> translations) {
 		this.translations = translations;

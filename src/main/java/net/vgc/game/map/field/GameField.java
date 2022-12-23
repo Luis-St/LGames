@@ -1,17 +1,34 @@
 package net.vgc.game.map.field;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
-import net.vgc.game.player.field.GameFigure;
+import javafx.scene.image.ImageView;
+import net.vgc.game.GameResult;
+import net.vgc.game.map.GameMap;
+import net.vgc.game.player.GamePlayerType;
+import net.vgc.game.player.figure.GameFigure;
+import net.vgc.player.GameProfile;
+import net.vgc.util.Util;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public interface GameField {
 	
 	public static final Logger LOGGER = LogManager.getLogger();
 	
+	void init();
+	
+	GameMap getMap();
+	
 	GameFieldType getFieldType();
+	
+	GamePlayerType getColorType();
 	
 	GameFieldPos getFieldPos();
 	
@@ -32,14 +49,43 @@ public interface GameField {
 	
 	void setFigure(@Nullable GameFigure figure);
 	
-	default void clear() {
-		this.setFigure(null);
-	}
-	
 	default boolean isEmpty() {
 		return this.getFigure() == null;
 	}
 	
-	GameFieldInfo getFieldInfo();
+	default void clearFigure() {
+		this.setFigure(null);
+	}
+	
+	GameResult getResult();
+	
+	void setResult(GameResult result);
+	
+	boolean canSelect();
+	
+	boolean isShadowed();
+	
+	void setShadowed(boolean shadowed);
+	
+	default void clearShadow() {
+		this.setShadowed(false);
+	}
+	
+	default void clear() {
+		this.clearFigure();
+	}
+	
+	@Nullable
+	ImageView getFieldBackground();
+	
+	void updateFieldGraphic();
+	
+	default GameFieldInfo getFieldInfo() {
+		if (this.isEmpty()) {
+			return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+		}
+		GameFigure figure = this.getFigure();
+		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
+	}
 	
 }

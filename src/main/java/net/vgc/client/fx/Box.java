@@ -5,11 +5,17 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Box<T extends Node> extends VBox {
 	
-	protected final T node;
-	protected final Pos pos;
-	protected final Insets padding;
+	private final T node;
+	private final Pos pos;
+	private final Insets padding;
 	
 	public Box(T node) {
 		this(node, Pos.CENTER);

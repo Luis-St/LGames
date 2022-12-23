@@ -1,12 +1,18 @@
 package net.vgc.network.packet.account;
 
 import net.vgc.account.PlayerAccount;
-import net.vgc.account.network.AccountServerPacketListener;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class ClientExitPacket implements AccountPacket {
 	
-	protected final PlayerAccount account;
+	private final PlayerAccount account;
 	
 	public ClientExitPacket(PlayerAccount account) {
 		this.account = account == null ? PlayerAccount.UNKNOWN : account;
@@ -20,14 +26,10 @@ public class ClientExitPacket implements AccountPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.account);
 	}
-
-	@Override
-	public void handle(AccountServerPacketListener listener) {
-		listener.handleClientLogoutExit(this.account.getName(), this.account.getPassword());
-	}
 	
+	@PacketGetter
 	public PlayerAccount getAccount() {
 		return this.account;
 	}
-
+	
 }

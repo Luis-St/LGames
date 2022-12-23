@@ -4,28 +4,38 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.PlayerInfoPane;
 import net.vgc.client.fx.game.PlayerScorePane;
-import net.vgc.client.game.games.ttt.TTTClientGame;
-import net.vgc.client.game.games.ttt.map.TTTClientMap;
-import net.vgc.client.game.games.ttt.map.field.TTTClientField;
-import net.vgc.game.games.ttt.map.field.TTTFieldType;
+import net.vgc.client.games.ttt.TTTClientGame;
+import net.vgc.client.games.ttt.map.TTTClientMap;
+import net.vgc.game.map.field.GameField;
+import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.TTTGameResultPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class TTTScreen extends GameScreen {
 	
-	protected final TTTClientGame game;
-	protected PlayerInfoPane playerInfo;
-	protected ButtonBox leaveButton;
-	protected ButtonBox playAgainButton;
-	protected ButtonBox confirmActionButton;
+	private final TTTClientGame game;
+	private PlayerInfoPane playerInfo;
+	private ButtonBox leaveButton;
+	private ButtonBox playAgainButton;
+	private ButtonBox confirmActionButton;
 	
 	public TTTScreen(TTTClientGame game) {
 		this.game = game;
@@ -42,19 +52,19 @@ public class TTTScreen extends GameScreen {
 		this.confirmActionButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.confirm_action"), Pos.CENTER, 20.0, this::handleConfirmAction);
 	}
 	
-	protected void handleLeave() {
+	private void handleLeave() {
 		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
 	}
 	
-	protected void handlePlayAgain() {
+	private void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
 			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
 	
-	protected void handleConfirmAction() {
-		TTTClientField field = this.game.getMap().getSelectedField();
+	private void handleConfirmAction() {
+		GameField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().isCurrent()) {
 				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), TTTFieldType.DEFAULT, field.getFieldPos()));
@@ -67,10 +77,10 @@ public class TTTScreen extends GameScreen {
 		}
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
-		if (clientPacket instanceof TTTGameResultPacket packet) {
+		if (clientPacket instanceof GameResultPacket packet) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}
@@ -84,16 +94,19 @@ public class TTTScreen extends GameScreen {
 		return pane;
 	}
 	
-	protected PlayerInfoPane createInfoPane() {
+	private PlayerInfoPane createInfoPane() {
 		return this.playerInfo;
 	}
 	
-	protected TTTClientMap createGamePane() {
-		return this.game.getMap();
+	private Pane createGamePane() {
+		if (this.game.getMap() instanceof TTTClientMap map) {
+			return map.getGridPane();
+		}
+		throw new NullPointerException("The map of game tic tac toe is null");
 	}
 	
-	protected Pane createActionPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 30.0);
+	private Pane createActionPane() {
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 30.0);
 		pane.addRow(0, this.leaveButton, this.playAgainButton, this.confirmActionButton);
 		return pane;
 	}

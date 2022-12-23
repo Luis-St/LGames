@@ -3,19 +3,25 @@ package net.vgc.network.packet.client;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.vgc.client.network.ClientPacketListener;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
 import net.vgc.server.player.ServerPlayer;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ClientJoinedPacket implements ClientPacket {
 	
-	protected final List<GameProfile> profiles;
+	private final List<GameProfile> profiles;
 	
 	public ClientJoinedPacket(List<ServerPlayer> players) {
 		this.profiles = players.stream().map(ServerPlayer::getProfile).collect(Collectors.toList());
 	}
-
+	
 	public ClientJoinedPacket(FriendlyByteBuffer buffer) {
 		this.profiles = buffer.readList(() -> {
 			return buffer.read(GameProfile.class);
@@ -28,14 +34,10 @@ public class ClientJoinedPacket implements ClientPacket {
 			buffer.write(profile);
 		});
 	}
-
-	@Override
-	public void handle(ClientPacketListener listener) {
-		listener.handleClientJoined(this.profiles);
-	}
 	
+	@PacketGetter
 	public List<GameProfile> getProfiles() {
 		return this.profiles;
 	}
-
+	
 }

@@ -8,17 +8,22 @@ import org.apache.logging.log4j.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import net.vgc.network.SkipPacketException;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.exception.SkipPacketException;
 
-public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+public class PacketEncoder extends MessageToByteEncoder<Packet> {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	protected void encode(ChannelHandlerContext context, Packet<?> packet, ByteBuf output) throws Exception {
-		int id = Packets.getId((Class<? extends Packet<?>>) packet.getClass());
+	protected void encode(ChannelHandlerContext context, Packet packet, ByteBuf output) throws Exception {
+		int id = Packets.getId((Class<? extends Packet>) packet.getClass());
 		if (id == -1) {
 			LOGGER.error("Can not encode packet {}", packet.getClass().getSimpleName());
 			throw new IOException("Can not encode packet " + packet.getClass().getSimpleName() + ", since it is not registered");
@@ -41,7 +46,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 					throw new RuntimeException("Fail to encode packet " + packet.getClass().getSimpleName(), e);
 				}
 			}
-
+			
 		}
 	}
 	
@@ -49,5 +54,5 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
 		LOGGER.warn("Caught an exception while encode a packet");
 	}
-
+	
 }

@@ -17,16 +17,22 @@ import com.google.common.collect.Maps;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.luis.utils.util.ReflectionHelper;
 import net.vgc.util.EnumRepresentable;
-import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class FriendlyByteBuffer {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final ByteBuf buffer;
+	private final ByteBuf buffer;
 	
 	public FriendlyByteBuffer() {
 		this(Unpooled.buffer());

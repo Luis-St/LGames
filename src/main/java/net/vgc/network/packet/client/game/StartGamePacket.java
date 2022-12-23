@@ -2,17 +2,23 @@ package net.vgc.network.packet.client.game;
 
 import java.util.List;
 
-import net.vgc.client.network.ClientPacketListener;
-import net.vgc.game.GameType;
-import net.vgc.game.GameTypes;
 import net.vgc.game.player.GamePlayerInfo;
+import net.vgc.game.type.GameType;
+import net.vgc.game.type.GameTypes;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.listener.PacketGetter;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class StartGamePacket implements ClientPacket {
 	
-	protected final GameType<?, ?> gameType;
-	protected final List<GamePlayerInfo> playerInfos;
+	private final GameType<?, ?> gameType;
+	private final List<GamePlayerInfo> playerInfos;
 	
 	public StartGamePacket(GameType<?, ?> gameType, List<GamePlayerInfo> playerInfos) {
 		this.gameType = gameType;
@@ -31,16 +37,13 @@ public class StartGamePacket implements ClientPacket {
 		buffer.writeString(this.gameType.getName());
 		buffer.writeList(this.playerInfos, buffer::write);
 	}
-
-	@Override
-	public void handle(ClientPacketListener listener) {
-		listener.handleStartGame(this.gameType, this.playerInfos);
-	}
 	
+	@PacketGetter
 	public GameType<?, ?> getGameType() {
 		return this.gameType;
 	}
 	
+	@PacketGetter
 	public List<GamePlayerInfo> getPlayerInfos() {
 		return this.playerInfos;
 	}

@@ -10,6 +10,12 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class FxAnimationUtil {
 	
 	public static void makeEmptyText(TextField field, int millis) {

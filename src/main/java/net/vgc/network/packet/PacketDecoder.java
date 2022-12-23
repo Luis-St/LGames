@@ -9,12 +9,18 @@ import org.apache.logging.log4j.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import net.vgc.network.SkipPacketException;
 import net.vgc.network.buffer.FriendlyByteBuffer;
+import net.vgc.util.exception.SkipPacketException;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class PacketDecoder extends ByteToMessageDecoder {
-
-	protected static final Logger LOGGER = LogManager.getLogger();
+	
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
 	protected void decode(ChannelHandlerContext context, ByteBuf input, List<Object> output) throws Exception {
@@ -22,7 +28,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
 		if (i != 0) {
 			FriendlyByteBuffer buffer = new FriendlyByteBuffer(input);
 			int id = buffer.readInt();
-			Packet<?> packet = Packets.getPacket(id, buffer);
+			Packet packet = Packets.getPacket(id, buffer);
 			if (packet == null) {
 				LOGGER.error("Fail to get packet for id {}", id);
 				throw new IOException("Fail to get packet for id: " + id);
@@ -52,5 +58,5 @@ public class PacketDecoder extends ByteToMessageDecoder {
 	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
 		LOGGER.warn("Caught an exception while decode a packet");
 	}
-
+	
 }

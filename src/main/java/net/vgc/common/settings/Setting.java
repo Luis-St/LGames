@@ -9,26 +9,32 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.tags.CompoundTag;
+import net.luis.utils.data.tag.tags.StringTag;
 import net.vgc.data.serialization.Serializable;
-import net.vgc.data.tag.Tag;
 import net.vgc.data.tag.TagUtil;
-import net.vgc.data.tag.tags.CompoundTag;
-import net.vgc.data.tag.tags.StringTag;
 import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.exception.InvalidValueException;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Setting<T> implements Serializable {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final List<BiConsumer<T, T>> listeners = Lists.newArrayList();
-	protected final TranslationKey name;
-	protected final TranslationKey description;
-	protected final SettingValueType<T> valueType;
-	protected final T defaultValue;
-	protected final List<T> possibleValues;
-	protected T value;
+	private final List<BiConsumer<T, T>> listeners = Lists.newArrayList();
+	private final TranslationKey name;
+	private final TranslationKey description;
+	private final SettingValueType<T> valueType;
+	private final T defaultValue;
+	private final List<T> possibleValues;
+	private T value;
 	
 	@SafeVarargs
 	public Setting(TranslationKey name, TranslationKey description, SettingValueType<T> valueType, T defaultValue, T... possibleValues) {

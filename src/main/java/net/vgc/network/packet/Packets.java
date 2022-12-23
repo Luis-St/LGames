@@ -4,13 +4,13 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Maps;
 
+import net.luis.utils.util.ReflectionHelper;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
@@ -29,30 +29,33 @@ import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.vgc.network.packet.client.game.ExitGamePacket;
 import net.vgc.network.packet.client.game.GameActionFailedPacket;
-import net.vgc.network.packet.client.game.LudoGameResultPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.StartGamePacket;
 import net.vgc.network.packet.client.game.StopGamePacket;
-import net.vgc.network.packet.client.game.TTTGameResultPacket;
-import net.vgc.network.packet.client.game.UpdateGameFieldPacket;
 import net.vgc.network.packet.client.game.UpdateGameMapPacket;
-import net.vgc.network.packet.client.game.Wins4GameResultPacket;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.network.packet.server.ClientLeavePacket;
+import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
-import net.vgc.network.packet.server.game.PlayGameRequestPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.vgc.util.ReflectionHelper;
 import net.vgc.util.Util;
+import net.vgc.util.exception.InvalidPacketException;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class Packets {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
-	protected static final Map<Integer, Class<? extends Packet<?>>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Map<Integer, Class<? extends Packet>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
 		int i = 0;
 		map.put(i++, ClientLoginPacket.class);
 		map.put(i++, ClientLogoutPacket.class);
@@ -79,11 +82,8 @@ public class Packets {
 		map.put(i++, GameActionFailedPacket.class);
 		map.put(i++, SelectGameFieldPacket.class);
 		map.put(i++, CanSelectGameFieldPacket.class);
-		map.put(i++, UpdateGameFieldPacket.class);
 		map.put(i++, UpdateGameMapPacket.class);
-		map.put(i++, TTTGameResultPacket.class);
-		map.put(i++, LudoGameResultPacket.class);
-		map.put(i++, Wins4GameResultPacket.class);
+		map.put(i++, GameResultPacket.class);
 		map.put(i++, ExitGameRequestPacket.class);
 		map.put(i++, ExitGamePacket.class);
 		map.put(i++, StopGamePacket.class);
@@ -91,8 +91,8 @@ public class Packets {
 	});
 	
 	@Nullable
-	public static Class<? extends Packet<?>> byId(int id) {
-		Class<? extends Packet<?>> clazz = PACKETS.get(id);
+	public static Class<? extends Packet> byId(int id) {
+		Class<? extends Packet> clazz = PACKETS.get(id);
 		if (clazz != null) {
 			return clazz;
 		}
@@ -100,8 +100,8 @@ public class Packets {
 		return null;
 	}
 	
-	public static int getId(Class<? extends Packet<?>> clazz) {
-		for (Entry<Integer, Class<? extends Packet<?>>> entry : PACKETS.entrySet()) {
+	public static int getId(Class<? extends Packet> clazz) {
+		for (Entry<Integer, Class<? extends Packet>> entry : PACKETS.entrySet()) {
 			if (entry.getValue() == clazz) {
 				return entry.getKey();
 			}
@@ -111,19 +111,19 @@ public class Packets {
 	}
 	
 	@Nullable
-	public static Packet<?> getPacket(int id, FriendlyByteBuffer buffer) {
-		Class<? extends Packet<?>> clazz = byId(id);
+	public static Packet getPacket(int id, FriendlyByteBuffer buffer) {
+		Class<? extends Packet> clazz = byId(id);
 		if (clazz != null) {
 			try {
 				if (ReflectionHelper.hasConstructor(clazz, FriendlyByteBuffer.class)) {
-					Constructor<? extends Packet<?>> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
+					Constructor<? extends Packet> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
 					return constructor.newInstance(buffer);
 				} else {
 					LOGGER.error("Packet {} does not have a constructor with FriendlyByteBuffer as parameter", clazz.getSimpleName());
 					throw new InvalidPacketException("Packet " + clazz.getSimpleName() + " does not have a FriendlyByteBuffer constructor");
 				}
 			} catch (Exception e) {
-				LOGGER.error("Fail to get create packet of type {} for id {}", clazz.getSimpleName(), id);
+				LOGGER.error("Fail to create packet of type {} for id {}", clazz.getSimpleName(), id);
 				throw new RuntimeException(e);
 			}
 		}

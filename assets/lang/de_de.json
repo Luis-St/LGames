@@ -50,7 +50,7 @@
     "screen.tic_tac_toe.cross_player": "Spieler (X): %1%",
     "screen.tic_tac_toe.player_info": "Spielerinfo",
     "settings.language.name": "Sprache",
-    "screen.player_select.play": "Play",
+    "screen.player_select.play": "Spielen",
     "server.window.player": "%1%\u0027s spieler",
     "screen.tic_tac_toe.no_data": "Noch keine Daten verfügbar",
     "window.error.continue": "Weiter",

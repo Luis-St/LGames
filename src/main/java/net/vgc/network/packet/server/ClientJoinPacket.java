@@ -3,12 +3,18 @@ package net.vgc.network.packet.server;
 import java.util.UUID;
 
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.server.network.ServerPacketListener;
+import net.vgc.network.packet.listener.PacketGetter;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class ClientJoinPacket implements ServerPacket {
 	
-	protected final String name;
-	protected final UUID uuid;
+	private final String name;
+	private final UUID uuid;
 	
 	public ClientJoinPacket(String name, UUID uuid) {
 		this.name = name;
@@ -25,18 +31,15 @@ public class ClientJoinPacket implements ServerPacket {
 		buffer.writeString(this.name);
 		buffer.writeUUID(this.uuid);
 	}
-
-	@Override
-	public void handle(ServerPacketListener listener) {
-		listener.handleClientJoin(this.name, this.uuid);
-	}
 	
+	@PacketGetter
 	public String getName() {
 		return this.name;
 	}
 	
+	@PacketGetter
 	public UUID getUUID() {
 		return this.uuid;
 	}
-
+	
 }

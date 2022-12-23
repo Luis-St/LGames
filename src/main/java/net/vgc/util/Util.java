@@ -11,10 +11,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -27,12 +26,18 @@ import net.vgc.Constans;
 import net.vgc.util.streams.DebugPrintStream;
 import net.vgc.util.streams.InfoPrintStream;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Util {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(Util.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 	
-	public static <T> T make(T object, Consumer<T> consumer) {	
+	public static <T> T make(T object, Consumer<T> consumer) {
 		consumer.accept(object);
 		return object;
 	}
@@ -126,15 +131,6 @@ public class Util {
 	
 	public static Random systemRandom() {
 		return new Random(System.currentTimeMillis());
-	}
-	
-	@SafeVarargs
-	public static <T> List<T> concatLists(List<T>... lists) {
-		List<T> list = Lists.newArrayList();
-		for (List<T> t : lists) {
-			list.addAll(t);
-		}
-		return list;
 	}
 	
 	public static void warpStreams(boolean debugMode) {

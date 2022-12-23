@@ -2,13 +2,15 @@ package net.vgc.common.loading;
 
 import net.vgc.util.EnumRepresentable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum LaunchState implements EnumRepresentable {
 	
-	STARTING("starting", 0),
-	STARTED("started", 1),
-	STOPPING("stopping", 2),
-	STOPPED("stopped", 3),
-	UNKNOWN("unknown", 4);
+	STARTING("starting", 0), STARTED("started", 1), STOPPING("stopping", 2), STOPPED("stopped", 3), UNKNOWN("unknown", 4);
 	
 	private final String name;
 	private final int id;
@@ -22,7 +24,7 @@ public enum LaunchState implements EnumRepresentable {
 	public String getName() {
 		return this.name;
 	}
-
+	
 	@Override
 	public int getId() {
 		return this.id;

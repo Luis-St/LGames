@@ -9,26 +9,36 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.player.AbstractClientPlayer;
-import net.vgc.game.GameType;
+import net.vgc.game.type.GameType;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.client.PlayerAddPacket;
 import net.vgc.network.packet.client.PlayerRemovePacket;
 import net.vgc.network.packet.client.SyncPermissionPacket;
 import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
-import net.vgc.network.packet.server.game.PlayGameRequestPacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
+import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class PlayerSelectScreen extends Screen {
 	
-	protected final GameType<?, ?> gameType;
-	protected final Screen backScreen;
-	protected ListView<String> playerList;
-	protected ButtonBox backButtonBox;
-	protected ButtonBox playButtonBox;
+	private final GameType<?, ?> gameType;
+	private final Screen backScreen;
+	private ListView<String> playerList;
+	private ButtonBox backButtonBox;
+	private ButtonBox playButtonBox;
 	
 	public PlayerSelectScreen(GameType<?, ?> gameType, Screen backScreen) {
 		this.gameType = gameType;
@@ -50,11 +60,11 @@ public class PlayerSelectScreen extends Screen {
 		this.playButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.player_select.play"), this::handlePlay);
 	}
 	
-	protected void handleBack() {
+	private void handleBack() {
 		this.showScreen(this.backScreen);
 	}
 	
-	protected void handlePlay() {
+	private void handlePlay() {
 		if (this.client.getPlayer().isAdmin()) {
 			List<String> selected = this.playerList.getSelectionModel().getSelectedItems();
 			int selectCount = selected.size();
@@ -83,7 +93,7 @@ public class PlayerSelectScreen extends Screen {
 		}
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
@@ -93,7 +103,7 @@ public class PlayerSelectScreen extends Screen {
 		}
 	}
 	
-	protected void refreshPlayers() {
+	private void refreshPlayers() {
 		this.playerList.getItems().clear();
 		for (AbstractClientPlayer player : this.client.getPlayers()) {
 			if (!player.isPlaying()) {
@@ -103,14 +113,14 @@ public class PlayerSelectScreen extends Screen {
 			}
 		}
 	}
-
+	
 	@Override
 	protected Pane createPane() {
-		GridPane outerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		GridPane innerPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane outerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane innerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		innerPane.addRow(0, this.backButtonBox, this.playButtonBox);
 		outerPane.addColumn(0, this.playerList, innerPane);
 		return outerPane;
 	}
-
+	
 }

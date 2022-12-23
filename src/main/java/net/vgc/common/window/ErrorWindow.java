@@ -1,9 +1,8 @@
 package net.vgc.common.window;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,16 +19,22 @@ import net.vgc.language.TranslationKey;
 import net.vgc.network.NetworkSide;
 import net.vgc.server.Server;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class ErrorWindow {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(ErrorWindow.class);
+	private static final Logger LOGGER = LogManager.getLogger(ErrorWindow.class);
 	
-	protected final String title;
-	protected final String errorMessage;
-	protected final Runnable action;
-	protected ErrorLevel errorLevel = ErrorLevel.NO;
+	private final String title;
+	private final String errorMessage;
+	private final Runnable action;
+	private ErrorLevel errorLevel = ErrorLevel.NO;
 	
-	protected ErrorWindow(String title, String errorMessage, Runnable action) {
+	private ErrorWindow(String title, String errorMessage, Runnable action) {
 		this.title = title;
 		this.errorMessage = errorMessage.toLowerCase().trim().length() != 0 ? errorMessage : null;
 		this.action = action;
@@ -39,7 +44,7 @@ public class ErrorWindow {
 		return new ErrorWindow("Error", errorMessage, () -> {
 			if (NetworkSide.CLIENT.isOn()) {
 				Client.getInstance().exit();
-			} else if (NetworkSide.ACCOUNT_SERVER.isOn()) {
+			} else if (NetworkSide.ACCOUNT.isOn()) {
 				AccountServer.getInstance().exit();
 			} else if (NetworkSide.SERVER.isOn()) {
 				Server.getInstance().exit();
@@ -103,7 +108,7 @@ public class ErrorWindow {
 		box.setAlignment(Pos.CENTER);
 		box.getChildren().add(button);
 		pane.add(box, 0, flag ? 1 : 0);
-
+		
 		stage.setScene(new Scene(pane, width, height));
 		stage.setTitle(this.title);
 		stage.showAndWait();

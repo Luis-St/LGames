@@ -1,12 +1,18 @@
 package net.vgc.network.packet.client.game.dice;
 
-import net.vgc.client.network.ClientPacketListener;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
+import net.vgc.network.packet.listener.PacketGetter;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class RolledDicePacket implements ClientPacket {
 	
-	protected final int count;
+	private final int count;
 	
 	public RolledDicePacket(int count) {
 		this.count = count;
@@ -20,12 +26,8 @@ public class RolledDicePacket implements ClientPacket {
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeInt(this.count);
 	}
-
-	@Override
-	public void handle(ClientPacketListener listener) {
-		listener.handleRolledDice(this.count);
-	}
 	
+	@PacketGetter
 	public int getCount() {
 		return this.count;
 	}

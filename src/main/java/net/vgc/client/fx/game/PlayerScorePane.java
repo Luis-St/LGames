@@ -8,27 +8,33 @@ import com.google.common.collect.Lists;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import net.luis.utils.util.SimpleEntry;
 import net.vgc.Constans;
-import net.vgc.client.game.ClientGame;
-import net.vgc.client.game.player.ClientGamePlayer;
-import net.vgc.client.player.AbstractClientPlayer;
+import net.vgc.game.Game;
+import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
-import net.vgc.util.SimpleEntry;
+import net.vgc.player.Player;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
 
 public class PlayerScorePane extends GridPane {
 	
-	protected final ClientGame game;
-	protected final PlayerScorePane.Type scoreType;
-	protected final List<Entry<ClientGamePlayer, Text>> playerScoreInfos;
+	private final Game game;
+	private final PlayerScorePane.Type scoreType;
+	private final List<Entry<GamePlayer, Text>> playerScoreInfos;
 	
-	public PlayerScorePane(ClientGame game, PlayerScorePane.Type scoreType) {
+	public PlayerScorePane(Game game, PlayerScorePane.Type scoreType) {
 		this.game = game;
 		this.scoreType = scoreType;
 		this.playerScoreInfos = Lists.newArrayList();
 		this.init();
 	}
 	
-	protected void init() {
+	private void init() {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(10.0);
 		this.setHgap(10.0);
@@ -36,13 +42,13 @@ public class PlayerScorePane extends GridPane {
 		this.makePlayerScore();
 	}
 	
-	protected void makePlayerScore() {
+	private void makePlayerScore() {
 		int i = 0;
-		for (ClientGamePlayer gamePlayer : this.game.getPlayers()) {
-			AbstractClientPlayer player = gamePlayer.getPlayer();
+		for (GamePlayer gamePlayer : this.game.getPlayers()) {
+			Player player = gamePlayer.getPlayer();
 			Text text = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_score", player.getProfile().getName(), this.scoreType.getValue(player)));
 			this.add(text, 0, i++);
-			this.playerScoreInfos.add(new SimpleEntry<ClientGamePlayer, Text>(gamePlayer, text, true));
+			this.playerScoreInfos.add(new SimpleEntry<GamePlayer, Text>(gamePlayer, text));
 		}
 	}
 	
@@ -51,8 +57,8 @@ public class PlayerScorePane extends GridPane {
 	}
 	
 	public void update() {
-		for (Entry<ClientGamePlayer, Text> entry : this.playerScoreInfos) {
-			AbstractClientPlayer player = entry.getKey().getPlayer();
+		for (Entry<GamePlayer, Text> entry : this.playerScoreInfos) {
+			Player player = entry.getKey().getPlayer();
 			entry.getValue().setText(TranslationKey.createAndGet("screen.tic_tac_toe.player_score", player.getProfile().getName(), this.scoreType.getValue(player)));
 		}
 	}
@@ -61,25 +67,25 @@ public class PlayerScorePane extends GridPane {
 		
 		WIN("win") {
 			@Override
-			public int getValue(AbstractClientPlayer player) {
+			public int getValue(Player player) {
 				return player.getScore().getWins();
 			}
 		},
 		LOSE("lose") {
 			@Override
-			public int getValue(AbstractClientPlayer player) {
+			public int getValue(Player player) {
 				return player.getScore().getLoses();
 			}
 		},
 		DRAW("draw") {
 			@Override
-			public int getValue(AbstractClientPlayer player) {
+			public int getValue(Player player) {
 				return player.getScore().getDraws();
 			}
 		},
 		SCORE("score") {
 			@Override
-			public int getValue(AbstractClientPlayer player) {
+			public int getValue(Player player) {
 				return player.getScore().getScore();
 			}
 		};
@@ -94,7 +100,7 @@ public class PlayerScorePane extends GridPane {
 			return this.name;
 		}
 		
-		public abstract int getValue(AbstractClientPlayer player);
+		public abstract int getValue(Player player);
 		
 		@Override
 		public String toString() {

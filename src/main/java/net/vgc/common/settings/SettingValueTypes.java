@@ -3,16 +3,22 @@ package net.vgc.common.settings;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Maps;
 
 import net.vgc.language.Language;
 import net.vgc.language.Languages;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class SettingValueTypes {
 	
-	protected static final Map<Integer, SettingValueType<?>> INT_TO_TYPE = Maps.newHashMap();
+	private static final Map<Integer, SettingValueType<?>> INT_TO_TYPE = Maps.newHashMap();
 	
 	public static final SettingValueType<Integer> INT = register(0, new SettingValueType<Integer>() {
 		@Override
@@ -97,7 +103,7 @@ public class SettingValueTypes {
 		return -1;
 	}
 	
-	protected static <T> SettingValueType<T> register(int id, SettingValueType<T> valueType) {
+	private static <T> SettingValueType<T> register(int id, SettingValueType<T> valueType) {
 		INT_TO_TYPE.put(id, valueType);
 		return valueType;
 	}

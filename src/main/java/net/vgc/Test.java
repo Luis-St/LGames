@@ -21,15 +21,22 @@ import net.vgc.language.Languages;
 import net.vgc.language.Translation;
 import net.vgc.util.Util;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Test {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public static void main(String[] args) {
+		LOGGER.info("");
 		makeLanguageFiles();
 	}
 	
-	protected static void makeLanguageFiles() {
+	private static void makeLanguageFiles() {
 		List<Translation> english = Util.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtual Game Collection"));
 			list.add(new Translation("window.error.continue", "Continue"));
@@ -193,7 +200,7 @@ public class Test {
 		saveLanguageFile(Languages.DE_DE, german);
 	}
 	
-	protected static void saveLanguageFile(Language language, List<Translation> translations) {
+	private static void saveLanguageFile(Language language, List<Translation> translations) {
 		LanguageFile languageFile = new LanguageFile(translations, language);
 		Function<LanguageFile, DataResult<JsonElement>> function = JsonOps.INSTANCE.withEncoder(LanguageFile.CODEC);
 		Optional<JsonElement> optional = function.apply(languageFile).result();
@@ -201,5 +208,5 @@ public class Test {
 			JsonHelper.save(new GsonBuilder().setPrettyPrinting().create(), optional.get(), new File(System.getProperty("user.home")).toPath().resolve("Desktop/" + language.getFileName() + ".json"));
 		}
 	}
-
+	
 }

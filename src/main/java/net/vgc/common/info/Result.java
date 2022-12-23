@@ -2,12 +2,16 @@ package net.vgc.common.info;
 
 import net.vgc.util.EnumRepresentable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public enum Result implements EnumRepresentable {
 	
-	SUCCESS("success", 0),
-	FAILED("failed", 1),
-	UNKNOWN("unknown", 2);
-
+	SUCCESS("success", 0), FAILED("failed", 1), UNKNOWN("unknown", 2);
+	
 	private final String name;
 	private final int id;
 	

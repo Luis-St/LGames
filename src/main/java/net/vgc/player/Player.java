@@ -3,11 +3,17 @@ package net.vgc.player;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.util.Tickable;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public abstract class Player implements Tickable {
 	
-	protected final GameProfile profile;
-	protected final PlayerScore score;
-	protected boolean playing;
+	private final GameProfile profile;
+	private final PlayerScore score;
+	private boolean playing;
 	
 	public Player(GameProfile profile, PlayerScore score) {
 		this.profile = profile;
@@ -23,6 +29,10 @@ public abstract class Player implements Tickable {
 	
 	public GameProfile getProfile() {
 		return this.profile;
+	}
+	
+	public String getName() {
+		return this.getProfile().getName();
 	}
 	
 	public PlayerScore getScore() {

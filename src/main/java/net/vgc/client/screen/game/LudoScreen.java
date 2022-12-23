@@ -4,29 +4,40 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.client.fx.game.DiceButton;
 import net.vgc.client.fx.game.PlayerInfoPane;
 import net.vgc.client.fx.game.PlayerScorePane;
-import net.vgc.client.game.games.ludo.LudoClientGame;
-import net.vgc.client.game.games.ludo.map.field.LudoClientField;
+import net.vgc.client.games.ludo.LudoClientGame;
+import net.vgc.client.games.ludo.map.LudoClientMap;
+import net.vgc.game.map.field.GameField;
 import net.vgc.language.TranslationKey;
+import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.client.ClientPacket;
-import net.vgc.network.packet.client.game.LudoGameResultPacket;
+import net.vgc.network.packet.client.game.GameResultPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
+import net.vgc.network.packet.listener.PacketListener;
+import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
 public class LudoScreen extends GameScreen {
 	
-	protected final LudoClientGame game;
-	protected PlayerInfoPane playerInfo;
-	protected DiceButton diceButton;
-	protected ButtonBox leaveButton;
-	protected ButtonBox playAgainButton;
-	protected ButtonBox confirmActionButton;
+	private final LudoClientGame game;
+	private PlayerInfoPane playerInfo;
+	private DiceButton diceButton;
+	private ButtonBox leaveButton;
+	private ButtonBox playAgainButton;
+	private ButtonBox confirmActionButton;
 	
 	public LudoScreen(LudoClientGame game) {
 		this.game = game;
@@ -44,19 +55,19 @@ public class LudoScreen extends GameScreen {
 		this.confirmActionButton = new ButtonBox(TranslationKey.createAndGet("screen.tic_tac_toe.confirm_action"), Pos.CENTER, 20.0, this::handleConfirmAction);
 	}
 	
-	protected void handleLeave() {
+	private void handleLeave() {
 		this.client.getServerHandler().send(new ExitGameRequestPacket(this.getPlayer().getProfile()));
 	}
 	
-	protected void handlePlayAgain() {
+	private void handlePlayAgain() {
 		if (this.client.getPlayer().isAdmin()) {
 			this.client.getServerHandler().send(new PlayAgainGameRequestPacket(this.getPlayer().getProfile()));
 			this.playAgainButton.getNode().setDisable(true);
 		}
 	}
 	
-	protected void handleConfirmAction() {
-		LudoClientField field = this.game.getMap().getSelectedField();
+	private void handleConfirmAction() {
+		GameField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().canSelect()) {
 				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), field.getFieldType(), field.getFieldPos()));
@@ -74,36 +85,43 @@ public class LudoScreen extends GameScreen {
 		
 	}
 	
-	@Override
+	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
 		if (clientPacket instanceof RolledDicePacket packet) {
 			this.diceButton.setCount(packet.getCount());
-		} else if (clientPacket instanceof LudoGameResultPacket packet) {
+		} else if (clientPacket instanceof GameResultPacket packet) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}
-
+	
 	@Override
 	protected Pane createPane() {
 		BorderPane pane = new BorderPane();
 		pane.setLeft(this.playerInfo);
 		pane.setRight(this.createDicePane());
-		pane.setCenter(this.game.getMap());
+		pane.setCenter(this.createGamePane());
 		pane.setBottom(this.createActionPane());
 		return pane;
 	}
 	
-	protected Pane createDicePane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+	private Pane createDicePane() {
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		pane.addColumn(0, this.diceButton);
 		return pane;
 	}
 	
-	protected Pane createActionPane() {
-		GridPane pane = FxUtil.makeGrid(Pos.CENTER, 10.0, 30.0);
+	private Pane createGamePane() {
+		if (this.game.getMap() instanceof LudoClientMap map) {
+			return map.getGridPane();
+		}
+		throw new NullPointerException("The map of game ludo is null");
+	}
+	
+	private Pane createActionPane() {
+		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 30.0);
 		pane.addRow(0, this.leaveButton, this.playAgainButton, this.confirmActionButton);
 		return pane;
 	}
-
+	
 }

@@ -9,15 +9,21 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.util.annotation.DecodingConstructor;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class PlayerScore implements Encodable {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final GameProfile profile;
-	protected final MutableInt win;
-	protected final MutableInt lose;
-	protected final MutableInt draw;
-	protected final MutableInt score;
+	private final GameProfile profile;
+	private final MutableInt win;
+	private final MutableInt lose;
+	private final MutableInt draw;
+	private final MutableInt score;
 	
 	public PlayerScore(GameProfile profile) {
 		this(profile, 0, 0, 0, 0);
@@ -72,7 +78,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public int getLoses() {
-		return this.lose.getValue();	
+		return this.lose.getValue();
 	}
 	
 	public void setLoses(int loses) {
@@ -88,7 +94,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	public int getDraws() {
-		return this.draw.getValue();	
+		return this.draw.getValue();
 	}
 	
 	public void setDraws(int draws) {

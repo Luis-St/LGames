@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -18,14 +17,20 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class FxTest extends Application {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
-
+	
 	@Override
 	public void start(Stage stage) throws Exception {
 		StackPane pane = new StackPane();
@@ -36,7 +41,7 @@ public class FxTest extends Application {
 		stage.show();
 	}
 	
-	@Nullable	
+	@Nullable
 	public static ImageView makeImageView(String path, double width, double heigh) {
 		ImageView imageView = null;
 		try {
@@ -50,5 +55,5 @@ public class FxTest extends Application {
 		}
 		return imageView;
 	}
-
+	
 }

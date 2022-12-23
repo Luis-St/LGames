@@ -8,19 +8,25 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import net.luis.fxutils.FxUtils;
 import net.vgc.client.ClientSettings;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxUtil;
 import net.vgc.language.Language;
 import net.vgc.language.TranslationKey;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class SettingsScreen extends Screen {
 	
-	protected final Screen backScreen;
-	protected Text languageSettingText;
-	protected ComboBox<String> languageSettingBox;
-	protected GridPane languageSetting;
-	protected ButtonBox backButtonBox;
+	private final Screen backScreen;
+	private Text languageSettingText;
+	private ComboBox<String> languageSettingBox;
+	private GridPane languageSetting;
+	private ButtonBox backButtonBox;
 	
 	public SettingsScreen(Screen backScreen) {
 		this.backScreen = backScreen;
@@ -37,23 +43,23 @@ public class SettingsScreen extends Screen {
 			ClientSettings.LANGUAGE.setValue(this.languageSettingBox.getSelectionModel().getSelectedItem());
 			this.reapplyScreen();
 		});
-		this.languageSetting = FxUtil.makeGrid(Pos.CENTER, 75.0, 10.0, 20.0);
+		this.languageSetting = FxUtils.makeGrid(Pos.CENTER, 75.0, 10.0, 20.0);
 		this.languageSetting.addRow(0, this.languageSettingText, this.languageSettingBox);
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
 	
-	protected void handleBack() {
+	private void handleBack() {
 		this.showScreen(this.backScreen);
 	}
 	
 	@Override
 	protected Pane createPane() {
-		GridPane gridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
-		GridPane settingsGridPane = FxUtil.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane gridPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
+		GridPane settingsGridPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		settingsGridPane.addRow(0, this.languageSetting);
 		gridPane.addRow(0, settingsGridPane);
 		gridPane.addRow(1, this.backButtonBox);
 		return gridPane;
 	}
-
+	
 }

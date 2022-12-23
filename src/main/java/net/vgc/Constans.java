@@ -1,5 +1,11 @@
 package net.vgc;
 
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
 public class Constans {
 	
 	public static final String ID = "vgc";
