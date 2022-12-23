@@ -33,7 +33,7 @@ println("Java: " + System.getProperty("java.version") + " JVM: " + System.getPro
 dependencies {
 	// Local
 	implementation "org.controlsfx:ControlsFX:1.1" // Fx
-	implementation "net.luis:LUtils:1.5" // Utility
+	implementation "net.luis:LUtils:1.6" // Utility
 	implementation "net.luis.fxutils:FxUtils:1.7" // Fx Utility
 	// Google
 	implementation "com.google.guava:guava:31.0.1-jre" // Utility
