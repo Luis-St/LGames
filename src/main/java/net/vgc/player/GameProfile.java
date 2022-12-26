@@ -2,8 +2,11 @@ package net.vgc.player;
 
 import java.util.UUID;
 
+import net.luis.utils.data.serialization.Deserializable;
+import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.vgc.data.serialization.Serializable;
+import net.luis.utils.util.Equals;
+import net.luis.utils.util.ToString;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
@@ -16,6 +19,7 @@ import net.vgc.util.annotation.DecodingConstructor;
  *
  */
 
+@Deserializable
 public class GameProfile implements Encodable, Serializable {
 	
 	public static final GameProfile EMPTY = new GameProfile("empty", Util.EMPTY_UUID);
@@ -35,8 +39,8 @@ public class GameProfile implements Encodable, Serializable {
 	}
 	
 	public GameProfile(CompoundTag tag) {
-		this.name = tag.getString("name");
-		this.uuid = TagUtil.readUUID(tag.getCompound("uuid"));
+		this.name = tag.getString("Name");
+		this.uuid = TagUtil.readUUID(tag.getCompound("UUID"));
 	}
 	
 	public String getName() {
@@ -56,29 +60,19 @@ public class GameProfile implements Encodable, Serializable {
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
-		tag.putString("name", this.name);
-		tag.putCompound("uuid", TagUtil.writeUUID(this.uuid));
+		tag.putString("Name", this.name);
+		tag.putCompound("UUID", TagUtil.writeUUID(this.uuid));
 		return tag;
 	}
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("GameProfile{");
-		builder.append("name=").append(this.name).append(",");
-		builder.append("uuid=").append(this.uuid).append("}");
-		return builder.toString();
+		return ToString.toString(this);
 	}
 	
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof GameProfile profile) {
-			if (!this.name.equals(profile.name)) {
-				return false;
-			} else {
-				return this.uuid.equals(profile.uuid);
-			}
-		}
-		return false;
+		return Equals.equals(this, object);
 	}
 	
 }

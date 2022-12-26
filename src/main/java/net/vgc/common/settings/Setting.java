@@ -9,10 +9,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
+import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.StringTag;
-import net.vgc.data.serialization.Serializable;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
@@ -51,17 +51,17 @@ public class Setting<T> implements Serializable {
 	
 	@SuppressWarnings("unchecked")
 	public Setting(CompoundTag tag) {
-		this.name = TagUtil.readTranslationKey(tag.getCompound("name_key"));
-		this.description = TagUtil.readTranslationKey(tag.getCompound("description_key"));
-		int valueTypeId = tag.getInt("value_type");
+		this.name = TagUtil.readTranslationKey(tag.getCompound("NameKey"));
+		this.description = TagUtil.readTranslationKey(tag.getCompound("DescriptionKey"));
+		int valueTypeId = tag.getInt("ValueType");
 		this.valueType = (SettingValueType<T>) SettingValueTypes.fromId(valueTypeId);
 		Objects.requireNonNull(this.valueType, "Fail to load SettingValueType from tag, since SettingValueType with id " + valueTypeId + " is not registered or does not exists");
-		this.defaultValue = this.valueType.getValue(tag.getString("default_value"));
-		this.possibleValues = TagUtil.readList(tag.getList("possible_values", Tag.STRING_TAG), (stringTag) -> {
+		this.defaultValue = this.valueType.getValue(tag.getString("DefaultValue"));
+		this.possibleValues = TagUtil.readList(tag.getList("PossibleValues", Tag.STRING_TAG), (stringTag) -> {
 			return Setting.this.valueType.getValue(((StringTag) stringTag).getAsString());
 		});
-		if (tag.contains("value")) {
-			this.value = this.valueType.getValue(tag.getString("value"));
+		if (tag.contains("Value")) {
+			this.value = this.valueType.getValue(tag.getString("Value"));
 			LOGGER.info("Load value and set to {}", this.value);
 		}
 	}
@@ -117,21 +117,21 @@ public class Setting<T> implements Serializable {
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
-		tag.put("name_key", TagUtil.writeTranslationKey(this.name));
-		tag.put("description_key", TagUtil.writeTranslationKey(this.description));
+		tag.put("NameKey", TagUtil.writeTranslationKey(this.name));
+		tag.put("DescriptionKey", TagUtil.writeTranslationKey(this.description));
 		int id = SettingValueTypes.getId(this.valueType);
 		if (id == -1) {
 			LOGGER.error("Fail to serialize SettingValueType to Tag, since id {} is not registered", id);
 			throw new InvalidValueException("Fail to get SettingValueType for id " + id);
 		}
-		tag.putInt("value_type", id);
-		tag.putString("default_value", this.valueType.toString(this.defaultValue));
-		tag.putList("possible_values", TagUtil.writeList(this.possibleValues, (value) -> {
+		tag.putInt("ValueType", id);
+		tag.putString("DefaultValue", this.valueType.toString(this.defaultValue));
+		tag.putList("PossibleValues", TagUtil.writeList(this.possibleValues, (value) -> {
 			return StringTag.valueOf(this.valueType.toString(value));
 		}));
 		if (this.getValue() != null) {
 			LOGGER.info("Save value {}", this.value);
-			tag.putString("value", this.valueType.toString(this.getValue()));
+			tag.putString("Value", this.valueType.toString(this.getValue()));
 		}
 		return tag;
 	}

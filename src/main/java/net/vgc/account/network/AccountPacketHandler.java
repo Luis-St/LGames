@@ -1,18 +1,22 @@
 package net.vgc.account.network;
 
+import java.util.Date;
+import java.util.Random;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.vgc.account.AccountAgent;
 import net.vgc.account.AccountServer;
-import net.vgc.account.LoginType;
-import net.vgc.account.PlayerAccount;
+import net.vgc.account.account.Account;
+import net.vgc.account.account.AccountType;
+import net.vgc.account.account.LoginType;
 import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.PacketHandler;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
+import net.vgc.network.packet.account.ClientRegistrationPacket;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
 import net.vgc.network.packet.listener.PacketListener;
@@ -36,33 +40,31 @@ public class AccountPacketHandler implements PacketHandler {
 		this.account = account;
 	}
 	
+	@PacketListener(ClientRegistrationPacket.class)
+	public void handleClientRegistration(String name, String mail, int passwordHash, String firstName, String lastName, Date birthday) {
+		Account account = this.account.getManager().createAndLogin(name, mail, passwordHash, firstName, lastName, birthday, AccountType.USER);
+		this.connection.send(new ClientLoggedInPacket(LoginType.REGISTRATION, account.getName(), account.getId(), account.getMail(), account.getUUID()));
+	}
+	
 	@PacketListener(ClientLoginPacket.class)
-	public void handleClientLogin(LoginType loginType, String name, String password) {
-		AccountAgent agent = this.account.getAgent();
-		PlayerAccount account;
-		if (loginType == LoginType.REGISTRATION) {
-			account = agent.createAndLogin(name, password, false);
-		} else if (loginType == LoginType.USER_LOGIN) {
-			account = agent.accountLogin(name, password);
-		} else if (loginType == LoginType.GUEST_LOGIN) {
-			account = agent.createAndLogin(name, "", true);
-		} else {
-			account = PlayerAccount.UNKNOWN;
-		}
-		this.connection.send(new ClientLoggedInPacket(loginType, account, account == PlayerAccount.UNKNOWN ? false : true));
+	public void handleClientLogin(LoginType loginType, String name, int passwordHash) {
+		Account account = switch (loginType) {
+			case USER_LOGIN -> this.account.getManager().accountLogin(name, passwordHash);
+			case GUEST_LOGIN -> this.account.getManager().createAccount(name, "guest@vgc.net", new Random().nextInt(), name, "Guest", new Date(), AccountType.GUEST);
+			default -> Account.UNKNOWN;
+		};
+		this.connection.send(new ClientLoggedInPacket(loginType, account.getName(), account.getId(), account.getMail(), account.getUUID()));
 	}
 	
 	@PacketListener(ClientLogoutPacket.class)
-	public void handleClientLogout(PlayerAccount account) {
-		this.connection.send(new ClientLoggedOutPacket(this.account.getAgent().accountLogout(account.getName(), account.getPassword())));
+	public void handleClientLogout(String name, int id, int passwordHash) {
+		this.connection.send(new ClientLoggedOutPacket(this.account.getManager().accountLogout(name, id, passwordHash)));
 	}
 	
 	@PacketListener(ClientExitPacket.class)
-	public void handleClientLogoutExit(PlayerAccount account) {
-		if (!account.getName().equals(PlayerAccount.UNKNOWN.getName()) && !account.getPassword().equals(PlayerAccount.UNKNOWN.getPassword())) {
-			LOGGER.info("Logout of client with name {} and password {}", account.getName(), account.getPassword());
-			this.account.getAgent().accountLogout(account.getName(), account.getPassword());
-		}
+	public void handleClientLogoutExit(String name, int id, int passwordHash) {
+		this.account.getManager().accountLogout(name, id, passwordHash);
+		LOGGER.info("Logout of account {}#{}", name, id);
 		this.account.exitClient(this.connection);
 	}
 	

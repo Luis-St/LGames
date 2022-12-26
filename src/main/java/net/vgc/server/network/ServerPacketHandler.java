@@ -65,7 +65,7 @@ public class ServerPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(ClientLeavePacket.class)
-	public void handleClientLeave(UUID uuid) {
+	public void handleClientLeave(String name, UUID uuid) {
 		this.server.leavePlayer(this.connection, this.server.getPlayerList().getPlayer(uuid));
 	}
 	

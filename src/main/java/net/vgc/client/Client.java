@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +18,6 @@ import joptsimple.OptionSpec;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.Constans;
-import net.vgc.account.PlayerAccount;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
 import net.vgc.client.network.ClientPacketHandler;
@@ -57,16 +57,17 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	private final Timeline ticker = Util.createTicker("ClientTicker", this);
 	private final List<AbstractClientPlayer> players = Lists.newArrayList();
 	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
-		connection.send(new ClientLeavePacket(this.account));
+		connection.send(new ClientLeavePacket(this.account.name(), this.account.uuid()));
 	});
 	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
-		connection.send(new ClientExitPacket(this.account));
+		connection.send(new ClientExitPacket(this.account.name(), this.account.id(), this.password.hashCode()));
 	});
 	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
 	private boolean instantLoading;
 	private boolean safeLoading;
 	private LoginWindow loginWindow;
-	private PlayerAccount account;
+	private ClientAccount account;
+	private String password;
 	private LocalPlayer player;
 	private ClientSettings settings;
 	private String accountHost;
@@ -222,13 +223,21 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		this.loginWindow = loginWindow;
 	}
 	
-	public PlayerAccount getAccount() {
+	public ClientAccount getAccount() {
 		return this.account;
 	}
 	
-	public void login(PlayerAccount account) {
-		LOGGER.info("Login with account: {}", account);
-		this.account = account;
+	public void login(String name, int id, String mail, UUID uuid) {
+		LOGGER.info("Login with account: {}#{}", name, id);
+		this.account = new ClientAccount(name, id, mail, uuid);
+	}
+	
+	public String getPassword() {
+		return this.password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	public void logout() {

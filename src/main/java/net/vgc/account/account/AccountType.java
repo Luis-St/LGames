@@ -1,4 +1,4 @@
-package net.vgc.account;
+package net.vgc.account.account;
 
 import net.vgc.util.EnumRepresentable;
 
@@ -8,14 +8,14 @@ import net.vgc.util.EnumRepresentable;
  *
  */
 
-public enum LoginType implements EnumRepresentable {
+public enum AccountType implements EnumRepresentable {
 	
-	REGISTRATION("registration", 0), USER_LOGIN("login_user", 1), GUEST_LOGIN("login_guest", 2), UNKNOWN("unknown", 3);
+	USER("user", 0), GUEST("guest", 1), TEST("test", 2), UNKNOWN("unknown", 3);
 	
 	private final String name;
 	private final int id;
 	
-	private LoginType(String name, int id) {
+	private AccountType(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}
@@ -31,7 +31,7 @@ public enum LoginType implements EnumRepresentable {
 	}
 	
 	@Override
-	public Enum<LoginType> getDefault() {
+	public Enum<AccountType> getDefault() {
 		return UNKNOWN;
 	}
 	

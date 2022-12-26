@@ -8,7 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import net.luis.fxutils.FxUtils;
 import net.vgc.Constans;
-import net.vgc.account.PlayerAccount;
+import net.vgc.client.ClientAccount;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.client.fx.InputPane;
@@ -71,8 +71,8 @@ public class MultiplayerScreen extends Screen {
 			} else if (port.isEmpty()) {
 				FxAnimationUtil.makeEmptyText(this.portInputPane.getInputField(), 750);
 			} else {
-				PlayerAccount account = this.client.getAccount();
-				this.connectAndSend(host, Integer.valueOf(port), new ClientJoinPacket(account.getName(), account.getUUID()));
+				ClientAccount account = this.client.getAccount();
+				this.connectAndSend(host, Integer.valueOf(port), new ClientJoinPacket(account.name(), account.uuid()));
 			}
 		}
 	}
@@ -81,8 +81,8 @@ public class MultiplayerScreen extends Screen {
 		if (this.canConnect()) {
 			this.hostInputPane.setText("127.0.0.1");
 			this.portInputPane.setText("8080");
-			PlayerAccount account = this.client.getAccount();
-			this.connectAndSend("127.0.0.1", 8080, new ClientJoinPacket(account.getName(), account.getUUID()));
+			ClientAccount account = this.client.getAccount();
+			this.connectAndSend("127.0.0.1", 8080, new ClientJoinPacket(account.name(), account.uuid()));
 		}
 	}
 	

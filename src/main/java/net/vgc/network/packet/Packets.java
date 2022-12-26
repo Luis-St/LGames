@@ -15,6 +15,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
+import net.vgc.network.packet.account.ClientRegistrationPacket;
 import net.vgc.network.packet.client.ClientJoinedPacket;
 import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
@@ -57,6 +58,7 @@ public class Packets {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Map<Integer, Class<? extends Packet>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
 		int i = 0;
+		map.put(i++, ClientRegistrationPacket.class);
 		map.put(i++, ClientLoginPacket.class);
 		map.put(i++, ClientLogoutPacket.class);
 		map.put(i++, ClientLoggedInPacket.class);

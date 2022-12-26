@@ -34,14 +34,17 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.luis.fxutils.FxUtils;
+import net.luis.utils.data.serialization.SerializationUtils;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.collection.ListTag;
 import net.vgc.Constans;
+import net.vgc.account.account.Account;
+import net.vgc.account.account.AccountManager;
+import net.vgc.account.account.AccountType;
 import net.vgc.account.network.AccountPacketHandler;
 import net.vgc.account.window.AccountCreationWindow;
 import net.vgc.common.application.GameApplication;
-import net.vgc.data.serialization.SerializationUtil;
 import net.vgc.language.Language;
 import net.vgc.language.LanguageProvider;
 import net.vgc.language.Languages;
@@ -76,7 +79,7 @@ public class AccountServer extends GameApplication {
 	private TreeView<String> accountView;
 	private String host;
 	private int port;
-	private AccountAgent agent;
+	private AccountManager manager;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -135,7 +138,7 @@ public class AccountServer extends GameApplication {
 	
 	@Override
 	public void load() throws IOException {
-		List<PlayerAccount> accounts = Lists.newArrayList();
+		List<Account> accounts = Lists.newArrayList();
 		Path path = this.gameDirectory.resolve("accounts.acc");
 		LOGGER.debug("Loading accounts from {}", path);
 		if (!Files.exists(path)) {
@@ -143,14 +146,14 @@ public class AccountServer extends GameApplication {
 		} else {
 			Tag tag = Tag.load(path);
 			if (tag instanceof CompoundTag loadTag) {
-				if (loadTag.contains("accounts", Tag.LIST_TAG)) {
+				if (loadTag.contains("Accounts", Tag.LIST_TAG)) {
 					ListTag accountsTag = loadTag.getList("accounts", Tag.COMPOUND_TAG);
 					if (accountsTag.isEmpty()) {
 						LOGGER.info("No accounts present");
 					} else {
 						for (Tag accountTag : accountsTag) {
 							if (accountTag instanceof CompoundTag) {
-								PlayerAccount account = SerializationUtil.deserialize(PlayerAccount.class, (CompoundTag) accountTag);
+								Account account = SerializationUtils.deserialize(Account.class, (CompoundTag) accountTag);
 								if (account != null) {
 									LOGGER.debug("Load {} account", account);
 									accounts.add(account);
@@ -175,7 +178,7 @@ public class AccountServer extends GameApplication {
 			}
 		}
 		LOGGER.debug("Load {} accounts", accounts.size());
-		this.agent = new AccountAgent(accounts);
+		this.manager = new AccountManager(accounts);
 	}
 	
 	private void launchServer() {
@@ -210,7 +213,7 @@ public class AccountServer extends GameApplication {
 		this.accountView = new TreeView<>();
 		this.accountView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("account.window.accounts"));
-		for (PlayerAccount account : this.agent.getAccounts()) {
+		for (Account account : this.manager.getAccounts()) {
 			treeItem.getChildren().add(account.display());
 		}
 		this.accountView.setRoot(treeItem);
@@ -240,7 +243,7 @@ public class AccountServer extends GameApplication {
 			TreeItem<String> treeItem = this.accountView.getRoot().getChildren().get(index);
 			if (treeItem.getChildren().size() == 5) {
 				UUID uuid = UUID.fromString(treeItem.getChildren().get(2).getValue().split(": ")[1]);
-				if (this.agent.removeAccount(uuid)) {
+				if (this.manager.removeAccount(uuid)) {
 					this.accountView.getRoot().getChildren().remove(index);
 					this.refreshScene();
 				}
@@ -250,7 +253,7 @@ public class AccountServer extends GameApplication {
 	
 	public void refreshScene() {
 		TreeItem<String> treeItem = new TreeItem<>();
-		for (PlayerAccount account : this.agent.getAccounts()) {
+		for (Account account : this.manager.getAccounts()) {
 			treeItem.getChildren().add(account.display());
 		}
 		this.accountView.setRoot(treeItem);
@@ -289,8 +292,8 @@ public class AccountServer extends GameApplication {
 		return this.resourceDirectory;
 	}
 	
-	public AccountAgent getAgent() {
-		return this.agent;
+	public AccountManager getManager() {
+		return this.manager;
 	}
 	
 	public void exitClient(Connection connection) {
@@ -307,15 +310,17 @@ public class AccountServer extends GameApplication {
 	public void save() throws IOException {
 		Path path = this.gameDirectory.resolve("accounts.acc");
 		LOGGER.debug("Remove guest accounts");
-		List<PlayerAccount> accounts = this.getAgent().getAccounts();
-		accounts.removeIf(PlayerAccount::isGuest);
+		List<Account> accounts = this.manager.getAccounts();
+		accounts.removeIf((account) -> {
+			return account.getType() == AccountType.GUEST || account.getType() == AccountType.TEST || account.getType() == AccountType.UNKNOWN;
+		});
 		if (!Files.exists(path)) {
 			Files.createDirectories(path.getParent());
 			Files.createFile(path);
 		}
 		CompoundTag tag = new CompoundTag();
 		ListTag accountsTag = new ListTag();
-		for (PlayerAccount account : accounts) {
+		for (Account account : accounts) {
 			if (account != null) {
 				accountsTag.add(account.serialize());
 			} else {
@@ -323,7 +328,7 @@ public class AccountServer extends GameApplication {
 			}
 		}
 		if (!accountsTag.isEmpty()) {
-			tag.put("accounts", accountsTag);
+			tag.put("Accounts", accountsTag);
 		}
 		Tag.save(path, tag);
 		LOGGER.info("Save {} accounts", accountsTag.size());
@@ -331,7 +336,7 @@ public class AccountServer extends GameApplication {
 	
 	@Override
 	protected void handleStop() throws Exception {
-		this.agent.close();
+		this.manager.close();
 		this.connections.clear();
 		this.channels.forEach(Channel::close);
 		this.channels.clear();

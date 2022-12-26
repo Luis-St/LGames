@@ -13,9 +13,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.luis.fxutils.FxUtils;
-import net.vgc.account.LoginType;
 import net.vgc.account.PlayerAccount;
+import net.vgc.account.account.Account;
+import net.vgc.account.account.LoginType;
 import net.vgc.client.Client;
+import net.vgc.client.ClientAccount;
 import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.language.TranslationKey;
@@ -69,7 +71,7 @@ public class LoginWindow {
 	
 	private Pane profile() {
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
-		PlayerAccount account = this.client.getAccount();
+		ClientAccount account = this.client.getAccount();
 		pane.addRow(0, new Text(TranslationKey.createAndGet("window.login.username")), new Text(account.getName()));
 		if (!account.isGuest()) {
 			pane.addRow(1, new Text(TranslationKey.createAndGet("window.login.password")));

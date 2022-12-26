@@ -10,6 +10,7 @@ import net.vgc.Main;
  *
  */
 
+@Deprecated
 public interface EnumRepresentable {
 	
 	String getName();
