@@ -15,7 +15,7 @@ public enum LoginType implements EnumRepresentable {
 	private final String name;
 	private final int id;
 	
-	private LoginType(String name, int id) {
+	LoginType(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

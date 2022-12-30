@@ -1,7 +1,5 @@
 package net.vgc.client.screen;
 
-import java.util.stream.Collectors;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
@@ -13,6 +11,8 @@ import net.vgc.client.ClientSettings;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.language.Language;
 import net.vgc.language.TranslationKey;
+
+import java.util.stream.Collectors;
 
 /**
  *

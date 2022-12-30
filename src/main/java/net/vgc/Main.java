@@ -1,10 +1,5 @@
 package net.vgc;
 
-import java.util.Arrays;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -12,6 +7,10 @@ import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
 import net.vgc.server.Server;
 import net.vgc.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
 
 /**
  *

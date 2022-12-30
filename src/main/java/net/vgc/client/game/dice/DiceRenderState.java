@@ -1,11 +1,10 @@
 package net.vgc.client.game.dice;
 
-import org.jetbrains.annotations.Nullable;
-
 import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
 import net.vgc.network.Network;
 import net.vgc.util.EnumRepresentable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -22,10 +21,16 @@ public enum DiceRenderState implements EnumRepresentable {
 	private final int id;
 	private final String path;
 	
-	private DiceRenderState(String name, int id, String path) {
+	DiceRenderState(String name, int id, String path) {
 		this.name = name;
 		this.id = id;
 		this.path = path;
+	}
+	
+	@Nullable
+	public static DiceRenderState fromCount(int count) {
+		DiceRenderState state = EnumRepresentable.fromId(DiceRenderState.class, count);
+		return state == null ? ZERO : state;
 	}
 	
 	@Override
@@ -46,12 +51,6 @@ public enum DiceRenderState implements EnumRepresentable {
 	@Override
 	public String toString() {
 		return this.name;
-	}
-	
-	@Nullable
-	public static DiceRenderState fromCount(int count) {
-		DiceRenderState state = EnumRepresentable.fromId(DiceRenderState.class, count);
-		return state == null ? ZERO : state;
 	}
 	
 }

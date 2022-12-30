@@ -1,11 +1,11 @@
 package net.vgc.game;
 
-import java.util.List;
-import java.util.function.Function;
-
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.function.Function;
 
 /**
  *

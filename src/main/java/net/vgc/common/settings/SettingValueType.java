@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
-public abstract interface SettingValueType<T> {
+public interface SettingValueType<T> {
 	
 	@NotNull
 	T getValue(String string);

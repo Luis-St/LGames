@@ -1,15 +1,14 @@
 package net.vgc.language;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import net.vgc.data.codec.CodecConstructor;
 import net.vgc.data.codec.CodecGetter;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *

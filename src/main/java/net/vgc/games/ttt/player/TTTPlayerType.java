@@ -1,12 +1,11 @@
 package net.vgc.games.ttt.player;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import javafx.scene.image.ImageView;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
+
+import java.util.List;
 
 /**
  *
@@ -25,7 +24,7 @@ public enum TTTPlayerType implements GamePlayerType {
 	private final TranslationKey translation;
 	private final String path;
 	
-	private TTTPlayerType(String name, int id, char character, TranslationKey translation, String path) {
+	TTTPlayerType(String name, int id, char character, TranslationKey translation, String path) {
 		this.name = name;
 		this.id = id;
 		this.character = character;

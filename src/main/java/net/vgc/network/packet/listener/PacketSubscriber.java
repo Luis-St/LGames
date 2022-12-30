@@ -1,12 +1,8 @@
 package net.vgc.network.packet.listener;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import net.vgc.network.NetworkSide;
+
+import java.lang.annotation.*;
 
 /**
  *
@@ -20,7 +16,7 @@ import net.vgc.network.NetworkSide;
 public @interface PacketSubscriber {
 	
 	NetworkSide[] value() default {
-		NetworkSide.CLIENT, NetworkSide.SERVER, NetworkSide.ACCOUNT
+			NetworkSide.CLIENT, NetworkSide.SERVER, NetworkSide.ACCOUNT
 	};
 	
 	String getter() default "";

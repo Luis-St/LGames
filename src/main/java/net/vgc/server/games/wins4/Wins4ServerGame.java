@@ -1,12 +1,6 @@
 package net.vgc.server.games.wins4;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.math.Mth;
 import net.vgc.client.games.wins4.Wins4ClientGame;
 import net.vgc.game.GameResult;
@@ -37,6 +31,11 @@ import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
 import net.vgc.server.games.wins4.win.Wins4WinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  *

@@ -1,11 +1,11 @@
 package net.vgc.network;
 
-import java.nio.file.Path;
-
 import net.vgc.account.AccountServer;
 import net.vgc.client.Client;
 import net.vgc.common.application.GameApplication;
 import net.vgc.server.Server;
+
+import java.nio.file.Path;
 
 /**
  *

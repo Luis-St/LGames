@@ -1,10 +1,6 @@
 package net.vgc.client.games.ttt.map;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.google.common.collect.Lists;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Toggle;
@@ -38,6 +34,9 @@ import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  *
  * @author Luis-st
@@ -47,7 +46,7 @@ import net.vgc.player.GameProfile;
 @PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
 public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
-	private final ToggleGroup group;	
+	private final ToggleGroup group;
 	private final GridPane gridPane;
 	
 	public TTTClientMap(Client client, Game game) {

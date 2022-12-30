@@ -1,11 +1,6 @@
 package net.vgc.game.type;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.client.game.AbstractClientGame;
 import net.vgc.client.games.ludo.LudoClientGame;
 import net.vgc.client.games.ttt.TTTClientGame;
@@ -17,6 +12,9 @@ import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.games.ludo.LudoServerGame;
 import net.vgc.server.games.ttt.TTTServerGame;
 import net.vgc.server.games.wins4.Wins4ServerGame;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  *

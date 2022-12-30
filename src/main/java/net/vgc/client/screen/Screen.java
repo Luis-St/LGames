@@ -1,8 +1,5 @@
 package net.vgc.client.screen;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.scene.layout.Pane;
 import net.vgc.Main;
 import net.vgc.client.Client;
@@ -10,6 +7,8 @@ import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Showable;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.Tickable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *

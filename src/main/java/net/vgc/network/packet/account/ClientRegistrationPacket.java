@@ -1,10 +1,10 @@
 package net.vgc.network.packet.account;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  *

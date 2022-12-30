@@ -1,14 +1,14 @@
 package net.vgc.network.packet.server;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
 import net.vgc.player.GameProfile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *

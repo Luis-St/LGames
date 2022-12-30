@@ -1,17 +1,7 @@
 package net.vgc.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -59,6 +49,14 @@ import net.vgc.util.ExceptionHandler;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidNetworkSideException;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -68,16 +66,9 @@ import net.vgc.util.exception.InvalidNetworkSideException;
 
 public class Server extends GameApplication implements Tickable {
 	
-	public static Server getInstance() {
-		if (NetworkSide.SERVER.isOn()) {
-			return (Server) instance;
-		}
-		throw new InvalidNetworkSideException(NetworkSide.SERVER);
-	}
-	
 	private final Timeline ticker = Util.createTicker("ServerTicker", this);
 	private final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
-		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
+			: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
 	private final List<Channel> channels = Lists.newArrayList();
 	private final List<Connection> connections = Lists.newArrayList();
 	private final ServerPacketHandler packetHandler = new ServerPacketHandler(this);
@@ -88,6 +79,13 @@ public class Server extends GameApplication implements Tickable {
 	private ServerPlayer adminPlayer;
 	private TreeItem<String> playersTreeItem;
 	private Game game;
+
+	public static Server getInstance() {
+		if (NetworkSide.SERVER.isOn()) {
+			return (Server) instance;
+		}
+		throw new InvalidNetworkSideException(NetworkSide.SERVER);
+	}
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {

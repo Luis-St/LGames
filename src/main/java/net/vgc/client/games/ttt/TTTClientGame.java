@@ -1,7 +1,5 @@
 package net.vgc.client.games.ttt;
 
-import java.util.List;
-
 import net.vgc.client.Client;
 import net.vgc.client.game.AbstractClientGame;
 import net.vgc.client.games.ttt.map.TTTClientMap;
@@ -10,6 +8,8 @@ import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.server.games.ttt.TTTServerGame;
+
+import java.util.List;
 
 /**
  *

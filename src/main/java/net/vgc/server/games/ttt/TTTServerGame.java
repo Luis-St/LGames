@@ -1,9 +1,5 @@
 package net.vgc.server.games.ttt;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-
 import net.vgc.client.games.ttt.TTTClientGame;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.field.GameField;
@@ -31,6 +27,10 @@ import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.server.games.ttt.win.TTTWinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  *

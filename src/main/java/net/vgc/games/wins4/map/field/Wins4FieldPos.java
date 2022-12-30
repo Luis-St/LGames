@@ -1,15 +1,14 @@
 package net.vgc.games.wins4.map.field;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.math.Mth;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
+
+import java.util.List;
 
 /**
  *
@@ -96,10 +95,7 @@ public class Wins4FieldPos implements GameFieldPos {
 	
 	@Override
 	public boolean isOutOfMap() {
-		if (Mth.isInBounds(this.position, 0, 41) && Mth.isInBounds(this.row, 0, 5) && Mth.isInBounds(this.column, 0, 6)) {
-			return false;
-		}
-		return true;
+		return !Mth.isInBounds(this.position, 0, 41) || !Mth.isInBounds(this.row, 0, 5) || !Mth.isInBounds(this.column, 0, 6);
 	}
 	
 	@Override
@@ -125,11 +121,10 @@ public class Wins4FieldPos implements GameFieldPos {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("Win4FieldPos{");
-		builder.append("position=").append(this.position).append(",");
-		builder.append("row=").append(this.row).append(",");
-		builder.append("column=").append(this.column).append("}");
-		return builder.toString();
+		String builder = "Win4FieldPos{" + "position=" + this.position + "," +
+				"row=" + this.row + "," +
+				"column=" + this.column + "}";
+		return builder;
 	}
 	
 }

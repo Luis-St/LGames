@@ -1,8 +1,5 @@
 package net.vgc.client.window;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,8 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.luis.fxutils.FxUtils;
-import net.vgc.account.PlayerAccount;
-import net.vgc.account.account.Account;
 import net.vgc.account.account.LoginType;
 import net.vgc.client.Client;
 import net.vgc.client.ClientAccount;
@@ -26,6 +21,8 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
 import net.vgc.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *

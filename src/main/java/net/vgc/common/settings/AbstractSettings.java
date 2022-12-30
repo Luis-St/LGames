@@ -1,16 +1,15 @@
 package net.vgc.common.settings;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.data.tag.TagUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  *

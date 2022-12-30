@@ -15,7 +15,7 @@ public enum NetworkSide implements EnumRepresentable {
 	private final String name;
 	private final int id;
 	
-	private NetworkSide(String name, int id) {
+	NetworkSide(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

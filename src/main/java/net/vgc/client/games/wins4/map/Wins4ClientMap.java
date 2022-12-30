@@ -1,10 +1,6 @@
 package net.vgc.client.games.wins4.map;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.google.common.collect.Lists;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Toggle;
@@ -36,6 +32,9 @@ import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  *

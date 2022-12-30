@@ -1,13 +1,12 @@
 package net.vgc.server.game.map.field;
 
-import org.jetbrains.annotations.Nullable;
-
 import javafx.scene.image.ImageView;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.AbstractGameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.map.field.GameFieldType;
 import net.vgc.game.player.GamePlayerType;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *

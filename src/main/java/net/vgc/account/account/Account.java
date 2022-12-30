@@ -1,9 +1,5 @@
 package net.vgc.account.account;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
-
 import javafx.scene.control.TreeItem;
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
@@ -17,6 +13,10 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.EnumRepresentable;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  *

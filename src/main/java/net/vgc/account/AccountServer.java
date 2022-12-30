@@ -1,15 +1,7 @@
 package net.vgc.account;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
-
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -56,6 +48,13 @@ import net.vgc.network.packet.PacketEncoder;
 import net.vgc.util.ExceptionHandler;
 import net.vgc.util.exception.InvalidNetworkSideException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
+
 /**
  *
  * @author Luis-st
@@ -64,15 +63,8 @@ import net.vgc.util.exception.InvalidNetworkSideException;
 
 public class AccountServer extends GameApplication {
 	
-	public static AccountServer getInstance() {
-		if (NetworkSide.ACCOUNT.isOn()) {
-			return (AccountServer) instance;
-		}
-		throw new InvalidNetworkSideException(NetworkSide.ACCOUNT);
-	}
-	
 	private final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
-		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
+			: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
 	private final List<Connection> connections = Lists.newArrayList();
 	private final List<Channel> channels = Lists.newArrayList();
 	private final AccountPacketHandler packetHandler = new AccountPacketHandler(this);
@@ -80,6 +72,13 @@ public class AccountServer extends GameApplication {
 	private String host;
 	private int port;
 	private AccountManager manager;
+
+	public static AccountServer getInstance() {
+		if (NetworkSide.ACCOUNT.isOn()) {
+			return (AccountServer) instance;
+		}
+		throw new InvalidNetworkSideException(NetworkSide.ACCOUNT);
+	}
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {

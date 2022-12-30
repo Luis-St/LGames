@@ -1,12 +1,7 @@
 package net.vgc.client.games.ludo.map;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Stream;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Toggle;
@@ -40,6 +35,10 @@ import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  *
@@ -295,7 +294,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 	@Override
 	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return switch ((LudoPlayerType) playerType) {
-			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
+			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of(playerType, 0).getPosition()));
 			default -> {
 				LOGGER.warn("Fail to get start field for type {}", playerType);
 				yield Lists.newArrayList();

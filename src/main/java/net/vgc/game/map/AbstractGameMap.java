@@ -1,13 +1,12 @@
 package net.vgc.game.map;
 
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
+
+import java.util.List;
 
 /**
  *

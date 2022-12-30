@@ -15,7 +15,7 @@ public enum Result implements EnumRepresentable {
 	private final String name;
 	private final int id;
 	
-	private Result(String name, int id) {
+	Result(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

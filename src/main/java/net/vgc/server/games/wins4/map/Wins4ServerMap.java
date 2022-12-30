@@ -1,11 +1,6 @@
 package net.vgc.server.games.wins4.map;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.math.Mth;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
@@ -18,6 +13,9 @@ import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.server.Server;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.wins4.map.field.Wins4ServerField;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  *

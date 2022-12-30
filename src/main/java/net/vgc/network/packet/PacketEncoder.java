@@ -1,15 +1,14 @@
 package net.vgc.network.packet;
 
-import java.io.IOException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.exception.SkipPacketException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 
 /**
  *
@@ -23,7 +22,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 	
 	@Override
 	protected void encode(ChannelHandlerContext context, Packet packet, ByteBuf output) throws Exception {
-		int id = Packets.getId((Class<? extends Packet>) packet.getClass());
+		int id = Packets.getId(packet.getClass());
 		if (id == -1) {
 			LOGGER.error("Can not encode packet {}", packet.getClass().getSimpleName());
 			throw new IOException("Can not encode packet " + packet.getClass().getSimpleName() + ", since it is not registered");

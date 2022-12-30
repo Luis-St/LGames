@@ -1,11 +1,5 @@
 package net.vgc.client.network;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.luis.utils.math.Mth;
 import net.vgc.account.account.LoginType;
 import net.vgc.client.Client;
@@ -22,21 +16,8 @@ import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientJoinedPacket;
-import net.vgc.network.packet.client.ClientLoggedInPacket;
-import net.vgc.network.packet.client.ClientLoggedOutPacket;
-import net.vgc.network.packet.client.PlayerAddPacket;
-import net.vgc.network.packet.client.PlayerRemovePacket;
-import net.vgc.network.packet.client.ServerClosedPacket;
-import net.vgc.network.packet.client.SyncPermissionPacket;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
-import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
-import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.ExitGamePacket;
-import net.vgc.network.packet.client.game.GameActionFailedPacket;
-import net.vgc.network.packet.client.game.StartGamePacket;
-import net.vgc.network.packet.client.game.StopGamePacket;
+import net.vgc.network.packet.client.*;
+import net.vgc.network.packet.client.game.*;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
@@ -45,6 +26,11 @@ import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -75,7 +61,7 @@ public class ClientPacketHandler implements PacketHandler {
 						loginWindow.handleLoggedIn(loginType);
 					}
 				}
-					break;
+				break;
 				case USER_LOGIN: {
 					LOGGER.debug("Successfully logged in");
 					this.client.login(name, id, mail, uuid);
@@ -83,7 +69,7 @@ public class ClientPacketHandler implements PacketHandler {
 						loginWindow.handleLoggedIn(loginType);
 					}
 				}
-					break;
+				break;
 				case GUEST_LOGIN: {
 					LOGGER.debug("Successfully logged in as a guest");
 					this.client.login(name, id, mail, uuid);
@@ -91,11 +77,11 @@ public class ClientPacketHandler implements PacketHandler {
 						loginWindow.handleLoggedIn(loginType);
 					}
 				}
-					break;
+				break;
 				case UNKNOWN: {
 					LOGGER.warn("Fail to log in");
 				}
-					break;
+				break;
 			}
 		} else {
 			LOGGER.warn("Fail to log in, since already logged in");
@@ -130,7 +116,6 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(PlayerAddPacket.class)
 	public void handlePlayerAdd(GameProfile profile) {
-		;
 		if (this.client.getAccount().uuid().equals(profile.getUUID())) {
 			if (this.client.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");

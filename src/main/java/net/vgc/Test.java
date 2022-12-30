@@ -1,25 +1,23 @@
 package net.vgc;
 
-import java.io.File;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-
 import net.vgc.data.json.JsonHelper;
 import net.vgc.language.Language;
 import net.vgc.language.LanguageFile;
 import net.vgc.language.Languages;
 import net.vgc.language.Translation;
 import net.vgc.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  *
@@ -128,12 +126,12 @@ public class Test {
 			list.add(new Translation("window.login.register", "Registrieren"));
 			list.add(new Translation("window.login.username", "Nutzername"));
 			list.add(new Translation("window.login.password", "Passwort"));
-			list.add(new Translation("window.login.confirm_password", "Passwort bestätigen"));
+			list.add(new Translation("window.login.confirm_password", "Passwort bestï¿½tigen"));
 			list.add(new Translation("window.login.login", "Anmelden"));
 			list.add(new Translation("window.login.guest", "Gast"));
 			list.add(new Translation("window.login.name", "Name"));
 			list.add(new Translation("window.login.user", "Benutzer"));
-			list.add(new Translation("window.login.back", "Zurück"));
+			list.add(new Translation("window.login.back", "Zurï¿½ck"));
 			list.add(new Translation("window.logout.logout", "Abmelden"));
 			list.add(new Translation("account.constans.name", "Account Server"));
 			list.add(new Translation("account.window.accounts", "Konten"));
@@ -144,9 +142,9 @@ public class Test {
 			list.add(new Translation("account.window.account_guest", "Gast: %1%"));
 			list.add(new Translation("account.window.account_taken", "Verwendet: %1%"));
 			list.add(new Translation("account.window.create", "Konto erstellen"));
-			list.add(new Translation("account.window.remove", "Konto löschen"));
+			list.add(new Translation("account.window.remove", "Konto lï¿½schen"));
 			list.add(new Translation("account.window.refresh", "Aktualisieren"));
-			list.add(new Translation("account.window.close", "Schließen"));
+			list.add(new Translation("account.window.close", "Schlieï¿½en"));
 			list.add(new Translation("window.create_account.true", "Ja"));
 			list.add(new Translation("window.create_account.false", "Nein"));
 			list.add(new Translation("server.constans.name", "Virtual Game Collection Server"));
@@ -155,7 +153,7 @@ public class Test {
 			list.add(new Translation("screen.multiplayer.connect", "Verbinden"));
 			list.add(new Translation("screen.multiplayer.connect_local", "Lokal verbinden"));
 			list.add(new Translation("settings.language.name", "Sprache"));
-			list.add(new Translation("settings.language.description", "Sprache für die Benutzeroberfläche"));
+			list.add(new Translation("settings.language.description", "Sprache fï¿½r die Benutzeroberflï¿½che"));
 			list.add(new Translation("server.window.server", "Server"));
 			list.add(new Translation("server.window.server_host", "Server host: %1%"));
 			list.add(new Translation("server.window.server_port", "Server port: %1%"));
@@ -174,20 +172,20 @@ public class Test {
 			list.add(new Translation("screen.lobby.leave", "Verlassen"));
 			list.add(new Translation("screen.lobby.ttt", "Tic Tac Toe"));
 			list.add(new Translation("screen.player_select.play", "Play"));
-			list.add(new Translation("screen.tic_tac_toe.confirm_action", "Aktion bestätigen"));
+			list.add(new Translation("screen.tic_tac_toe.confirm_action", "Aktion bestï¿½tigen"));
 			list.add(new Translation("screen.tic_tac_toe.play_again", "Nochmal abspielen"));
 			list.add(new Translation("screen.tic_tac_toe.cross_player", "Spieler (X): %1%"));
 			list.add(new Translation("screen.tic_tac_toe.circle_player", "Spieler (O): %1%"));
 			list.add(new Translation("screen.tic_tac_toe.no_player", "Spieler: %1%"));
 			list.add(new Translation("screen.tic_tac_toe.player_info", "Spielerinfo"));
 			list.add(new Translation("screen.tic_tac_toe.player_score", "%1%: %2%"));
-			list.add(new Translation("screen.tic_tac_toe.no_data", "Noch keine Daten verfügbar"));
+			list.add(new Translation("screen.tic_tac_toe.no_data", "Noch keine Daten verfï¿½gbar"));
 			list.add(new Translation("screen.tic_tac_toe.fail_data", "Daten konnten nicht geladen werden"));
 			list.add(new Translation("screen.tic_tac_toe.current_player", "Aktueller Spieler: %1%"));
 			list.add(new Translation("screen.tic_tac_toe.no_current_player", "Aktueller Spieler: keiner"));
-			list.add(new Translation("screen.lobby.ludo", "Mensch ärgere dich nicht"));
+			list.add(new Translation("screen.lobby.ludo", "Mensch ï¿½rgere dich nicht"));
 			list.add(new Translation("screen.ludo.players", "Spieler"));
-			list.add(new Translation("screen.ludo.green_player", "Grüner Spieler: %1%"));
+			list.add(new Translation("screen.ludo.green_player", "Grï¿½ner Spieler: %1%"));
 			list.add(new Translation("screen.ludo.yellow_player", "Gelber Spieler: %1%"));
 			list.add(new Translation("screen.ludo.blue_player", "Blauer Spieler: %1%"));
 			list.add(new Translation("screen.ludo.red_player", "Roter Spieler: %1%"));

@@ -1,11 +1,5 @@
 package net.vgc.account.network;
 
-import java.util.Date;
-import java.util.Random;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.vgc.account.AccountServer;
 import net.vgc.account.account.Account;
 import net.vgc.account.account.AccountType;
@@ -21,6 +15,11 @@ import net.vgc.network.packet.client.ClientLoggedInPacket;
 import net.vgc.network.packet.client.ClientLoggedOutPacket;
 import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Date;
+import java.util.Random;
 
 /**
  *

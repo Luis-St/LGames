@@ -1,15 +1,14 @@
 package net.vgc.game.player.figure;
 
-import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.UUID;
 
 /**
  *
@@ -19,7 +18,7 @@ import net.vgc.game.player.GamePlayerType;
 
 public interface GameFigure {
 	
-	public static final Logger LOGGER = LogManager.getLogger();
+	Logger LOGGER = LogManager.getLogger();
 	
 	GamePlayer getPlayer();
 	

@@ -1,7 +1,5 @@
 package net.vgc.client.screen;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -18,6 +16,7 @@ import net.vgc.network.ConnectionHandler;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.util.Util;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *

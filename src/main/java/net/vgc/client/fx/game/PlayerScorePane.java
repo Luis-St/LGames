@@ -1,10 +1,6 @@
 package net.vgc.client.fx.game;
 
-import java.util.List;
-import java.util.Map.Entry;
-
 import com.google.common.collect.Lists;
-
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -14,6 +10,9 @@ import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
 import net.vgc.player.Player;
+
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  *
@@ -63,7 +62,7 @@ public class PlayerScorePane extends GridPane {
 		}
 	}
 	
-	public static enum Type {
+	public enum Type {
 		
 		WIN("win") {
 			@Override
@@ -92,7 +91,7 @@ public class PlayerScorePane extends GridPane {
 		
 		private final String name;
 		
-		private Type(String name) {
+		Type(String name) {
 			this.name = name;
 		}
 		

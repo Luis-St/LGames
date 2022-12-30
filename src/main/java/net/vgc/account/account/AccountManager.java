@@ -1,15 +1,14 @@
 package net.vgc.account.account;
 
+import net.luis.utils.math.Mth;
+import net.vgc.account.AccountServer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.luis.utils.math.Mth;
-import net.vgc.account.AccountServer;
 
 /**
  *
@@ -22,9 +21,13 @@ public final class AccountManager {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private final List<Account> accounts;
-
+	
 	public AccountManager(List<Account> accounts) {
 		this.accounts = accounts;
+	}
+	
+	public static UUID generateUUID(int nameHash, int passwordHash) {
+		return new UUID(nameHash, passwordHash);
 	}
 	
 	public List<Account> getAccounts() {
@@ -63,10 +66,6 @@ public final class AccountManager {
 		}
 		LOGGER.warn("Fail to create account for user {}, since there is already a account with these credentials", name);
 		return Account.UNKNOWN;
-	}
-	
-	public static UUID generateUUID(int nameHash, int passwordHash) {
-		return new UUID(nameHash, passwordHash);
 	}
 	
 	public Account createAndLogin(String name, String mail, int passwordHash, String firstName, String lastName, Date birthday, AccountType type) {

@@ -1,8 +1,7 @@
 package net.vgc.util;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.vgc.Main;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -13,18 +12,9 @@ import net.vgc.Main;
 @Deprecated
 public interface EnumRepresentable {
 	
-	String getName();
-	
-	int getId();
-	
-	@Nullable
-	default Enum<?> getDefault() {
-		return null;
-	}
-	
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public static <T extends Enum<T> & EnumRepresentable> T fromName(Class<T> clazz, String name) {
+	static <T extends Enum<T> & EnumRepresentable> T fromName(Class<T> clazz, String name) {
 		if (clazz.isEnum()) {
 			T[] values = clazz.getEnumConstants();
 			for (T value : values) {
@@ -43,7 +33,7 @@ public interface EnumRepresentable {
 	
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public static <T extends EnumRepresentable> T fromId(Class<T> clazz, int id) {
+	static <T extends EnumRepresentable> T fromId(Class<T> clazz, int id) {
 		if (clazz.isEnum()) {
 			T[] values = clazz.getEnumConstants();
 			for (T value : values) {
@@ -57,6 +47,15 @@ public interface EnumRepresentable {
 		} else {
 			Main.LOGGER.warn("Fail to get enum value from id {}, since the class {} is not a enum", id, clazz.getSimpleName());
 		}
+		return null;
+	}
+	
+	String getName();
+	
+	int getId();
+	
+	@Nullable
+	default Enum<?> getDefault() {
 		return null;
 	}
 	

@@ -1,23 +1,7 @@
 package net.vgc.util;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -25,6 +9,16 @@ import javafx.util.Duration;
 import net.vgc.Constans;
 import net.vgc.util.streams.DebugPrintStream;
 import net.vgc.util.streams.InfoPrintStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -34,8 +28,8 @@ import net.vgc.util.streams.InfoPrintStream;
 
 public class Util {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
 	public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public static <T> T make(T object, Consumer<T> consumer) {
 		consumer.accept(object);
@@ -108,7 +102,7 @@ public class Util {
 	
 	public static <T> List<T> reverseList(List<T> list) {
 		List<T> reversedList = Lists.newArrayList();
-		for (int i = list.size(); i-- > 0;) {
+		for (int i = list.size(); i-- > 0; ) {
 			reversedList.add(list.get(i));
 		}
 		return reversedList;

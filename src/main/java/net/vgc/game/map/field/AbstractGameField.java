@@ -1,11 +1,11 @@
 package net.vgc.game.map.field;
 
-import java.util.Objects;
-
 import net.vgc.game.GameResult;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
+
+import java.util.Objects;
 
 /**
  *

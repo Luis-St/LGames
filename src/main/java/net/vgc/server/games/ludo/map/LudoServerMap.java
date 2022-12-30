@@ -1,11 +1,7 @@
 package net.vgc.server.games.ludo.map;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import net.luis.utils.math.Mth;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
@@ -23,6 +19,9 @@ import net.vgc.server.games.ludo.map.field.LudoServerField;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidValueException;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  *
@@ -176,7 +175,7 @@ public class LudoServerMap extends AbstractServerGameMap {
 	@Override
 	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return switch ((LudoPlayerType) playerType) {
-			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
+			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of(playerType, 0).getPosition()));
 			default -> {
 				LOGGER.warn("Fail to get start field for type {}", playerType);
 				yield Lists.newArrayList();

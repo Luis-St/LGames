@@ -1,10 +1,10 @@
 package net.vgc.network.packet.client;
 
-import java.util.UUID;
-
 import net.vgc.account.account.LoginType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
+
+import java.util.UUID;
 
 /**
  *
@@ -35,7 +35,7 @@ public class ClientLoggedInPacket implements ClientPacket {
 		this.mail = buffer.readString();
 		this.uuid = buffer.readUUID();
 	}
-
+	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeEnum(this.loginType);

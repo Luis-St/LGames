@@ -1,21 +1,15 @@
 package net.vgc.network.packet.listener;
 
-import static net.vgc.network.packet.listener.PacketInvokHelper.createException;
-import static net.vgc.network.packet.listener.PacketInvokHelper.getInstanceObject;
-import static net.vgc.network.packet.listener.PacketInvokHelper.getListeners;
-import static net.vgc.network.packet.listener.PacketInvokHelper.getPacketObjects;
-import static net.vgc.network.packet.listener.PacketInvokHelper.getSubscribers;
-import static net.vgc.network.packet.listener.PacketInvokHelper.setConnectionInstance;
-import static net.vgc.network.packet.listener.PacketInvokHelper.validateSignature;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-
 import net.luis.utils.util.ReflectionHelper;
 import net.vgc.common.application.GameApplication;
 import net.vgc.network.Connection;
 import net.vgc.network.Network;
 import net.vgc.network.packet.Packet;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
+import static net.vgc.network.packet.listener.PacketInvokHelper.*;
 
 /**
  *

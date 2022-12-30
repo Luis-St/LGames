@@ -1,23 +1,18 @@
 package net.vgc.network;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.vgc.network.packet.Packet;
 import net.vgc.util.exception.SkipPacketException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -140,7 +135,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet> {
 		return false;
 	}
 	
-	private static record PacketHolder(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
+	private record PacketHolder(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
 		
 	}
 	

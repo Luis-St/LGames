@@ -1,9 +1,6 @@
 package net.vgc.client.screen;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -24,6 +21,8 @@ import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.network.packet.server.PlayGameRequestPacket;
 import net.vgc.util.Util;
+
+import java.util.List;
 
 /**
  *

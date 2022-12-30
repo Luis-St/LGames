@@ -1,14 +1,12 @@
 package net.vgc.common.settings;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Maps;
-
 import net.vgc.language.Language;
 import net.vgc.language.Languages;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *

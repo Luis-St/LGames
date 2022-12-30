@@ -1,16 +1,6 @@
 package net.vgc.client;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import javafx.animation.Timeline;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -38,6 +28,14 @@ import net.vgc.player.GameProfile;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidNetworkSideException;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -47,32 +45,32 @@ import net.vgc.util.exception.InvalidNetworkSideException;
 
 public class Client extends GameApplication implements Tickable, Screenable {
 	
+	private final Timeline ticker = Util.createTicker("ClientTicker", this);
+	private final List<AbstractClientPlayer> players = Lists.newArrayList();
+	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
+	private boolean instantLoading;
+	private boolean safeLoading;
+	private LoginWindow loginWindow;
+	private ClientAccount account;
+	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
+		connection.send(new ClientLeavePacket(this.account.name(), this.account.uuid()));
+	});
+	private String password;
+	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
+		connection.send(new ClientExitPacket(this.account.name(), this.account.id(), this.password.hashCode()));
+	});
+	private LocalPlayer player;
+	private ClientSettings settings;
+	private String accountHost;
+	private int accountPort;
+	private Game game;
+
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
 			return (Client) instance;
 		}
 		throw new InvalidNetworkSideException(NetworkSide.CLIENT);
 	}
-	
-	private final Timeline ticker = Util.createTicker("ClientTicker", this);
-	private final List<AbstractClientPlayer> players = Lists.newArrayList();
-	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
-		connection.send(new ClientLeavePacket(this.account.name(), this.account.uuid()));
-	});
-	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
-		connection.send(new ClientExitPacket(this.account.name(), this.account.id(), this.password.hashCode()));
-	});
-	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
-	private boolean instantLoading;
-	private boolean safeLoading;
-	private LoginWindow loginWindow;
-	private ClientAccount account;
-	private String password;
-	private LocalPlayer player;
-	private ClientSettings settings;
-	private String accountHost;
-	private int accountPort;
-	private Game game;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {

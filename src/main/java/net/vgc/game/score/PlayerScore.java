@@ -1,13 +1,12 @@
 package net.vgc.game.score;
 
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.util.annotation.DecodingConstructor;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -161,13 +160,12 @@ public class PlayerScore implements Encodable {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("PlayerScore{");
-		builder.append("profile=").append(this.profile).append(",");
-		builder.append("wins=").append(this.win.getValue()).append(",");
-		builder.append("loses=").append(this.lose.getValue()).append(",");
-		builder.append("draw=").append(this.draw.getValue()).append(",");
-		builder.append("score=").append(this.score.getValue()).append("}");
-		return builder.toString();
+		String builder = "PlayerScore{" + "profile=" + this.profile + "," +
+				"wins=" + this.win.getValue() + "," +
+				"loses=" + this.lose.getValue() + "," +
+				"draw=" + this.draw.getValue() + "," +
+				"score=" + this.score.getValue() + "}";
+		return builder;
 	}
 	
 }

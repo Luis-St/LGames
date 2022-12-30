@@ -1,11 +1,6 @@
 package net.vgc.server.game;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.function.BiFunction;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.function.TriFunction;
 import net.luis.utils.math.Mth;
 import net.vgc.game.AbstractGame;
@@ -22,6 +17,10 @@ import net.vgc.player.Player;
 import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiFunction;
 
 /**
  *

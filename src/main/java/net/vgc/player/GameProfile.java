@@ -1,7 +1,5 @@
 package net.vgc.player;
 
-import java.util.UUID;
-
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.tags.CompoundTag;
@@ -12,6 +10,8 @@ import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
+
+import java.util.UUID;
 
 /**
  *

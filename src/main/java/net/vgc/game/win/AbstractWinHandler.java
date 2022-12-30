@@ -1,10 +1,9 @@
 package net.vgc.game.win;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.game.player.GamePlayer;
+
+import java.util.List;
 
 /**
  *

@@ -1,13 +1,6 @@
 package net.vgc.client.game;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.function.BiFunction;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.function.QuadFunction;
 import net.vgc.client.Client;
 import net.vgc.client.player.AbstractClientPlayer;
@@ -24,6 +17,11 @@ import net.vgc.network.packet.Packet;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.util.Util;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.function.BiFunction;
 
 /**
  *

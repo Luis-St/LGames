@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 public interface Dice {
 	
-	public static final Logger LOGGER = LogManager.getLogger();
+	Logger LOGGER = LogManager.getLogger();
 	
 	int roll();
 	

@@ -15,7 +15,7 @@ public enum TTTFieldType implements GameFieldType {
 	private final String name;
 	private final int id;
 	
-	private TTTFieldType(String name, int id) {
+	TTTFieldType(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

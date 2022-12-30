@@ -1,13 +1,13 @@
 package net.vgc.network.packet.client.game;
 
-import java.util.List;
-
 import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.listener.PacketGetter;
+
+import java.util.List;
 
 /**
  *

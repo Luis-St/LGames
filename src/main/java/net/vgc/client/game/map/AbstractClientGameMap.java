@@ -1,13 +1,13 @@
 package net.vgc.client.game.map;
 
-import java.util.List;
-
 import net.vgc.client.Client;
 import net.vgc.game.Game;
 import net.vgc.game.map.AbstractGameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.GameFigure;
+
+import java.util.List;
 
 /**
  *

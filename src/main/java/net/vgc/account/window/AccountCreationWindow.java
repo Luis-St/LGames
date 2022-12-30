@@ -1,8 +1,5 @@
 package net.vgc.account.window;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,6 +16,8 @@ import net.vgc.account.AccountServer;
 import net.vgc.client.fx.Box;
 import net.vgc.client.fx.FxAnimationUtil;
 import net.vgc.language.TranslationKey;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -52,9 +51,7 @@ public class AccountCreationWindow {
 		ToggleButton trueButton = new ToggleButton(TranslationKey.createAndGet("window.create_account.true"));
 		trueButton.setToggleGroup(toggleGroup);
 		guestPane.addRow(0, falseButton, trueButton);
-		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), () -> {
-			this.stage.close();
-		});
+		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), this.stage::close);
 		Button createButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.create"), () -> {
 			String name = nameField.getText();
 			String password = passwordField.getText();
@@ -71,7 +68,7 @@ public class AccountCreationWindow {
 				FxAnimationUtil.makeNotToggled(trueButton, 750);
 				LOGGER.info("No account type selected");
 			} else {
-				this.accountServer.getAgent().createAccount(name, password, !gueatFalse && guestTrue);
+				this.accountServer.getAgent().createAccount(name, password, !gueatFalse);
 				nameField.setText("");
 				passwordField.setText("");
 				toggleGroup.selectToggle(null);

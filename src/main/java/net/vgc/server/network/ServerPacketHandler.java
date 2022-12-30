@@ -1,15 +1,6 @@
 package net.vgc.server.network;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.game.Game;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.player.GamePlayer;
@@ -39,6 +30,13 @@ import net.vgc.player.GameProfile;
 import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  *

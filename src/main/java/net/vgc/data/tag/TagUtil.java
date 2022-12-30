@@ -1,15 +1,14 @@
 package net.vgc.data.tag;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.collection.ListTag;
 import net.vgc.language.TranslationKey;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Function;
 
 /**
  *

@@ -85,10 +85,7 @@ public class TTTFieldPos implements GameFieldPos {
 	
 	@Override
 	public boolean isOutOfMap() {
-		if (Mth.isInBounds(this.position, 0, 8) && Mth.isInBounds(this.row, 0, 2) && Mth.isInBounds(this.column, 0, 2)) {
-			return false;
-		}
-		return true;
+		return !Mth.isInBounds(this.position, 0, 8) || !Mth.isInBounds(this.row, 0, 2) || !Mth.isInBounds(this.column, 0, 2);
 	}
 	
 	@Override
@@ -114,11 +111,10 @@ public class TTTFieldPos implements GameFieldPos {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("TTTFieldPos{");
-		builder.append("position=").append(this.position).append(",");
-		builder.append("row=").append(this.row).append(",");
-		builder.append("column=").append(this.column).append("}");
-		return builder.toString();
+		String builder = "TTTFieldPos{" + "position=" + this.position + "," +
+				"row=" + this.row + "," +
+				"column=" + this.column + "}";
+		return builder;
 	}
 	
 }

@@ -17,12 +17,12 @@ public interface ToggleButtonWrapper {
 	
 	ToggleButton getToggleButton();
 	
-	default void setToggleGroup(ToggleGroup group) {
-		this.getToggleButton().setToggleGroup(group);
-	}
-	
 	default ToggleGroup getToggleGroup() {
 		return this.getToggleButton().getToggleGroup();
+	}
+	
+	default void setToggleGroup(ToggleGroup group) {
+		this.getToggleButton().setToggleGroup(group);
 	}
 	
 	default void setPrefSize(double prefWidth, double prefHeight) {

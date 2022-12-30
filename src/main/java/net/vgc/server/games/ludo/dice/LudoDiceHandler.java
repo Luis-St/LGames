@@ -1,10 +1,6 @@
 package net.vgc.server.games.ludo.dice;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.game.Game;
 import net.vgc.game.dice.Dice;
 import net.vgc.game.dice.DiceHandler;
@@ -15,6 +11,9 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  *

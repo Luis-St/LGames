@@ -1,11 +1,6 @@
 package net.vgc.server.games.ludo;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.client.games.ludo.LudoClientGame;
 import net.vgc.game.GameResult;
 import net.vgc.game.dice.DiceHandler;
@@ -34,6 +29,10 @@ import net.vgc.server.games.ludo.player.LudoServerPlayer;
 import net.vgc.server.games.ludo.win.LudoWinHandler;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  *

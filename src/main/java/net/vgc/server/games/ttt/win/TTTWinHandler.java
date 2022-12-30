@@ -1,9 +1,6 @@
 package net.vgc.server.games.ttt.win;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
@@ -17,6 +14,8 @@ import net.vgc.games.ttt.player.TTTPlayerType;
 import net.vgc.server.games.ttt.map.TTTServerMap;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.util.Util;
+
+import java.util.List;
 
 /**
  *
@@ -45,7 +44,7 @@ public class TTTWinHandler extends AbstractWinHandler {
 	@Override
 	public boolean hasPlayerFinished(GamePlayer gamePlayer) {
 		if (gamePlayer instanceof TTTServerPlayer player) {
-			return this.getWinType((TTTServerMap) player.getMap()) == player.getPlayerType();
+			return this.getWinType(player.getMap()) == player.getPlayerType();
 		}
 		return false;
 	}

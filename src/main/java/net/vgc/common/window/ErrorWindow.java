@@ -1,9 +1,5 @@
 package net.vgc.common.window;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,6 +14,9 @@ import net.vgc.common.ErrorLevel;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.NetworkSide;
 import net.vgc.server.Server;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *

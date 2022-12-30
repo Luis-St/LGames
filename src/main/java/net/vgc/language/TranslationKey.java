@@ -1,10 +1,9 @@
 package net.vgc.language;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.Main;
+
+import java.util.List;
 
 /**
  *

@@ -15,7 +15,7 @@ public enum AccountType implements EnumRepresentable {
 	private final String name;
 	private final int id;
 	
-	private AccountType(String name, int id) {
+	AccountType(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

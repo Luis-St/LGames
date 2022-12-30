@@ -1,18 +1,6 @@
 package net.vgc.network.packet.listener;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ClassUtils;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.util.ClassPathInspector;
 import net.luis.utils.util.ReflectionHelper;
 import net.luis.utils.util.SimpleEntry;
@@ -20,6 +8,16 @@ import net.vgc.common.application.GameApplication;
 import net.vgc.network.Connection;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.Packet;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -202,7 +200,7 @@ class PacketInvokHelper {
 		return new RuntimeException("Invalid method signature of method " + name + ", expected parameter " + expectedParameters + " but " + obtainedParameters + " was passed");
 	}
 	
-	private static record GetterInfo(String parameterName, String getterName) {
+	private record GetterInfo(String parameterName, String getterName) {
 		
 	}
 	

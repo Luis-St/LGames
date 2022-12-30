@@ -1,11 +1,6 @@
 package net.vgc.server.games.wins4.win;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
@@ -19,6 +14,10 @@ import net.vgc.games.wins4.player.Wins4PlayerType;
 import net.vgc.server.games.wins4.map.Wins4ServerMap;
 import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
 import net.vgc.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
