@@ -6,7 +6,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import net.luis.utils.util.ToString;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
 import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
@@ -49,7 +49,7 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 		this.setToggleGroup(this.group);
 		this.setPrefSize(this.getSize(), this.getSize());
 		this.setFocusTraversable(false);
-		if (!Constans.DEBUG) {
+		if (!Constants.DEBUG) {
 			this.setBackground(null);
 		}
 		this.updateFieldGraphic();

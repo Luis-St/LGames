@@ -4,7 +4,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import net.luis.utils.util.ToString;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.LabelWrapper;
 import net.vgc.client.game.map.field.AbstractClientGameField;
@@ -46,7 +46,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 	public void init() {
 		this.setPrefSize(this.getSize(), this.getSize());
 		this.setFocusTraversable(false);
-		if (!Constans.DEBUG) {
+		if (!Constants.DEBUG) {
 			this.setBackground(null);
 		}
 		this.updateFieldGraphic();

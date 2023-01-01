@@ -5,7 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import net.luis.utils.util.SimpleEntry;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
@@ -37,7 +37,7 @@ public class PlayerScorePane extends GridPane {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(10.0);
 		this.setHgap(10.0);
-		this.setGridLinesVisible(Constans.DEBUG);
+		this.setGridLinesVisible(Constants.DEBUG);
 		this.makePlayerScore();
 	}
 	

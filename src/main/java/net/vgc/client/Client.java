@@ -187,11 +187,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	@Override
-	protected String getVersion() {
-		return Constans.Client.VERSION;
-	}
-	
-	@Override
 	public NetworkSide getNetworkSide() {
 		return NetworkSide.CLIENT;
 	}

@@ -38,16 +38,16 @@ public class Main {
 		boolean server = set.has("server");
 		boolean account = set.has("account");
 		Util.warpStreams(set.has(debugMode) ? set.valueOf(debugMode) : false);
-		Constans.IDE = set.has("ide");
+		Constants.IDE = set.has("ide");
 		checkLaunch(client, server, account);
 		if (client) {
-			Constans.LAUNCH_TYPE = "client";
+			Constants.LAUNCH_TYPE = "client";
 			Client.launch(Client.class, args);
 		} else if (server) {
-			Constans.LAUNCH_TYPE = "server";
+			Constants.LAUNCH_TYPE = "server";
 			Server.launch(Server.class, args);
 		} else if (account) {
-			Constans.LAUNCH_TYPE = "account";
+			Constants.LAUNCH_TYPE = "account";
 			AccountServer.launch(AccountServer.class, args);
 		} else {
 			LOGGER.error("A critical error occurred while launching the virtual game collection");

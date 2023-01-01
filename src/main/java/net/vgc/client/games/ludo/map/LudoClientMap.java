@@ -9,7 +9,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import net.luis.utils.math.Mth;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
 import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
@@ -73,7 +73,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 		this.setHgap(10.0);
 		this.setVgap(10.0);
 		this.setPadding(new Insets(20.0));
-		this.setGridLinesVisible(Constans.DEBUG);
+		this.setGridLinesVisible(Constants.DEBUG);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			LocalPlayer player = this.getClient().getPlayer();
 			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {

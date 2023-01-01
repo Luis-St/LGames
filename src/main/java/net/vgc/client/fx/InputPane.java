@@ -5,7 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import net.luis.fxutils.FxUtils;
-import net.vgc.Constans;
+import net.vgc.Constants;
 
 /**
  *
@@ -19,6 +19,10 @@ public class InputPane extends GridPane {
 	private final TextField inputField;
 	
 	public InputPane(String inputText) {
+		this(inputText, 12.0);
+	}
+	
+	public InputPane(String inputText, double textSize) {
 		this.inputText = new Text(inputText);
 		this.inputField = new TextField();
 		this.init();
@@ -28,7 +32,7 @@ public class InputPane extends GridPane {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(0.0);
 		this.setHgap(0.0);
-		this.setGridLinesVisible(Constans.DEBUG);
+		this.setGridLinesVisible(Constants.DEBUG);
 		this.addColumn(0, FxUtils.makeVBox(Pos.CENTER_LEFT, 0.0, this.inputText), this.inputField);
 	}
 	

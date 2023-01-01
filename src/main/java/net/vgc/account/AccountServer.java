@@ -30,7 +30,7 @@ import net.luis.utils.data.serialization.SerializationUtils;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.collection.ListTag;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.account.account.Account;
 import net.vgc.account.account.AccountManager;
 import net.vgc.account.account.AccountType;
@@ -136,7 +136,7 @@ public class AccountServer extends GameApplication {
 	}
 	
 	@Override
-	public void load() throws IOException {
+	public void load() {
 		List<Account> accounts = Lists.newArrayList();
 		Path path = this.gameDirectory.resolve("accounts.acc");
 		LOGGER.debug("Loading accounts from {}", path);
@@ -181,9 +181,9 @@ public class AccountServer extends GameApplication {
 	}
 	
 	private void launchServer() {
-		new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
+		new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<>() {
 			@Override
-			protected void initChannel(Channel channel) throws Exception {
+			protected void initChannel(Channel channel) {
 				ChannelPipeline pipeline = channel.pipeline();
 				Connection connection = new Connection();
 				pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
@@ -216,7 +216,7 @@ public class AccountServer extends GameApplication {
 			treeItem.getChildren().add(account.display());
 		}
 		this.accountView.setRoot(treeItem);
-		this.accountView.setShowRoot(Constans.DEBUG);
+		this.accountView.setShowRoot(Constants.DEBUG);
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 5.0, 5.0);
 		Button createAccountButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.create"), this::createAccount);
 		createAccountButton.setPrefWidth(110.0);
@@ -256,7 +256,7 @@ public class AccountServer extends GameApplication {
 			treeItem.getChildren().add(account.display());
 		}
 		this.accountView.setRoot(treeItem);
-		this.accountView.setShowRoot(Constans.DEBUG);
+		this.accountView.setShowRoot(Constants.DEBUG);
 	}
 	
 	@Override
@@ -267,11 +267,6 @@ public class AccountServer extends GameApplication {
 	@Override
 	protected String getName() {
 		return "account server";
-	}
-	
-	@Override
-	protected String getVersion() {
-		return Constans.Account.VERSION;
 	}
 	
 	@Override

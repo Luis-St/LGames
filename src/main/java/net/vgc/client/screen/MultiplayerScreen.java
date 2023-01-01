@@ -5,7 +5,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import net.luis.fxutils.FxUtils;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.client.ClientAccount;
 import net.vgc.client.fx.ButtonBox;
 import net.vgc.client.fx.FxAnimationUtil;
@@ -109,7 +109,7 @@ public class MultiplayerScreen extends Screen {
 	protected Pane createPane() {
 		GridPane outerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		GridPane innerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
-		if (Constans.IDE) {
+		if (Constants.IDE) {
 			innerPane.addColumn(0, this.connectButtonBox, this.connectLocalButtonBox, this.backButtonBox);
 		} else {
 			innerPane.addColumn(0, this.connectButtonBox, this.backButtonBox);

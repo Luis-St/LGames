@@ -6,7 +6,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.util.streams.DebugPrintStream;
 import net.vgc.util.streams.InfoPrintStream;
 import org.apache.logging.log4j.LogManager;
@@ -129,7 +129,7 @@ public class Util {
 	
 	public static void warpStreams(boolean debugMode) {
 		LOGGER.info("Warp System PrintStreams to type {}", debugMode ? "DEBUG" : "INFO");
-		Constans.DEBUG = debugMode;
+		Constants.DEBUG = debugMode;
 		if (debugMode) {
 			System.setOut(new DebugPrintStream("STDOUT", System.out));
 			System.setErr(new DebugPrintStream("STDERR", System.err));

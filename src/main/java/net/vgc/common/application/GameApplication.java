@@ -74,7 +74,7 @@ public abstract class GameApplication extends Application implements DataHandler
 		}
 		LanguageProvider.INSTANCE.load();
 		this.launchState = LaunchState.STARTED;
-		LOGGER.info("Successfully start of {} with version {}", this.getName(), this.getVersion());
+		LOGGER.info("Successfully start of {}", this.getName());
 	}
 	
 	protected abstract void handleStart(String[] args) throws Exception;
@@ -91,8 +91,6 @@ public abstract class GameApplication extends Application implements DataHandler
 	protected abstract String getThreadName();
 	
 	protected abstract String getName();
-	
-	protected abstract String getVersion();
 	
 	public abstract NetworkSide getNetworkSide();
 	

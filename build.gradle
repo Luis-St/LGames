@@ -1,6 +1,5 @@
 plugins {
 	id "java-library"
-	id "eclipse"
 	id "java"
 	id "org.openjfx.javafxplugin" version "0.0.10"
 }
@@ -15,8 +14,6 @@ repositories {
 	}
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 javafx {
 	version = "17"
 	modules = [ "javafx.controls" ]
@@ -28,8 +25,6 @@ compileJava {
 	options.compilerArgs << "-parameters"
 }
 
-println("Java: " + System.getProperty("java.version") + " JVM: " + System.getProperty("java.vm.version") + "Java Runtime:" + System.getProperty("java.runtime.version"))
-
 dependencies {
 	// Local
 	implementation "org.controlsfx:ControlsFX:1.1" // Fx
@@ -40,29 +35,29 @@ dependencies {
 	implementation "com.google.code.gson:gson:2.8.9" // Json
 	// Apache
 	implementation "org.apache.logging.log4j:log4j-api:2.14.1" // Logging
-	implementation "org.apache.logging.log4j:log4j-core:2.14.1" // Logging
+	implementation 'org.apache.logging.log4j:log4j-core:2.17.1' // Logging
 	implementation "org.apache.commons:commons-lang3:3.0" // Utility
 	implementation "org.apache.commons:commons-email:1.5" // E-Mail
-	implementation "commons-codec:commons-codec:1.15" // Crypting
+	implementation "commons-codec:commons-codec:1.15" // Cryptic
 	// Netty
-	implementation "io.netty:netty-all:4.1.25.Final" // Network
+	implementation 'io.netty:netty-all:4.1.25.Final' // Network
 	// Other
 	implementation "net.sf.jopt-simple:jopt-simple:5.0.4" // Startup
 	implementation "com.mojang:datafixerupper:4.0.26" // Codec/Json helper
 	implementation "org.jetbrains:annotations:23.0.0" // Annotations
 }
 
-task runClient(type:JavaExec) {
+tasks.register("runClient", JavaExec) {
 	group = "runs"
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("assets"), "--accountHost", "localhost", "--accountPort", "8081")
-	args("--instantLoading", "true", "--safeLoading", "false")
+	args("--instantLoading", "true", "--safeLoading", "false", "--cachePasswordLocal", "true")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task runServer(type:JavaExec) {
+tasks.register("runServer", JavaExec) {
 	group = "runs"
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
@@ -72,7 +67,7 @@ task runServer(type:JavaExec) {
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task runAccount(type:JavaExec) {
+tasks.register("runAccount", JavaExec) {
 	group = "runs"
 	main = "net.vgc.Main"
 	classpath = sourceSets.main.runtimeClasspath
@@ -81,7 +76,7 @@ task runAccount(type:JavaExec) {
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task runTest(type:JavaExec) {
+tasks.register("runTest", JavaExec) {
 	group = "test runs"
 	main = "net.vgc.Test"
 	classpath = sourceSets.main.runtimeClasspath
@@ -89,7 +84,7 @@ task runTest(type:JavaExec) {
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
-task runFxTest(type:JavaExec) {
+tasks.register("runFxTest", JavaExec) {
 	group = "test runs"
 	main = "net.vgc.FxTest"
 	classpath = sourceSets.main.runtimeClasspath
