@@ -6,7 +6,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import net.luis.fxutils.FxUtils;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
@@ -37,7 +37,7 @@ public class PlayerInfoPane extends GridPane {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(10.0);
 		this.setHgap(10.0);
-		this.setGridLinesVisible(Constans.DEBUG);
+		this.setGridLinesVisible(Constants.DEBUG);
 		this.add(this.makePlayerInfoPane(), 0, 0);
 		this.add(this.makeSeparator(), 0, 1);
 		this.add(this.makeCurrentPlayerPane(), 0, 2);

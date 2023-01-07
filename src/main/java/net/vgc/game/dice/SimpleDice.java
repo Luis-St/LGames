@@ -1,9 +1,9 @@
 package net.vgc.game.dice;
 
-import java.util.Random;
-
 import net.luis.utils.math.Mth;
 import net.vgc.util.exception.InvalidValueException;
+
+import java.util.Random;
 
 /**
  *
@@ -92,10 +92,9 @@ public class SimpleDice implements Dice {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("SimpleDice{");
-		builder.append("min=").append(this.min).append(",");
-		builder.append("max=").append(this.max).append("}");
-		return builder.toString();
+		String builder = "SimpleDice{" + "min=" + this.min + "," +
+				"max=" + this.max + "}";
+		return builder;
 	}
 	
 }

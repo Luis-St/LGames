@@ -1,7 +1,6 @@
 package net.vgc.client;
 
 import com.google.common.collect.Lists;
-
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.vgc.common.settings.AbstractSettings;
 import net.vgc.common.settings.Setting;

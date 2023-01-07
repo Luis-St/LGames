@@ -1,19 +1,18 @@
 package net.vgc.client.fx.game;
 
-import java.util.List;
-import java.util.Map.Entry;
-
 import com.google.common.collect.Lists;
-
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import net.luis.utils.util.SimpleEntry;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
 import net.vgc.player.Player;
+
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  *
@@ -38,7 +37,7 @@ public class PlayerScorePane extends GridPane {
 		this.setAlignment(Pos.CENTER);
 		this.setVgap(10.0);
 		this.setHgap(10.0);
-		this.setGridLinesVisible(Constans.DEBUG);
+		this.setGridLinesVisible(Constants.DEBUG);
 		this.makePlayerScore();
 	}
 	
@@ -63,7 +62,7 @@ public class PlayerScorePane extends GridPane {
 		}
 	}
 	
-	public static enum Type {
+	public enum Type {
 		
 		WIN("win") {
 			@Override
@@ -92,7 +91,7 @@ public class PlayerScorePane extends GridPane {
 		
 		private final String name;
 		
-		private Type(String name) {
+		Type(String name) {
 			this.name = name;
 		}
 		

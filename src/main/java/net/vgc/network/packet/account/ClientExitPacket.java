@@ -1,8 +1,9 @@
 package net.vgc.network.packet.account;
 
-import net.vgc.account.PlayerAccount;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
+
+import java.util.UUID;
 
 /**
  *
@@ -12,24 +13,42 @@ import net.vgc.network.packet.listener.PacketGetter;
 
 public class ClientExitPacket implements AccountPacket {
 	
-	private final PlayerAccount account;
+	private final String name;
+	private final int id;
+	private final UUID uuid;
 	
-	public ClientExitPacket(PlayerAccount account) {
-		this.account = account == null ? PlayerAccount.UNKNOWN : account;
+	public ClientExitPacket(String name, int id, UUID uuid) {
+		this.name = name;
+		this.id = id;
+		this.uuid = uuid;
 	}
 	
 	public ClientExitPacket(FriendlyByteBuffer buffer) {
-		this.account = buffer.read(PlayerAccount.class);
+		this.name = buffer.readString();
+		this.id = buffer.readInt();
+		this.uuid = buffer.readUUID();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.write(this.account);
+		buffer.writeString(this.name);
+		buffer.writeInt(this.id);
+		buffer.writeUUID(this.uuid);
 	}
 	
 	@PacketGetter
-	public PlayerAccount getAccount() {
-		return this.account;
+	public String getName() {
+		return this.name;
+	}
+	
+	@PacketGetter
+	public int getId() {
+		return this.id;
+	}
+	
+	@PacketGetter
+	public UUID getUUID() {
+		return this.uuid;
 	}
 	
 }

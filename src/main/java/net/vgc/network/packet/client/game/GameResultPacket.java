@@ -1,7 +1,5 @@
 package net.vgc.network.packet.client.game;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.luis.utils.util.ReflectionHelper;
 import net.vgc.game.GameResult;
 import net.vgc.game.win.GameResultLine;
@@ -9,6 +7,7 @@ import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.client.ClientPacket;
 import net.vgc.network.packet.listener.PacketGetter;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *

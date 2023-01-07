@@ -1,9 +1,10 @@
 package net.vgc.network.packet.client;
 
-import net.vgc.account.LoginType;
-import net.vgc.account.PlayerAccount;
+import net.vgc.account.account.LoginType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
+
+import java.util.UUID;
 
 /**
  *
@@ -14,26 +15,34 @@ import net.vgc.network.packet.listener.PacketGetter;
 public class ClientLoggedInPacket implements ClientPacket {
 	
 	private final LoginType loginType;
-	private final PlayerAccount account;
-	private final boolean successful;
+	private final String name;
+	private final int id;
+	private final String mail;
+	private final UUID uuid;
 	
-	public ClientLoggedInPacket(LoginType loginType, PlayerAccount account, boolean successful) {
+	public ClientLoggedInPacket(LoginType loginType, String name, int id, String mail, UUID uuid) {
 		this.loginType = loginType;
-		this.account = account;
-		this.successful = successful;
+		this.name = name;
+		this.id = id;
+		this.mail = mail;
+		this.uuid = uuid;
 	}
 	
 	public ClientLoggedInPacket(FriendlyByteBuffer buffer) {
 		this.loginType = buffer.readEnum(LoginType.class);
-		this.account = buffer.read(PlayerAccount.class);
-		this.successful = buffer.readBoolean();
+		this.name = buffer.readString();
+		this.id = buffer.readInt();
+		this.mail = buffer.readString();
+		this.uuid = buffer.readUUID();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeEnum(this.loginType);
-		buffer.write(this.account);
-		buffer.writeBoolean(this.successful);
+		buffer.writeString(this.name);
+		buffer.writeInt(this.id);
+		buffer.writeString(this.mail);
+		buffer.writeUUID(this.uuid);
 	}
 	
 	@PacketGetter
@@ -42,13 +51,23 @@ public class ClientLoggedInPacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public PlayerAccount getAccount() {
-		return this.account;
+	public String getName() {
+		return this.name;
 	}
 	
 	@PacketGetter
-	public boolean isSuccessful() {
-		return this.successful;
+	public int getId() {
+		return this.id;
+	}
+	
+	@PacketGetter
+	public String getMail() {
+		return this.mail;
+	}
+	
+	@PacketGetter
+	public UUID getUUID() {
+		return this.uuid;
 	}
 	
 }

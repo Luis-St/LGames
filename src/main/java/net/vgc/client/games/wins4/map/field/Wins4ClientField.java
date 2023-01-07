@@ -4,7 +4,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import net.luis.utils.util.ToString;
-import net.vgc.Constans;
+import net.luis.utils.util.Utils;
+import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.LabelWrapper;
 import net.vgc.client.game.map.field.AbstractClientGameField;
@@ -18,7 +19,6 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldType;
 import net.vgc.games.wins4.player.Wins4PlayerType;
 import net.vgc.player.GameProfile;
-import net.vgc.util.Util;
 
 /**
  *
@@ -46,7 +46,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 	public void init() {
 		this.setPrefSize(this.getSize(), this.getSize());
 		this.setFocusTraversable(false);
-		if (!Constans.DEBUG) {
+		if (!Constants.DEBUG) {
 			this.setBackground(null);
 		}
 		this.updateFieldGraphic();
@@ -123,7 +123,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 	@Override
 	public GameFieldInfo getFieldInfo() {
 		if (this.isEmpty()) {
-			return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+			return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Utils.EMPTY_UUID);
 		}
 		GameFigure figure = this.getFigure();
 		return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());

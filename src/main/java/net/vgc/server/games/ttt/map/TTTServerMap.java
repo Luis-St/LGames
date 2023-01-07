@@ -1,11 +1,6 @@
 package net.vgc.server.games.ttt.map;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
@@ -17,6 +12,9 @@ import net.vgc.games.ttt.map.field.TTTFieldPos;
 import net.vgc.server.Server;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.ttt.map.field.TTTServerField;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  *

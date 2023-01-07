@@ -1,7 +1,5 @@
 package net.vgc.client.games.wins4;
 
-import java.util.List;
-
 import net.vgc.client.Client;
 import net.vgc.client.game.AbstractClientGame;
 import net.vgc.client.games.wins4.map.Wins4ClientMap;
@@ -10,6 +8,8 @@ import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.game.type.GameType;
 import net.vgc.game.type.GameTypes;
 import net.vgc.server.games.wins4.Wins4ServerGame;
+
+import java.util.List;
 
 /**
  *

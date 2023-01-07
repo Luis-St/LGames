@@ -1,12 +1,12 @@
 package net.vgc.client.games.wins4.player.figure;
 
-import java.util.UUID;
-
 import net.luis.utils.util.ToString;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.AbstractGameFigure;
 import net.vgc.games.wins4.map.field.Wins4FieldPos;
+
+import java.util.UUID;
 
 /**
  *

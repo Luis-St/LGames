@@ -1,14 +1,13 @@
 package net.vgc.games.wins4.player;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Network;
+
+import java.util.List;
 
 /**
  *
@@ -26,7 +25,7 @@ public enum Wins4PlayerType implements GamePlayerType {
 	private final TranslationKey translation;
 	private final String path;
 	
-	private Wins4PlayerType(String name, int id, TranslationKey translation, String path) {
+	Wins4PlayerType(String name, int id, TranslationKey translation, String path) {
 		this.name = name;
 		this.id = id;
 		this.translation = translation;

@@ -1,8 +1,8 @@
 package net.vgc.language;
 
-import java.nio.file.Path;
-
 import net.vgc.network.Network;
+
+import java.nio.file.Path;
 
 /**
  *

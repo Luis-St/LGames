@@ -1,12 +1,11 @@
 package net.vgc.game.player;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import javafx.scene.image.ImageView;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.EnumRepresentable;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  *

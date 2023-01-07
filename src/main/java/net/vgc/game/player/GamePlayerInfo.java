@@ -1,12 +1,12 @@
 package net.vgc.game.player;
 
-import java.util.List;
-import java.util.UUID;
-
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.util.annotation.DecodingConstructor;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -69,11 +69,10 @@ public class GamePlayerInfo implements Encodable {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("GamePlayerInfo{");
-		builder.append("profile=").append(this.profile).append(",");
-		builder.append("playerType=").append(this.playerType).append(",");
-		builder.append("uuids=").append(this.uuids).append("}");
-		return builder.toString();
+		String builder = "GamePlayerInfo{" + "profile=" + this.profile + "," +
+				"playerType=" + this.playerType + "," +
+				"uuids=" + this.uuids + "}";
+		return builder;
 	}
 	
 }

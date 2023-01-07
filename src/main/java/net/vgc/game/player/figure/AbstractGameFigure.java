@@ -1,8 +1,8 @@
 package net.vgc.game.player.figure;
 
-import java.util.UUID;
-
 import net.vgc.game.player.GamePlayer;
+
+import java.util.UUID;
 
 /**
  *

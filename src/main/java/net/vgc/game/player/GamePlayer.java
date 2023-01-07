@@ -1,19 +1,18 @@
 package net.vgc.game.player;
 
-import java.util.List;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
 import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.player.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 /**
  *
@@ -23,7 +22,7 @@ import net.vgc.player.Player;
 
 public interface GamePlayer {
 	
-	public static final Logger LOGGER = LogManager.getLogger();
+	Logger LOGGER = LogManager.getLogger();
 	
 	Game getGame();
 	

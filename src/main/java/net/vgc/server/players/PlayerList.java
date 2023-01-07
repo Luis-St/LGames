@@ -1,16 +1,6 @@
 package net.vgc.server.players;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.vgc.network.Connection;
 import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.client.PlayerAddPacket;
@@ -22,6 +12,14 @@ import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  *

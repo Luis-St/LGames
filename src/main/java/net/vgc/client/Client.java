@@ -1,23 +1,13 @@
 package net.vgc.client;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import javafx.animation.Timeline;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.vgc.Constans;
-import net.vgc.account.PlayerAccount;
+import net.luis.utils.util.Utils;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
 import net.vgc.client.network.ClientPacketHandler;
@@ -38,6 +28,14 @@ import net.vgc.player.GameProfile;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidNetworkSideException;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -47,31 +45,38 @@ import net.vgc.util.exception.InvalidNetworkSideException;
 
 public class Client extends GameApplication implements Tickable, Screenable {
 	
+	private final Timeline ticker = Util.createTicker("ClientTicker", this);
+	private final List<AbstractClientPlayer> players = Lists.newArrayList();
+	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
+	private boolean instantLoading;
+	private boolean safeLoading;
+	private boolean cachePasswordLocal;
+	private LoginWindow loginWindow;
+	private ClientAccount account;
+	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
+		connection.send(new ClientLeavePacket(this.account.name(), this.account.uuid()));
+	});
+	private String password;
+	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
+		if (this.isLoggedIn()) {
+			connection.send(new ClientExitPacket(this.account.name(), this.account.id(), this.account.uuid()));
+		} else {
+			connection.send(new ClientExitPacket("", -1, Utils.EMPTY_UUID));
+		}
+		
+	});
+	private LocalPlayer player;
+	private ClientSettings settings;
+	private String accountHost;
+	private int accountPort;
+	private Game game;
+
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
 			return (Client) instance;
 		}
 		throw new InvalidNetworkSideException(NetworkSide.CLIENT);
 	}
-	
-	private final Timeline ticker = Util.createTicker("ClientTicker", this);
-	private final List<AbstractClientPlayer> players = Lists.newArrayList();
-	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
-		connection.send(new ClientLeavePacket(this.account));
-	});
-	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
-		connection.send(new ClientExitPacket(this.account));
-	});
-	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
-	private boolean instantLoading;
-	private boolean safeLoading;
-	private LoginWindow loginWindow;
-	private PlayerAccount account;
-	private LocalPlayer player;
-	private ClientSettings settings;
-	private String accountHost;
-	private int accountPort;
-	private Game game;
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -83,6 +88,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		OptionSpec<Integer> accountPort = parser.accepts("accountPort").withRequiredArg().ofType(Integer.class);
 		OptionSpec<Boolean> instantLoading = parser.accepts("instantLoading").withRequiredArg().ofType(Boolean.class);
 		OptionSpec<Boolean> safeLoading = parser.accepts("safeLoading").withRequiredArg().ofType(Boolean.class);
+		OptionSpec<Boolean> cachePasswordLocal = parser.accepts("cachePasswordLocal").withRequiredArg().ofType(Boolean.class);
 		OptionSet set = parser.parse(args);
 		if (set.has(gameDir)) {
 			this.gameDirectory = set.valueOf(gameDir).toPath();
@@ -129,10 +135,16 @@ public class Client extends GameApplication implements Tickable, Screenable {
 			this.safeLoading = set.valueOf(safeLoading);
 			LOGGER.info("Use safe loading");
 		}
+		if (set.has(cachePasswordLocal)) {
+			this.cachePasswordLocal = set.valueOf(cachePasswordLocal);
+		} else {
+			this.cachePasswordLocal = true;
+			LOGGER.info("Password caching was not specified, use default value: true");
+		}
 	}
 	
 	@Override
-	public void load() throws IOException {
+	public void load() {
 		Path settingsPath = this.gameDirectory.resolve("settings.data");
 		if (Files.exists(settingsPath)) {
 			Tag settingsTag = Tag.load(settingsPath);
@@ -188,11 +200,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	@Override
-	protected String getVersion() {
-		return Constans.Client.VERSION;
-	}
-	
-	@Override
 	public NetworkSide getNetworkSide() {
 		return NetworkSide.CLIENT;
 	}
@@ -222,13 +229,30 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		this.loginWindow = loginWindow;
 	}
 	
-	public PlayerAccount getAccount() {
+	public ClientAccount getAccount() {
 		return this.account;
 	}
 	
-	public void login(PlayerAccount account) {
-		LOGGER.info("Login with account: {}", account);
-		this.account = account;
+	public void login(String name, int id, String mail, UUID uuid, boolean guest) {
+		LOGGER.info("Login with account: {}#{}", name, id);
+		this.account = new ClientAccount(name, id, mail, uuid, guest);
+	}
+	
+	public String getPassword() {
+		return this.password;
+	}
+	
+	public void setPassword(String password) {
+		if (this.cachePasswordLocal) {
+			this.password = password;
+		} else {
+			this.password = "";
+			LOGGER.debug("The password is not cached local because it is disabled");
+		}
+	}
+	
+	public boolean isPasswordCachedLocal() {
+		return this.cachePasswordLocal;
 	}
 	
 	public void logout() {
@@ -330,7 +354,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	@Override
-	protected void handleStop() throws Exception {
+	protected void handleStop() {
 		this.ticker.stop();
 		this.accountHandler.close();
 		this.serverHandler.close();

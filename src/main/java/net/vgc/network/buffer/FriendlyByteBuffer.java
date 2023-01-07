@@ -1,5 +1,16 @@
 package net.vgc.network.buffer;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import net.luis.utils.util.ReflectionHelper;
+import net.luis.utils.util.Utils;
+import net.vgc.util.EnumRepresentable;
+import net.vgc.util.annotation.DecodingConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -8,19 +19,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import net.luis.utils.util.ReflectionHelper;
-import net.vgc.util.EnumRepresentable;
-import net.vgc.util.Util;
-import net.vgc.util.annotation.DecodingConstructor;
 
 /**
  *
@@ -125,7 +123,7 @@ public class FriendlyByteBuffer {
 		long most = this.readLong();
 		long least = this.readLong();
 		UUID uuid = new UUID(most, least);
-		return uuid.equals(Util.EMPTY_UUID) ? Util.EMPTY_UUID : uuid;
+		return uuid.equals(Utils.EMPTY_UUID) ? Utils.EMPTY_UUID : uuid;
 	}
 	
 	public <T extends Encodable> void write(T value) {

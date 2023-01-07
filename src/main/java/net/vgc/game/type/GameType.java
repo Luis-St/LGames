@@ -1,10 +1,5 @@
 package net.vgc.game.type;
 
-import java.util.List;
-import java.util.function.Function;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.luis.utils.math.Mth;
 import net.vgc.client.Client;
 import net.vgc.client.screen.game.GameScreen;
@@ -14,6 +9,10 @@ import net.vgc.game.player.GamePlayerInfo;
 import net.vgc.network.NetworkSide;
 import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.Function;
 
 /**
  *

@@ -1,13 +1,5 @@
 package net.vgc.common.application;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Random;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
 import io.netty.channel.epoll.Epoll;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -19,6 +11,13 @@ import net.vgc.language.LanguageProvider;
 import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 import net.vgc.util.ExceptionHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Random;
 
 /**
  *
@@ -33,10 +32,10 @@ public abstract class GameApplication extends Application implements DataHandler
 	protected static GameApplication instance;
 	
 	protected Stage stage;
-	private Random rng;
 	protected LaunchState launchState = LaunchState.UNKNOWN;
 	protected Path gameDirectory;
 	protected Path resourceDirectory;
+	private Random rng;
 	
 	public void init() throws Exception {
 		instance = this;
@@ -75,7 +74,7 @@ public abstract class GameApplication extends Application implements DataHandler
 		}
 		LanguageProvider.INSTANCE.load();
 		this.launchState = LaunchState.STARTED;
-		LOGGER.info("Successfully start of {} with version {}", this.getName(), this.getVersion());
+		LOGGER.info("Successfully start of {}", this.getName());
 	}
 	
 	protected abstract void handleStart(String[] args) throws Exception;
@@ -92,8 +91,6 @@ public abstract class GameApplication extends Application implements DataHandler
 	protected abstract String getThreadName();
 	
 	protected abstract String getName();
-	
-	protected abstract String getVersion();
 	
 	public abstract NetworkSide getNetworkSide();
 	

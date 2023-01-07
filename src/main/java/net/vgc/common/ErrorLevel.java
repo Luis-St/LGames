@@ -17,7 +17,7 @@ public enum ErrorLevel implements EnumRepresentable {
 	private final int id;
 	private final Color color;
 	
-	private ErrorLevel(String name, int id, Color color) {
+	ErrorLevel(String name, int id, Color color) {
 		this.name = name;
 		this.id = id;
 		this.color = color;

@@ -1,6 +1,6 @@
 package net.vgc.network.packet.account;
 
-import net.vgc.account.LoginType;
+import net.vgc.account.account.LoginType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
 
@@ -14,25 +14,25 @@ public class ClientLoginPacket implements AccountPacket {
 	
 	private final LoginType loginType;
 	private final String name;
-	private final String password;
+	private final int passwordHash;
 	
-	public ClientLoginPacket(LoginType loginType, String name, String password) {
+	public ClientLoginPacket(LoginType loginType, String name, int passwordHash) {
 		this.loginType = loginType;
 		this.name = name;
-		this.password = password;
+		this.passwordHash = passwordHash;
 	}
 	
 	public ClientLoginPacket(FriendlyByteBuffer buffer) {
 		this.loginType = buffer.readEnum(LoginType.class);
 		this.name = buffer.readString();
-		this.password = buffer.readString();
+		this.passwordHash = buffer.readInt();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeEnum(this.loginType);
 		buffer.writeString(this.name);
-		buffer.writeString(this.password);
+		buffer.writeInt(this.passwordHash);
 	}
 	
 	@PacketGetter
@@ -46,8 +46,8 @@ public class ClientLoginPacket implements AccountPacket {
 	}
 	
 	@PacketGetter
-	public String getPassword() {
-		return this.password;
+	public int getPasswordHash() {
+		return this.passwordHash;
 	}
 	
 }

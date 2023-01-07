@@ -15,7 +15,7 @@ public enum LudoFieldType implements GameFieldType {
 	private final String name;
 	private final int id;
 	
-	private LudoFieldType(String name, int id) {
+	LudoFieldType(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

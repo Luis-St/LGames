@@ -1,9 +1,9 @@
 package net.vgc.network.packet.server;
 
-import java.util.UUID;
-
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
+
+import java.util.UUID;
 
 /**
  *

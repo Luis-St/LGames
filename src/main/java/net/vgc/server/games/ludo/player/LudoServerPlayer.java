@@ -1,10 +1,6 @@
 package net.vgc.server.games.ludo.player;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.ToString;
 import net.vgc.game.Game;
@@ -17,6 +13,9 @@ import net.vgc.player.Player;
 import net.vgc.server.game.player.AbstractServerGamePlayer;
 import net.vgc.server.games.ludo.player.figure.LudoServerFigure;
 import net.vgc.util.exception.InvalidValueException;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  *

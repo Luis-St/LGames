@@ -15,7 +15,7 @@ public enum LaunchState implements EnumRepresentable {
 	private final String name;
 	private final int id;
 	
-	private LaunchState(String name, int id) {
+	LaunchState(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

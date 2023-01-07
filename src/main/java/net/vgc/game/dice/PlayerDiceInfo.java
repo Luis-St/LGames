@@ -40,10 +40,9 @@ public class PlayerDiceInfo {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("PlayerDiceInfo{");
-		builder.append("player=").append(this.player).append(",");
-		builder.append("count=").append(this.count).append("}");
-		return builder.toString();
+		String builder = "PlayerDiceInfo{" + "player=" + this.player + "," +
+				"count=" + this.count + "}";
+		return builder;
 	}
 	
 }

@@ -15,7 +15,7 @@ public enum GameResult implements EnumRepresentable {
 	private final String name;
 	private final int id;
 	
-	private GameResult(String name, int id) {
+	GameResult(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

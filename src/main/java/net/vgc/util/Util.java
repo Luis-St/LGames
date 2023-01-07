@@ -1,30 +1,14 @@
 package net.vgc.util;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.util.streams.DebugPrintStream;
 import net.vgc.util.streams.InfoPrintStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -35,12 +19,6 @@ import net.vgc.util.streams.InfoPrintStream;
 public class Util {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-	public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-	
-	public static <T> T make(T object, Consumer<T> consumer) {
-		consumer.accept(object);
-		return object;
-	}
 	
 	public static Timeline createTicker(String name, Tickable tickable) {
 		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(50), name, (event) -> {
@@ -65,77 +43,9 @@ public class Util {
 		timeline.play();
 	}
 	
-	public static <K, V, T> List<T> mapToList(Map<K, V> map, BiFunction<K, V, T> function) {
-		List<T> list = Lists.newArrayList();
-		for (Map.Entry<K, V> entry : map.entrySet()) {
-			list.add(function.apply(entry.getKey(), entry.getValue()));
-		}
-		return list;
-	}
-	
-	public static <T, K, V> Map<K, V> listToMap(List<T> list, Function<T, Entry<K, V>> function) {
-		Map<K, V> map = Maps.newHashMap();
-		for (T t : list) {
-			Entry<K, V> entry = function.apply(t);
-			map.put(entry.getKey(), entry.getValue());
-		}
-		return map;
-	}
-	
-	public static <T, U> List<U> mapList(List<T> list, Function<T, U> function) {
-		return list.stream().map(function).collect(Collectors.toList());
-	}
-	
-	public static <T, U, V> List<V> mapList(List<T> list, Function<T, U> firstFunction, Function<U, V> secondFunction) {
-		return list.stream().map(firstFunction).map(secondFunction).collect(Collectors.toList());
-	}
-	
-	public static <K, T, V> Map<T, V> mapKey(Map<K, V> map, Function<K, T> function) {
-		Map<T, V> mapped = Maps.newHashMap();
-		for (Entry<K, V> entry : map.entrySet()) {
-			mapped.put(function.apply(entry.getKey()), entry.getValue());
-		}
-		return mapped;
-	}
-	
-	public static <K, V, T> Map<K, T> mapValue(Map<K, V> map, Function<V, T> function) {
-		Map<K, T> mapped = Maps.newHashMap();
-		for (Entry<K, V> entry : map.entrySet()) {
-			mapped.put(entry.getKey(), function.apply(entry.getValue()));
-		}
-		return mapped;
-	}
-	
-	public static <T> List<T> reverseList(List<T> list) {
-		List<T> reversedList = Lists.newArrayList();
-		for (int i = list.size(); i-- > 0;) {
-			reversedList.add(list.get(i));
-		}
-		return reversedList;
-	}
-	
-	@Nullable
-	public static <T, R> R runIfNotNull(T value, Function<T, R> function) {
-		if (value != null) {
-			return function.apply(value);
-		}
-		return null;
-	}
-	
-	public static <T> T warpNullTo(T value, T nullFallback) {
-		if (value == null) {
-			return Objects.requireNonNull(nullFallback, "The fallback value can not be null");
-		}
-		return value;
-	}
-	
-	public static Random systemRandom() {
-		return new Random(System.currentTimeMillis());
-	}
-	
 	public static void warpStreams(boolean debugMode) {
 		LOGGER.info("Warp System PrintStreams to type {}", debugMode ? "DEBUG" : "INFO");
-		Constans.DEBUG = debugMode;
+		Constants.DEBUG = debugMode;
 		if (debugMode) {
 			System.setOut(new DebugPrintStream("STDOUT", System.out));
 			System.setErr(new DebugPrintStream("STDERR", System.err));

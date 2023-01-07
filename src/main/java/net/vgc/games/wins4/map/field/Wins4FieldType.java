@@ -15,7 +15,7 @@ public enum Wins4FieldType implements GameFieldType {
 	private final String name;
 	private final int id;
 	
-	private Wins4FieldType(String name, int id) {
+	Wins4FieldType(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

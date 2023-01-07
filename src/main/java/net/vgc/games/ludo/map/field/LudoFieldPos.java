@@ -1,13 +1,12 @@
 package net.vgc.games.ludo.map.field;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.luis.utils.math.Mth;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.games.ludo.player.LudoPlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -126,18 +125,12 @@ public class LudoFieldPos implements GameFieldPos {
 			return true;
 		} else if (this.green == 20 && this.yellow == 10 && this.blue == 0 && this.red == 30) {
 			return true;
-		} else if (this.green == 30 && this.yellow == 20 && this.blue == 10 && this.red == 0) {
-			return true;
-		}
-		return false;
+		} else return this.green == 30 && this.yellow == 20 && this.blue == 10 && this.red == 0;
 	}
 	
 	@Override
 	public boolean isOutOfMap() {
-		if (Mth.isInBounds(this.green, 0, 39) && Mth.isInBounds(this.yellow, 0, 39) && Mth.isInBounds(this.blue, 0, 39) && Mth.isInBounds(this.red, 0, 39)) {
-			return false;
-		}
-		return true;
+		return !Mth.isInBounds(this.green, 0, 39) || !Mth.isInBounds(this.yellow, 0, 39) || !Mth.isInBounds(this.blue, 0, 39) || !Mth.isInBounds(this.red, 0, 39);
 	}
 	
 	@Override
@@ -166,12 +159,11 @@ public class LudoFieldPos implements GameFieldPos {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("LudoFieldPos{");
-		builder.append("green=").append(this.green).append(",");
-		builder.append("yellow=").append(this.yellow).append(",");
-		builder.append("blue=").append(this.blue).append(",");
-		builder.append("red=").append(this.red).append("}");
-		return builder.toString();
+		String builder = "LudoFieldPos{" + "green=" + this.green + "," +
+				"yellow=" + this.yellow + "," +
+				"blue=" + this.blue + "," +
+				"red=" + this.red + "}";
+		return builder;
 	}
 	
 }

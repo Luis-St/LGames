@@ -1,12 +1,12 @@
 package net.vgc.server.games.ttt.player.figure;
 
-import java.util.UUID;
-
 import net.luis.utils.util.ToString;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.figure.AbstractGameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldPos;
+
+import java.util.UUID;
 
 /**
  *

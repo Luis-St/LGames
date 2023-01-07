@@ -42,7 +42,7 @@ public enum NetworkDirection {
 	private final NetworkSide from;
 	private final NetworkSide to;
 	
-	private NetworkDirection(String name, NetworkSide from, NetworkSide to) {
+	NetworkDirection(String name, NetworkSide from, NetworkSide to) {
 		this.name = name;
 		this.from = from;
 		this.to = to;

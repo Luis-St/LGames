@@ -1,38 +1,15 @@
 package net.vgc.network.packet;
 
-import java.lang.reflect.Constructor;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Maps;
-
 import net.luis.utils.util.ReflectionHelper;
+import net.luis.utils.util.Utils;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
 import net.vgc.network.packet.account.ClientLogoutPacket;
-import net.vgc.network.packet.client.ClientJoinedPacket;
-import net.vgc.network.packet.client.ClientLoggedInPacket;
-import net.vgc.network.packet.client.ClientLoggedOutPacket;
-import net.vgc.network.packet.client.PlayerAddPacket;
-import net.vgc.network.packet.client.PlayerRemovePacket;
-import net.vgc.network.packet.client.ServerClosedPacket;
-import net.vgc.network.packet.client.SyncPermissionPacket;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
-import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
-import net.vgc.network.packet.client.game.CancelPlayGameRequestPacket;
-import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.ExitGamePacket;
-import net.vgc.network.packet.client.game.GameActionFailedPacket;
-import net.vgc.network.packet.client.game.GameResultPacket;
-import net.vgc.network.packet.client.game.StartGamePacket;
-import net.vgc.network.packet.client.game.StopGamePacket;
-import net.vgc.network.packet.client.game.UpdateGameMapPacket;
+import net.vgc.network.packet.account.ClientRegistrationPacket;
+import net.vgc.network.packet.client.*;
+import net.vgc.network.packet.client.game.*;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
@@ -43,8 +20,14 @@ import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidPacketException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Constructor;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -55,8 +38,9 @@ import net.vgc.util.exception.InvalidPacketException;
 public class Packets {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final Map<Integer, Class<? extends Packet>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
+	private static final Map<Integer, Class<? extends Packet>> PACKETS = Utils.make(Maps.newHashMap(), (map) -> {
 		int i = 0;
+		map.put(i++, ClientRegistrationPacket.class);
 		map.put(i++, ClientLoginPacket.class);
 		map.put(i++, ClientLogoutPacket.class);
 		map.put(i++, ClientLoggedInPacket.class);

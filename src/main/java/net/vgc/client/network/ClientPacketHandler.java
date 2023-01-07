@@ -1,13 +1,8 @@
 package net.vgc.client.network;
 
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.luis.utils.math.Mth;
-import net.vgc.account.LoginType;
-import net.vgc.account.PlayerAccount;
+import net.luis.utils.util.Utils;
+import net.vgc.account.account.LoginType;
 import net.vgc.client.Client;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.player.LocalPlayer;
@@ -22,21 +17,8 @@ import net.vgc.game.score.PlayerScore;
 import net.vgc.game.type.GameType;
 import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.PacketHandler;
-import net.vgc.network.packet.client.ClientJoinedPacket;
-import net.vgc.network.packet.client.ClientLoggedInPacket;
-import net.vgc.network.packet.client.ClientLoggedOutPacket;
-import net.vgc.network.packet.client.PlayerAddPacket;
-import net.vgc.network.packet.client.PlayerRemovePacket;
-import net.vgc.network.packet.client.ServerClosedPacket;
-import net.vgc.network.packet.client.SyncPermissionPacket;
-import net.vgc.network.packet.client.SyncPlayerDataPacket;
-import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
-import net.vgc.network.packet.client.game.CancelPlayAgainGameRequestPacket;
-import net.vgc.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.vgc.network.packet.client.game.ExitGamePacket;
-import net.vgc.network.packet.client.game.GameActionFailedPacket;
-import net.vgc.network.packet.client.game.StartGamePacket;
-import net.vgc.network.packet.client.game.StopGamePacket;
+import net.vgc.network.packet.client.*;
+import net.vgc.network.packet.client.game.*;
 import net.vgc.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.vgc.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.vgc.network.packet.client.game.dice.RolledDicePacket;
@@ -44,7 +26,11 @@ import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
-import net.vgc.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -64,42 +50,40 @@ public class ClientPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(ClientLoggedInPacket.class)
-	public void handleClientLoggedIn(LoginType loginType, PlayerAccount account, boolean successful) {
+	public void handleClientLoggedIn(LoginType loginType, String name, int id, String mail, UUID uuid) {
 		LoginWindow loginWindow = this.client.getLoginWindow();
 		if (!this.client.isLoggedIn()) {
-			if (successful) {
-				switch (loginType) {
-					case REGISTRATION: {
-						LOGGER.info("Create successfully a new account");
-						this.client.login(account);
-						if (loginWindow != null) {
-							loginWindow.handleLoggedIn(loginType);
-						}
+			switch (loginType) {
+				case REGISTRATION: {
+					LOGGER.info("Create successfully a new account");
+					this.client.login(name, id, mail, uuid, false);
+					if (loginWindow != null) {
+						loginWindow.handleLoggedIn();
 					}
-						break;
-					case USER_LOGIN: {
-						LOGGER.debug("Successfully logged in");
-						this.client.login(account);
-						if (loginWindow != null) {
-							loginWindow.handleLoggedIn(loginType);
-						}
-					}
-						break;
-					case GUEST_LOGIN: {
-						LOGGER.debug("Successfully logged in as a guest");
-						this.client.login(account);
-						if (loginWindow != null) {
-							loginWindow.handleLoggedIn(loginType);
-						}
-					}
-						break;
-					case UNKNOWN: {
-						LOGGER.warn("Fail to log in");
-					}
-						break;
 				}
-			} else {
-				LOGGER.warn("Fail to log in");
+				break;
+				case USER_LOGIN: {
+					LOGGER.debug("Successfully logged in");
+					this.client.login(name, id, mail, uuid, false);
+					if (loginWindow != null) {
+						loginWindow.handleLoggedIn();
+					}
+				}
+				break;
+				case GUEST_LOGIN: {
+					LOGGER.debug("Successfully logged in as a guest");
+					this.client.login(name, id, mail, uuid, true);
+					if (loginWindow != null) {
+						loginWindow.handleLoggedIn();
+					}
+					this.client.setPassword("");
+				}
+				break;
+				case UNKNOWN: {
+					LOGGER.warn("Fail to log in");
+					this.client.setPassword("");
+				}
+				break;
 			}
 		} else {
 			LOGGER.warn("Fail to log in, since already logged in");
@@ -123,7 +107,7 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(ClientJoinedPacket.class)
 	public void handleClientJoined(List<GameProfile> profiles) {
 		for (GameProfile profile : profiles) {
-			if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
+			if (this.client.getAccount().uuid().equals(profile.getUUID())) {
 				this.client.setPlayer(new LocalPlayer(profile));
 			} else {
 				this.client.addRemotePlayer(new RemotePlayer(profile));
@@ -134,8 +118,7 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(PlayerAddPacket.class)
 	public void handlePlayerAdd(GameProfile profile) {
-		;
-		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
+		if (this.client.getAccount().uuid().equals(profile.getUUID())) {
 			if (this.client.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
 				this.client.setPlayer(new LocalPlayer(profile));
@@ -149,7 +132,7 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(PlayerRemovePacket.class)
 	public void handlePlayerRemove(GameProfile profile) {
-		if (this.client.getAccount().getUUID().equals(profile.getUUID())) {
+		if (this.client.getAccount().uuid().equals(profile.getUUID())) {
 			this.client.removePlayer();
 		} else {
 			this.client.removeRemotePlayer(new RemotePlayer(profile));
@@ -235,7 +218,7 @@ public class ClientPacketHandler implements PacketHandler {
 			C game = gameType.createClientGame(this.client, playerInfos);
 			game.start();
 			boolean flag = false;
-			for (Player player : Util.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
+			for (Player player : Utils.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
 				player.setPlaying(true);
 				if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
 					flag = true;

@@ -49,10 +49,9 @@ public abstract class Player implements Tickable {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder(this.getClass().getSimpleName() + "{");
-		builder.append("profile=").append(this.profile).append(",");
-		builder.append("score=").append(this.score).append("}");
-		return builder.toString();
+		String builder = this.getClass().getSimpleName() + "{" + "profile=" + this.profile + "," +
+				"score=" + this.score + "}";
+		return builder;
 	}
 	
 	@Override

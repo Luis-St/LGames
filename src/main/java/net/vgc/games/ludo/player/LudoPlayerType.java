@@ -1,14 +1,13 @@
 package net.vgc.games.ludo.player;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.Network;
+
+import java.util.List;
 
 /**
  *
@@ -27,7 +26,7 @@ public enum LudoPlayerType implements GamePlayerType {
 	private final TranslationKey translation;
 	private final String path;
 	
-	private LudoPlayerType(String name, int id, TranslationKey translation, String path) {
+	LudoPlayerType(String name, int id, TranslationKey translation, String path) {
 		this.name = name;
 		this.id = id;
 		this.translation = translation;

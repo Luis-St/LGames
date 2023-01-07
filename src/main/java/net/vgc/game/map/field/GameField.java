@@ -1,16 +1,15 @@
 package net.vgc.game.map.field;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
 import javafx.scene.image.ImageView;
+import net.luis.utils.util.Utils;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.player.GameProfile;
-import net.vgc.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -20,7 +19,7 @@ import net.vgc.util.Util;
 
 public interface GameField {
 	
-	public static final Logger LOGGER = LogManager.getLogger();
+	Logger LOGGER = LogManager.getLogger();
 	
 	void init();
 	
@@ -82,7 +81,7 @@ public interface GameField {
 	
 	default GameFieldInfo getFieldInfo() {
 		if (this.isEmpty()) {
-			return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+			return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), GameProfile.EMPTY, -1, Utils.EMPTY_UUID);
 		}
 		GameFigure figure = this.getFigure();
 		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());

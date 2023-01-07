@@ -1,17 +1,7 @@
 package net.vgc.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -38,7 +28,7 @@ import joptsimple.OptionSpec;
 import net.luis.fxutils.FxUtils;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.common.application.GameApplication;
 import net.vgc.game.Game;
 import net.vgc.game.player.GamePlayer;
@@ -59,6 +49,14 @@ import net.vgc.util.ExceptionHandler;
 import net.vgc.util.Tickable;
 import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidNetworkSideException;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -68,16 +66,9 @@ import net.vgc.util.exception.InvalidNetworkSideException;
 
 public class Server extends GameApplication implements Tickable {
 	
-	public static Server getInstance() {
-		if (NetworkSide.SERVER.isOn()) {
-			return (Server) instance;
-		}
-		throw new InvalidNetworkSideException(NetworkSide.SERVER);
-	}
-	
 	private final Timeline ticker = Util.createTicker("ServerTicker", this);
 	private final EventLoopGroup group = NATIVE ? new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build())
-		: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
+			: new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("connection #%d").setUncaughtExceptionHandler(new ExceptionHandler()).build());
 	private final List<Channel> channels = Lists.newArrayList();
 	private final List<Connection> connections = Lists.newArrayList();
 	private final ServerPacketHandler packetHandler = new ServerPacketHandler(this);
@@ -88,6 +79,13 @@ public class Server extends GameApplication implements Tickable {
 	private ServerPlayer adminPlayer;
 	private TreeItem<String> playersTreeItem;
 	private Game game;
+
+	public static Server getInstance() {
+		if (NetworkSide.SERVER.isOn()) {
+			return (Server) instance;
+		}
+		throw new InvalidNetworkSideException(NetworkSide.SERVER);
+	}
 	
 	@Override
 	protected void handleStart(String[] args) throws Exception {
@@ -216,15 +214,15 @@ public class Server extends GameApplication implements Tickable {
 		}
 		treeItem.getChildren().add(this.playersTreeItem);
 		serverTree.setRoot(treeItem);
-		serverTree.setShowRoot(Constans.DEBUG);
+		serverTree.setShowRoot(Constants.DEBUG);
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 5.0, 5.0);
 		Button settingsButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.menu.settings"), this::openSettings);
 		settingsButton.setPrefWidth(150.0);
 		Button refreshButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshPlayers);
-		refreshButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
+		refreshButton.setPrefWidth(Constants.IDE ? 150.0 : 225.0);
 		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), Platform::exit);
-		closeButton.setPrefWidth(Constans.IDE ? 150.0 : 225.0);
-		if (Constans.IDE) {
+		closeButton.setPrefWidth(Constants.IDE ? 150.0 : 225.0);
+		if (Constants.IDE) {
 			pane.addRow(0, settingsButton, refreshButton, closeButton);
 		} else {
 			pane.addRow(0, refreshButton, closeButton);
@@ -257,11 +255,6 @@ public class Server extends GameApplication implements Tickable {
 	@Override
 	protected String getName() {
 		return "virtual game collection server";
-	}
-	
-	@Override
-	protected String getVersion() {
-		return Constans.Server.VERSION;
 	}
 	
 	@Override

@@ -1,14 +1,13 @@
 package net.vgc.game.win;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.util.ToString;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
+
+import java.util.List;
 
 /**
  *

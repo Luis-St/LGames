@@ -1,12 +1,12 @@
 package net.vgc.game.map.field;
 
-import java.util.UUID;
-
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.util.annotation.DecodingConstructor;
+
+import java.util.UUID;
 
 /**
  *
@@ -99,14 +99,13 @@ public class GameFieldInfo implements Encodable {
 	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("GameFieldInfo{");
-		builder.append("fieldType=").append(this.fieldType).append(",");
-		builder.append("playerType=").append(this.playerType).append(",");
-		builder.append("fieldPos=").append(this.fieldPos).append(",");
-		builder.append("profile=").append(this.profile).append(",");
-		builder.append("figureCount=").append(this.figureCount).append(",");
-		builder.append("figureUUID=").append(this.figureUUID).append("}");
-		return builder.toString();
+		String builder = "GameFieldInfo{" + "fieldType=" + this.fieldType + "," +
+				"playerType=" + this.playerType + "," +
+				"fieldPos=" + this.fieldPos + "," +
+				"profile=" + this.profile + "," +
+				"figureCount=" + this.figureCount + "," +
+				"figureUUID=" + this.figureUUID + "}";
+		return builder;
 	}
 	
 }

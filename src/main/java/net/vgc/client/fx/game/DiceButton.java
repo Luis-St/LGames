@@ -3,7 +3,7 @@ package net.vgc.client.fx.game;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.Box;
 import net.vgc.client.game.dice.DiceRenderState;
@@ -31,7 +31,7 @@ public class DiceButton extends Button {
 	private void init() {
 		this.setPrefSize(this.prefSize, this.prefSize);
 		this.updateState();
-		if (!Constans.DEBUG) {
+		if (!Constants.DEBUG) {
 			this.setBackground(null);
 		}
 		this.setOnAction((event) -> {

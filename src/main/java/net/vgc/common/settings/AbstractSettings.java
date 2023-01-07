@@ -1,16 +1,14 @@
 package net.vgc.common.settings;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.vgc.data.serialization.Serializable;
-import net.vgc.data.tag.TagUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  *
@@ -25,7 +23,7 @@ public abstract class AbstractSettings implements Serializable {
 	private final List<Setting<?>> settings;
 	
 	protected AbstractSettings(CompoundTag tag) {
-		this(TagUtils.readList(tag.getList("settings", Tag.COMPOUND_TAG), (settingTag) -> {
+		this(TagUtils.readList(tag.getList("Settings", Tag.COMPOUND_TAG), (settingTag) -> {
 			return new Setting<>((CompoundTag) settingTag);
 		}));
 	}
@@ -56,9 +54,7 @@ public abstract class AbstractSettings implements Serializable {
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
-		tag.putList("settings", TagUtil.writeList(this.settings, (setting) -> {
-			return setting.serialize();
-		}));
+		tag.putList("Settings", TagUtils.writeList(this.settings, Setting::serialize));
 		return tag;
 	}
 	

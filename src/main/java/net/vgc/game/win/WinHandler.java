@@ -1,13 +1,12 @@
 package net.vgc.game.win;
 
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 /**
  *
@@ -17,7 +16,7 @@ import net.vgc.game.player.GamePlayer;
 
 public interface WinHandler {
 	
-	public static final Logger LOGGER = LogManager.getLogger();
+	Logger LOGGER = LogManager.getLogger();
 	
 	boolean hasMultipleWinners();
 	

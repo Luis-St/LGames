@@ -1,12 +1,7 @@
 package net.vgc.client.games.ludo.map;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Stream;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Toggle;
@@ -14,7 +9,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import net.luis.utils.math.Mth;
-import net.vgc.Constans;
+import net.luis.utils.util.Utils;
+import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
 import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
@@ -39,7 +35,10 @@ import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
-import net.vgc.util.Util;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  *
@@ -74,7 +73,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 		this.setHgap(10.0);
 		this.setVgap(10.0);
 		this.setPadding(new Insets(20.0));
-		this.setGridLinesVisible(Constans.DEBUG);
+		this.setGridLinesVisible(Constants.DEBUG);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			LocalPlayer player = this.getClient().getPlayer();
 			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
@@ -220,7 +219,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 	
 	@Override
 	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
-		playerType = Util.warpNullTo(playerType, LudoPlayerType.NO);
+		playerType = Utils.warpNullTo(playerType, LudoPlayerType.NO);
 		if (fieldType == LudoFieldType.DEFAULT) {
 			if (playerType != LudoPlayerType.NO && fieldPos.getPosition() % 10 == 0) {
 				return this.getFields().get(fieldPos.getPosition());
@@ -295,7 +294,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 	@Override
 	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return switch ((LudoPlayerType) playerType) {
-			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of((LudoPlayerType) playerType, 0).getPosition()));
+			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of(playerType, 0).getPosition()));
 			default -> {
 				LOGGER.warn("Fail to get start field for type {}", playerType);
 				yield Lists.newArrayList();

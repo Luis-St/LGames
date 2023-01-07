@@ -1,10 +1,6 @@
 package net.vgc.client.games.ttt.player;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.google.common.collect.Lists;
-
 import net.luis.utils.util.ToString;
 import net.vgc.client.game.player.AbstractClientGamePlayer;
 import net.vgc.client.games.ttt.player.figure.TTTClientFigure;
@@ -14,6 +10,9 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.game.player.figure.GameFigure;
 import net.vgc.player.Player;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  *

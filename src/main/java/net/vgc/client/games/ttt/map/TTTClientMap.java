@@ -1,10 +1,6 @@
 package net.vgc.client.games.ttt.map;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.google.common.collect.Lists;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Toggle;
@@ -13,7 +9,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import net.vgc.Constans;
+import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
 import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
@@ -38,6 +34,9 @@ import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  *
  * @author Luis-st
@@ -47,7 +46,7 @@ import net.vgc.player.GameProfile;
 @PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
 public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
-	private final ToggleGroup group;	
+	private final ToggleGroup group;
 	private final GridPane gridPane;
 	
 	public TTTClientMap(Client client, Game game) {
@@ -70,7 +69,7 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		this.setHgap(10.0);
 		this.setVgap(10.0);
 		this.setPadding(new Insets(20.0));
-		this.setGridLinesVisible(Constans.DEBUG);
+		this.setGridLinesVisible(Constants.DEBUG);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (oldValue instanceof ToggleButton oldButton && oldButton.getUserData() instanceof TTTClientField oldField) {
 				if (newValue instanceof ToggleButton newButton && newButton.getUserData() instanceof TTTClientField newField) {
