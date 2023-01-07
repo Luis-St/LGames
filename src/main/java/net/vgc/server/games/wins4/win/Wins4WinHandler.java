@@ -1,6 +1,7 @@
 package net.vgc.server.games.wins4.win;
 
 import com.google.common.collect.Lists;
+import net.luis.utils.util.Utils;
 import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
@@ -13,7 +14,6 @@ import net.vgc.games.wins4.map.field.Wins4FieldPos;
 import net.vgc.games.wins4.player.Wins4PlayerType;
 import net.vgc.server.games.wins4.map.Wins4ServerMap;
 import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
-import net.vgc.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class Wins4WinHandler extends AbstractWinHandler {
 	
-	private final List<GameResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {
+	private final List<GameResultLine> resultLines = Utils.make(Lists.newArrayList(), (list) -> {
 		for (int i = 0; i < 42; i++) {
 			list.addAll(this.getResultLinesForPos(Wins4FieldPos.of(i)));
 		}
@@ -37,7 +37,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		int position = fieldPos.getPosition();
 		int row = fieldPos.getRow();
 		int column = fieldPos.getColumn();
-		return Util.make(new ArrayList<GameResultLine>(), (list) -> {
+		return Utils.make(new ArrayList<GameResultLine>(), (list) -> {
 			list.add(new GameResultLine(fieldPos, Wins4FieldPos.of(row - 1, column), Wins4FieldPos.of(row - 2, column), Wins4FieldPos.of(row - 3, column)));
 			list.add(new GameResultLine(fieldPos, Wins4FieldPos.of(row - 1, column + 1), Wins4FieldPos.of(row - 2, column + 2), Wins4FieldPos.of(row - 3, column + 3)));
 			list.add(new GameResultLine(fieldPos, Wins4FieldPos.of(position + 1), Wins4FieldPos.of(position + 2), Wins4FieldPos.of(position + 3)));

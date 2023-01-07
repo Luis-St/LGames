@@ -2,6 +2,7 @@ package net.vgc.client.game;
 
 import com.google.common.collect.Lists;
 import net.luis.utils.function.QuadFunction;
+import net.luis.utils.util.Utils;
 import net.vgc.client.Client;
 import net.vgc.client.player.AbstractClientPlayer;
 import net.vgc.client.screen.LobbyScreen;
@@ -16,7 +17,6 @@ import net.vgc.game.win.WinHandler;
 import net.vgc.network.packet.Packet;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
-import net.vgc.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public abstract class AbstractClientGame extends AbstractGame {
 	}
 	
 	private static List<GamePlayer> createGamePlayers(Client client, Game game, List<GamePlayerInfo> playerInfos, QuadFunction<Game, Player, GamePlayerType, List<UUID>, GamePlayer> function) {
-		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(playerInfos, GamePlayerInfo::getProfile, GameProfile::getName));
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Utils.mapList(playerInfos, GamePlayerInfo::getProfile, GameProfile::getName));
 		List<GamePlayer> gamePlayers = Lists.newArrayList();
 		for (GamePlayerInfo playerInfo : playerInfos) {
 			AbstractClientPlayer player = client.getPlayer(playerInfo.getProfile());

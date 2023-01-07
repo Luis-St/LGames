@@ -1,8 +1,8 @@
 package net.vgc.game;
 
+import net.luis.utils.util.Utils;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.function.Function;
@@ -46,7 +46,7 @@ public abstract class AbstractGame implements Game {
 	
 	@Override
 	public void setPlayer(GamePlayer player) {
-		LOGGER.info("Update current player from {} to {}", Util.runIfNotNull(this.getPlayer(), GamePlayer::getName), Util.runIfNotNull(player, GamePlayer::getName));
+		LOGGER.info("Update current player from {} to {}", Utils.runIfNotNull(this.getPlayer(), GamePlayer::getName), Utils.runIfNotNull(player, GamePlayer::getName));
 		this.player = player;
 	}
 	

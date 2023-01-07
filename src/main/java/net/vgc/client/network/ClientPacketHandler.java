@@ -1,6 +1,7 @@
 package net.vgc.client.network;
 
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.account.account.LoginType;
 import net.vgc.client.Client;
 import net.vgc.client.player.AbstractClientPlayer;
@@ -25,7 +26,6 @@ import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
-import net.vgc.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -216,7 +216,7 @@ public class ClientPacketHandler implements PacketHandler {
 			C game = gameType.createClientGame(this.client, playerInfos);
 			game.start();
 			boolean flag = false;
-			for (Player player : Util.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
+			for (Player player : Utils.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
 				player.setPlaying(true);
 				if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
 					flag = true;

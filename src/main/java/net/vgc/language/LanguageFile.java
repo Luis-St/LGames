@@ -2,9 +2,9 @@ package net.vgc.language;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.luis.utils.util.Utils;
 import net.vgc.data.codec.CodecConstructor;
 import net.vgc.data.codec.CodecGetter;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class LanguageFile {
 	
 	@CodecConstructor
 	private LanguageFile(Map<String, String> languageTranslations) {
-		this.translations = Util.mapToList(languageTranslations, Translation::new);
+		this.translations = Utils.mapToList(languageTranslations, Translation::new);
 	}
 	
 	@CodecGetter

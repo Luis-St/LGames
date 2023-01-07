@@ -3,6 +3,7 @@ package net.vgc.server.game;
 import com.google.common.collect.Lists;
 import net.luis.utils.function.TriFunction;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.game.AbstractGame;
 import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
@@ -16,7 +17,6 @@ import net.vgc.network.packet.client.game.StopGamePacket;
 import net.vgc.player.Player;
 import net.vgc.server.Server;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.Objects;
@@ -52,7 +52,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 			LOGGER.error("Fail to create game players list, since there are {} player types present but at least {} are required", playerTypes.length, players.size());
 			throw new IllegalStateException("Fail to create game players list, since there are " + playerTypes.length + " player types present but at least " + players.size() + " are required");
 		}
-		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Util.mapList(players, Player::getName));
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Utils.mapList(players, Player::getName));
 		List<GamePlayer> gamePlayers = Lists.newArrayList();
 		int i = 0;
 		for (ServerPlayer player : players) {
@@ -115,7 +115,7 @@ public abstract class AbstractServerGame extends AbstractGame {
 	public void stop() {
 		for (ServerPlayer player : this.getServer().getPlayerList().getPlayers()) {
 			if (player.isPlaying()) {
-				if (Util.mapList(this.getPlayers(), GamePlayer::getPlayer).contains(player)) {
+				if (Utils.mapList(this.getPlayers(), GamePlayer::getPlayer).contains(player)) {
 					player.setPlaying(false);
 				} else {
 					player.setPlaying(false);

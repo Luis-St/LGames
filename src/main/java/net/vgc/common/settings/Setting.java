@@ -3,6 +3,7 @@ package net.vgc.common.settings;
 import com.google.common.collect.Lists;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.Tag;
+import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.StringTag;
 import net.vgc.data.tag.TagUtil;
@@ -55,9 +56,7 @@ public class Setting<T> implements Serializable {
 		this.valueType = (SettingValueType<T>) SettingValueTypes.fromId(valueTypeId);
 		Objects.requireNonNull(this.valueType, "Fail to load SettingValueType from tag, since SettingValueType with id " + valueTypeId + " is not registered or does not exists");
 		this.defaultValue = this.valueType.getValue(tag.getString("DefaultValue"));
-		this.possibleValues = TagUtil.readList(tag.getList("PossibleValues", Tag.STRING_TAG), (stringTag) -> {
-			return Setting.this.valueType.getValue(stringTag.getAsString());
-		});
+		this.possibleValues = TagUtils.readList(tag.getList("PossibleValues", Tag.STRING_TAG), (stringTag) -> Setting.this.valueType.getValue(stringTag.getAsString()));
 		if (tag.contains("Value")) {
 			this.value = this.valueType.getValue(tag.getString("Value"));
 			LOGGER.info("Load value and set to {}", this.value);
@@ -124,9 +123,7 @@ public class Setting<T> implements Serializable {
 		}
 		tag.putInt("ValueType", id);
 		tag.putString("DefaultValue", this.valueType.toString(this.defaultValue));
-		tag.putList("PossibleValues", TagUtil.writeList(this.possibleValues, (value) -> {
-			return StringTag.valueOf(this.valueType.toString(value));
-		}));
+		tag.putList("PossibleValues", TagUtils.writeList(this.possibleValues, (value) -> StringTag.valueOf(this.valueType.toString(value))));
 		if (this.getValue() != null) {
 			LOGGER.info("Save value {}", this.value);
 			tag.putString("Value", this.valueType.toString(this.getValue()));

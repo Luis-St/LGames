@@ -1,6 +1,7 @@
 package net.vgc.server.games.ttt.win;
 
 import com.google.common.collect.Lists;
+import net.luis.utils.util.Utils;
 import net.vgc.game.Game;
 import net.vgc.game.map.GameMap;
 import net.vgc.game.map.field.GameField;
@@ -13,7 +14,6 @@ import net.vgc.games.ttt.map.field.TTTFieldPos;
 import net.vgc.games.ttt.player.TTTPlayerType;
 import net.vgc.server.games.ttt.map.TTTServerMap;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
-import net.vgc.util.Util;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class TTTWinHandler extends AbstractWinHandler {
 	
-	private final List<GameResultLine> resultLines = Util.make(Lists.newArrayList(), (list) -> {
+	private final List<GameResultLine> resultLines = Utils.make(Lists.newArrayList(), (list) -> {
 		list.add(new GameResultLine(TTTFieldPos.of(0), TTTFieldPos.of(1), TTTFieldPos.of(2)));
 		list.add(new GameResultLine(TTTFieldPos.of(3), TTTFieldPos.of(4), TTTFieldPos.of(5)));
 		list.add(new GameResultLine(TTTFieldPos.of(6), TTTFieldPos.of(7), TTTFieldPos.of(8)));

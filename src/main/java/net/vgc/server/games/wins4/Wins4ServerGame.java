@@ -2,6 +2,7 @@ package net.vgc.server.games.wins4;
 
 import com.google.common.collect.Lists;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.client.games.wins4.Wins4ClientGame;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.field.GameField;
@@ -30,7 +31,6 @@ import net.vgc.server.games.wins4.map.Wins4ServerMap;
 import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
 import net.vgc.server.games.wins4.win.Wins4WinHandler;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.Objects;
@@ -60,7 +60,7 @@ public class Wins4ServerGame extends AbstractServerGame {
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
 			GamePlayer player = this.getPlayerFor(packet.getProfile());
 			if (Objects.equals(this.getPlayer(), player)) {
-				Optional<GameField> optionalField = Util.reverseList(this.getFieldsForColumn(packet.getFieldPos().getColumn())).stream().filter(GameField::isEmpty).findFirst();
+				Optional<GameField> optionalField = Utils.reverseList(this.getFieldsForColumn(packet.getFieldPos().getColumn())).stream().filter(GameField::isEmpty).findFirst();
 				if (optionalField.isPresent()) {
 					GameField field = optionalField.orElseThrow(NullPointerException::new);
 					if (field.isEmpty()) {
@@ -69,10 +69,10 @@ public class Wins4ServerGame extends AbstractServerGame {
 						});
 						if (figure != null) {
 							field.setFigure(figure);
-							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+							this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 							if (this.getWinHandler().hasPlayerFinished(player)) {
 								this.getWinHandler().onPlayerFinished(player);
-								LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Util.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
+								LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Utils.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
 								GameResultLine resultLine = this.getWinHandler().getResultLine(this.getMap());
 								LOGGER.debug("Result line of player {} is {}", player.getName(), resultLine);
 								if (resultLine != GameResultLine.EMPTY) {

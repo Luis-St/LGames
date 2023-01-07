@@ -2,6 +2,7 @@ package net.vgc.game;
 
 import com.google.common.collect.Lists;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.client.game.AbstractClientGame;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.map.GameMap;
@@ -16,7 +17,6 @@ import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 import net.vgc.server.game.AbstractServerGame;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -155,8 +155,8 @@ public interface Game {
 			}
 			this.getWinHandler().reset();
 			this.nextPlayer(true);
-			this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
-			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Util.mapList(this.getPlayers(), GamePlayer::getName));
+			this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Utils.mapList(this.getPlayers(), GamePlayer::getName));
 			return true;
 		}
 		LOGGER.warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());

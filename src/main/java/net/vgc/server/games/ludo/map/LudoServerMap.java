@@ -3,6 +3,7 @@ package net.vgc.server.games.ludo.map;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.map.field.GameFieldPos;
@@ -17,7 +18,6 @@ import net.vgc.server.Server;
 import net.vgc.server.game.map.AbstractServerGameMap;
 import net.vgc.server.games.ludo.map.field.LudoServerField;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
-import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidValueException;
 
 import java.util.List;
@@ -100,7 +100,7 @@ public class LudoServerMap extends AbstractServerGameMap {
 	
 	@Override
 	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
-		playerType = Util.warpNullTo(playerType, LudoPlayerType.NO);
+		playerType = Utils.warpNullTo(playerType, LudoPlayerType.NO);
 		if (fieldType == LudoFieldType.DEFAULT) {
 			if (playerType != LudoPlayerType.NO && fieldPos.getPosition() % 10 == 0) {
 				return this.getFields().get(fieldPos.getPosition());

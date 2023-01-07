@@ -2,10 +2,10 @@ package net.vgc.games.wins4.map.field;
 
 import com.google.common.collect.Lists;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 public class Wins4FieldPos implements GameFieldPos {
 	
 	public static final Wins4FieldPos NO = new Wins4FieldPos(-1, -1, -1);
-	private static final List<List<Integer>> ROW_COLUMN_GRID = Util.make(Lists.newArrayList(), (list) -> {
+	private static final List<List<Integer>> ROW_COLUMN_GRID = Utils.make(Lists.newArrayList(), (list) -> {
 		list.add(Lists.newArrayList(0, 1, 2, 3, 4, 5, 6));
 		list.add(Lists.newArrayList(7, 8, 9, 10, 11, 12, 13));
 		list.add(Lists.newArrayList(14, 15, 16, 17, 18, 19, 20));

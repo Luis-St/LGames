@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import net.luis.fxutils.FxUtils;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.IndexToggleButton;
 import net.vgc.client.fx.game.wrapper.StackPaneWrapper;
@@ -31,7 +32,6 @@ import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.UUID;
@@ -106,7 +106,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		button.setPrefSize(120.0, 6120.0);
 		button.setOnAction((event) -> {
 			if (this.getClient().getPlayer().isCurrent()) {
-				List<GameField> fields = Util.reverseList(this.getFieldsForColumn(index));
+				List<GameField> fields = Utils.reverseList(this.getFieldsForColumn(index));
 				for (GameField field : fields) {
 					if (field.isEmpty()) {
 						field.setShadowed(true);

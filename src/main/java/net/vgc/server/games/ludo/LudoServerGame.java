@@ -1,6 +1,7 @@
 package net.vgc.server.games.ludo;
 
 import com.google.common.collect.Lists;
+import net.luis.utils.util.Utils;
 import net.vgc.client.games.ludo.LudoClientGame;
 import net.vgc.game.GameResult;
 import net.vgc.game.dice.DiceHandler;
@@ -28,7 +29,6 @@ import net.vgc.server.games.ludo.map.LudoServerMap;
 import net.vgc.server.games.ludo.player.LudoServerPlayer;
 import net.vgc.server.games.ludo.win.LudoWinHandler;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.Objects;
@@ -117,13 +117,13 @@ public class LudoServerGame extends AbstractServerGame {
 						GameField nextField = this.getMap().getNextField(figure, count);
 						if (nextField != null) {
 							if (this.getMap().moveFigureTo(figure, nextField)) {
-								this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+								this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 								if (this.getWinHandler().hasPlayerFinished(player)) {
 									this.getWinHandler().onPlayerFinished(player);
 									if (this.getWinHandler().getWinOrder().size() - this.getPlayers().size() > 1) {
 										this.nextPlayer(false);
 									} else {
-										LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Util.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
+										LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Utils.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
 										for (GamePlayer gamePlayer : this.getPlayers()) {
 											PlayerScore score = gamePlayer.getPlayer().getScore();
 											score.setScore(this.getWinHandler().getScoreFor(this, gamePlayer));

@@ -4,7 +4,6 @@ import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.vgc.data.tag.TagUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,9 +54,7 @@ public abstract class AbstractSettings implements Serializable {
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
-		tag.putList("Settings", TagUtil.writeList(this.settings, (setting) -> {
-			return setting.serialize();
-		}));
+		tag.putList("Settings", TagUtils.writeList(this.settings, Setting::serialize));
 		return tag;
 	}
 	

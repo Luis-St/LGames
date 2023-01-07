@@ -1,6 +1,7 @@
 package net.vgc.server.network;
 
 import com.google.common.collect.Lists;
+import net.luis.utils.util.Utils;
 import net.vgc.game.Game;
 import net.vgc.game.dice.DiceHandler;
 import net.vgc.game.player.GamePlayer;
@@ -113,7 +114,7 @@ public class ServerPacketHandler implements PacketHandler {
 	private List<GamePlayerInfo> createPlayerInfos(List<GamePlayer> players) {
 		List<GamePlayerInfo> playerInfos = Lists.newArrayList();
 		for (GamePlayer player : players) {
-			playerInfos.add(new GamePlayerInfo(player.getPlayer().getProfile(), player.getPlayerType(), Util.mapList(player.getFigures(), GameFigure::getUUID)));
+			playerInfos.add(new GamePlayerInfo(player.getPlayer().getProfile(), player.getPlayerType(), Utils.mapList(player.getFigures(), GameFigure::getUUID)));
 		}
 		return playerInfos;
 	}

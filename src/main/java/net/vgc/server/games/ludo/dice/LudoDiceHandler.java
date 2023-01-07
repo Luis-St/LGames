@@ -1,6 +1,7 @@
 package net.vgc.server.games.ludo.dice;
 
 import com.google.common.collect.Lists;
+import net.luis.utils.util.Utils;
 import net.vgc.game.Game;
 import net.vgc.game.dice.Dice;
 import net.vgc.game.dice.DiceHandler;
@@ -10,7 +11,6 @@ import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
 import net.vgc.network.packet.client.game.CanSelectGameFieldPacket;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.Objects;
@@ -107,7 +107,7 @@ public class LudoDiceHandler implements DiceHandler {
 	
 	@Override
 	public int getLastCount(GamePlayer player) {
-		for (PlayerDiceInfo diceInfo : Util.reverseList(this.countHistory)) {
+		for (PlayerDiceInfo diceInfo : Utils.reverseList(this.countHistory)) {
 			if (diceInfo.getPlayer().equals(player)) {
 				return diceInfo.getCount();
 			}

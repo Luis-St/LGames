@@ -1,6 +1,8 @@
 package net.vgc.client.screen;
 
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import net.luis.fxutils.CssUtils;
 import net.vgc.Main;
 import net.vgc.client.Client;
 import net.vgc.client.fx.ScreenScene;
@@ -48,8 +50,14 @@ public abstract class Screen implements Showable, Tickable {
 	
 	protected abstract Pane createPane();
 	
-	public final ScreenScene show() {
-		return new ScreenScene(this.createPane(), this.width, this.height, this);
+	public final Scene show() {
+		Scene scene = new ScreenScene(this.createPane(), this.width, this.height, this);
+		this.onSceneShow(scene);
+		return scene;
+	}
+	
+	protected void onSceneShow(Scene scene) {
+	
 	}
 	
 }

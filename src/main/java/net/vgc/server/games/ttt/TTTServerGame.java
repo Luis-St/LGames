@@ -1,5 +1,6 @@
 package net.vgc.server.games.ttt;
 
+import net.luis.utils.util.Utils;
 import net.vgc.client.games.ttt.TTTClientGame;
 import net.vgc.game.GameResult;
 import net.vgc.game.map.field.GameField;
@@ -26,7 +27,6 @@ import net.vgc.server.games.ttt.map.TTTServerMap;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
 import net.vgc.server.games.ttt.win.TTTWinHandler;
 import net.vgc.server.player.ServerPlayer;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.Objects;
@@ -63,10 +63,10 @@ public class TTTServerGame extends AbstractServerGame {
 						});
 						if (figure != null) {
 							field.setFigure(figure);
-							this.broadcastPlayers(new UpdateGameMapPacket(Util.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+							this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 							if (this.getWinHandler().hasPlayerFinished(player)) {
 								this.getWinHandler().onPlayerFinished(player);
-								LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Util.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
+								LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Utils.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
 								GameResultLine resultLine = this.getWinHandler().getResultLine(this.getMap());
 								if (resultLine != GameResultLine.EMPTY) {
 									for (GamePlayer gamePlayer : this.getPlayers()) {

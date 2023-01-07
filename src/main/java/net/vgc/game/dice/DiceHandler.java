@@ -1,10 +1,10 @@
 package net.vgc.game.dice;
 
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.game.Game;
 import net.vgc.game.map.field.GameField;
 import net.vgc.game.player.GamePlayer;
-import net.vgc.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +45,7 @@ public interface DiceHandler {
 	boolean canRollAfterMove(GamePlayer player, GameField oldField, GameField newField, int count);
 	
 	default boolean hasPlayerRolledDice(GamePlayer player) {
-		return Util.mapList(this.getCountHistory(), PlayerDiceInfo::getPlayer).contains(player) && Mth.isInBounds(this.getLastCount(player), this.getMin(), this.getMax());
+		return Utils.mapList(this.getCountHistory(), PlayerDiceInfo::getPlayer).contains(player) && Mth.isInBounds(this.getLastCount(player), this.getMin(), this.getMax());
 	}
 	
 	int getLastCount(GamePlayer player);

@@ -2,13 +2,13 @@ package net.vgc.player;
 
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
+import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.util.Equals;
 import net.luis.utils.util.ToString;
-import net.vgc.data.tag.TagUtil;
+import net.luis.utils.util.Utils;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
-import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
 
 import java.util.UUID;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @Deserializable
 public class GameProfile implements Encodable, Serializable {
 	
-	public static final GameProfile EMPTY = new GameProfile("empty", Util.EMPTY_UUID);
+	public static final GameProfile EMPTY = new GameProfile("empty", Utils.EMPTY_UUID);
 	
 	private final String name;
 	private final UUID uuid;
@@ -40,7 +40,7 @@ public class GameProfile implements Encodable, Serializable {
 	
 	public GameProfile(CompoundTag tag) {
 		this.name = tag.getString("Name");
-		this.uuid = TagUtil.readUUID(tag.getCompound("UUID"));
+		this.uuid = TagUtils.readUUID(tag.getCompound("UUID"));
 	}
 	
 	public String getName() {
@@ -61,7 +61,7 @@ public class GameProfile implements Encodable, Serializable {
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Name", this.name);
-		tag.putCompound("UUID", TagUtil.writeUUID(this.uuid));
+		tag.putCompound("UUID", TagUtils.writeUUID(this.uuid));
 		return tag;
 	}
 	

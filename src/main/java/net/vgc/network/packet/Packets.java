@@ -2,6 +2,7 @@ package net.vgc.network.packet;
 
 import com.google.common.collect.Maps;
 import net.luis.utils.util.ReflectionHelper;
+import net.luis.utils.util.Utils;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.account.ClientExitPacket;
 import net.vgc.network.packet.account.ClientLoginPacket;
@@ -19,7 +20,6 @@ import net.vgc.network.packet.server.game.ExitGameRequestPacket;
 import net.vgc.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.vgc.network.packet.server.game.SelectGameFieldPacket;
 import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.vgc.util.Util;
 import net.vgc.util.exception.InvalidPacketException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +38,7 @@ import java.util.Map.Entry;
 public class Packets {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final Map<Integer, Class<? extends Packet>> PACKETS = Util.make(Maps.newHashMap(), (map) -> {
+	private static final Map<Integer, Class<? extends Packet>> PACKETS = Utils.make(Maps.newHashMap(), (map) -> {
 		int i = 0;
 		map.put(i++, ClientRegistrationPacket.class);
 		map.put(i++, ClientLoginPacket.class);

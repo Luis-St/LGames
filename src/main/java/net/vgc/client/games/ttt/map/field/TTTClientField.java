@@ -4,6 +4,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import net.luis.utils.util.ToString;
+import net.luis.utils.util.Utils;
 import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.ToggleButtonWrapper;
@@ -18,7 +19,6 @@ import net.vgc.game.player.figure.GameFigure;
 import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.games.ttt.player.TTTPlayerType;
 import net.vgc.player.GameProfile;
-import net.vgc.util.Util;
 
 /**
  *
@@ -140,7 +140,7 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 	@Override
 	public GameFieldInfo getFieldInfo() {
 		if (this.isEmpty()) {
-			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Util.EMPTY_UUID);
+			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Utils.EMPTY_UUID);
 		}
 		GameFigure figure = this.getFigure();
 		return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());

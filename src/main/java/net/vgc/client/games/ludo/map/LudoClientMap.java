@@ -9,6 +9,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import net.vgc.Constants;
 import net.vgc.client.Client;
 import net.vgc.client.fx.game.wrapper.GridPaneWrapper;
@@ -34,7 +35,6 @@ import net.vgc.network.packet.client.game.UpdateGameMapPacket;
 import net.vgc.network.packet.listener.PacketListener;
 import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
-import net.vgc.util.Util;
 
 import java.util.List;
 import java.util.UUID;
@@ -219,7 +219,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 	
 	@Override
 	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
-		playerType = Util.warpNullTo(playerType, LudoPlayerType.NO);
+		playerType = Utils.warpNullTo(playerType, LudoPlayerType.NO);
 		if (fieldType == LudoFieldType.DEFAULT) {
 			if (playerType != LudoPlayerType.NO && fieldPos.getPosition() % 10 == 0) {
 				return this.getFields().get(fieldPos.getPosition());

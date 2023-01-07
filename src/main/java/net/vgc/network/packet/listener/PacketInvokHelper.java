@@ -10,10 +10,13 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.Packet;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -131,7 +134,7 @@ class PacketInvokHelper {
 		}).toArray(GetterInfo[]::new);
 	}
 	
-	private static Object[] sortBySignature(GameApplication application, Method method, List<Entry<GetterInfo, Object>> objects, boolean multipleObjects) {
+	private static Object[] sortBySignature(GameApplication application, Method method, List<Entry<GetterInfo, Object>> objects, List<Class<?>> objectInfo) {
 		List<Object> parameters = Lists.newArrayList();
 		if (application != null) {
 			parameters.add(application);
@@ -140,32 +143,30 @@ class PacketInvokHelper {
 			Class<?> parameter = method.getParameterTypes()[i];
 			String parameterName = method.getParameters()[i].getName();
 			for (Entry<GetterInfo, Object> entry : objects) {
-				if (!ClassUtils.primitiveToWrapper(parameter).isInstance(entry.getValue())) {
-					continue;
-				} else if (entry.getKey().parameterName().equals(parameterName)) {
-					parameters.add(entry.getValue());
-				} else if (multipleObjects) {
-					continue;
-				} else {
-					parameters.add(entry.getValue());
+				boolean multipleObjects = Collections.frequency(objectInfo, entry.getValue().getClass()) > 1;
+				if (ClassUtils.primitiveToWrapper(parameter).isInstance(entry.getValue())) {
+					if (entry.getKey().parameterName().equals(parameterName)) {
+						parameters.add(entry.getValue());
+						break;
+					} else if (!multipleObjects) {
+						parameters.add(entry.getValue());
+						break;
+					}
 				}
 			}
+		}
+		if (parameters.size() != objects.size()) {
+			throw new RuntimeException("Sorting parameters of method " + method.getDeclaringClass().getName() + "#" + method.getName() + " by signature failed");
 		}
 		return parameters.toArray();
 	}
 	
-	private static boolean hasMultipleObjects(List<Entry<GetterInfo, Object>> objects) {
+	private static List<Class<?>> generateObjectInfo(List<Entry<GetterInfo, Object>> objects) {
 		List<Class<?>> objectClasses = Lists.newArrayList();
 		for (Entry<GetterInfo, Object> entry : objects) {
-			Class<?> clazz = entry.getValue().getClass();
-			if (!objectClasses.contains(clazz)) {
-				objectClasses.add(clazz);
-			}
+			objectClasses.add(entry.getValue().getClass());
 		}
-		if (objectClasses.size() > objects.size()) {
-			throw new RuntimeException("More object classes found than objects exist");
-		}
-		return objects.size() > objectClasses.size();
+		return objectClasses;
 	}
 	
 	static Object[] getPacketObjects(GameApplication application, Packet packet, Method method) {
@@ -174,7 +175,7 @@ class PacketInvokHelper {
 			Object object = Objects.requireNonNull(ReflectionHelper.invoke(packet.getClass(), getterInfo.getterName(), packet), "Getter " + getterInfo.getterName() + " in packet " + packet.getClass().getName() + " must not return null");
 			objects.add(new SimpleEntry<>(getterInfo, object));
 		}
-		return sortBySignature(application, method, objects, hasMultipleObjects(objects));
+		return sortBySignature(application, method, objects, generateObjectInfo(objects));
 	}
 	
 	static boolean validateSignature(Method method, Object... objects) {
@@ -195,8 +196,8 @@ class PacketInvokHelper {
 	
 	static RuntimeException createException(Method method, Object... objects) {
 		String name = method.getDeclaringClass().getSimpleName() + "#" + method.getName();
-		String expectedParameters = Arrays.asList(method.getParameterTypes()).stream().map(Class::getName).toList().toString();
-		String obtainedParameters = Arrays.asList(objects).stream().map(Object::getClass).map(Class::getName).toList().toString();
+		String expectedParameters = Arrays.stream(method.getParameterTypes()).map(Class::getName).toList().toString();
+		String obtainedParameters = Arrays.stream(objects).map(Object::getClass).map(Class::getName).toList().toString();
 		return new RuntimeException("Invalid method signature of method " + name + ", expected parameter " + expectedParameters + " but " + obtainedParameters + " was passed");
 	}
 	

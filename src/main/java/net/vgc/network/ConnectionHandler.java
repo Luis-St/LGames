@@ -51,9 +51,9 @@ public class ConnectionHandler {
 			ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("client network").setUncaughtExceptionHandler(new ExceptionHandler()).build();
 			this.group = NATIVE ? new EpollEventLoopGroup(0, threadFactory) : new NioEventLoopGroup(0, threadFactory);
 			this.connection = new Connection();
-			this.channel = new Bootstrap().group(this.group).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<Channel>() {
+			this.channel = new Bootstrap().group(this.group).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<>() {
 				@Override
-				protected void initChannel(Channel channel) throws Exception {
+				protected void initChannel(Channel channel) {
 					ChannelPipeline pipeline = channel.pipeline();
 					pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
 					pipeline.addLast("decoder", new PacketDecoder());

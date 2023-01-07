@@ -1,7 +1,6 @@
 package net.vgc.common.window;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -24,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  *
  */
 
-public class ErrorWindow {
+public class ErrorWindow extends AbstractWindow {
 	
 	private static final Logger LOGGER = LogManager.getLogger(ErrorWindow.class);
 	
@@ -34,6 +33,7 @@ public class ErrorWindow {
 	private ErrorLevel errorLevel = ErrorLevel.NO;
 	
 	private ErrorWindow(String title, String errorMessage, Runnable action) {
+		super(new Stage(), 200.0, 100.0);
 		this.title = title;
 		this.errorMessage = errorMessage.toLowerCase().trim().length() != 0 ? errorMessage : null;
 		this.action = action;
@@ -78,8 +78,8 @@ public class ErrorWindow {
 		return this;
 	}
 	
+	@Override
 	public void show() {
-		Stage stage = new Stage();
 		GridPane pane = new GridPane();
 		double width = 200.0;
 		double height = 100.0;
@@ -100,17 +100,21 @@ public class ErrorWindow {
 		}
 		Button button = new Button(TranslationKey.createAndGet("window.error.continue"));
 		button.setOnAction((event) -> {
-			stage.close();
+			this.close();
 			this.action.run();
 		});
 		VBox box = new VBox();
 		box.setAlignment(Pos.CENTER);
 		box.getChildren().add(button);
 		pane.add(box, 0, flag ? 1 : 0);
-		
-		stage.setScene(new Scene(pane, width, height));
-		stage.setTitle(this.title);
-		stage.showAndWait();
+		this.updateScene(pane);
+		this.stage.setTitle(this.title);
+		this.stage.showAndWait();
+	}
+	
+	@Override
+	protected void exit() {
+	
 	}
 	
 }

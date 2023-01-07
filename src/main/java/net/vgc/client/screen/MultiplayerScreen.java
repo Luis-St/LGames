@@ -1,15 +1,17 @@
 package net.vgc.client.screen;
 
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.FxUtils;
+import net.luis.fxutils.fx.InputValidationPane;
 import net.vgc.Constants;
 import net.vgc.client.ClientAccount;
 import net.vgc.client.fx.ButtonBox;
-import net.vgc.client.fx.FxAnimationUtil;
-import net.vgc.client.fx.InputPane;
 import net.vgc.client.window.LoginWindow;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.ConnectionHandler;
@@ -17,6 +19,8 @@ import net.vgc.network.packet.Packet;
 import net.vgc.network.packet.server.ClientJoinPacket;
 import net.vgc.util.Util;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
 
 /**
  *
@@ -27,8 +31,8 @@ import org.apache.commons.lang3.StringUtils;
 public class MultiplayerScreen extends Screen {
 	
 	private final Screen backScreen;
-	private InputPane hostInputPane;
-	private InputPane portInputPane;
+	private InputValidationPane<TextField> hostPane;
+	private InputValidationPane<TextField> portPane;
 	private ButtonBox connectButtonBox;
 	private ButtonBox connectLocalButtonBox;
 	private ButtonBox backButtonBox;
@@ -39,8 +43,22 @@ public class MultiplayerScreen extends Screen {
 	
 	@Override
 	public void init() {
-		this.hostInputPane = new InputPane(TranslationKey.createAndGet("screen.multiplayer.server_host"));
-		this.portInputPane = new InputPane(TranslationKey.createAndGet("screen.multiplayer.server_port"));
+		this.hostPane = new InputValidationPane<>(TranslationKey.createAndGet("screen.multiplayer.server_host"), new TextField(), (field) -> {
+			if (StringUtils.trimToEmpty(field.getText()).isEmpty()) {
+				return InputValidationPane.ValidationState.INVALID;
+			} else {
+				return InputValidationPane.ValidationState.VALID;
+			}
+		});
+		CssUtils.addStyleClass(this.hostPane.getInputNode(), "input-validation");
+		this.portPane = new InputValidationPane<>(TranslationKey.createAndGet("screen.multiplayer.server_port"), new TextField(), (field) -> {
+			if (StringUtils.trimToEmpty(field.getText()).isEmpty()) {
+				return InputValidationPane.ValidationState.INVALID;
+			} else {
+				return InputValidationPane.ValidationState.VALID;
+			}
+		});
+		CssUtils.addStyleClass(this.portPane.getInputNode(), "input-validation");
 		this.connectButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.multiplayer.connect"), this::handleConnect);
 		this.connectLocalButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.multiplayer.connect_local"), this::handleConnectLocal);
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
@@ -60,26 +78,29 @@ public class MultiplayerScreen extends Screen {
 	
 	private void handleConnect() {
 		if (this.canConnect()) {
-			String host = StringUtils.trimToEmpty(this.hostInputPane.getText());
-			String port = StringUtils.trimToEmpty(this.portInputPane.getText());
+			String host = StringUtils.trimToEmpty(this.hostPane.getInputNode().getText());
+			String port = StringUtils.trimToEmpty(this.portPane.getInputNode().getText());
 			if (host.isEmpty() && port.isEmpty()) {
-				this.hostInputPane.setText("127.0.0.1");
-				FxAnimationUtil.makeEmptyText(this.portInputPane.getInputField(), 750);
+				this.hostPane.getInputNode().setText("127.0.0.1");
+				this.hostPane.validateInput();
 			} else if (host.isEmpty()) {
-				this.hostInputPane.setText("127.0.0.1");
+				this.hostPane.getInputNode().setText("127.0.0.1");
+				this.hostPane.validateInput();
 			} else if (port.isEmpty()) {
-				FxAnimationUtil.makeEmptyText(this.portInputPane.getInputField(), 750);
+				this.portPane.validateInput();
 			} else {
 				ClientAccount account = this.client.getAccount();
-				this.connectAndSend(host, Integer.valueOf(port), new ClientJoinPacket(account.name(), account.uuid()));
+				this.connectAndSend(host, Integer.parseInt(port), new ClientJoinPacket(account.name(), account.uuid()));
 			}
 		}
 	}
 	
 	private void handleConnectLocal() {
 		if (this.canConnect()) {
-			this.hostInputPane.setText("127.0.0.1");
-			this.portInputPane.setText("8080");
+			this.hostPane.getInputNode().setText("127.0.0.1");
+			this.hostPane.validateInput();
+			this.portPane.getInputNode().setText("8080");
+			this.portPane.validateInput();
 			ClientAccount account = this.client.getAccount();
 			this.connectAndSend("127.0.0.1", 8080, new ClientJoinPacket(account.name(), account.uuid()));
 		}
@@ -114,8 +135,12 @@ public class MultiplayerScreen extends Screen {
 		} else {
 			innerPane.addColumn(0, this.connectButtonBox, this.backButtonBox);
 		}
-		outerPane.addColumn(0, this.hostInputPane, this.portInputPane, innerPane);
+		outerPane.addColumn(0, this.hostPane, this.portPane, innerPane);
 		return outerPane;
 	}
 	
+	@Override
+	protected void onSceneShow(Scene scene) {
+		scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/style.css")).toExternalForm());
+	}
 }
