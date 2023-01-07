@@ -1,5 +1,6 @@
 package net.vgc.account.network;
 
+import net.luis.utils.util.Utils;
 import net.vgc.account.AccountServer;
 import net.vgc.account.account.Account;
 import net.vgc.account.account.AccountType;
@@ -20,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  *
@@ -49,21 +51,23 @@ public class AccountPacketHandler implements PacketHandler {
 	public void handleClientLogin(LoginType loginType, String name, int passwordHash) {
 		Account account = switch (loginType) {
 			case USER_LOGIN -> this.account.getManager().accountLogin(name, passwordHash);
-			case GUEST_LOGIN -> this.account.getManager().createAccount(name, "guest@vgc.net", new Random().nextInt(), name, "Guest", new Date(), AccountType.GUEST);
+			case GUEST_LOGIN -> this.account.getManager().createAccount(name, "", new Random().nextInt(), name, "Guest", new Date(), AccountType.GUEST);
 			default -> Account.UNKNOWN;
 		};
-		this.connection.send(new ClientLoggedInPacket(loginType, account.getName(), account.getId(), account.getMail(), account.getUUID()));
+		this.connection.send(new ClientLoggedInPacket(account == Account.UNKNOWN ? LoginType.UNKNOWN : loginType, account.getName(), account.getId(), account.getMail(), account.getUUID()));
 	}
 	
 	@PacketListener(ClientLogoutPacket.class)
-	public void handleClientLogout(String name, int id, int passwordHash) {
-		this.connection.send(new ClientLoggedOutPacket(this.account.getManager().accountLogout(name, id, passwordHash)));
+	public void handleClientLogout(String name, int id, UUID uuid) {
+		this.connection.send(new ClientLoggedOutPacket(this.account.getManager().accountLogout(name, id, uuid)));
 	}
 	
 	@PacketListener(ClientExitPacket.class)
-	public void handleClientLogoutExit(String name, int id, int passwordHash) {
-		this.account.getManager().accountLogout(name, id, passwordHash);
-		LOGGER.info("Logout of account {}#{}", name, id);
+	public void handleClientLogoutExit(String name, int id, UUID uuid) {
+		if (!name.isEmpty() && id != -1 && !uuid.equals(Utils.EMPTY_UUID)) {
+			this.account.getManager().accountLogout(name, id, uuid);
+			LOGGER.info("Logout of account {}#{}", name, id);
+		}
 		this.account.exitClient(this.connection);
 	}
 	

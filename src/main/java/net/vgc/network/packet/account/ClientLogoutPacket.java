@@ -3,6 +3,8 @@ package net.vgc.network.packet.account;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.network.packet.listener.PacketGetter;
 
+import java.util.UUID;
+
 /**
  *
  * @author Luis-st
@@ -13,26 +15,25 @@ public class ClientLogoutPacket implements AccountPacket {
 	
 	private final String name;
 	private final int id;
-	private final int passwordHash;
+	private final UUID uuid;
 	
-	public ClientLogoutPacket(String name, int id, int passwordHash) {
+	public ClientLogoutPacket(String name, int id, UUID uuid) {
 		this.name = name;
 		this.id = id;
-		this.passwordHash = passwordHash;
+		this.uuid = uuid;
 	}
 	
 	public ClientLogoutPacket(FriendlyByteBuffer buffer) {
 		this.name = buffer.readString();
 		this.id = buffer.readInt();
-		this.passwordHash = buffer.readInt();
+		this.uuid = buffer.readUUID();
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.writeString(this.name);
 		buffer.writeInt(this.id);
-		buffer.writeString(this.name);
-		buffer.writeInt(this.passwordHash);
+		buffer.writeUUID(this.uuid);
 	}
 	
 	@PacketGetter
@@ -46,8 +47,8 @@ public class ClientLogoutPacket implements AccountPacket {
 	}
 	
 	@PacketGetter
-	public int getPasswordHash() {
-		return this.passwordHash;
+	public UUID getUUID() {
+		return this.uuid;
 	}
 	
 }

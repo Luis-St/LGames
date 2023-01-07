@@ -7,7 +7,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.vgc.Constans;
+import net.luis.utils.util.Utils;
 import net.vgc.client.fx.ScreenScene;
 import net.vgc.client.fx.Screenable;
 import net.vgc.client.network.ClientPacketHandler;
@@ -50,6 +50,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
 	private boolean instantLoading;
 	private boolean safeLoading;
+	private boolean cachePasswordLocal;
 	private LoginWindow loginWindow;
 	private ClientAccount account;
 	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
@@ -57,7 +58,12 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	});
 	private String password;
 	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
-		connection.send(new ClientExitPacket(this.account.name(), this.account.id(), this.password.hashCode()));
+		if (this.isLoggedIn()) {
+			connection.send(new ClientExitPacket(this.account.name(), this.account.id(), this.account.uuid()));
+		} else {
+			connection.send(new ClientExitPacket("", -1, Utils.EMPTY_UUID));
+		}
+		
 	});
 	private LocalPlayer player;
 	private ClientSettings settings;
@@ -82,6 +88,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		OptionSpec<Integer> accountPort = parser.accepts("accountPort").withRequiredArg().ofType(Integer.class);
 		OptionSpec<Boolean> instantLoading = parser.accepts("instantLoading").withRequiredArg().ofType(Boolean.class);
 		OptionSpec<Boolean> safeLoading = parser.accepts("safeLoading").withRequiredArg().ofType(Boolean.class);
+		OptionSpec<Boolean> cachePasswordLocal = parser.accepts("cachePasswordLocal").withRequiredArg().ofType(Boolean.class);
 		OptionSet set = parser.parse(args);
 		if (set.has(gameDir)) {
 			this.gameDirectory = set.valueOf(gameDir).toPath();
@@ -128,10 +135,16 @@ public class Client extends GameApplication implements Tickable, Screenable {
 			this.safeLoading = set.valueOf(safeLoading);
 			LOGGER.info("Use safe loading");
 		}
+		if (set.has(cachePasswordLocal)) {
+			this.cachePasswordLocal = set.valueOf(cachePasswordLocal);
+		} else {
+			this.cachePasswordLocal = true;
+			LOGGER.info("Password caching was not specified, use default value: true");
+		}
 	}
 	
 	@Override
-	public void load() throws IOException {
+	public void load() {
 		Path settingsPath = this.gameDirectory.resolve("settings.data");
 		if (Files.exists(settingsPath)) {
 			Tag settingsTag = Tag.load(settingsPath);
@@ -220,9 +233,9 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		return this.account;
 	}
 	
-	public void login(String name, int id, String mail, UUID uuid) {
+	public void login(String name, int id, String mail, UUID uuid, boolean guest) {
 		LOGGER.info("Login with account: {}#{}", name, id);
-		this.account = new ClientAccount(name, id, mail, uuid);
+		this.account = new ClientAccount(name, id, mail, uuid, guest);
 	}
 	
 	public String getPassword() {
@@ -230,7 +243,16 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	public void setPassword(String password) {
-		this.password = password;
+		if (this.cachePasswordLocal) {
+			this.password = password;
+		} else {
+			this.password = "";
+			LOGGER.debug("The password is not cached local because it is disabled");
+		}
+	}
+	
+	public boolean isPasswordCachedLocal() {
+		return this.cachePasswordLocal;
 	}
 	
 	public void logout() {
@@ -332,7 +354,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	@Override
-	protected void handleStop() throws Exception {
+	protected void handleStop() {
 		this.ticker.stop();
 		this.accountHandler.close();
 		this.serverHandler.close();

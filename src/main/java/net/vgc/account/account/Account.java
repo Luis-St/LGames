@@ -7,13 +7,16 @@ import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.util.Equals;
 import net.luis.utils.util.ToString;
+import net.luis.utils.util.Utils;
 import net.vgc.language.TranslationKey;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.EnumRepresentable;
-import net.vgc.util.Util;
 import net.vgc.util.annotation.DecodingConstructor;
+import org.apache.commons.lang3.StringUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -27,11 +30,12 @@ import java.util.UUID;
 @Deserializable
 public class Account implements Encodable, Serializable {
 	
-	public static final Account UNKNOWN = new Account("Unknown", "unknown".hashCode(), 0000, Util.EMPTY_UUID, "unknown@vgc.net", "Unknown", "Unknown", new Date(), AccountType.UNKNOWN);
-	public static final Account TEST_1 = new Account("Test 1", "1".hashCode(), 0001, UUID.fromString("11111111-1111-1111-1111-111111111111"), "test@vgc.net", "Unknown", "Test", new Date(), AccountType.TEST);
-	public static final Account TEST_2 = new Account("Test 2", "2".hashCode(), 0002, UUID.fromString("22222222-2222-2222-2222-222222222222"), "test@vgc.net", "Unknown", "Test", new Date(), AccountType.TEST);
-	public static final Account TEST_3 = new Account("Test 3", "3".hashCode(), 0003, UUID.fromString("33333333-3333-3333-3333-333333333333"), "test@vgc.net", "Unknown", "Test", new Date(), AccountType.TEST);
-	public static final Account TEST_4 = new Account("Test 4", "4".hashCode(), 0004, UUID.fromString("44444444-4444-4444-4444-000000000000"), "test@vgc.net", "Unknown", "Test", new Date(), AccountType.TEST);
+	private static final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy");
+	public static final Account UNKNOWN = new Account("Unknown", "unknown".hashCode(), 0, Utils.EMPTY_UUID, "", "Unknown", "Unknown", new Date(), AccountType.UNKNOWN);
+	public static final Account TEST_1 = new Account("Test 1", "1".hashCode(), 1, UUID.fromString("11111111-1111-1111-1111-111111111111"), "", "Test", "1", new Date(), AccountType.TEST);
+	public static final Account TEST_2 = new Account("Test 2", "2".hashCode(), 2, UUID.fromString("22222222-2222-2222-2222-222222222222"), "", "Test", "2", new Date(), AccountType.TEST);
+	public static final Account TEST_3 = new Account("Test 3", "3".hashCode(), 3, UUID.fromString("33333333-3333-3333-3333-333333333333"), "", "Test", "3", new Date(), AccountType.TEST);
+	public static final Account TEST_4 = new Account("Test 4", "4".hashCode(), 4, UUID.fromString("44444444-4444-4444-4444-444444444444"), "", "Test", "4", new Date(), AccountType.TEST);
 	
 	private final String name;
 	private final int passwordHash;
@@ -77,13 +81,13 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	public Account(CompoundTag tag) {
-		this.name = tag.getCryptString("Name");
+		this.name = tag.getString("Name");
 		this.passwordHash = tag.getInt("PasswordHash");
 		this.id = tag.getInt("Id");
 		this.uuid = TagUtils.readUUID(tag.getCompound("UUID"));
-		this.mail = tag.getCryptString("Mail");
-		this.firstName = tag.getCryptString("FirstName");
-		this.lastName = tag.getCryptString("LastName");
+		this.mail = tag.getString("Mail");
+		this.firstName = tag.getString("FirstName");
+		this.lastName = tag.getString("LastName");
 		{
 			Calendar calendar = Calendar.getInstance();
 			CompoundTag birthdayTag = tag.getCompound("Birthday");
@@ -141,15 +145,34 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	public TreeItem<String> display() {
-		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("account.window.account", this.name));
-		// treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_name", this.name)));
-		// treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_password", this.password)));
-		// treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_uuid", this.uuid)));
-		// String trueTranslation = TranslationKey.createAndGet("window.create_account.true");
-		// String falseTranslation = TranslationKey.createAndGet("window.create_account.false");
-		// treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_guest", this.guest ? trueTranslation : falseTranslation)));
-		// treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("account.window.account_taken", this.taken ? trueTranslation : falseTranslation)));
-		return treeItem;
+		TreeItem<String> rootItem = new TreeItem<>(TranslationKey.createAndGet("account.window.account", this.name + "#" + this.getDisplayId()));
+		TreeItem<String> userDataItem = new TreeItem<>(TranslationKey.createAndGet("account.window.user_data"));
+		userDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.name", this.name)));
+		if (!StringUtils.isEmpty(this.firstName.trim())) {
+			userDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.first_name", this.firstName)));
+		}
+		if (!StringUtils.isEmpty(this.lastName.trim())) {
+			userDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.last_name", this.lastName)));
+		}
+		if (!StringUtils.isEmpty(this.mail.trim())) {
+			userDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.mail", this.mail)));
+		}
+		userDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.birthday", FORMAT.format(this.birthday))));
+		TreeItem<String> systemDataItem = new TreeItem<>(TranslationKey.createAndGet("account.window.system_data"));
+		systemDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.id", this.getDisplayId())));
+		systemDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.uuid", this.uuid)));
+		systemDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.type", this.type.getTranslation())));
+		rootItem.getChildren().add(userDataItem);
+		rootItem.getChildren().add(systemDataItem);
+		return rootItem;
+	}
+	
+	private String getDisplayId() {
+		String id = String.valueOf(this.id);
+		if (id.length() == 4) {
+			return id;
+		}
+		return "0".repeat(4 - id.length()) + id;
 	}
 	
 	@Override
@@ -174,13 +197,13 @@ public class Account implements Encodable, Serializable {
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
-		tag.putCryptString("Name", this.name);
+		tag.putString("Name", this.name);
 		tag.putInt("PasswordHash", this.passwordHash);
 		tag.putInt("Id", this.id);
 		tag.put("UUID", TagUtils.writeUUID(this.uuid));
-		tag.putCryptString("Mail", this.mail);
-		tag.putCryptString("FirstName", this.firstName);
-		tag.putCryptString("LastName", this.lastName);
+		tag.putString("Mail", this.mail);
+		tag.putString("FirstName", this.firstName);
+		tag.putString("LastName", this.lastName);
 		{
 			CompoundTag birthdayTag = new CompoundTag();
 			Calendar calendar = Calendar.getInstance();

@@ -1,6 +1,7 @@
 package net.vgc.account.account;
 
 import net.luis.utils.math.Mth;
+import net.vgc.Constants;
 import net.vgc.account.AccountServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,9 +25,26 @@ public final class AccountManager {
 	
 	public AccountManager(List<Account> accounts) {
 		this.accounts = accounts;
+		if (Constants.IDE) {
+			this.accounts.add(Account.TEST_1);
+			this.accounts.add(Account.TEST_2);
+			this.accounts.add(Account.TEST_3);
+			this.accounts.add(Account.TEST_4);
+		}
 	}
 	
 	public static UUID generateUUID(int nameHash, int passwordHash) {
+		if (Constants.IDE) {
+			if (Account.TEST_1.getName().hashCode() == nameHash && Account.TEST_1.getPasswordHash() == passwordHash) {
+				return Account.TEST_1.getUUID();
+			} else if (Account.TEST_2.getName().hashCode() == nameHash && Account.TEST_2.getPasswordHash() == passwordHash) {
+				return Account.TEST_2.getUUID();
+			} else if (Account.TEST_3.getName().hashCode() == nameHash && Account.TEST_3.getPasswordHash() == passwordHash) {
+				return Account.TEST_3.getUUID();
+			} else if (Account.TEST_4.getName().hashCode() == nameHash && Account.TEST_4.getPasswordHash() == passwordHash) {
+				return Account.TEST_4.getUUID();
+			}
+		}
 		return new UUID(nameHash, passwordHash);
 	}
 	
@@ -34,8 +52,18 @@ public final class AccountManager {
 		return this.accounts;
 	}
 	
-	private Account findAccount(int nameHash, int passwordHash) {
-		UUID uuid = generateUUID(nameHash, passwordHash);
+	private Account findAccount(UUID uuid) {
+		if (Constants.IDE && Constants.DEBUG) {
+			if (Account.TEST_1.getUUID().equals(uuid)) {
+				return Account.TEST_1;
+			} else if (Account.TEST_2.getUUID().equals(uuid)) {
+				return Account.TEST_2;
+			} else if (Account.TEST_3.getUUID().equals(uuid)) {
+				return Account.TEST_3;
+			} else if (Account.TEST_4.getUUID().equals(uuid)) {
+				return Account.TEST_4;
+			}
+		}
 		for (Account account : this.accounts) {
 			if (account.getUUID().equals(uuid)) {
 				return account;
@@ -45,7 +73,7 @@ public final class AccountManager {
 	}
 	
 	public boolean removeAccount(int nameHash, int passwordHash) {
-		Account account = this.findAccount(nameHash, passwordHash);
+		Account account = this.findAccount(generateUUID(nameHash, passwordHash));
 		if (account != null) {
 			if (!account.isTaken()) {
 				LOGGER.info("Remove account: {}", account.toShortString());
@@ -59,9 +87,11 @@ public final class AccountManager {
 	}
 	
 	public Account createAccount(String name, String mail, int passwordHash, String firstName, String lastName, Date birthday, AccountType type) {
-		Account account = new Account(name, passwordHash, Mth.randomInclusiveInt(new Random(), 0, 9999), generateUUID(name.hashCode(), passwordHash), mail, firstName, lastName, birthday, type);
-		if (this.findAccount(name.hashCode(), passwordHash) == null) {
+		Account account = new Account(name, passwordHash, Mth.randomInclusiveInt(new Random(), 1, 9999), generateUUID(name.hashCode(), passwordHash), mail, firstName, lastName, birthday, type);
+		if (this.findAccount(generateUUID(name.hashCode(), passwordHash)) == null) {
+			LOGGER.info("Account {} was created successfully", account.toShortString());
 			this.accounts.add(account);
+			AccountServer.getInstance().refreshScene();
 			return account;
 		}
 		LOGGER.warn("Fail to create account for user {}, since there is already a account with these credentials", name);
@@ -70,13 +100,13 @@ public final class AccountManager {
 	
 	public Account createAndLogin(String name, String mail, int passwordHash, String firstName, String lastName, Date birthday, AccountType type) {
 		Account account = this.createAccount(name, mail, passwordHash, firstName, lastName, birthday, type);
+		LOGGER.info("Client logged in with account {}", account.toShortString());
 		account.setTaken(true);
-		AccountServer.getInstance().refreshScene();
 		return account;
 	}
 	
 	public Account accountLogin(String name, int passwordHash) {
-		Account account = this.findAccount(name.hashCode(), passwordHash);
+		Account account = this.findAccount(generateUUID(name.hashCode(), passwordHash));
 		if (account != null) {
 			if (account.isTaken()) {
 				LOGGER.warn("Fail to login, since the account {} is already used by another player", account.toShortString());
@@ -95,13 +125,13 @@ public final class AccountManager {
 		return Account.UNKNOWN;
 	}
 	
-	public boolean accountLogout(String name, int id, int passwordHash) {
-		Account account = this.findAccount(name.hashCode(), passwordHash);
+	public boolean accountLogout(String name, int id, UUID uuid) {
+		Account account = this.findAccount(uuid);
 		if (account != null) {
 			if (!account.isTaken()) {
 				LOGGER.warn("Fail to logout, since the account is not used by a player");
 				return false;
-			} else if (account.getPasswordHash() == passwordHash) {
+			} else if (account.getName().hashCode() == name.hashCode() && account.getId() == id) {
 				LOGGER.info("Client logged out with account {}", account.toShortString());
 				account.setTaken(false);
 				AccountServer.getInstance().refreshScene();
@@ -111,7 +141,7 @@ public final class AccountManager {
 				return false;
 			}
 		}
-		LOGGER.warn("Fail to logout, since there is no account with id {} and name {}", id, name);
+		LOGGER.warn("Fail to logout, since there is no such account {}#{}", name, id);
 		return false;
 	}
 	

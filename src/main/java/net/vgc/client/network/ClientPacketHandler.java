@@ -56,30 +56,32 @@ public class ClientPacketHandler implements PacketHandler {
 			switch (loginType) {
 				case REGISTRATION: {
 					LOGGER.info("Create successfully a new account");
-					this.client.login(name, id, mail, uuid);
+					this.client.login(name, id, mail, uuid, false);
 					if (loginWindow != null) {
-						loginWindow.handleLoggedIn(loginType);
+						loginWindow.handleLoggedIn();
 					}
 				}
 				break;
 				case USER_LOGIN: {
 					LOGGER.debug("Successfully logged in");
-					this.client.login(name, id, mail, uuid);
+					this.client.login(name, id, mail, uuid, false);
 					if (loginWindow != null) {
-						loginWindow.handleLoggedIn(loginType);
+						loginWindow.handleLoggedIn();
 					}
 				}
 				break;
 				case GUEST_LOGIN: {
 					LOGGER.debug("Successfully logged in as a guest");
-					this.client.login(name, id, mail, uuid);
+					this.client.login(name, id, mail, uuid, true);
 					if (loginWindow != null) {
-						loginWindow.handleLoggedIn(loginType);
+						loginWindow.handleLoggedIn();
 					}
+					this.client.setPassword("");
 				}
 				break;
 				case UNKNOWN: {
 					LOGGER.warn("Fail to log in");
+					this.client.setPassword("");
 				}
 				break;
 			}

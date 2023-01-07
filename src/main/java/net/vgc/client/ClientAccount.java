@@ -8,10 +8,6 @@ import java.util.UUID;
  *
  */
 
-public record ClientAccount(String name, int id, String mail, UUID uuid) {
-	
-	public boolean isGuest() {
-		return this.mail.equals("guest@vgc.net");
-	}
+public record ClientAccount(String name, int id, String mail, UUID uuid, boolean guest) {
 	
 }

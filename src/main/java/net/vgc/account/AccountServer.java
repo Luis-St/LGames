@@ -26,6 +26,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.luis.fxutils.FxUtils;
+import net.luis.fxutils.PropertyListeners;
 import net.luis.utils.data.serialization.SerializationUtils;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
@@ -53,7 +54,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 
 /**
  *
@@ -146,7 +146,7 @@ public class AccountServer extends GameApplication {
 			Tag tag = Tag.load(path);
 			if (tag instanceof CompoundTag loadTag) {
 				if (loadTag.contains("Accounts", Tag.LIST_TAG)) {
-					ListTag accountsTag = loadTag.getList("accounts", Tag.COMPOUND_TAG);
+					ListTag accountsTag = loadTag.getList("Accounts", Tag.COMPOUND_TAG);
 					if (accountsTag.isEmpty()) {
 						LOGGER.info("No accounts present");
 					} else {
@@ -221,12 +221,23 @@ public class AccountServer extends GameApplication {
 		Button createAccountButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.create"), this::createAccount);
 		createAccountButton.setPrefWidth(110.0);
 		Button removeAccountButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.remove"), this::removeAccount);
+		removeAccountButton.setDisable(true);
 		removeAccountButton.setPrefWidth(110.0);
 		Button refreshButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.refresh"), this::refreshScene);
 		refreshButton.setPrefWidth(110.0);
 		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), this::exit);
 		closeButton.setPrefWidth(110.0);
 		pane.addRow(0, createAccountButton, removeAccountButton, refreshButton, closeButton);
+		this.accountView.getSelectionModel().selectedItemProperty().addListener(PropertyListeners.create((oldValue, newValue) -> {
+			if (newValue == null) {
+				removeAccountButton.setDisable(true);
+			} else if (this.accountView.getRoot() != newValue.getParent()) {
+				removeAccountButton.setDisable(true);
+			} else {
+				Account account = this.manager.getAccounts().get(this.accountView.getRoot().getChildren().indexOf(newValue));
+				removeAccountButton.setDisable(account.getType() == AccountType.TEST || account.isTaken());
+			}
+		}));
 		box.getChildren().addAll(this.accountView, pane);
 		return new Scene(box, 450.0, 400.0);
 	}
@@ -237,15 +248,14 @@ public class AccountServer extends GameApplication {
 	}
 	
 	private void removeAccount() {
-		int index = this.accountView.getSelectionModel().getSelectedIndex();
-		if (this.accountView.getRoot().getChildren().size() > index && index >= 0) {
-			TreeItem<String> treeItem = this.accountView.getRoot().getChildren().get(index);
-			if (treeItem.getChildren().size() == 5) {
-				UUID uuid = UUID.fromString(treeItem.getChildren().get(2).getValue().split(": ")[1]);
-				if (this.manager.removeAccount(uuid)) {
-					this.accountView.getRoot().getChildren().remove(index);
-					this.refreshScene();
-				}
+		TreeItem<String> selectedItem = this.accountView.getSelectionModel().getSelectedItem();
+		if (this.accountView.getRoot() == selectedItem.getParent()) {
+			Account account = this.manager.getAccounts().get(this.accountView.getRoot().getChildren().indexOf(selectedItem));
+			if (account.getType() == AccountType.TEST) {
+				LOGGER.warn("Can not remove a test account");
+			} else {
+				this.manager.removeAccount(account.getName().hashCode(), account.getPasswordHash());
+				this.refreshScene();
 			}
 		}
 	}
@@ -308,10 +318,6 @@ public class AccountServer extends GameApplication {
 		accounts.removeIf((account) -> {
 			return account.getType() == AccountType.GUEST || account.getType() == AccountType.TEST || account.getType() == AccountType.UNKNOWN;
 		});
-		if (!Files.exists(path)) {
-			Files.createDirectories(path.getParent());
-			Files.createFile(path);
-		}
 		CompoundTag tag = new CompoundTag();
 		ListTag accountsTag = new ListTag();
 		for (Account account : accounts) {
@@ -329,7 +335,7 @@ public class AccountServer extends GameApplication {
 	}
 	
 	@Override
-	protected void handleStop() throws Exception {
+	protected void handleStop() {
 		this.manager.close();
 		this.connections.clear();
 		this.channels.forEach(Channel::close);

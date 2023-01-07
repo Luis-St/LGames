@@ -1,5 +1,6 @@
 package net.vgc.account.account;
 
+import net.vgc.language.TranslationKey;
 import net.vgc.util.EnumRepresentable;
 
 /**
@@ -33,6 +34,10 @@ public enum AccountType implements EnumRepresentable {
 	@Override
 	public Enum<AccountType> getDefault() {
 		return UNKNOWN;
+	}
+	
+	public String getTranslation() {
+	    return TranslationKey.createAndGet("account.type." + this.name);
 	}
 	
 	@Override

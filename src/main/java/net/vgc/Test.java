@@ -5,12 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.luis.utils.util.Utils;
 import net.vgc.data.json.JsonHelper;
 import net.vgc.language.Language;
 import net.vgc.language.LanguageFile;
 import net.vgc.language.Languages;
 import net.vgc.language.Translation;
-import net.vgc.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +35,7 @@ public class Test {
 	}
 	
 	private static void makeLanguageFiles() {
-		List<Translation> english = Util.make(Lists.newArrayList(), (list) -> {
+		List<Translation> english = Utils.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtual Game Collection"));
 			list.add(new Translation("window.error.continue", "Continue"));
 			list.add(new Translation("screen.loading.title", "Loading Virtual Game Collection"));
@@ -53,21 +53,38 @@ public class Test {
 			list.add(new Translation("window.login.name", "Name"));
 			list.add(new Translation("window.login.user", "User"));
 			list.add(new Translation("window.login.back", "Back"));
+			list.add(new Translation("window.login.next", "Next"));
 			list.add(new Translation("window.logout.logout", "Logout"));
 			list.add(new Translation("account.constans.name", "Account Server"));
 			list.add(new Translation("account.window.accounts", "Accounts"));
-			list.add(new Translation("account.window.account", "%1%'s Account"));
-			list.add(new Translation("account.window.account_name", "Name: %1%"));
-			list.add(new Translation("account.window.account_password", "Password: %1%"));
-			list.add(new Translation("account.window.account_uuid", "Id: %1%"));
-			list.add(new Translation("account.window.account_guest", "Guest: %1%"));
-			list.add(new Translation("account.window.account_taken", "Taken: %1%"));
+			list.add(new Translation("account.window.account", "%1%"));
+			list.add(new Translation("account.window.user_data", "User data"));
+			list.add(new Translation("account.window.name", "Display name: %1%"));
+			list.add(new Translation("account.window.first_name", "First name: %1%"));
+			list.add(new Translation("account.window.last_name", "Last name: %1%"));
+			list.add(new Translation("account.window.mail", "Mail: %1%"));
+			list.add(new Translation("account.window.birthday", "Birthday: %1%"));
+			list.add(new Translation("account.window.system_data", "System data"));
+			list.add(new Translation("account.window.id", "Id: %1%"));
+			list.add(new Translation("account.window.uuid", "Universally unique id: %1%"));
+			list.add(new Translation("account.window.type", "Account type: %1%"));
+			list.add(new Translation("account.type.user", "User"));
+			list.add(new Translation("account.type.guest", "Guest"));
+			list.add(new Translation("account.type.test", "Test"));
+			list.add(new Translation("account.type.unknown", "Unknown"));
 			list.add(new Translation("account.window.create", "Create account"));
 			list.add(new Translation("account.window.remove", "Remove account"));
 			list.add(new Translation("account.window.refresh", "Refresh"));
 			list.add(new Translation("account.window.close", "Close"));
-			list.add(new Translation("window.create_account.true", "Yes"));
-			list.add(new Translation("window.create_account.false", "No"));
+			list.add(new Translation("window.create_account.name", "Display Name"));
+			list.add(new Translation("window.create_account.password", "Password"));
+			list.add(new Translation("window.create_account.confirm_password", "Confirm Password"));
+			list.add(new Translation("window.create_account.first_name", "First Name"));
+			list.add(new Translation("window.create_account.last_name", "Last Name"));
+			list.add(new Translation("window.create_account.mail", "Mail"));
+			list.add(new Translation("window.create_account.birthday", "Birthday"));
+			list.add(new Translation("window.create_account.back", "Back"));
+			list.add(new Translation("window.create_account.create", "Create"));
 			list.add(new Translation("server.constans.name", "Virtual Game Collection Server"));
 			list.add(new Translation("screen.multiplayer.server_host", "Server host"));
 			list.add(new Translation("screen.multiplayer.server_port", "Server port"));
@@ -114,7 +131,7 @@ public class Test {
 			list.add(new Translation("screen.win4.yellow_player", "Yellow player: %1%"));
 			list.add(new Translation("screen.win4.red_player", "Red player: %1%"));
 		});
-		List<Translation> german = Util.make(Lists.newArrayList(), (list) -> {
+		List<Translation> german = Utils.make(Lists.newArrayList(), (list) -> {
 			list.add(new Translation("client.constans.name", "Virtuelle Spielesammlung"));
 			list.add(new Translation("window.error.continue", "Weiter"));
 			list.add(new Translation("screen.loading.title", "Virtuelle Spielesammlung wird geladen"));
@@ -131,29 +148,46 @@ public class Test {
 			list.add(new Translation("window.login.guest", "Gast"));
 			list.add(new Translation("window.login.name", "Name"));
 			list.add(new Translation("window.login.user", "Benutzer"));
-			list.add(new Translation("window.login.back", "Zur�ck"));
+			list.add(new Translation("window.login.back", "Zurück"));
+			list.add(new Translation("window.login.next", "Weiter"));
 			list.add(new Translation("window.logout.logout", "Abmelden"));
 			list.add(new Translation("account.constans.name", "Account Server"));
 			list.add(new Translation("account.window.accounts", "Konten"));
-			list.add(new Translation("account.window.account", "%1%'s Konto"));
-			list.add(new Translation("account.window.account_name", "Name: %1%"));
-			list.add(new Translation("account.window.account_password", "Passwort: %1%"));
-			list.add(new Translation("account.window.account_uuid", "Id: %1%"));
-			list.add(new Translation("account.window.account_guest", "Gast: %1%"));
-			list.add(new Translation("account.window.account_taken", "Verwendet: %1%"));
+			list.add(new Translation("account.window.account", "%1%"));
+			list.add(new Translation("account.window.user_data", "Benutzerdaten"));
+			list.add(new Translation("account.window.name", "Anzeige name: %1%"));
+			list.add(new Translation("account.window.first_name", "Vorname: %1%"));
+			list.add(new Translation("account.window.last_name", "Nachname: %1%"));
+			list.add(new Translation("account.window.mail", "Mail: %1%"));
+			list.add(new Translation("account.window.birthday", "Geburtstag: %1%"));
+			list.add(new Translation("account.window.system_data", "Systemdaten"));
+			list.add(new Translation("account.window.id", "Id: %1%"));
+			list.add(new Translation("account.window.uuid", "Universell eindeutige id: %1%"));
+			list.add(new Translation("account.window.type", "Konto typ: %1%"));
+			list.add(new Translation("account.type.user", "Benutzer"));
+			list.add(new Translation("account.type.guest", "Gast"));
+			list.add(new Translation("account.type.test", "Test"));
+			list.add(new Translation("account.type.unknown", "Unbekannt"));
 			list.add(new Translation("account.window.create", "Konto erstellen"));
-			list.add(new Translation("account.window.remove", "Konto l�schen"));
+			list.add(new Translation("account.window.remove", "Konto löschen"));
 			list.add(new Translation("account.window.refresh", "Aktualisieren"));
 			list.add(new Translation("account.window.close", "Schlie�en"));
-			list.add(new Translation("window.create_account.true", "Ja"));
-			list.add(new Translation("window.create_account.false", "Nein"));
+			list.add(new Translation("window.create_account.name", "Anzeige Name"));
+			list.add(new Translation("window.create_account.password", "Passwort"));
+			list.add(new Translation("window.create_account.confirm_password", "Passwort Bestätigen"));
+			list.add(new Translation("window.create_account.first_name", "Vorname"));
+			list.add(new Translation("window.create_account.last_name", "Nachname"));
+			list.add(new Translation("window.create_account.mail", "Mail"));
+			list.add(new Translation("window.create_account.birthday", "Geburtstag"));
+			list.add(new Translation("window.create_account.back", "Zurück"));
+			list.add(new Translation("window.create_account.create", "Erstellen"));
 			list.add(new Translation("server.constans.name", "Virtual Game Collection Server"));
 			list.add(new Translation("screen.multiplayer.server_host", "Server host"));
 			list.add(new Translation("screen.multiplayer.server_port", "Server port"));
 			list.add(new Translation("screen.multiplayer.connect", "Verbinden"));
 			list.add(new Translation("screen.multiplayer.connect_local", "Lokal verbinden"));
 			list.add(new Translation("settings.language.name", "Sprache"));
-			list.add(new Translation("settings.language.description", "Sprache f�r die Benutzeroberfl�che"));
+			list.add(new Translation("settings.language.description", "Sprache für die Benutzeroberfläche"));
 			list.add(new Translation("server.window.server", "Server"));
 			list.add(new Translation("server.window.server_host", "Server host: %1%"));
 			list.add(new Translation("server.window.server_port", "Server port: %1%"));
@@ -172,20 +206,20 @@ public class Test {
 			list.add(new Translation("screen.lobby.leave", "Verlassen"));
 			list.add(new Translation("screen.lobby.ttt", "Tic Tac Toe"));
 			list.add(new Translation("screen.player_select.play", "Play"));
-			list.add(new Translation("screen.tic_tac_toe.confirm_action", "Aktion best�tigen"));
+			list.add(new Translation("screen.tic_tac_toe.confirm_action", "Aktion bestätigen"));
 			list.add(new Translation("screen.tic_tac_toe.play_again", "Nochmal abspielen"));
 			list.add(new Translation("screen.tic_tac_toe.cross_player", "Spieler (X): %1%"));
 			list.add(new Translation("screen.tic_tac_toe.circle_player", "Spieler (O): %1%"));
 			list.add(new Translation("screen.tic_tac_toe.no_player", "Spieler: %1%"));
 			list.add(new Translation("screen.tic_tac_toe.player_info", "Spielerinfo"));
 			list.add(new Translation("screen.tic_tac_toe.player_score", "%1%: %2%"));
-			list.add(new Translation("screen.tic_tac_toe.no_data", "Noch keine Daten verf�gbar"));
+			list.add(new Translation("screen.tic_tac_toe.no_data", "Noch keine Daten verfügbar"));
 			list.add(new Translation("screen.tic_tac_toe.fail_data", "Daten konnten nicht geladen werden"));
 			list.add(new Translation("screen.tic_tac_toe.current_player", "Aktueller Spieler: %1%"));
 			list.add(new Translation("screen.tic_tac_toe.no_current_player", "Aktueller Spieler: keiner"));
-			list.add(new Translation("screen.lobby.ludo", "Mensch �rgere dich nicht"));
+			list.add(new Translation("screen.lobby.ludo", "Mensch ärgere dich nicht"));
 			list.add(new Translation("screen.ludo.players", "Spieler"));
-			list.add(new Translation("screen.ludo.green_player", "Gr�ner Spieler: %1%"));
+			list.add(new Translation("screen.ludo.green_player", "Grüner Spieler: %1%"));
 			list.add(new Translation("screen.ludo.yellow_player", "Gelber Spieler: %1%"));
 			list.add(new Translation("screen.ludo.blue_player", "Blauer Spieler: %1%"));
 			list.add(new Translation("screen.ludo.red_player", "Roter Spieler: %1%"));
@@ -202,9 +236,7 @@ public class Test {
 		LanguageFile languageFile = new LanguageFile(translations, language);
 		Function<LanguageFile, DataResult<JsonElement>> function = JsonOps.INSTANCE.withEncoder(LanguageFile.CODEC);
 		Optional<JsonElement> optional = function.apply(languageFile).result();
-		if (optional.isPresent()) {
-			JsonHelper.save(new GsonBuilder().setPrettyPrinting().create(), optional.get(), new File(System.getProperty("user.home")).toPath().resolve("Desktop/" + language.getFileName() + ".json"));
-		}
+		optional.ifPresent(jsonElement -> JsonHelper.save(new GsonBuilder().setPrettyPrinting().create(), jsonElement, new File(System.getProperty("user.home")).toPath().resolve("Desktop/" + language.getFileName() + ".json")));
 	}
 	
 }
