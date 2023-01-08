@@ -125,6 +125,7 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 			}
 			this.setGraphic(pane);
 		} else {
+			assert this.getFigure() != null;
 			StackPane pane = new StackPane(fieldBackground, new Box<>(this.getFigure().getPlayerType().getImage(this.getSize() * 0.95, this.getSize() * 0.95)));
 			if (this.isShadowed()) {
 				pane.getChildren().add(new Box<>(this.makeImage("textures/ludo/figure/figure_shadow.png", 0.95)));
@@ -132,6 +133,7 @@ public class LudoClientField extends AbstractClientGameField implements ToggleBu
 			this.setGraphic(pane);
 		}
 	}
+	
 	
 	@Override
 	public String toString() {

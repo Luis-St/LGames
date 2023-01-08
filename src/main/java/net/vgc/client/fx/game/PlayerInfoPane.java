@@ -12,6 +12,8 @@ import net.vgc.game.player.GamePlayer;
 import net.vgc.language.TranslationKey;
 import net.vgc.util.Util;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -80,7 +82,7 @@ public class PlayerInfoPane extends GridPane {
 	
 	public void update() {
 		Util.runDelayed("DelayedPlayerInfoUpdate", 500, () -> {
-			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.getName(this.game.getPlayer())));
+			this.currentPlayerInfo.setText(TranslationKey.createAndGet("screen.tic_tac_toe.current_player", this.getName(Objects.requireNonNull(this.game.getPlayer()))));
 			this.scorePane.update();
 		});
 	}

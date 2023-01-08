@@ -12,6 +12,7 @@ import net.vgc.server.player.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -83,6 +84,21 @@ public class GameType<S extends Game, C extends Game> {
 		if (NetworkSide.CLIENT.isOn()) {
 			client.setScreen(this.screenFactory.apply(game));
 		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof GameType<?, ?> gameType)) return false;
+		
+		if (this.minPlayers != gameType.minPlayers) return false;
+		if (this.maxPlayers != gameType.maxPlayers) return false;
+		return this.name.equals(gameType.name);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.name, this.minPlayers, this.maxPlayers);
 	}
 	
 	@Override

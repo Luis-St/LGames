@@ -2,6 +2,7 @@ package net.vgc.games.wins4.map.field;
 
 import com.google.common.collect.Lists;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
@@ -9,6 +10,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -106,25 +108,23 @@ public class Wins4FieldPos implements GameFieldPos {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Wins4FieldPos pos) {
-			if (this.position != pos.position) {
-				return false;
-			} else if (this.row != pos.row) {
-				return false;
-			} else {
-				return this.column == pos.column;
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Wins4FieldPos that)) return false;
+		
+		if (this.position != that.position) return false;
+		if (this.row != that.row) return false;
+		return this.column == that.column;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.position, this.row, this.column);
 	}
 	
 	@Override
 	public String toString() {
-		String builder = "Win4FieldPos{" + "position=" + this.position + "," +
-				"row=" + this.row + "," +
-				"column=" + this.column + "}";
-		return builder;
+		return ToString.toString(this);
 	}
 	
 }

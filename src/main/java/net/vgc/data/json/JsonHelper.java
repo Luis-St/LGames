@@ -28,7 +28,7 @@ public class JsonHelper {
 	public static JsonElement load(Path path) {
 		try {
 			if (!Files.exists(path)) {
-				LOGGER.warn("Unbale to load file {}, since it does not exists", path);
+				LOGGER.warn("Unable to load file {}, since it does not exists", path);
 				return null;
 			}
 			BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);

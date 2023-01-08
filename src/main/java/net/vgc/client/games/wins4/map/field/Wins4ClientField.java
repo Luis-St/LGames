@@ -109,6 +109,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 			}
 			this.setGraphic(pane);
 		} else {
+			assert this.getFigure() != null;
 			ImageView figure = this.getFigure().getPlayer().getPlayerType().getImage(this.getSize(), this.getSize());
 			if (figure != null) {
 				pane.getChildren().add(figure);
@@ -126,6 +127,7 @@ public class Wins4ClientField extends AbstractClientGameField implements LabelWr
 			return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Utils.EMPTY_UUID);
 		}
 		GameFigure figure = this.getFigure();
+		assert figure != null;
 		return new GameFieldInfo(Wins4FieldType.DEFAULT, Wins4PlayerType.NO, this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	

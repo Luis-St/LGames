@@ -3,6 +3,7 @@ package net.vgc.client.fx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import net.luis.fxutils.EventHandlers;
 
 /**
  *
@@ -40,9 +41,7 @@ public class ButtonBox extends Box<Button> {
 	@Override
 	protected void init() {
 		super.init();
-		this.getNode().setOnAction((event) -> {
-			this.action.run();
-		});
+		this.getNode().setOnAction(EventHandlers.create(this.action));
 	}
 	
 }

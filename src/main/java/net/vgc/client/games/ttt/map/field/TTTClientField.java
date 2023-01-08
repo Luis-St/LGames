@@ -20,6 +20,8 @@ import net.vgc.games.ttt.map.field.TTTFieldType;
 import net.vgc.games.ttt.player.TTTPlayerType;
 import net.vgc.player.GameProfile;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -102,7 +104,7 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 		if (this.isEmpty()) {
 			if (this.isShadowed()) {
 				if (this.getResult() == GameResult.NO) {
-					if (this.getMap().getGame().getPlayerFor(this.getClient().getPlayer()).getPlayerType() instanceof TTTPlayerType playerType) {
+					if (Objects.requireNonNull(this.getMap().getGame().getPlayerFor(this.getClient().getPlayer())).getPlayerType() instanceof TTTPlayerType playerType) {
 						this.setGraphic(this.makeImage(playerType.getPath() + "_shadow.png", 0.95));
 					} else {
 						throw new ClassCastException();
@@ -143,6 +145,7 @@ public class TTTClientField extends AbstractClientGameField implements ToggleBut
 			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Utils.EMPTY_UUID);
 		}
 		GameFigure figure = this.getFigure();
+		assert figure != null;
 		return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	

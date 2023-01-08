@@ -5,12 +5,9 @@ import net.vgc.common.application.GameApplication;
 import net.vgc.network.Connection;
 import net.vgc.network.Network;
 import net.vgc.network.packet.Packet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 
 import static net.vgc.network.packet.listener.PacketInvokHelper.*;
 

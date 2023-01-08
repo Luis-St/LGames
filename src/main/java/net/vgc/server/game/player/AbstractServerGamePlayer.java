@@ -5,6 +5,8 @@ import net.vgc.game.player.AbstractGamePlayer;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.player.Player;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -30,13 +32,16 @@ public abstract class AbstractServerGamePlayer extends AbstractGamePlayer {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (!super.equals(object)) {
-			return false;
-		} else if (object instanceof AbstractServerGamePlayer player) {
-			return this.rollCount == player.rollCount;
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AbstractServerGamePlayer that)) return false;
+		if (!super.equals(o)) return false;
+		
+		return this.rollCount == that.rollCount;
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), this.rollCount);
+	}
 }

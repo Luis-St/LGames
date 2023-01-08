@@ -42,7 +42,7 @@ public class LoadingScreen extends Screen {
 		loadingBar.progressProperty().addListener((observable, oldValue, newValue) -> {
 			loadingText.setText(TranslationKey.createAndGet("screen.loading.loading.text", Mth.roundTo(newValue.doubleValue() * 100, 100)));
 		});
-		this.loadingBarBox = new Box<ProgressBar>(loadingBar);
+		this.loadingBarBox = new Box<>(loadingBar);
 		this.enterMenu = false;
 	}
 	
@@ -58,7 +58,7 @@ public class LoadingScreen extends Screen {
 			if (0 > progress) {
 				progress = 0;
 			}
-			this.loadingBarBox.getNode().setProgress(progress += this.client.isSafeLoading() && !this.client.isInstantLoading() ? 0.001 : 0.01);
+			this.loadingBarBox.getNode().setProgress(progress + (this.client.isSafeLoading() && !this.client.isInstantLoading() ? 0.001 : 0.01));
 		}
 	}
 	

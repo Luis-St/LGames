@@ -1,11 +1,13 @@
 package net.vgc.game.map.field;
 
+import net.luis.utils.util.ToString;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.util.annotation.DecodingConstructor;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -78,34 +80,26 @@ public class GameFieldInfo implements Encodable {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof GameFieldInfo fieldInfo) {
-			if (!this.fieldType.equals(fieldInfo.fieldType)) {
-				return false;
-			} else if (!this.playerType.equals(fieldInfo.playerType)) {
-				return false;
-			} else if (!this.fieldPos.equals(fieldInfo.fieldPos)) {
-				return false;
-			} else if (!this.profile.equals(fieldInfo.profile)) {
-				return false;
-			} else if (this.figureCount != fieldInfo.figureCount) {
-				return false;
-			} else {
-				return this.figureUUID.equals(fieldInfo.figureUUID);
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof GameFieldInfo that)) return false;
+		
+		if (this.figureCount != that.figureCount) return false;
+		if (!this.fieldType.equals(that.fieldType)) return false;
+		if (!this.playerType.equals(that.playerType)) return false;
+		if (!this.fieldPos.equals(that.fieldPos)) return false;
+		if (!this.profile.equals(that.profile)) return false;
+		return this.figureUUID.equals(that.figureUUID);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.fieldType, this.playerType, this.fieldPos, this.profile, this.figureCount, this.figureUUID);
 	}
 	
 	@Override
 	public String toString() {
-		String builder = "GameFieldInfo{" + "fieldType=" + this.fieldType + "," +
-				"playerType=" + this.playerType + "," +
-				"fieldPos=" + this.fieldPos + "," +
-				"profile=" + this.profile + "," +
-				"figureCount=" + this.figureCount + "," +
-				"figureUUID=" + this.figureUUID + "}";
-		return builder;
+		return ToString.toString(this);
 	}
 	
 }

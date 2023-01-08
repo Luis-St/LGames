@@ -10,6 +10,8 @@ import net.vgc.client.game.dice.DiceRenderState;
 import net.vgc.client.player.LocalPlayer;
 import net.vgc.network.packet.server.game.dice.RollDiceRequestPacket;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -43,7 +45,7 @@ public class DiceButton extends Button {
 	}
 	
 	private void updateState() {
-		ImageView image = DiceRenderState.fromCount(this.count).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
+		ImageView image = Objects.requireNonNull(DiceRenderState.fromCount(this.count)).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
 		if (image != null) {
 			this.setGraphic(new Box<>(image, Pos.CENTER));
 		} else {

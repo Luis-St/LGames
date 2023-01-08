@@ -8,6 +8,7 @@ import net.vgc.game.player.GamePlayerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -40,7 +41,7 @@ public interface GameFigure {
 	
 	default boolean canMove(GameMap map, GameField currentField, GameField nextField) {
 		if (nextField != null) {
-			return nextField.isEmpty() || (nextField.getFigure().isKickable() && this.canKick(nextField.getFigure()));
+			return nextField.isEmpty() || (Objects.requireNonNull(nextField.getFigure()).isKickable() && this.canKick(nextField.getFigure()));
 		}
 		return false;
 	}

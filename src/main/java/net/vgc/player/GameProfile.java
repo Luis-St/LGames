@@ -4,13 +4,13 @@ import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.luis.utils.util.Equals;
 import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -66,13 +66,22 @@ public class GameProfile implements Encodable, Serializable {
 	}
 	
 	@Override
-	public String toString() {
-		return ToString.toString(this);
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof GameProfile that)) return false;
+		
+		if (!this.name.equals(that.name)) return false;
+		return this.uuid.equals(that.uuid);
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		return Equals.equals(this, object);
+	public int hashCode() {
+		return Objects.hash(this.name, this.uuid);
+	}
+	
+	@Override
+	public String toString() {
+		return ToString.toString(this);
 	}
 	
 }

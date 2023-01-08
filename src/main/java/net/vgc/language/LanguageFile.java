@@ -8,6 +8,7 @@ import net.vgc.data.codec.CodecGetter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +42,7 @@ public class LanguageFile {
 	
 	@CodecGetter
 	private Map<String, String> getLanguageKeyMap() {
-		return this.translations.stream().collect(Collectors.toMap(Translation::getKey, Translation::getValue));
+		return this.translations.stream().collect(Collectors.toMap(Translation::key, Translation::value));
 	}
 	
 	public List<Translation> getLanguageKeys() {
@@ -60,4 +61,17 @@ public class LanguageFile {
 		this.language = language;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof LanguageFile that)) return false;
+		
+		if (!this.translations.equals(that.translations)) return false;
+		return Objects.equals(this.language, that.language);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.translations, this.language);
+	}
 }

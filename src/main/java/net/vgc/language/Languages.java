@@ -25,7 +25,7 @@ public class Languages {
 	@Nullable
 	public static Language fromName(String name) {
 		for (Language language : LANGUAGES) {
-			if (language.getName().equals(name)) {
+			if (language.name().equals(name)) {
 				return language;
 			}
 		}
@@ -35,7 +35,7 @@ public class Languages {
 	@Nullable
 	public static Language fromFileName(String fileName) {
 		for (Language language : LANGUAGES) {
-			if (language.getFileName().equals(fileName)) {
+			if (language.fileName().equals(fileName)) {
 				return language;
 			}
 		}

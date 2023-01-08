@@ -35,6 +35,7 @@ import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -189,6 +190,7 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 					GamePlayer player = this.getGame().getPlayerFor(profile);
 					if (player != null) {
 						GameFigure figure = player.getFigure(fieldInfo.getFigureCount());
+						assert figure != null;
 						UUID uuid = figure.getUUID();
 						UUID serverUUID = fieldInfo.getFigureUUID();
 						if (uuid.equals(serverUUID)) {
@@ -199,7 +201,7 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 					} else if (profile.equals(GameProfile.EMPTY)) {
 						field.setFigure(null);
 					} else {
-						LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
+						LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exists", profile.getName(), fieldPos.getPosition());
 					}
 				} else {
 					LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());
@@ -215,8 +217,9 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 					}
 				} else {
 					if (resultLine != GameResultLine.EMPTY) {
+						assert resultLine != null;
 						for (GameFieldPos fieldPos : resultLine.getPositions()) {
-							this.getField(null, null, fieldPos).setResult(result);
+							Objects.requireNonNull(this.getField(null, null, fieldPos)).setResult(result);
 						}
 					} else {
 						LOGGER.warn("Fail to handle game result {}, since there is no result line", result);

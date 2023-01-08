@@ -3,6 +3,8 @@ package net.vgc.game.player;
 import net.vgc.game.Game;
 import net.vgc.player.Player;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -37,17 +39,16 @@ public abstract class AbstractGamePlayer implements GamePlayer {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof AbstractGamePlayer player) {
-			if (!this.game.equals(player.game)) {
-				return false;
-			} else if (!this.player.equals(player.player)) {
-				return false;
-			} else {
-				return this.playerType.equals(player.playerType);
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AbstractGamePlayer that)) return false;
+		
+		if (!this.player.equals(that.player)) return false;
+		return this.playerType.equals(that.playerType);
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.player, this.playerType);
+	}
 }

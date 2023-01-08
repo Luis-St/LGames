@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -151,9 +152,9 @@ public interface Game {
 			this.getMap().reset();
 			this.getMap().init(this.getPlayers());
 			if (this.isDiceGame()) {
-				this.getDiceHandler().reset();
+				Objects.requireNonNull(this.getDiceHandler()).reset();
 			}
-			this.getWinHandler().reset();
+			Objects.requireNonNull(this.getWinHandler()).reset();
 			this.nextPlayer(true);
 			this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
 			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Utils.mapList(this.getPlayers(), GamePlayer::getName));

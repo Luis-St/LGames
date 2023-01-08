@@ -64,7 +64,7 @@ public class Wins4Screen extends GameScreen {
 	}
 	
 	private void handleConfirmAction() {
-		int column = -1;
+		int column;
 		if (this.game.getMap() instanceof Wins4ClientMap map) {
 			column = map.getSelectedColumn();
 		} else {

@@ -71,7 +71,7 @@ public class Packets {
 		map.put(i++, ExitGameRequestPacket.class);
 		map.put(i++, ExitGamePacket.class);
 		map.put(i++, StopGamePacket.class);
-		map.put(i++, ServerClosedPacket.class);
+		map.put(i, ServerClosedPacket.class);
 	});
 	
 	@Nullable
@@ -101,6 +101,7 @@ public class Packets {
 			try {
 				if (ReflectionHelper.hasConstructor(clazz, FriendlyByteBuffer.class)) {
 					Constructor<? extends Packet> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
+					assert constructor != null;
 					return constructor.newInstance(buffer);
 				} else {
 					LOGGER.error("Packet {} does not have a constructor with FriendlyByteBuffer as parameter", clazz.getSimpleName());

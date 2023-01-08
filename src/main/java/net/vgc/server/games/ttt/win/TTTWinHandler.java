@@ -16,6 +16,7 @@ import net.vgc.server.games.ttt.map.TTTServerMap;
 import net.vgc.server.games.ttt.player.TTTServerPlayer;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -90,7 +91,7 @@ public class TTTWinHandler extends AbstractWinHandler {
 			if (field.isEmpty()) {
 				return TTTPlayerType.NO;
 			}
-			GamePlayerType playerType = field.getFigure().getPlayerType();
+			GamePlayerType playerType = Objects.requireNonNull(field.getFigure()).getPlayerType();
 			return playerType == null ? TTTPlayerType.NO : playerType;
 		}
 		return TTTPlayerType.NO;

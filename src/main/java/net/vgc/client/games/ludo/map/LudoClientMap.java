@@ -37,6 +37,7 @@ import net.vgc.network.packet.listener.PacketSubscriber;
 import net.vgc.player.GameProfile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -78,7 +79,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 			LocalPlayer player = this.getClient().getPlayer();
 			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
 				if (newValue instanceof ToggleButton button && button.getUserData() instanceof LudoClientField field) {
-					if (field.canSelect() && field.getFigure().getPlayerType() == this.getGame().getPlayerType(this.getGame().getPlayerFor(player))) {
+					if (field.canSelect() && Objects.requireNonNull(field.getFigure()).getPlayerType() == this.getGame().getPlayerType(this.getGame().getPlayerFor(player))) {
 						
 					} else {
 						this.group.selectToggle(null);
@@ -203,6 +204,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 				LOGGER.debug("Add figures ({}) of player {}, to their home fields", player.getFigures().size(), player.getPlayer().getProfile().getName());
 				for (GameFigure figure : player.getFigures()) {
 					GameField field = this.getField(LudoFieldType.HOME, player.getPlayerType(), figure.getHomePos());
+					assert field != null;
 					field.setFigure(figure);
 				}
 			} else {
@@ -261,7 +263,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 						} else if (position > 39) {
 							return this.getWinFields(playerType).get(position - 40);
 						} else {
-							return this.getFields().get(LudoFieldPos.of(playerType, position).getPosition());
+							return this.getFields().get(Objects.requireNonNull(LudoFieldPos.of(playerType, position)).getPosition());
 						}
 					}
 				}
@@ -276,16 +278,12 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 	@Override
 	public List<GameField> getHomeFields(GamePlayerType playerType) {
 		switch ((LudoPlayerType) playerType) {
-			case GREEN:
-				return this.homeFields.subList(0, 4);
-			case YELLOW:
-				return this.homeFields.subList(4, 8);
-			case BLUE:
-				return this.homeFields.subList(8, 12);
-			case RED:
-				return this.homeFields.subList(12, 16);
-			default:
-				break;
+			case GREEN -> this.homeFields.subList(0, 4);
+			case YELLOW -> this.homeFields.subList(4, 8);
+			case BLUE -> this.homeFields.subList(8, 12);
+			case RED -> this.homeFields.subList(12, 16);
+			default -> {
+			}
 		}
 		LOGGER.warn("Fail to get home fields for type {}", playerType);
 		return Lists.newArrayList();
@@ -294,7 +292,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 	@Override
 	public List<GameField> getStartFields(GamePlayerType playerType) {
 		return switch ((LudoPlayerType) playerType) {
-			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(LudoFieldPos.of(playerType, 0).getPosition()));
+			case GREEN, YELLOW, BLUE, RED -> Lists.newArrayList(this.getFields().get(Objects.requireNonNull(LudoFieldPos.of(playerType, 0)).getPosition()));
 			default -> {
 				LOGGER.warn("Fail to get start field for type {}", playerType);
 				yield Lists.newArrayList();
@@ -305,16 +303,12 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 	@Override
 	public List<GameField> getWinFields(GamePlayerType playerType) {
 		switch ((LudoPlayerType) playerType) {
-			case GREEN:
-				return this.winFields.subList(0, 4);
-			case YELLOW:
-				return this.winFields.subList(4, 8);
-			case BLUE:
-				return this.winFields.subList(8, 12);
-			case RED:
-				return this.winFields.subList(12, 16);
-			default:
-				break;
+			case GREEN -> this.homeFields.subList(0, 4);
+			case YELLOW -> this.homeFields.subList(4, 8);
+			case BLUE -> this.homeFields.subList(8, 12);
+			case RED -> this.homeFields.subList(12, 16);
+			default -> {
+			}
 		}
 		LOGGER.warn("Fail to get win fields for type {}", playerType);
 		return Lists.newArrayList();
@@ -352,6 +346,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 					GamePlayer player = this.getGame().getPlayerFor(profile);
 					if (player != null) {
 						GameFigure figure = player.getFigure(fieldInfo.getFigureCount());
+						assert figure != null;
 						UUID uuid = figure.getUUID();
 						UUID serverUUID = fieldInfo.getFigureUUID();
 						if (uuid.equals(serverUUID)) {
@@ -362,7 +357,7 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 					} else if (profile.equals(GameProfile.EMPTY)) {
 						field.setFigure(null);
 					} else {
-						LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
+						LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exists", profile.getName(), fieldPos.getPosition());
 					}
 				} else {
 					LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());

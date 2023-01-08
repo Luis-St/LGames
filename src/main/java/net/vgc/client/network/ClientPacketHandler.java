@@ -54,23 +54,21 @@ public class ClientPacketHandler implements PacketHandler {
 		LoginWindow loginWindow = this.client.getLoginWindow();
 		if (!this.client.isLoggedIn()) {
 			switch (loginType) {
-				case REGISTRATION: {
+				case REGISTRATION -> {
 					LOGGER.info("Create successfully a new account");
 					this.client.login(name, id, mail, uuid, false);
 					if (loginWindow != null) {
 						loginWindow.handleLoggedIn();
 					}
 				}
-				break;
-				case USER_LOGIN: {
+				case USER_LOGIN -> {
 					LOGGER.debug("Successfully logged in");
 					this.client.login(name, id, mail, uuid, false);
 					if (loginWindow != null) {
 						loginWindow.handleLoggedIn();
 					}
 				}
-				break;
-				case GUEST_LOGIN: {
+				case GUEST_LOGIN -> {
 					LOGGER.debug("Successfully logged in as a guest");
 					this.client.login(name, id, mail, uuid, true);
 					if (loginWindow != null) {
@@ -78,12 +76,10 @@ public class ClientPacketHandler implements PacketHandler {
 					}
 					this.client.setPassword("");
 				}
-				break;
-				case UNKNOWN: {
+				case UNKNOWN -> {
 					LOGGER.warn("Fail to log in");
 					this.client.setPassword("");
 				}
-				break;
 			}
 		} else {
 			LOGGER.warn("Fail to log in, since already logged in");

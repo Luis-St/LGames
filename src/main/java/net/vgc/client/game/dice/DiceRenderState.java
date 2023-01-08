@@ -4,7 +4,7 @@ import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
 import net.vgc.network.Network;
 import net.vgc.util.EnumRepresentable;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -27,8 +27,7 @@ public enum DiceRenderState implements EnumRepresentable {
 		this.path = path;
 	}
 	
-	@Nullable
-	public static DiceRenderState fromCount(int count) {
+	public static @NotNull DiceRenderState fromCount(int count) {
 		DiceRenderState state = EnumRepresentable.fromId(DiceRenderState.class, count);
 		return state == null ? ZERO : state;
 	}
@@ -43,8 +42,7 @@ public enum DiceRenderState implements EnumRepresentable {
 		return this.id;
 	}
 	
-	@Nullable
-	public ImageView getImage(double width, double height) {
+	public @NotNull ImageView getImage(double width, double height) {
 		return FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
 	}
 	

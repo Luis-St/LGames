@@ -37,7 +37,7 @@ public enum AccountType implements EnumRepresentable {
 	}
 	
 	public String getTranslation() {
-	    return TranslationKey.createAndGet("account.type." + this.name);
+		return TranslationKey.createAndGet("account.type." + this.name);
 	}
 	
 	@Override

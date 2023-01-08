@@ -236,7 +236,7 @@ public class Test {
 		LanguageFile languageFile = new LanguageFile(translations, language);
 		Function<LanguageFile, DataResult<JsonElement>> function = JsonOps.INSTANCE.withEncoder(LanguageFile.CODEC);
 		Optional<JsonElement> optional = function.apply(languageFile).result();
-		optional.ifPresent(jsonElement -> JsonHelper.save(new GsonBuilder().setPrettyPrinting().create(), jsonElement, new File(System.getProperty("user.home")).toPath().resolve("Desktop/" + language.getFileName() + ".json")));
+		optional.ifPresent(jsonElement -> JsonHelper.save(new GsonBuilder().setPrettyPrinting().create(), jsonElement, new File(System.getProperty("user.home")).toPath().resolve("Desktop/" + language.fileName() + ".json")));
 	}
 	
 }

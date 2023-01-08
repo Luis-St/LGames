@@ -1,12 +1,15 @@
 package net.vgc.games.ludo.map.field;
 
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.ToString;
 import net.vgc.game.map.field.GameFieldPos;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.games.ludo.player.LudoPlayerType;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  *
@@ -51,16 +54,12 @@ public class LudoFieldPos implements GameFieldPos {
 	@Nullable
 	private static LudoFieldPos of(LudoPlayerType playerType, int pos) {
 		switch (playerType) {
-			case GREEN:
-				return ofGreen(pos);
-			case YELLOW:
-				return ofYellow(pos);
-			case BLUE:
-				return ofBlue(pos);
-			case RED:
-				return ofRed(pos);
-			default:
-				break;
+			case GREEN -> ofGreen(pos);
+			case YELLOW -> ofYellow(pos);
+			case BLUE -> ofBlue(pos);
+			case RED -> ofRed(pos);
+			default -> {
+			}
 		}
 		LOGGER.warn("Fail to create field pos for ludo type {}", playerType);
 		return null;
@@ -142,28 +141,24 @@ public class LudoFieldPos implements GameFieldPos {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof LudoFieldPos pos) {
-			if (this.green != pos.green) {
-				return false;
-			} else if (this.yellow != pos.yellow) {
-				return false;
-			} else if (this.blue != pos.blue) {
-				return false;
-			} else {
-				return this.red == pos.red;
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof LudoFieldPos that)) return false;
+		
+		if (this.green != that.green) return false;
+		if (this.yellow != that.yellow) return false;
+		if (this.blue != that.blue) return false;
+		return this.red == that.red;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.green, this.yellow, this.blue, this.red);
 	}
 	
 	@Override
 	public String toString() {
-		String builder = "LudoFieldPos{" + "green=" + this.green + "," +
-				"yellow=" + this.yellow + "," +
-				"blue=" + this.blue + "," +
-				"red=" + this.red + "}";
-		return builder;
+		return ToString.toString(this);
 	}
 	
 }

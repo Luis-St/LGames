@@ -27,9 +27,7 @@ public class StartGamePacket implements ClientPacket {
 	
 	public StartGamePacket(FriendlyByteBuffer buffer) {
 		this.gameType = GameTypes.fromName(buffer.readString());
-		this.playerInfos = buffer.readList(() -> {
-			return buffer.read(GamePlayerInfo.class);
-		});
+		this.playerInfos = buffer.readList(() -> buffer.read(GamePlayerInfo.class));
 	}
 	
 	@Override

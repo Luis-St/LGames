@@ -139,8 +139,8 @@ public class PlayerList implements Tickable {
 	}
 	
 	public void broadcastAll(Packet packet) {
-		for (int i = 0; i < this.players.size(); i++) {
-			this.broadcast(packet, this.players.get(i));
+		for (ServerPlayer player : this.players) {
+			this.broadcast(packet, player);
 		}
 	}
 	
@@ -151,8 +151,7 @@ public class PlayerList implements Tickable {
 	}
 	
 	public void broadcastAllExclude(Packet packet, ServerPlayer... players) {
-		for (int i = 0; i < this.players.size(); i++) {
-			ServerPlayer player = this.players.get(i);
+		for (ServerPlayer player : this.players) {
 			if (!Lists.newArrayList(players).contains(player)) {
 				this.broadcast(packet, player);
 			}

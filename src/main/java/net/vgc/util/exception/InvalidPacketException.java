@@ -1,5 +1,7 @@
 package net.vgc.util.exception;
 
+import java.io.Serial;
+
 /**
  *
  * @author Luis-st
@@ -8,6 +10,7 @@ package net.vgc.util.exception;
 
 public class InvalidPacketException extends RuntimeException {
 	
+	@Serial
 	private static final long serialVersionUID = 443649863499410053L;
 	
 	public InvalidPacketException() {

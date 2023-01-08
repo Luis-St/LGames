@@ -13,7 +13,7 @@ public class TagUtil {
 	
 	public static CompoundTag writeTranslationKey(TranslationKey key) {
 		CompoundTag tag = new CompoundTag();
-		tag.putString("key", key.getKey());
+		tag.putString("key", key.key());
 		return tag;
 	}
 	

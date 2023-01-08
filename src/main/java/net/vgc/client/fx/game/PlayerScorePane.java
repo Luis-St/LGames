@@ -47,7 +47,7 @@ public class PlayerScorePane extends GridPane {
 			Player player = gamePlayer.getPlayer();
 			Text text = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.player_score", player.getProfile().getName(), this.scoreType.getValue(player)));
 			this.add(text, 0, i++);
-			this.playerScoreInfos.add(new SimpleEntry<GamePlayer, Text>(gamePlayer, text));
+			this.playerScoreInfos.add(new SimpleEntry<>(gamePlayer, text));
 		}
 	}
 	

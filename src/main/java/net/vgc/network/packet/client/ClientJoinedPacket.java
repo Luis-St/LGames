@@ -23,16 +23,12 @@ public class ClientJoinedPacket implements ClientPacket {
 	}
 	
 	public ClientJoinedPacket(FriendlyByteBuffer buffer) {
-		this.profiles = buffer.readList(() -> {
-			return buffer.read(GameProfile.class);
-		});
+		this.profiles = buffer.readList(() -> buffer.read(GameProfile.class));
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeList(this.profiles, (profile) -> {
-			buffer.write(profile);
-		});
+		buffer.writeList(this.profiles, buffer::write);
 	}
 	
 	@PacketGetter

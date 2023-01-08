@@ -2,6 +2,8 @@ package net.vgc.util.exception;
 
 import io.netty.handler.codec.EncoderException;
 
+import java.io.Serial;
+
 /**
  *
  * @author Luis-st
@@ -10,6 +12,7 @@ import io.netty.handler.codec.EncoderException;
 
 public class SkipPacketException extends EncoderException {
 	
+	@Serial
 	private static final long serialVersionUID = 182028572541416074L;
 	
 	public SkipPacketException() {

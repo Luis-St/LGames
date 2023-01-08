@@ -17,6 +17,7 @@ import net.vgc.server.games.wins4.player.Wins4ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -105,7 +106,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 			if (field.isEmpty()) {
 				return Wins4PlayerType.NO;
 			}
-			GamePlayerType playerType = field.getFigure().getPlayerType();
+			GamePlayerType playerType = Objects.requireNonNull(field.getFigure()).getPlayerType();
 			return playerType == null ? Wins4PlayerType.NO : playerType;
 		}
 		return Wins4PlayerType.NO;

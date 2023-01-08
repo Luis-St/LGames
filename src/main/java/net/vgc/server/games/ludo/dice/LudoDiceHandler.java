@@ -108,8 +108,8 @@ public class LudoDiceHandler implements DiceHandler {
 	@Override
 	public int getLastCount(GamePlayer player) {
 		for (PlayerDiceInfo diceInfo : Utils.reverseList(this.countHistory)) {
-			if (diceInfo.getPlayer().equals(player)) {
-				return diceInfo.getCount();
+			if (diceInfo.player().equals(player)) {
+				return diceInfo.count();
 			}
 		}
 		LOGGER.warn("Player {} has not rolled the dice yet", player.getPlayer().getProfile().getName());

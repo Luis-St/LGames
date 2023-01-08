@@ -6,6 +6,7 @@ import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.StringTag;
+import net.luis.utils.util.ToString;
 import net.vgc.data.tag.TagUtil;
 import net.vgc.language.Languages;
 import net.vgc.language.TranslationKey;
@@ -73,9 +74,7 @@ public class Setting<T> implements Serializable {
 		} else {
 			LOGGER.debug("Update value of setting {} from {} to {}", this.name.getValue(Languages.EN_US), oldValue, newValue);
 		}
-		this.listeners.forEach((listener) -> {
-			listener.accept(oldValue, newValue);
-		});
+		this.listeners.forEach((listener) -> listener.accept(oldValue, newValue));
 	}
 	
 	public String getName() {
@@ -132,22 +131,25 @@ public class Setting<T> implements Serializable {
 	}
 	
 	@Override
-	public String toString() {
-		String builder = "Setting{" + "name=" + this.name + "," +
-				"description=" + this.description + "," +
-				"value_type=" + this.valueType + "," +
-				"default_value=" + this.defaultValue + "," +
-				"possible_values=" + this.possibleValues + "," +
-				"value=" + this.value + "}";
-		return builder;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Setting<?> setting)) return false;
+		
+		if (!this.name.equals(setting.name)) return false;
+		if (!this.description.equals(setting.description)) return false;
+		if (!this.valueType.equals(setting.valueType)) return false;
+		if (!this.defaultValue.equals(setting.defaultValue)) return false;
+		if (!this.possibleValues.equals(setting.possibleValues)) return false;
+		return Objects.equals(this.value, setting.value);
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Setting<?> setting) {
-			return this.name.equals(setting.name) && this.description.equals(setting.description) && this.valueType == setting.valueType && this.defaultValue.equals(setting.defaultValue) && this.possibleValues.equals(setting.possibleValues);
-		}
-		return false;
+	public int hashCode() {
+		return Objects.hash(this.name, this.description, this.valueType, this.defaultValue, this.possibleValues, this.value);
 	}
 	
+	@Override
+	public String toString() {
+		return ToString.toString(this, "listeners");
+	}
 }

@@ -70,21 +70,19 @@ public abstract class AbstractGameField implements GameField {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof AbstractGameField field) {
-			if (!this.fieldType.equals(field.fieldType)) {
-				return false;
-			} else if (!this.colorType.equals(field.colorType)) {
-				return false;
-			} else if (!this.fieldPos.equals(field.fieldPos)) {
-				return false;
-			} else if (!Objects.equals(this.figure, field.figure)) {
-				return false;
-			} else {
-				return Objects.equals(this.result, field.result);
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AbstractGameField that)) return false;
+		
+		if (!this.fieldType.equals(that.fieldType)) return false;
+		if (!this.colorType.equals(that.colorType)) return false;
+		if (!this.fieldPos.equals(that.fieldPos)) return false;
+		if (!this.figure.equals(that.figure)) return false;
+		return this.result == that.result;
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.fieldType, this.colorType, this.fieldPos, this.figure, this.result);
+	}
 }

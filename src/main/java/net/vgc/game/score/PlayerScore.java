@@ -1,5 +1,6 @@
 package net.vgc.game.score;
 
+import net.luis.utils.util.ToString;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
@@ -7,6 +8,8 @@ import net.vgc.util.annotation.DecodingConstructor;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Objects;
 
 /**
  *
@@ -141,31 +144,25 @@ public class PlayerScore implements Encodable {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof PlayerScore score) {
-			if (!this.profile.equals(score.profile)) {
-				return false;
-			} else if (!this.win.equals(score.win)) {
-				return false;
-			} else if (!this.lose.equals(score.lose)) {
-				return false;
-			} else if (!this.draw.equals(score.draw)) {
-				return false;
-			} else {
-				return this.score.equals(score.score);
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof PlayerScore that)) return false;
+		
+		if (!this.profile.equals(that.profile)) return false;
+		if (!this.win.equals(that.win)) return false;
+		if (!this.lose.equals(that.lose)) return false;
+		if (!this.draw.equals(that.draw)) return false;
+		return this.score.equals(that.score);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.profile, this.win, this.lose, this.draw, this.score);
 	}
 	
 	@Override
 	public String toString() {
-		String builder = "PlayerScore{" + "profile=" + this.profile + "," +
-				"wins=" + this.win.getValue() + "," +
-				"loses=" + this.lose.getValue() + "," +
-				"draw=" + this.draw.getValue() + "," +
-				"score=" + this.score.getValue() + "}";
-		return builder;
+		return ToString.toString(this);
 	}
 	
 }

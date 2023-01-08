@@ -80,7 +80,7 @@ public class TTTScreen extends GameScreen {
 	@PacketListener
 	public void handlePacket(ClientPacket clientPacket) {
 		this.playerInfo.update();
-		if (clientPacket instanceof GameResultPacket packet) {
+		if (clientPacket instanceof GameResultPacket) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -31,12 +32,12 @@ public class Connection extends SimpleChannelInboundHandler<Packet> {
 	private int failedPackets;
 	
 	@Override
-	public void channelActive(ChannelHandlerContext context) throws Exception {
+	public void channelActive(ChannelHandlerContext context) {
 		this.channel = context.channel();
 	}
 	
 	@Override
-	protected void channelRead0(ChannelHandlerContext context, Packet packet) throws Exception {
+	protected void channelRead0(ChannelHandlerContext context, Packet packet) {
 		if (this.channel.isOpen()) {
 			try {
 				LOGGER.debug("Received packet of type {}", packet.getClass().getSimpleName());
@@ -120,19 +121,20 @@ public class Connection extends SimpleChannelInboundHandler<Packet> {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Connection connection) {
-			if (this.sentPackets != connection.sentPackets) {
-				return false;
-			} else if (this.receivedPackets != connection.receivedPackets) {
-				return false;
-			} else if (this.failedPackets != connection.failedPackets) {
-				return false;
-			} else {
-				return this.channel.equals(connection.channel);
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Connection that)) return false;
+		
+		if (this.sentPackets != that.sentPackets) return false;
+		if (this.receivedPackets != that.receivedPackets) return false;
+		if (this.failedPackets != that.failedPackets) return false;
+		if (!this.waitingPackets.equals(that.waitingPackets)) return false;
+		return Objects.equals(this.channel, that.channel);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.waitingPackets, this.channel, this.sentPackets, this.receivedPackets, this.failedPackets);
 	}
 	
 	private record PacketHolder(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {

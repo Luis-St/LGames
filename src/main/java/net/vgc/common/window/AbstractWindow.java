@@ -24,9 +24,7 @@ public abstract class AbstractWindow {
 		this.stage = stage;
 		this.width = width;
 		this.height = height;
-		this.stage.setOnCloseRequest((event) -> {
-			this.exit();
-		});
+		this.stage.setOnCloseRequest((event) -> this.exit());
 	}
 	
 	protected void updateScene(Pane pane) {

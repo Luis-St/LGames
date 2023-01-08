@@ -10,8 +10,6 @@ import net.vgc.network.NetworkSide;
 import net.vgc.network.packet.Packet;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -91,6 +89,7 @@ class PacketInvokHelper {
 	private static Field getConnectionField(Class<?> clazz) {
 		if (ReflectionHelper.hasField(clazz, "connection")) {
 			Field field = ReflectionHelper.getField(clazz, "connection");
+			assert field != null;
 			if (field.getType() == Connection.class) {
 				return field;
 			}

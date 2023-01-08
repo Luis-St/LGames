@@ -1,7 +1,10 @@
 package net.vgc.player;
 
+import net.luis.utils.util.ToString;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.util.Tickable;
+
+import java.util.Objects;
 
 /**
  *
@@ -48,24 +51,22 @@ public abstract class Player implements Tickable {
 	}
 	
 	@Override
-	public String toString() {
-		String builder = this.getClass().getSimpleName() + "{" + "profile=" + this.profile + "," +
-				"score=" + this.score + "}";
-		return builder;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Player player)) return false;
+		
+		if (this.playing != player.playing) return false;
+		if (!this.profile.equals(player.profile)) return false;
+		return this.score.equals(player.score);
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Player player) {
-			if (!this.profile.equals(player.profile)) {
-				return false;
-			} else if (!this.score.equals(player.score)) {
-				return false;
-			} else {
-				return this.playing == player.playing;
-			}
-		}
-		return false;
+	public int hashCode() {
+		return Objects.hash(this.profile, this.score, this.playing);
 	}
 	
+	@Override
+	public String toString() {
+		return ToString.toString(this, "playing");
+	}
 }

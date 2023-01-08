@@ -2,6 +2,7 @@ package net.vgc.game.player.figure;
 
 import net.vgc.game.player.GamePlayer;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -38,17 +39,17 @@ public abstract class AbstractGameFigure implements GameFigure {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof AbstractGameFigure figure) {
-			if (!this.player.equals(figure.player)) {
-				return false;
-			} else if (this.count != figure.count) {
-				return false;
-			} else {
-				return this.uuid.equals(figure.uuid);
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AbstractGameFigure that)) return false;
+		
+		if (this.count != that.count) return false;
+		if (!this.player.equals(that.player)) return false;
+		return this.uuid.equals(that.uuid);
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.player, this.count, this.uuid);
+	}
 }

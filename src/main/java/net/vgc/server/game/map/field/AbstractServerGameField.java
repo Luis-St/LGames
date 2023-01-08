@@ -27,7 +27,7 @@ public abstract class AbstractServerGameField extends AbstractGameField {
 	
 	@Override
 	public final boolean canSelect() {
-		LOGGER.warn("Can not celect the field on server");
+		LOGGER.warn("Can not select the field on server");
 		return false;
 	}
 	

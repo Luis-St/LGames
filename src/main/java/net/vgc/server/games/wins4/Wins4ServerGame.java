@@ -59,17 +59,17 @@ public class Wins4ServerGame extends AbstractServerGame {
 	public void handlePacket(ServerPacket serverPacket) {
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
 			GamePlayer player = this.getPlayerFor(packet.getProfile());
+			assert player != null;
 			if (Objects.equals(this.getPlayer(), player)) {
 				Optional<GameField> optionalField = Utils.reverseList(this.getFieldsForColumn(packet.getFieldPos().getColumn())).stream().filter(GameField::isEmpty).findFirst();
 				if (optionalField.isPresent()) {
 					GameField field = optionalField.orElseThrow(NullPointerException::new);
 					if (field.isEmpty()) {
-						GameFigure figure = player.getFigure((map, gameFigure) -> {
-							return map.getField(gameFigure) == null;
-						});
+						GameFigure figure = player.getFigure((map, gameFigure) -> map.getField(gameFigure) == null);
 						if (figure != null) {
 							field.setFigure(figure);
 							this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+							assert this.getWinHandler() != null;
 							if (this.getWinHandler().hasPlayerFinished(player)) {
 								this.getWinHandler().onPlayerFinished(player);
 								LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Utils.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
@@ -107,7 +107,7 @@ public class Wins4ServerGame extends AbstractServerGame {
 					this.broadcastPlayer(new GameActionFailedPacket(), player);
 				}
 			} else {
-				LOGGER.warn("Player {} tries to change the {} map at pos {} to {}, but it is not his turn", player.getName(), packet.getFieldPos().getPosition(), player.getPlayerType());
+				LOGGER.warn("Player {} tries to change the map at pos {} to {}, but it is not his turn", player.getName(), packet.getFieldPos().getPosition(), player.getPlayerType());
 			}
 		}
 	}

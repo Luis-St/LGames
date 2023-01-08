@@ -54,7 +54,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
 	}
 	
 	@Override
-	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
+	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
 		LOGGER.warn("Caught an exception while decode a packet");
 	}
 	

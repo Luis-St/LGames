@@ -1,6 +1,9 @@
 package net.vgc.game.dice;
 
+import net.luis.utils.util.ToString;
 import net.vgc.game.player.GamePlayer;
+
+import java.util.Objects;
 
 /**
  *
@@ -8,41 +11,25 @@ import net.vgc.game.player.GamePlayer;
  *
  */
 
-public class PlayerDiceInfo {
+public record PlayerDiceInfo(GamePlayer player, int count) {
 	
-	private final GamePlayer player;
-	private final int count;
-	
-	public PlayerDiceInfo(GamePlayer player, int count) {
-		this.player = player;
-		this.count = count;
-	}
-	
-	public GamePlayer getPlayer() {
-		return this.player;
-	}
-	
-	public int getCount() {
-		return this.count;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof PlayerDiceInfo that)) return false;
+		
+		if (this.count != that.count) return false;
+		return this.player.equals(that.player);
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof PlayerDiceInfo diceInfo) {
-			if (!this.player.equals(diceInfo.player)) {
-				return false;
-			} else {
-				return this.count == diceInfo.count;
-			}
-		}
-		return false;
+	public int hashCode() {
+		return Objects.hash(this.player, this.count);
 	}
 	
 	@Override
 	public String toString() {
-		String builder = "PlayerDiceInfo{" + "player=" + this.player + "," +
-				"count=" + this.count + "}";
-		return builder;
+		return ToString.toString(this);
 	}
 	
 }

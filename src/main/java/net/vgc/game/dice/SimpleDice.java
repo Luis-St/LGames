@@ -1,8 +1,10 @@
 package net.vgc.game.dice;
 
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.ToString;
 import net.vgc.util.exception.InvalidValueException;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -77,24 +79,22 @@ public class SimpleDice implements Dice {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof SimpleDice dice) {
-			if (!this.rng.equals(object)) {
-				return false;
-			} else if (this.min != dice.min) {
-				return false;
-			} else {
-				return this.max == dice.max;
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SimpleDice that)) return false;
+		
+		if (this.min != that.min) return false;
+		return this.max == that.max;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.min, this.max);
 	}
 	
 	@Override
 	public String toString() {
-		String builder = "SimpleDice{" + "min=" + this.min + "," +
-				"max=" + this.max + "}";
-		return builder;
+		return ToString.toString(this, "rng");
 	}
 	
 }

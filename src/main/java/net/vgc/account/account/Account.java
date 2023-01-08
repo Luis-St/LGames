@@ -5,7 +5,6 @@ import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.luis.utils.util.Equals;
 import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;
 import net.vgc.language.TranslationKey;
@@ -14,11 +13,13 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.EnumRepresentable;
 import net.vgc.util.annotation.DecodingConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -30,13 +31,12 @@ import java.util.UUID;
 @Deserializable
 public class Account implements Encodable, Serializable {
 	
-	private static final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 	public static final Account UNKNOWN = new Account("Unknown", "unknown".hashCode(), 0, Utils.EMPTY_UUID, "", "Unknown", "Unknown", new Date(), AccountType.UNKNOWN);
 	public static final Account TEST_1 = new Account("Test 1", "1".hashCode(), 1, UUID.fromString("11111111-1111-1111-1111-111111111111"), "", "Test", "1", new Date(), AccountType.TEST);
 	public static final Account TEST_2 = new Account("Test 2", "2".hashCode(), 2, UUID.fromString("22222222-2222-2222-2222-222222222222"), "", "Test", "2", new Date(), AccountType.TEST);
 	public static final Account TEST_3 = new Account("Test 3", "3".hashCode(), 3, UUID.fromString("33333333-3333-3333-3333-333333333333"), "", "Test", "3", new Date(), AccountType.TEST);
 	public static final Account TEST_4 = new Account("Test 4", "4".hashCode(), 4, UUID.fromString("44444444-4444-4444-4444-444444444444"), "", "Test", "4", new Date(), AccountType.TEST);
-	
+	private static final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 	private final String name;
 	private final int passwordHash;
 	private final int id;
@@ -80,7 +80,7 @@ public class Account implements Encodable, Serializable {
 		this.type = buffer.readEnum(AccountType.class);
 	}
 	
-	public Account(CompoundTag tag) {
+	public Account(@NotNull CompoundTag tag) {
 		this.name = tag.getString("Name");
 		this.passwordHash = tag.getInt("PasswordHash");
 		this.id = tag.getInt("Id");
@@ -167,7 +167,7 @@ public class Account implements Encodable, Serializable {
 		return rootItem;
 	}
 	
-	private String getDisplayId() {
+	private @NotNull String getDisplayId() {
 		String id = String.valueOf(this.id);
 		if (id.length() == 4) {
 			return id;
@@ -218,8 +218,25 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		return Equals.equals(this, object);
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Account account)) return false;
+		
+		if (this.passwordHash != account.passwordHash) return false;
+		if (this.id != account.id) return false;
+		if (this.taken != account.taken) return false;
+		if (!this.name.equals(account.name)) return false;
+		if (!this.uuid.equals(account.uuid)) return false;
+		if (!this.mail.equals(account.mail)) return false;
+		if (!this.firstName.equals(account.firstName)) return false;
+		if (!this.lastName.equals(account.lastName)) return false;
+		if (!this.birthday.equals(account.birthday)) return false;
+		return this.type == account.type;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.name, this.passwordHash, this.id, this.uuid, this.mail, this.firstName, this.lastName, this.birthday, this.type, this.taken);
 	}
 	
 	@Override

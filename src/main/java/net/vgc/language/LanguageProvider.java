@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -40,15 +39,15 @@ public class LanguageProvider {
 					if (!languageFile.isEmpty()) {
 						languageFile.setLanguage(language);
 						languageFiles.add(languageFile);
-						LOGGER.debug("Load language {}", language.getName());
+						LOGGER.debug("Load language {}", language.name());
 					} else {
-						LOGGER.warn("Fail to load language {}", language.getName());
+						LOGGER.warn("Fail to load language {}", language.name());
 					}
 				}
 			} else if (language == Languages.EN_US) {
-				LOGGER.warn("Fail to load language {}, since language file not does not exists", language.getName());
+				LOGGER.warn("Fail to load language {}, since language file not does not exists", language.name());
 			} else {
-				LOGGER.info("Fail to load language {}", language.getName());
+				LOGGER.info("Fail to load language {}", language.name());
 			}
 		}
 		if (languageFiles.isEmpty()) {
@@ -64,11 +63,11 @@ public class LanguageProvider {
 			if (optional.isPresent()) {
 				return optional.get().getFirst();
 			} else {
-				LOGGER.warn("Fail to decode language file {} for language {}", path, language.getName());
+				LOGGER.warn("Fail to decode language file {} for language {}", path, language.name());
 				return null;
 			}
 		} else {
-			LOGGER.warn("Fail to load language file {} for language {}, since it does not exists", path, language.getName());
+			LOGGER.warn("Fail to load language file {} for language {}, since it does not exists", path, language.name());
 			return null;
 		}
 	}
@@ -83,7 +82,7 @@ public class LanguageProvider {
 	}
 	
 	public boolean isLanguageLoad(Language language) {
-		return this.loadLanguageFiles.stream().map(LanguageFile::getLanguage).collect(Collectors.toList()).contains(language);
+		return this.loadLanguageFiles.stream().map(LanguageFile::getLanguage).toList().contains(language);
 	}
 	
 	@Nullable
@@ -98,22 +97,22 @@ public class LanguageProvider {
 	}
 	
 	public String getTranslation(Language language, TranslationKey key) {
-		if (this.isLanguageLoad(this.currentLanguage)) {
-			LanguageFile languageFile = this.getFileForLanguage(this.currentLanguage);
+		if (this.isLanguageLoad(language)) {
+			LanguageFile languageFile = this.getFileForLanguage(language);
 			if (languageFile != null) {
 				for (Translation translation : languageFile.getLanguageKeys()) {
-					if (translation.getKey().equals(key.getKey())) {
-						return translation.getValue();
+					if (translation.key().equals(key.key())) {
+						return translation.value();
 					}
 				}
-				LOGGER.warn("Fail to get translation for key {} in language {}, since the translation does not exists in the language file", key.getKey(), this.currentLanguage);
-				return key.getKey();
+				LOGGER.warn("Fail to get translation for key {} in language {}, since the translation does not exists in the language file", key.key(), language);
+				return key.key();
 			}
-			LOGGER.warn("Fail to get translation for key {} in language {}, since language file is missing", key.getKey(), this.currentLanguage);
-			return key.getKey();
+			LOGGER.warn("Fail to get translation for key {} in language {}, since language file is missing", key.key(), language);
+			return key.key();
 		}
-		LOGGER.warn("Fail to get translation for key {} in language {}, since the language is not load", key.getKey(), this.currentLanguage);
-		return key.getKey();
+		LOGGER.warn("Fail to get translation for key {} in language {}, since the language is not load", key.key(), language);
+		return key.key();
 	}
 	
 	public String getTranslation(TranslationKey key) {

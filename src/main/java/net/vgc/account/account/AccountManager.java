@@ -17,11 +17,9 @@ import java.util.UUID;
  *
  */
 
-public final class AccountManager {
+public record AccountManager(List<Account> accounts) {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-	
-	private final List<Account> accounts;
 	
 	public AccountManager(List<Account> accounts) {
 		this.accounts = accounts;
@@ -48,9 +46,6 @@ public final class AccountManager {
 		return new UUID(nameHash, passwordHash);
 	}
 	
-	public List<Account> getAccounts() {
-		return this.accounts;
-	}
 	
 	private Account findAccount(UUID uuid) {
 		if (Constants.IDE && Constants.DEBUG) {

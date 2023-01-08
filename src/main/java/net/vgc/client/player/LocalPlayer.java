@@ -3,6 +3,8 @@ package net.vgc.client.player;
 import net.vgc.game.score.PlayerScore;
 import net.vgc.player.GameProfile;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -44,19 +46,19 @@ public class LocalPlayer extends AbstractClientPlayer {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof LocalPlayer player) {
-			if (!super.equals(player)) {
-				return false;
-			} else if (this.canSelect != player.canSelect) {
-				return false;
-			} else if (this.canRollDice != player.canRollDice) {
-				return false;
-			} else {
-				return this.count == player.count;
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof LocalPlayer that)) return false;
+		if (!super.equals(o)) return false;
+		
+		if (this.canSelect != that.canSelect) return false;
+		if (this.canRollDice != that.canRollDice) return false;
+		return this.count == that.count;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), this.canSelect, this.canRollDice, this.count);
 	}
 	
 }

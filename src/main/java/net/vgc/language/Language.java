@@ -1,8 +1,10 @@
 package net.vgc.language;
 
+import net.luis.utils.util.ToString;
 import net.vgc.network.Network;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  *
@@ -10,39 +12,29 @@ import java.nio.file.Path;
  *
  */
 
-public class Language {
-	
-	private final String name;
-	private final String fileName;
-	
-	public Language(String name, String fileName) {
-		this.name = name;
-		this.fileName = fileName;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public String getFileName() {
-		return this.fileName;
-	}
+public record Language(String name, String fileName) {
 	
 	public Path getPath() {
 		return Network.INSTANCE.getResourceDirectory().resolve("lang/" + this.fileName + ".json");
 	}
 	
 	@Override
-	public String toString() {
-		return this.name;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Language language)) return false;
+		
+		if (!this.name.equals(language.name)) return false;
+		return this.fileName.equals(language.fileName);
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Language language) {
-			return this.name.equals(language.name) && this.fileName.equals(language.fileName);
-		}
-		return false;
+	public int hashCode() {
+		return Objects.hash(this.name, this.fileName);
+	}
+	
+	@Override
+	public String toString() {
+		return ToString.toString(this, "fileName");
 	}
 	
 }

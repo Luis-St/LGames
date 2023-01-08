@@ -133,6 +133,7 @@ public class FriendlyByteBuffer {
 	public <T extends Encodable> T read(Class<T> clazz) {
 		if (ReflectionHelper.hasConstructor(clazz, FriendlyByteBuffer.class)) {
 			Constructor<T> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
+			assert constructor != null;
 			if (constructor.isAnnotationPresent(DecodingConstructor.class)) {
 				T value = ReflectionHelper.newInstance(constructor, this);
 				if (value != null) {
@@ -195,9 +196,7 @@ public class FriendlyByteBuffer {
 	
 	public <T extends Encodable> void writeOptional(Optional<T> optional) {
 		this.writeBoolean(optional.isPresent());
-		optional.ifPresent((value) -> {
-			this.write(value);
-		});
+		optional.ifPresent((value) -> this.write(value));
 	}
 	
 	public <T extends Encodable> Optional<T> readOptional(Class<T> clazz) {
@@ -211,9 +210,7 @@ public class FriendlyByteBuffer {
 	
 	public <T extends EnumRepresentable> void writeEnumOptional(Optional<T> optional) {
 		this.writeBoolean(optional.isPresent());
-		optional.ifPresent((value) -> {
-			this.writeEnum(value);
-		});
+		optional.ifPresent(this::writeEnum);
 	}
 	
 	public <T extends EnumRepresentable> Optional<T> readEnumOptional(Class<T> clazz) {

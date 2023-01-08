@@ -10,9 +10,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -30,11 +28,10 @@ public class FxTest extends Application {
 		launch(args);
 	}
 	
-	@Nullable
 	public static ImageView makeImageView(String path, double width, double height) {
-		ImageView imageView = null;
+		ImageView imageView;
 		try {
-			imageView = new ImageView(new Image(new FileInputStream(new File(path))));
+			imageView = new ImageView(new Image(new FileInputStream(path)));
 			imageView.setFitWidth(width);
 			imageView.setFitHeight(height);
 			imageView.setSmooth(true);

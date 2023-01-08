@@ -8,6 +8,7 @@ import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.util.annotation.DecodingConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -52,11 +53,16 @@ public class GameResultLine implements Encodable {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof GameResultLine resultLine) {
-			return this.fieldPositions.equals(resultLine.fieldPositions);
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof GameResultLine that)) return false;
+		
+		return this.fieldPositions.equals(that.fieldPositions);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.fieldPositions);
 	}
 	
 	@Override

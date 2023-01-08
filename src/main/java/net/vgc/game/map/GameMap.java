@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -42,7 +43,7 @@ public interface GameMap {
 	@Nullable
 	default GameField getField(GameFigure figure) {
 		for (GameField field : this.getFields()) {
-			if (!field.isEmpty() && field.getFigure().equals(figure)) {
+			if (!field.isEmpty() && Objects.equals(field.getFigure(), figure)) {
 				return field;
 			}
 		}

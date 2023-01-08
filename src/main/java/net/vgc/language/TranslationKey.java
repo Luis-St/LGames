@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.vgc.Main;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -11,13 +12,7 @@ import java.util.List;
  *
  */
 
-public class TranslationKey {
-	
-	private final String key;
-	
-	public TranslationKey(String key) {
-		this.key = key;
-	}
+public record TranslationKey(String key) {
 	
 	public static String createAndGet(String key, Object... objects) {
 		return new TranslationKey(key).getValue(objects);
@@ -25,10 +20,6 @@ public class TranslationKey {
 	
 	public static String createAndGet(Language language, String key, Object... objects) {
 		return new TranslationKey(key).getValue(language, objects);
-	}
-	
-	public String getKey() {
-		return this.key;
 	}
 	
 	public String getValue(Object... objects) {
@@ -54,16 +45,22 @@ public class TranslationKey {
 	}
 	
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TranslationKey that)) return false;
+		
+		return this.key.equals(that.key);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.key);
+	}
+	
+	@Override
 	public String toString() {
 		return this.key;
 	}
 	
-	@Override
-	public boolean equals(Object object) {
-		if (object instanceof TranslationKey translationKey) {
-			return this.key.equals(translationKey.key);
-		}
-		return false;
-	}
 	
 }

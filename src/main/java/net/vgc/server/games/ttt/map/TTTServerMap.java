@@ -70,7 +70,7 @@ public class TTTServerMap extends AbstractServerGameMap {
 	
 	@Override
 	public final boolean moveFigureTo(GameFigure figure, GameField field) {
-		LOGGER.warn("Fail to move figure {} of player {}, since tic tac toe figures are not moveable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
+		LOGGER.warn("Fail to move figure {} of player {}, since tic tac toe figures are not movable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return false;
 	}
 	

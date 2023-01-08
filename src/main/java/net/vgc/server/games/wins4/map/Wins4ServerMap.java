@@ -82,7 +82,7 @@ public class Wins4ServerMap extends AbstractServerGameMap {
 	
 	@Override
 	public final boolean moveFigureTo(GameFigure figure, GameField field) {
-		LOGGER.warn("Fail to move figure {} of player {}, since the 4 wins figures are not moveable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
+		LOGGER.warn("Fail to move figure {} of player {}, since the 4 wins figures are not movable", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
 		return false;
 	}
 	

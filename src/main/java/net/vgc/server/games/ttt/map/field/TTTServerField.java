@@ -63,6 +63,7 @@ public class TTTServerField extends AbstractServerGameField {
 			return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), GameProfile.EMPTY, -1, Utils.EMPTY_UUID);
 		}
 		GameFigure figure = this.getFigure();
+		assert figure != null;
 		return new GameFieldInfo(TTTFieldType.DEFAULT, TTTPlayerType.NO, this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
 	}
 	

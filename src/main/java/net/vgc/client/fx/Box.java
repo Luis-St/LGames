@@ -22,7 +22,7 @@ public class Box<T extends Node> extends VBox {
 	}
 	
 	public Box(T node, Pos pos) {
-		this(node, Pos.CENTER, 0.0, 0.0, 0.0, 0.0);
+		this(node, pos, 0.0, 0.0, 0.0, 0.0);
 	}
 	
 	public Box(T node, Pos pos, double top, double right, double bottom, double left) {

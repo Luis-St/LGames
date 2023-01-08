@@ -50,7 +50,6 @@ import net.vgc.util.ExceptionHandler;
 import net.vgc.util.exception.InvalidNetworkSideException;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -72,7 +71,7 @@ public class AccountServer extends GameApplication {
 	private String host;
 	private int port;
 	private AccountManager manager;
-
+	
 	public static AccountServer getInstance() {
 		if (NetworkSide.ACCOUNT.isOn()) {
 			return (AccountServer) instance;
@@ -153,13 +152,8 @@ public class AccountServer extends GameApplication {
 						for (Tag accountTag : accountsTag) {
 							if (accountTag instanceof CompoundTag) {
 								Account account = SerializationUtils.deserialize(Account.class, (CompoundTag) accountTag);
-								if (account != null) {
-									LOGGER.debug("Load {} account", account);
-									accounts.add(account);
-								} else {
-									LOGGER.error("Fail to load player account");
-									throw new NullPointerException("Something went wrong while loading player accounts, since \"account\" is null");
-								}
+								LOGGER.debug("Load {} account", account);
+								accounts.add(account);
 							} else {
 								LOGGER.warn("Fail to load account, since tag {} is not an instance of CompoundTag, but it is a type of {}", accountsTag, accountTag.getClass().getSimpleName());
 							}
@@ -212,7 +206,7 @@ public class AccountServer extends GameApplication {
 		this.accountView = new TreeView<>();
 		this.accountView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("account.window.accounts"));
-		for (Account account : this.manager.getAccounts()) {
+		for (Account account : this.manager.accounts()) {
 			treeItem.getChildren().add(account.display());
 		}
 		this.accountView.setRoot(treeItem);
@@ -234,7 +228,7 @@ public class AccountServer extends GameApplication {
 			} else if (this.accountView.getRoot() != newValue.getParent()) {
 				removeAccountButton.setDisable(true);
 			} else {
-				Account account = this.manager.getAccounts().get(this.accountView.getRoot().getChildren().indexOf(newValue));
+				Account account = this.manager.accounts().get(this.accountView.getRoot().getChildren().indexOf(newValue));
 				removeAccountButton.setDisable(account.getType() == AccountType.TEST || account.isTaken());
 			}
 		}));
@@ -250,7 +244,7 @@ public class AccountServer extends GameApplication {
 	private void removeAccount() {
 		TreeItem<String> selectedItem = this.accountView.getSelectionModel().getSelectedItem();
 		if (this.accountView.getRoot() == selectedItem.getParent()) {
-			Account account = this.manager.getAccounts().get(this.accountView.getRoot().getChildren().indexOf(selectedItem));
+			Account account = this.manager.accounts().get(this.accountView.getRoot().getChildren().indexOf(selectedItem));
 			if (account.getType() == AccountType.TEST) {
 				LOGGER.warn("Can not remove a test account");
 			} else {
@@ -262,7 +256,7 @@ public class AccountServer extends GameApplication {
 	
 	public void refreshScene() {
 		TreeItem<String> treeItem = new TreeItem<>();
-		for (Account account : this.manager.getAccounts()) {
+		for (Account account : this.manager.accounts()) {
 			treeItem.getChildren().add(account.display());
 		}
 		this.accountView.setRoot(treeItem);
@@ -301,20 +295,20 @@ public class AccountServer extends GameApplication {
 	}
 	
 	public void exitClient(Connection connection) {
-		String adress = connection.getChannel().remoteAddress().toString().replace("/", "");
+		String address = connection.getChannel().remoteAddress().toString().replace("/", "");
 		if (this.channels.contains(connection.getChannel()) && this.connections.contains(connection)) {
 			this.channels.remove(connection.getChannel());
 			this.connections.remove(connection);
-			LOGGER.debug("Remove channel and connection for client {}", adress);
+			LOGGER.debug("Remove channel and connection for client {}", address);
 		}
-		LOGGER.debug("Client disconnected with adress {}", adress);
+		LOGGER.debug("Client disconnected with adress {}", address);
 	}
 	
 	@Override
-	public void save() throws IOException {
+	public void save() {
 		Path path = this.gameDirectory.resolve("accounts.acc");
 		LOGGER.debug("Remove guest accounts");
-		List<Account> accounts = this.manager.getAccounts();
+		List<Account> accounts = this.manager.accounts();
 		accounts.removeIf((account) -> {
 			return account.getType() == AccountType.GUEST || account.getType() == AccountType.TEST || account.getType() == AccountType.UNKNOWN;
 		});

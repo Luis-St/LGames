@@ -8,23 +8,20 @@ import java.util.Objects;
  *
  */
 
-public class Translation {
+public record Translation(String key, String value) {
 	
-	private final String key;
-	private final String value;
-	
-	public Translation(String key, String value) {
-		this.key = key;
-		this.value = value;
-	}
-	
-	public String getKey() {
-		return this.key;
-	}
-	
-	public String getValue() {
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Translation that)) return false;
 		
-		return this.value;
+		if (!this.key.equals(that.key)) return false;
+		return this.value.equals(that.value);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.key, this.value);
 	}
 	
 	@Override
@@ -32,12 +29,5 @@ public class Translation {
 		return this.key + ":" + this.value;
 	}
 	
-	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Translation translation) {
-			return this.key.equals(translation.key) && Objects.equals(this.value, translation.value);
-		}
-		return false;
-	}
 	
 }

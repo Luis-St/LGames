@@ -4,6 +4,8 @@ import net.vgc.game.score.PlayerScore;
 import net.vgc.player.GameProfile;
 import net.vgc.player.Player;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -41,17 +43,18 @@ public abstract class AbstractClientPlayer extends Player {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof AbstractClientPlayer player) {
-			if (!super.equals(player)) {
-				return false;
-			} else if (this.admin != player.admin) {
-				return false;
-			} else {
-				return this.current == player.current;
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AbstractClientPlayer that)) return false;
+		if (!super.equals(o)) return false;
+		
+		if (this.admin != that.admin) return false;
+		return this.current == that.current;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.admin, this.current);
 	}
 	
 }

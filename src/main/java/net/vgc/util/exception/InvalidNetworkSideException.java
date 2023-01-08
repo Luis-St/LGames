@@ -3,6 +3,8 @@ package net.vgc.util.exception;
 import net.vgc.network.Network;
 import net.vgc.network.NetworkSide;
 
+import java.io.Serial;
+
 /**
  *
  * @author Luis-st
@@ -11,6 +13,7 @@ import net.vgc.network.NetworkSide;
 
 public class InvalidNetworkSideException extends RuntimeException {
 	
+	@Serial
 	private static final long serialVersionUID = -6784865518985390672L;
 	
 	public InvalidNetworkSideException() {

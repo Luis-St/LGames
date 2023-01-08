@@ -45,7 +45,7 @@ public interface DiceHandler {
 	boolean canRollAfterMove(GamePlayer player, GameField oldField, GameField newField, int count);
 	
 	default boolean hasPlayerRolledDice(GamePlayer player) {
-		return Utils.mapList(this.getCountHistory(), PlayerDiceInfo::getPlayer).contains(player) && Mth.isInBounds(this.getLastCount(player), this.getMin(), this.getMax());
+		return Utils.mapList(this.getCountHistory(), PlayerDiceInfo::player).contains(player) && Mth.isInBounds(this.getLastCount(player), this.getMin(), this.getMax());
 	}
 	
 	int getLastCount(GamePlayer player);

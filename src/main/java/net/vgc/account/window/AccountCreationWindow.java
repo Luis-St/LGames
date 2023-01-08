@@ -47,7 +47,9 @@ public class AccountCreationWindow extends AbstractWindow {
 			return InputValidationPane.ValidationState.VALID;
 		}
 	});
-	private final InputValidationPane<TextField> passwordPane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.password"), new PasswordField(), (field) -> {
+	private final InputPane<TextField> firstNamePane = new InputPane<>(TranslationKey.createAndGet("window.create_account.first_name"), new TextField());
+	private final InputPane<TextField> lastNamePane = new InputPane<>(TranslationKey.createAndGet("window.create_account.last_name"), new TextField());
+	private final InputPane<TextField> mailPane = new InputPane<>(TranslationKey.createAndGet("window.create_account.mail"), new TextField());	private final InputValidationPane<TextField> passwordPane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.password"), new PasswordField(), (field) -> {
 		this.confirmPasswordPane.validateInput();
 		String password = StringUtils.trimToEmpty(field.getText());
 		if (password.isEmpty()) {
@@ -58,18 +60,6 @@ public class AccountCreationWindow extends AbstractWindow {
 			return InputValidationPane.ValidationState.VALID;
 		}
 	});
-	private final InputValidationPane<PasswordField> confirmPasswordPane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.confirm_password"), new PasswordField(), (confirmField) -> {
-		if (this.passwordPane.getInputNode().getText().isBlank() && confirmField.getText().isBlank()) {
-			return InputValidationPane.ValidationState.DEFAULT;
-		} else if (this.passwordPane.getInputNode().getText().equals(confirmField.getText())) {
-			return InputValidationPane.ValidationState.VALID;
-		} else {
-			return InputValidationPane.ValidationState.INVALID;
-		}
-	});
-	private final InputPane<TextField> firstNamePane = new InputPane<>(TranslationKey.createAndGet("window.create_account.first_name"), new TextField());
-	private final InputPane<TextField> lastNamePane = new InputPane<>(TranslationKey.createAndGet("window.create_account.last_name"), new TextField());
-	private final InputPane<TextField> mailPane = new InputPane<>(TranslationKey.createAndGet("window.create_account.mail"), new TextField());
 	private final InputValidationPane<DatePicker> datePane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.birthday"), new DatePicker(), (picker) -> {
 		if (StringUtils.trimToEmpty(picker.getEditor().getText()).isEmpty()) {
 			return InputValidationPane.ValidationState.DEFAULT;
@@ -79,12 +69,11 @@ public class AccountCreationWindow extends AbstractWindow {
 			return InputValidationPane.ValidationState.INVALID;
 		}
 	});
-	
 	public AccountCreationWindow(AccountServer account, Stage stage) {
 		super(stage, 340.0, 365.0);
 		this.account = account;
 	}
-	
+
 	private GridPane main() {
 		GridPane pane = FxUtils.makeGrid(Pos.TOP_CENTER, 10.0, 20.0);
 		CssUtils.addStyleClass(this.namePane.getInputNode(), "input-validation");
@@ -142,10 +131,18 @@ public class AccountCreationWindow extends AbstractWindow {
 			}
 		})), 1, 5);
 		return pane;
-	}
+	}	private final InputValidationPane<PasswordField> confirmPasswordPane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.confirm_password"), new PasswordField(), (confirmField) -> {
+		if (this.passwordPane.getInputNode().getText().isBlank() && confirmField.getText().isBlank()) {
+			return InputValidationPane.ValidationState.DEFAULT;
+		} else if (this.passwordPane.getInputNode().getText().equals(confirmField.getText())) {
+			return InputValidationPane.ValidationState.VALID;
+		} else {
+			return InputValidationPane.ValidationState.INVALID;
+		}
+	});
 	
 	private boolean isValidPassword(String password) {
-	    return (!PATTERN.matcher(password).matches() || password.length() <= 4) && !Constants.IDE;
+		return (!PATTERN.matcher(password).matches() || password.length() <= 4) && !Constants.IDE;
 	}
 	
 	@Override
@@ -167,5 +164,10 @@ public class AccountCreationWindow extends AbstractWindow {
 	protected void exit() {
 	
 	}
+	
+
+	
+
+	
 	
 }

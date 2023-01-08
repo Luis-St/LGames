@@ -90,7 +90,7 @@ public class LudoScreen extends GameScreen {
 		this.playerInfo.update();
 		if (clientPacket instanceof RolledDicePacket packet) {
 			this.diceButton.setCount(packet.getCount());
-		} else if (clientPacket instanceof GameResultPacket packet) {
+		} else if (clientPacket instanceof GameResultPacket) {
 			this.playAgainButton.getNode().setDisable(!this.getPlayer().isAdmin());
 		}
 	}

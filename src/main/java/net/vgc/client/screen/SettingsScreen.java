@@ -12,8 +12,6 @@ import net.vgc.client.fx.ButtonBox;
 import net.vgc.language.Language;
 import net.vgc.language.TranslationKey;
 
-import java.util.stream.Collectors;
-
 /**
  *
  * @author Luis-st
@@ -23,7 +21,6 @@ import java.util.stream.Collectors;
 public class SettingsScreen extends Screen {
 	
 	private final Screen backScreen;
-	private Text languageSettingText;
 	private ComboBox<String> languageSettingBox;
 	private GridPane languageSetting;
 	private ButtonBox backButtonBox;
@@ -34,17 +31,16 @@ public class SettingsScreen extends Screen {
 	
 	@Override
 	public void init() {
-		this.languageSettingText = new Text(ClientSettings.LANGUAGE.getName());
 		this.languageSettingBox = new ComboBox<>();
-		this.languageSettingBox.getItems().addAll(ClientSettings.LANGUAGE.getPossibleValues().stream().map(Language::getName).collect(Collectors.toList()));
-		this.languageSettingBox.getSelectionModel().select(ClientSettings.LANGUAGE.getValue().getName());
+		this.languageSettingBox.getItems().addAll(ClientSettings.LANGUAGE.getPossibleValues().stream().map(Language::name).toList());
+		this.languageSettingBox.getSelectionModel().select(ClientSettings.LANGUAGE.getValue().name());
 		this.languageSettingBox.setTooltip(new Tooltip(ClientSettings.LANGUAGE.getDescription()));
 		this.languageSettingBox.setOnAction((event) -> {
 			ClientSettings.LANGUAGE.setValue(this.languageSettingBox.getSelectionModel().getSelectedItem());
 			this.reapplyScreen();
 		});
 		this.languageSetting = FxUtils.makeGrid(Pos.CENTER, 75.0, 10.0, 20.0);
-		this.languageSetting.addRow(0, this.languageSettingText, this.languageSettingBox);
+		this.languageSetting.addRow(0, new Text(ClientSettings.LANGUAGE.getName()), this.languageSettingBox);
 		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
 	

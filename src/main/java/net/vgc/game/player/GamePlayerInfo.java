@@ -1,11 +1,13 @@
 package net.vgc.game.player;
 
+import net.luis.utils.util.ToString;
 import net.vgc.network.buffer.Encodable;
 import net.vgc.network.buffer.FriendlyByteBuffer;
 import net.vgc.player.GameProfile;
 import net.vgc.util.annotation.DecodingConstructor;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -54,25 +56,23 @@ public class GamePlayerInfo implements Encodable {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof GamePlayerInfo playerInfo) {
-			if (!this.profile.equals(playerInfo.profile)) {
-				return false;
-			} else if (!this.playerType.equals(playerInfo.playerType)) {
-				return false;
-			} else {
-				return this.uuids.equals(playerInfo.uuids);
-			}
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof GamePlayerInfo that)) return false;
+		
+		if (!this.profile.equals(that.profile)) return false;
+		if (!this.playerType.equals(that.playerType)) return false;
+		return this.uuids.equals(that.uuids);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.profile, this.playerType, this.uuids);
 	}
 	
 	@Override
 	public String toString() {
-		String builder = "GamePlayerInfo{" + "profile=" + this.profile + "," +
-				"playerType=" + this.playerType + "," +
-				"uuids=" + this.uuids + "}";
-		return builder;
+		return ToString.toString(this);
 	}
 	
 }

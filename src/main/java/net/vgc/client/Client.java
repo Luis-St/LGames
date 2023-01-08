@@ -56,7 +56,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	private final ConnectionHandler serverHandler = new ConnectionHandler("virtual game collection server", (connection) -> {
 		connection.send(new ClientLeavePacket(this.account.name(), this.account.uuid()));
 	});
-	private String password;
 	private final ConnectionHandler accountHandler = new ConnectionHandler("account server", (connection) -> {
 		if (this.isLoggedIn()) {
 			connection.send(new ClientExitPacket(this.account.name(), this.account.id(), this.account.uuid()));
@@ -65,12 +64,13 @@ public class Client extends GameApplication implements Tickable, Screenable {
 		}
 		
 	});
+	private String password;
 	private LocalPlayer player;
 	private ClientSettings settings;
 	private String accountHost;
 	private int accountPort;
 	private Game game;
-
+	
 	public static Client getInstance() {
 		if (NetworkSide.CLIENT.isOn()) {
 			return (Client) instance;

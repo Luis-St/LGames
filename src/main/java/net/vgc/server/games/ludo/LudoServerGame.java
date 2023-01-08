@@ -66,6 +66,7 @@ public class LudoServerGame extends AbstractServerGame {
 	@Override
 	public void nextPlayer(boolean random) {
 		List<? extends GamePlayer> players = Lists.newArrayList(this.getPlayers());
+		assert this.getWinHandler() != null;
 		players.removeIf(this.getWinHandler().getWinOrder()::contains);
 		if (!players.isEmpty()) {
 			if (random) {
@@ -108,16 +109,20 @@ public class LudoServerGame extends AbstractServerGame {
 	public void handlePacket(ServerPacket serverPacket) {
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
 			GamePlayer player = this.getPlayerFor(packet.getProfile());
+			assert player != null;
 			if (Objects.equals(this.getPlayer(), player)) {
 				int count = this.diceHandler.getLastCount(player);
 				if (count != -1) {
 					GameField currentField = this.getMap().getField(packet.getFieldType(), player.getPlayerType(), packet.getFieldPos());
+					assert currentField != null;
 					if (!currentField.isEmpty()) {
 						GameFigure figure = currentField.getFigure();
+						assert figure != null;
 						GameField nextField = this.getMap().getNextField(figure, count);
 						if (nextField != null) {
 							if (this.getMap().moveFigureTo(figure, nextField)) {
 								this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+								assert this.getWinHandler() != null;
 								if (this.getWinHandler().hasPlayerFinished(player)) {
 									this.getWinHandler().onPlayerFinished(player);
 									if (this.getWinHandler().getWinOrder().size() - this.getPlayers().size() > 1) {
@@ -154,7 +159,7 @@ public class LudoServerGame extends AbstractServerGame {
 					this.stop();
 				}
 			} else {
-				LOGGER.warn("Player {} tries to change the {} map at pos {} to {}, but it is not his turn", player.getName(), packet.getFieldPos().getPosition(), player.getPlayerType());
+				LOGGER.warn("Player {} tries to change the map at pos {} to {}, but it is not his turn", player.getName(), packet.getFieldPos().getPosition(), player.getPlayerType());
 			}
 		}
 	}

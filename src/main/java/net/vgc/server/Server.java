@@ -79,7 +79,7 @@ public class Server extends GameApplication implements Tickable {
 	private ServerPlayer adminPlayer;
 	private TreeItem<String> playersTreeItem;
 	private Game game;
-
+	
 	public static Server getInstance() {
 		if (NetworkSide.SERVER.isOn()) {
 			return (Server) instance;
@@ -145,7 +145,7 @@ public class Server extends GameApplication implements Tickable {
 			try {
 				this.admin = UUID.fromString(string);
 			} catch (IllegalArgumentException e) {
-				LOGGER.warn("Fail to create admin id, since the given id {} does not have the correct id formate", string);
+				LOGGER.warn("Fail to create admin id, since the given id {} does not have the correct id format", string);
 			}
 		}
 	}
@@ -159,9 +159,7 @@ public class Server extends GameApplication implements Tickable {
 		Path path = this.gameDirectory.resolve("server.data");
 		if (Files.exists(path)) {
 			Tag loadTag = Tag.load(path);
-			if (loadTag instanceof CompoundTag tag) {
-				
-			} else {
+			if (!(loadTag instanceof CompoundTag)) {
 				LOGGER.warn("Fail to load server from {}, since tag {} is not a instance of CompoundTag but it is a tag of type {}", path, loadTag, loadTag.getClass().getSimpleName());
 			}
 		}
@@ -179,9 +177,9 @@ public class Server extends GameApplication implements Tickable {
 			throw new RuntimeException("Fail to creating virtual game collection server", e);
 		}
 		try {
-			new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
+			new ServerBootstrap().group(this.group).channel(NATIVE ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<>() {
 				@Override
-				protected void initChannel(Channel channel) throws Exception {
+				protected void initChannel(Channel channel) {
 					ChannelPipeline pipeline = channel.pipeline();
 					Connection connection = new Connection();
 					pipeline.addLast("splitter", new ProtobufVarint32FrameDecoder());
@@ -204,11 +202,11 @@ public class Server extends GameApplication implements Tickable {
 	private Scene makeScene() {
 		VBox box = new VBox();
 		TreeView<String> serverTree = new TreeView<>();
-		TreeItem<String> treeItem = new TreeItem<String>(TranslationKey.createAndGet("server.window.server"));
-		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_host", this.host)));
-		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_port", this.port)));
-		treeItem.getChildren().add(new TreeItem<String>(TranslationKey.createAndGet("server.window.server_admin", this.admin)));
-		this.playersTreeItem = new TreeItem<String>(TranslationKey.createAndGet("server.window.players"));
+		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("server.window.server"));
+		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.server_host", this.host)));
+		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.server_port", this.port)));
+		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.server_admin", this.admin)));
+		this.playersTreeItem = new TreeItem<>(TranslationKey.createAndGet("server.window.players"));
 		for (ServerPlayer player : this.playerList.getPlayers()) {
 			this.playersTreeItem.getChildren().add(player.display());
 		}
@@ -289,7 +287,7 @@ public class Server extends GameApplication implements Tickable {
 	
 	@Nullable
 	public ServerPlayer getAdminPlayer() {
-		if (this.playerList != null && this.adminPlayer == null) {
+		if (this.adminPlayer == null) {
 			this.adminPlayer = this.playerList.getPlayer(this.admin);
 		}
 		return this.adminPlayer;
@@ -343,13 +341,13 @@ public class Server extends GameApplication implements Tickable {
 	}
 	
 	@Override
-	public void save() throws IOException {
+	public void save() {
 		Tag.save(this.gameDirectory.resolve("server.data"), new CompoundTag());
 		LOGGER.debug("Save server data");
 	}
 	
 	@Override
-	protected void handleStop() throws Exception {
+	protected void handleStop() {
 		this.ticker.stop();
 		this.adminPlayer = null;
 		this.playerList.removeAllPlayers();

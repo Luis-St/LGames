@@ -3,6 +3,7 @@ package net.vgc.common.settings;
 import com.google.common.collect.Maps;
 import net.vgc.language.Language;
 import net.vgc.language.Languages;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -18,9 +19,9 @@ public class SettingValueTypes {
 	
 	private static final Map<Integer, SettingValueType<?>> INT_TO_TYPE = Maps.newHashMap();
 	
-	public static final SettingValueType<Integer> INT = register(0, new SettingValueType<Integer>() {
+	public static final SettingValueType<Integer> INT = register(0, new SettingValueType<>() {
 		@Override
-		public Integer getValue(String string) {
+		public @NotNull Integer getValue(String string) {
 			return Integer.valueOf(string);
 		}
 		
@@ -34,9 +35,9 @@ public class SettingValueTypes {
 			return "SettingValueType{type=Integer}";
 		}
 	});
-	public static final SettingValueType<Double> DOUBLE = register(0, new SettingValueType<Double>() {
+	public static final SettingValueType<Double> DOUBLE = register(0, new SettingValueType<>() {
 		@Override
-		public Double getValue(String string) {
+		public @NotNull Double getValue(String string) {
 			return Double.valueOf(string);
 		}
 		
@@ -50,9 +51,9 @@ public class SettingValueTypes {
 			return "SettingValueType{type=Double}";
 		}
 	});
-	public static final SettingValueType<String> STRING = register(2, new SettingValueType<String>() {
+	public static final SettingValueType<String> STRING = register(2, new SettingValueType<>() {
 		@Override
-		public String getValue(String string) {
+		public @NotNull String getValue(String string) {
 			return string;
 		}
 		
@@ -66,9 +67,9 @@ public class SettingValueTypes {
 			return "SettingValueType{type=String}";
 		}
 	});
-	public static final SettingValueType<Language> LANGUAGE = register(3, new SettingValueType<Language>() {
+	public static final SettingValueType<Language> LANGUAGE = register(3, new SettingValueType<>() {
 		@Override
-		public Language getValue(String string) {
+		public @NotNull Language getValue(String string) {
 			Language language = Languages.fromName(string);
 			if (language != null) {
 				return language;
@@ -78,7 +79,7 @@ public class SettingValueTypes {
 		
 		@Override
 		public String toString(Language value) {
-			return value.getName();
+			return value.name();
 		}
 		
 		@Override

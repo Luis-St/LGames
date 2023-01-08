@@ -91,7 +91,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 	
 	public void addInteractions() {
 		for (int i = 0; i < 7; i++) {
-			this.addInteraction(i, i, 0);
+			this.addInteraction(i, i);
 		}
 	}
 	
@@ -99,7 +99,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 		this.getChildren().addAll(this.fieldPane, this.interactionPane);
 	}
 	
-	private void addInteraction(int index, int column, int row) {
+	private void addInteraction(int index, int column) {
 		IndexToggleButton button = new IndexToggleButton(index);
 		button.setToggleGroup(this.group);
 		button.setBackground(null);
@@ -118,7 +118,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 				this.group.selectToggle(null);
 			}
 		});
-		this.interactionPane.add(button, column, row);
+		this.interactionPane.add(button, column, 0);
 	}
 	
 	@Override
@@ -190,6 +190,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 					GamePlayer player = this.getGame().getPlayerFor(profile);
 					if (player != null) {
 						GameFigure figure = player.getFigure(fieldInfo.getFigureCount());
+						assert figure != null;
 						UUID uuid = figure.getUUID();
 						UUID serverUUID = fieldInfo.getFigureUUID();
 						if (uuid.equals(serverUUID)) {
@@ -200,7 +201,7 @@ public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWr
 					} else if (profile.equals(GameProfile.EMPTY)) {
 						field.setFigure(null);
 					} else {
-						LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exsists", profile.getName(), fieldPos.getPosition());
+						LOGGER.warn("Fail to place a figure of player {} at field {}, since the player does not exists", profile.getName(), fieldPos.getPosition());
 					}
 				} else {
 					LOGGER.warn("Fail to update game field, since there is not field for pos {}", fieldPos.getPosition());

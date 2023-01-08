@@ -54,16 +54,16 @@ public class TTTServerGame extends AbstractServerGame {
 	public void handlePacket(ServerPacket serverPacket) {
 		if (serverPacket instanceof SelectGameFieldPacket packet) {
 			GamePlayer player = this.getPlayerFor(packet.getProfile());
+			assert player != null;
 			if (Objects.equals(this.getPlayer(), player)) {
 				GameField field = this.getMap().getField(null, null, packet.getFieldPos());
 				if (field != null) {
 					if (field.isEmpty()) {
-						GameFigure figure = player.getFigure((map, gameFigure) -> {
-							return map.getField(gameFigure) == null;
-						});
+						GameFigure figure = player.getFigure((map, gameFigure) -> map.getField(gameFigure) == null);
 						if (figure != null) {
 							field.setFigure(figure);
 							this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
+							assert this.getWinHandler() != null;
 							if (this.getWinHandler().hasPlayerFinished(player)) {
 								this.getWinHandler().onPlayerFinished(player);
 								LOGGER.info("Finished game {} with player win order: {}", this.getType().getInfoName(), Utils.mapList(this.getWinHandler().getWinOrder(), GamePlayer::getName));
@@ -92,7 +92,7 @@ public class TTTServerGame extends AbstractServerGame {
 							this.stop();
 						}
 					} else {
-						LOGGER.warn("Fail to place a figure of player {} on field, since on the field is already a figure of type {}", player.getName(), field.getFigure().getPlayerType());
+						LOGGER.warn("Fail to place a figure of player {} on field, since on the field is already a figure of type {}", player.getName(), Objects.requireNonNull(field.getFigure()).getPlayerType());
 						this.broadcastPlayer(new GameActionFailedPacket(), player);
 					}
 				} else {
@@ -100,7 +100,7 @@ public class TTTServerGame extends AbstractServerGame {
 					this.broadcastPlayer(new GameActionFailedPacket(), player);
 				}
 			} else {
-				LOGGER.warn("Player {} tries to change the {} map at pos {} to {}, but it is not his turn", player.getName(), packet.getFieldPos().getPosition(), player.getPlayerType());
+				LOGGER.warn("Player {} tries to change the map at pos {} to {}, but it is not his turn", player.getName(), packet.getFieldPos().getPosition(), player.getPlayerType());
 			}
 		}
 	}

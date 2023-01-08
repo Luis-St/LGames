@@ -2,7 +2,6 @@ package net.vgc.client.screen;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import net.luis.fxutils.CssUtils;
 import net.vgc.Main;
 import net.vgc.client.Client;
 import net.vgc.client.fx.ScreenScene;

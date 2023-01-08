@@ -89,9 +89,7 @@ public class ServerPacketHandler implements PacketHandler {
 							player.setPlaying(true);
 							player.connection.send(new StartGamePacket(gameType, this.createPlayerInfos(game.getPlayers())));
 						}
-						Util.runDelayed("DelayedSetStartPlayer", 250, () -> {
-							game.getStartPlayer();
-						});
+						Util.runDelayed("DelayedSetStartPlayer", 250, game::getStartPlayer);
 					}
 				} else {
 					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getInfoName(), this.server.getGame().getType().getInfoName());
@@ -136,7 +134,7 @@ public class ServerPacketHandler implements PacketHandler {
 					this.connection.send(new CancelPlayAgainGameRequestPacket());
 				}
 			} else {
-				LOGGER.warn("Cancel request to start a new match, since the player {} has not the required permission");
+				LOGGER.warn("Cancel request to start a new match, since the player {} has not the required permission", profile.getName());
 				this.connection.send(new CancelPlayAgainGameRequestPacket());
 			}
 		} else {
@@ -153,6 +151,7 @@ public class ServerPacketHandler implements PacketHandler {
 			if (player != null) {
 				if (game.isDiceGame()) {
 					DiceHandler diceHandler = game.getDiceHandler();
+					assert diceHandler != null;
 					if (diceHandler.canRoll(player)) {
 						int count;
 						if (diceHandler.hasPlayerRolledDice(player)) {
