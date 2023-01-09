@@ -1,0 +1,15 @@
+include "account"
+include "client"
+include "common"
+include "game"
+
+include "ludo"
+project(":ludo").projectDir = file("/games/ludo")
+include "ttt"
+project(":ttt").projectDir = file("/games/ttt")
+include "wins4"
+project(":wins4").projectDir = file("/games/wins4")
+
+include "language"
+include "network"
+include "server"

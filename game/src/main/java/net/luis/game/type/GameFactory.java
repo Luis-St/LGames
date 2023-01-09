@@ -1,0 +1,40 @@
+package net.luis.game.type;
+
+import net.luis.game.Game;
+import net.luis.game.player.GamePlayerInfo;
+import net.luis.client.Client;
+import net.luis.server.Server;
+import net.luis.server.player.ServerPlayer;
+
+import java.util.List;
+import java.util.function.BiFunction;
+
+/**
+ *
+ * @author Luis-st
+ *
+ */
+
+public class GameFactory<S extends Game, C extends Game> {
+	
+	private final BiFunction<Server, List<ServerPlayer>, S> serverFactory;
+	private final BiFunction<Client, List<GamePlayerInfo>, C> clientFactory;
+	
+	public GameFactory(BiFunction<Server, List<ServerPlayer>, S> serverFactory, BiFunction<Client, List<GamePlayerInfo>, C> clientFactory) {
+		this.serverFactory = serverFactory;
+		this.clientFactory = clientFactory;
+	}
+	
+	public S createServerGame(Server server, List<ServerPlayer> players) {
+		S game = this.serverFactory.apply(server, players);
+		game.init();
+		return game;
+	}
+	
+	public C createClientGame(Client client, List<GamePlayerInfo> playerInfos) {
+		C game = this.clientFactory.apply(client, playerInfos);
+		game.init();
+		return game;
+	}
+	
+}
