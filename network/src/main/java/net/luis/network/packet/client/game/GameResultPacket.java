@@ -1,12 +1,12 @@
 package net.luis.network.packet.client.game;
 
+import net.luis.game.GameResult;
+import net.luis.game.win.GameResultLine;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.listener.PacketGetter;
 import net.luis.utils.util.ReflectionHelper;
-import net.luis.game.GameResult;
-import net.luis.game.win.GameResultLine;
 import org.jetbrains.annotations.Nullable;
 
 /**

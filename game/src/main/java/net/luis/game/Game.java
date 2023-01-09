@@ -1,6 +1,9 @@
 package net.luis.game;
 
 import com.google.common.collect.Lists;
+import net.luis.client.game.AbstractClientGame;
+import net.luis.common.player.GameProfile;
+import net.luis.common.player.Player;
 import net.luis.game.dice.DiceHandler;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
@@ -8,15 +11,12 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.type.GameType;
 import net.luis.game.win.WinHandler;
-import net.luis.utils.math.Mth;
-import net.luis.utils.util.Utils;
-import net.luis.client.game.AbstractClientGame;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
-import net.luis.common.player.GameProfile;
-import net.luis.common.player.Player;
 import net.luis.server.game.AbstractServerGame;
 import net.luis.server.player.ServerPlayer;
+import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;

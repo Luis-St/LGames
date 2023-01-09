@@ -1,10 +1,6 @@
 package net.luis.server.games.wins4.map;
 
 import com.google.common.collect.Lists;
-import net.luis.server.Server;
-import net.luis.server.game.map.AbstractServerGameMap;
-import net.luis.server.games.wins4.map.field.Wins4ServerField;
-import net.luis.utils.math.Mth;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
@@ -13,6 +9,10 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.wins4.map.field.Wins4FieldPos;
+import net.luis.server.Server;
+import net.luis.server.game.map.AbstractServerGameMap;
+import net.luis.server.games.wins4.map.field.Wins4ServerField;
+import net.luis.utils.math.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

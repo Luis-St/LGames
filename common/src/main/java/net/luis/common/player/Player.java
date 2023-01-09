@@ -1,8 +1,8 @@
 package net.luis.common.player;
 
-import net.luis.utils.util.ToString;
-import net.luis.game.score.PlayerScore;
 import net.luis.common.util.Tickable;
+import net.luis.game.score.PlayerScore;
+import net.luis.utils.util.ToString;
 
 import java.util.Objects;
 

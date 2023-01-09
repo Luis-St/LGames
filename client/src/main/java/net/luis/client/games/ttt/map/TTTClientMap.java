@@ -15,6 +15,7 @@ import net.luis.client.fx.game.wrapper.ToggleButtonWrapper;
 import net.luis.client.game.map.AbstractClientGameMap;
 import net.luis.client.games.ttt.map.field.TTTClientField;
 import net.luis.common.Constants;
+import net.luis.common.GameProfile;
 import net.luis.game.Game;
 import net.luis.game.GameResult;
 import net.luis.game.map.field.GameField;
@@ -32,7 +33,6 @@ import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
-import net.luis.common.GameProfile;
 
 import java.util.List;
 import java.util.Objects;

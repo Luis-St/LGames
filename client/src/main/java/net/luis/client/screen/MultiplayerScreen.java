@@ -9,15 +9,15 @@ import javafx.stage.Stage;
 import net.luis.client.ClientAccount;
 import net.luis.client.fx.ButtonBox;
 import net.luis.client.window.LoginWindow;
+import net.luis.common.Constants;
+import net.luis.common.util.Util;
 import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.FxUtils;
 import net.luis.fxutils.fx.InputValidationPane;
-import net.luis.common.Constants;
 import net.luis.language.TranslationKey;
 import net.luis.network.ConnectionHandler;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.server.ClientJoinPacket;
-import net.luis.common.util.Util;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;

@@ -1,14 +1,14 @@
 package net.luis.common.player;
 
+import net.luis.common.util.annotation.DecodingConstructor;
+import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;
-import net.luis.network.buffer.Encodable;
-import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.common.util.annotation.DecodingConstructor;
 
 import java.util.Objects;
 import java.util.UUID;

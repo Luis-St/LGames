@@ -1,13 +1,13 @@
 package net.luis.server.games.ludo.map.field;
 
-import net.luis.server.game.map.field.AbstractServerGameField;
-import net.luis.utils.util.ToString;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ludo.map.field.LudoFieldType;
+import net.luis.server.game.map.field.AbstractServerGameField;
+import net.luis.utils.util.ToString;
 
 /**
  *

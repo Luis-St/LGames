@@ -5,8 +5,8 @@ import javafx.scene.layout.Pane;
 import net.luis.client.Client;
 import net.luis.client.fx.ScreenScene;
 import net.luis.client.fx.Showable;
-import net.luis.language.TranslationKey;
 import net.luis.common.util.Tickable;
+import net.luis.language.TranslationKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

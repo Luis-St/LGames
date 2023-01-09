@@ -1,9 +1,9 @@
 package net.luis.network.packet.client.game;
 
+import net.luis.game.map.field.GameFieldInfo;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.listener.PacketGetter;
-import net.luis.game.map.field.GameFieldInfo;
 
 import java.util.List;
 

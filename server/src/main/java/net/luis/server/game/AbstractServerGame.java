@@ -1,11 +1,7 @@
 package net.luis.server.game;
 
 import com.google.common.collect.Lists;
-import net.luis.server.Server;
-import net.luis.server.player.ServerPlayer;
-import net.luis.utils.function.TriFunction;
-import net.luis.utils.math.Mth;
-import net.luis.utils.util.Utils;
+import net.luis.common.player.Player;
 import net.luis.game.AbstractGame;
 import net.luis.game.Game;
 import net.luis.game.map.GameMap;
@@ -16,7 +12,11 @@ import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.luis.network.packet.client.game.ExitGamePacket;
 import net.luis.network.packet.client.game.StopGamePacket;
-import net.luis.common.player.Player;
+import net.luis.server.Server;
+import net.luis.server.player.ServerPlayer;
+import net.luis.utils.function.TriFunction;
+import net.luis.utils.math.Mth;
+import net.luis.utils.util.Utils;
 
 import java.util.List;
 import java.util.Objects;

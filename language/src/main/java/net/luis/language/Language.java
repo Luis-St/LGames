@@ -1,7 +1,8 @@
 package net.luis.language;
 
-import net.luis.utils.util.ToString;
 import net.luis.network.Network;
+import net.luis.utils.util.ToString;
+
 import java.nio.file.Path;
 import java.util.Objects;
 

@@ -4,9 +4,9 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import net.luis.common.Constants;
 import net.luis.common.util.streams.DebugPrintStream;
 import net.luis.common.util.streams.InfoPrintStream;
-import net.luis.common.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

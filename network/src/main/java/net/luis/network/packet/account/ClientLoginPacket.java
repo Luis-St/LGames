@@ -1,8 +1,8 @@
 package net.luis.network.packet.account;
 
+import net.luis.account.account.LoginType;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.listener.PacketGetter;
-import net.luis.account.account.LoginType;
 
 /**
  *

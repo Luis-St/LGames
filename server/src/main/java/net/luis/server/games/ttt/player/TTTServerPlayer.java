@@ -1,15 +1,15 @@
 package net.luis.server.games.ttt.player;
 
 import com.google.common.collect.Lists;
-import net.luis.server.game.player.AbstractServerGamePlayer;
-import net.luis.server.games.ttt.player.figure.TTTServerFigure;
-import net.luis.utils.util.ToString;
+import net.luis.common.player.Player;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
-import net.luis.common.player.Player;
+import net.luis.server.game.player.AbstractServerGamePlayer;
+import net.luis.server.games.ttt.player.figure.TTTServerFigure;
+import net.luis.utils.util.ToString;
 
 import java.util.List;
 import java.util.UUID;

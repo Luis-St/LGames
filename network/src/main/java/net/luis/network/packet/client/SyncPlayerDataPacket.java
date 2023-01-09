@@ -1,11 +1,11 @@
 package net.luis.network.packet.client;
 
-import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.packet.listener.PacketGetter;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.score.PlayerScore;
 import net.luis.common.player.GameProfile;
 import net.luis.common.player.Player;
+import net.luis.game.player.GamePlayer;
+import net.luis.game.score.PlayerScore;
+import net.luis.network.buffer.FriendlyByteBuffer;
+import net.luis.network.packet.listener.PacketGetter;
 
 /**
  *

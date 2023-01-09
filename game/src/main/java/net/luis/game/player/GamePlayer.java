@@ -1,11 +1,11 @@
 package net.luis.game.player;
 
+import net.luis.common.player.Player;
 import net.luis.game.Game;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.figure.GameFigure;
-import net.luis.common.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;

@@ -1,8 +1,6 @@
 package net.luis.server.games.ludo.dice;
 
 import com.google.common.collect.Lists;
-import net.luis.server.player.ServerPlayer;
-import net.luis.utils.util.Utils;
 import net.luis.game.Game;
 import net.luis.game.dice.Dice;
 import net.luis.game.dice.DiceHandler;
@@ -11,6 +9,8 @@ import net.luis.game.dice.SimpleDice;
 import net.luis.game.map.field.GameField;
 import net.luis.game.player.GamePlayer;
 import net.luis.network.packet.client.game.CanSelectGameFieldPacket;
+import net.luis.server.player.ServerPlayer;
+import net.luis.utils.util.Utils;
 
 import java.util.List;
 import java.util.Objects;

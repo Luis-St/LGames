@@ -12,6 +12,7 @@ import net.luis.client.fx.ButtonBox;
 import net.luis.client.player.AbstractClientPlayer;
 import net.luis.client.player.LocalPlayer;
 import net.luis.client.screen.game.GameScreen;
+import net.luis.common.util.Util;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.type.GameTypes;
 import net.luis.language.TranslationKey;
@@ -22,7 +23,6 @@ import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
-import net.luis.common.util.Util;
 
 /**
  *

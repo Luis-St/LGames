@@ -1,11 +1,11 @@
 package net.luis.server.games.ludo.player.figure;
 
-import net.luis.utils.util.ToString;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.figure.AbstractGameFigure;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ludo.map.field.LudoFieldPos;
+import net.luis.utils.util.ToString;
 
 import java.util.UUID;
 

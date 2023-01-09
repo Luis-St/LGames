@@ -1,9 +1,6 @@
 package net.luis.server.games.ttt.win;
 
 import com.google.common.collect.Lists;
-import net.luis.server.games.ttt.map.TTTServerMap;
-import net.luis.server.games.ttt.player.TTTServerPlayer;
-import net.luis.utils.util.Utils;
 import net.luis.game.Game;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
@@ -14,6 +11,9 @@ import net.luis.game.win.AbstractWinHandler;
 import net.luis.game.win.GameResultLine;
 import net.luis.games.ttt.map.field.TTTFieldPos;
 import net.luis.games.ttt.player.TTTPlayerType;
+import net.luis.server.games.ttt.map.TTTServerMap;
+import net.luis.server.games.ttt.player.TTTServerPlayer;
+import net.luis.utils.util.Utils;
 
 import java.util.List;
 import java.util.Objects;

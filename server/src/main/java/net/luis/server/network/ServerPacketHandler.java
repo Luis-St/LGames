@@ -1,9 +1,8 @@
 package net.luis.server.network;
 
 import com.google.common.collect.Lists;
-import net.luis.server.Server;
-import net.luis.server.player.ServerPlayer;
-import net.luis.utils.util.Utils;
+import net.luis.common.player.GameProfile;
+import net.luis.common.util.Util;
 import net.luis.game.Game;
 import net.luis.game.dice.DiceHandler;
 import net.luis.game.player.GamePlayer;
@@ -29,8 +28,9 @@ import net.luis.network.packet.server.PlayGameRequestPacket;
 import net.luis.network.packet.server.game.ExitGameRequestPacket;
 import net.luis.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.luis.common.player.GameProfile;
-import net.luis.common.util.Util;
+import net.luis.server.Server;
+import net.luis.server.player.ServerPlayer;
+import net.luis.utils.util.Utils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

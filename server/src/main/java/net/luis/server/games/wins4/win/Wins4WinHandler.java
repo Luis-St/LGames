@@ -1,9 +1,6 @@
 package net.luis.server.games.wins4.win;
 
 import com.google.common.collect.Lists;
-import net.luis.server.games.wins4.map.Wins4ServerMap;
-import net.luis.server.games.wins4.player.Wins4ServerPlayer;
-import net.luis.utils.util.Utils;
 import net.luis.game.Game;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
@@ -14,6 +11,9 @@ import net.luis.game.win.AbstractWinHandler;
 import net.luis.game.win.GameResultLine;
 import net.luis.games.wins4.map.field.Wins4FieldPos;
 import net.luis.games.wins4.player.Wins4PlayerType;
+import net.luis.server.games.wins4.map.Wins4ServerMap;
+import net.luis.server.games.wins4.player.Wins4ServerPlayer;
+import net.luis.utils.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

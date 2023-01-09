@@ -4,7 +4,6 @@ import net.luis.account.AccountServer;
 import net.luis.account.account.Account;
 import net.luis.account.account.AccountType;
 import net.luis.account.account.LoginType;
-import net.luis.utils.util.Utils;
 import net.luis.network.Connection;
 import net.luis.network.NetworkSide;
 import net.luis.network.packet.PacketHandler;
@@ -16,6 +15,7 @@ import net.luis.network.packet.client.ClientLoggedInPacket;
 import net.luis.network.packet.client.ClientLoggedOutPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
+import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

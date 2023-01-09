@@ -6,9 +6,8 @@ import javafx.scene.image.ImageView;
 import net.luis.client.Client;
 import net.luis.client.fx.game.wrapper.ToggleButtonWrapper;
 import net.luis.client.game.map.field.AbstractClientGameField;
-import net.luis.utils.util.ToString;
-import net.luis.utils.util.Utils;
 import net.luis.common.Constants;
+import net.luis.common.player.GameProfile;
 import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameFieldInfo;
@@ -18,7 +17,8 @@ import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ttt.map.field.TTTFieldType;
 import net.luis.games.ttt.player.TTTPlayerType;
-import net.luis.common.player.GameProfile;
+import net.luis.utils.util.ToString;
+import net.luis.utils.util.Utils;
 
 import java.util.Objects;
 

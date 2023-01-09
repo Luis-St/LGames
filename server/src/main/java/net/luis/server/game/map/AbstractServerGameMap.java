@@ -1,9 +1,9 @@
 package net.luis.server.game.map;
 
-import net.luis.server.Server;
 import net.luis.game.Game;
 import net.luis.game.map.AbstractGameMap;
 import net.luis.game.map.field.GameField;
+import net.luis.server.Server;
 
 /**
  *

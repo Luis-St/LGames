@@ -9,7 +9,6 @@ import net.luis.client.Client;
 import net.luis.client.fx.Box;
 import net.luis.client.fx.game.wrapper.ToggleButtonWrapper;
 import net.luis.client.game.map.field.AbstractClientGameField;
-import net.luis.utils.util.ToString;
 import net.luis.common.Constants;
 import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;
@@ -19,6 +18,7 @@ import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ludo.map.field.LudoFieldType;
 import net.luis.games.ludo.player.LudoPlayerType;
+import net.luis.utils.util.ToString;
 
 /**
  *

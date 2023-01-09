@@ -1,14 +1,14 @@
 package net.luis.game.type;
 
+import net.luis.client.Client;
+import net.luis.client.screen.game.GameScreen;
 import net.luis.game.Game;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerInfo;
-import net.luis.utils.math.Mth;
-import net.luis.client.Client;
-import net.luis.client.screen.game.GameScreen;
 import net.luis.network.NetworkSide;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
+import net.luis.utils.math.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

@@ -1,16 +1,16 @@
 package net.luis.common.settings;
 
 import com.google.common.collect.Lists;
+import net.luis.common.data.tag.TagUtil;
+import net.luis.common.exception.InvalidValueException;
+import net.luis.language.Languages;
+import net.luis.language.TranslationKey;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.data.tag.tags.StringTag;
 import net.luis.utils.util.ToString;
-import net.luis.common.data.tag.TagUtil;
-import net.luis.language.Languages;
-import net.luis.language.TranslationKey;
-import net.luis.common.exception.InvalidValueException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

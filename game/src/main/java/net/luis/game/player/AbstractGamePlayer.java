@@ -1,7 +1,7 @@
 package net.luis.game.player;
 
-import net.luis.game.Game;
 import net.luis.common.player.Player;
+import net.luis.game.Game;
 
 import java.util.Objects;
 

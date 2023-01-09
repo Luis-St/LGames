@@ -1,7 +1,7 @@
 package net.luis.common.data.tag;
 
-import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.language.TranslationKey;
+import net.luis.utils.data.tag.tags.CompoundTag;
 
 /**
  *

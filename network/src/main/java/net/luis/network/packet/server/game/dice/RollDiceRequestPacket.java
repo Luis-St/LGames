@@ -1,9 +1,9 @@
 package net.luis.network.packet.server.game.dice;
 
+import net.luis.common.player.GameProfile;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.listener.PacketGetter;
 import net.luis.network.packet.server.ServerPacket;
-import net.luis.common.player.GameProfile;
 
 /**
  *

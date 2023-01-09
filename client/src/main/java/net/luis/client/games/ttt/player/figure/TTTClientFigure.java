@@ -1,10 +1,10 @@
 package net.luis.client.games.ttt.player.figure;
 
-import net.luis.utils.util.ToString;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.figure.AbstractGameFigure;
 import net.luis.games.ttt.map.field.TTTFieldPos;
+import net.luis.utils.util.ToString;
 
 import java.util.UUID;
 

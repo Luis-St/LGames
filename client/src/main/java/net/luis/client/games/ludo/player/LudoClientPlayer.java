@@ -3,14 +3,14 @@ package net.luis.client.games.ludo.player;
 import com.google.common.collect.Lists;
 import net.luis.client.game.player.AbstractClientGamePlayer;
 import net.luis.client.games.ludo.player.figure.LudoClientFigure;
-import net.luis.utils.util.ToString;
+import net.luis.common.player.Player;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ludo.map.field.LudoFieldPos;
-import net.luis.common.player.Player;
+import net.luis.utils.util.ToString;
 
 import java.util.List;
 import java.util.UUID;

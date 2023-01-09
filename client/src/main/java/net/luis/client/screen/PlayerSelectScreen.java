@@ -8,6 +8,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import net.luis.client.fx.ButtonBox;
 import net.luis.client.player.AbstractClientPlayer;
+import net.luis.common.util.Util;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.type.GameType;
 import net.luis.language.TranslationKey;
@@ -20,7 +21,6 @@ import net.luis.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.PlayGameRequestPacket;
-import net.luis.common.util.Util;
 
 import java.util.List;
 

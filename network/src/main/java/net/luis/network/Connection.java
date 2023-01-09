@@ -4,8 +4,8 @@ import io.netty.channel.*;
 import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import net.luis.network.packet.Packet;
 import net.luis.network.exception.SkipPacketException;
+import net.luis.network.packet.Packet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

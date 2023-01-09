@@ -1,13 +1,7 @@
 package net.luis.server.games.ttt;
 
-import net.luis.server.Server;
-import net.luis.server.game.AbstractServerGame;
-import net.luis.server.games.ttt.map.TTTServerMap;
-import net.luis.server.games.ttt.player.TTTServerPlayer;
-import net.luis.server.games.ttt.win.TTTWinHandler;
-import net.luis.server.player.ServerPlayer;
-import net.luis.utils.util.Utils;
 import net.luis.client.games.ttt.TTTClientGame;
+import net.luis.common.player.Player;
 import net.luis.game.GameResult;
 import net.luis.game.map.field.GameField;
 import net.luis.game.player.GamePlayer;
@@ -26,7 +20,13 @@ import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
-import net.luis.common.player.Player;
+import net.luis.server.Server;
+import net.luis.server.game.AbstractServerGame;
+import net.luis.server.games.ttt.map.TTTServerMap;
+import net.luis.server.games.ttt.player.TTTServerPlayer;
+import net.luis.server.games.ttt.win.TTTWinHandler;
+import net.luis.server.player.ServerPlayer;
+import net.luis.utils.util.Utils;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,10 +1,10 @@
 package net.luis.server.games.wins4.player.figure;
 
-import net.luis.utils.util.ToString;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.figure.AbstractGameFigure;
 import net.luis.games.wins4.map.field.Wins4FieldPos;
+import net.luis.utils.util.ToString;
 
 import java.util.UUID;
 

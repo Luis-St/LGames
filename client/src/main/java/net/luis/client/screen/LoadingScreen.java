@@ -8,8 +8,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import net.luis.client.fx.Box;
 import net.luis.fxutils.FxUtils;
-import net.luis.utils.math.Mth;
 import net.luis.language.TranslationKey;
+import net.luis.utils.math.Mth;
 
 /**
  *

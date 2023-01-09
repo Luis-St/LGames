@@ -1,8 +1,5 @@
 package net.luis.server.games.wins4.map.field;
 
-import net.luis.server.game.map.field.AbstractServerGameField;
-import net.luis.utils.util.ToString;
-import net.luis.utils.util.Utils;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameFieldInfo;
 import net.luis.game.map.field.GameFieldPos;
@@ -12,6 +9,9 @@ import net.luis.game.player.figure.GameFigure;
 import net.luis.games.wins4.map.field.Wins4FieldType;
 import net.luis.games.wins4.player.Wins4PlayerType;
 import net.luis.player.GameProfile;
+import net.luis.server.game.map.field.AbstractServerGameField;
+import net.luis.utils.util.ToString;
+import net.luis.utils.util.Utils;
 
 /**
  *
