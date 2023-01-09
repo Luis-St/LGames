@@ -1,8 +1,8 @@
 package net.luis.network.packet.client;
 
-import net.luis.common.player.GameProfile;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.listener.PacketGetter;
+import net.luis.player.GameProfile;
 import net.luis.server.player.ServerPlayer;
 
 import java.util.List;

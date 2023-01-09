@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
-import net.luis.common.data.json.JsonHelper;
+import net.luis.data.json.JsonHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;

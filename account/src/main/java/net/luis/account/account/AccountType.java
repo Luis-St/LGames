@@ -1,7 +1,7 @@
 package net.luis.account.account;
 
-import net.luis.common.util.EnumRepresentable;
 import net.luis.language.TranslationKey;
+import net.luis.util.EnumRepresentable;
 
 /**
  *

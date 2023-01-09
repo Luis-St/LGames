@@ -5,12 +5,12 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import net.luis.common.Constants;
-import net.luis.common.util.Util;
+import net.luis.Constants;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.Game;
 import net.luis.game.player.GamePlayer;
 import net.luis.language.TranslationKey;
+import net.luis.util.Util;
 
 import java.util.Objects;
 

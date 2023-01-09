@@ -2,7 +2,7 @@ package net.luis.server.games.ludo.map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import net.luis.common.exception.InvalidValueException;
+import net.luis.exception.InvalidValueException;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;

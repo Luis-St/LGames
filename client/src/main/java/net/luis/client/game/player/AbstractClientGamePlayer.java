@@ -1,9 +1,9 @@
 package net.luis.client.game.player;
 
-import net.luis.common.player.Player;
 import net.luis.game.Game;
 import net.luis.game.player.AbstractGamePlayer;
 import net.luis.game.player.GamePlayerType;
+import net.luis.player.Player;
 
 /**
  *

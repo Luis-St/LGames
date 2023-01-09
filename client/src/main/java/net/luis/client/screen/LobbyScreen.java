@@ -12,17 +12,16 @@ import net.luis.client.fx.ButtonBox;
 import net.luis.client.player.AbstractClientPlayer;
 import net.luis.client.player.LocalPlayer;
 import net.luis.client.screen.game.GameScreen;
-import net.luis.common.util.Util;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.type.GameTypes;
 import net.luis.language.TranslationKey;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.PlayerAddPacket;
 import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
+import net.luis.util.Util;
 
 /**
  *
@@ -30,7 +29,7 @@ import net.luis.network.packet.listener.PacketSubscriber;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
+@PacketSubscriber("#getStage#getScene#getScreen")
 public class LobbyScreen extends GameScreen {
 	
 	private Menu playerMenu;

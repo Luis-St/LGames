@@ -3,12 +3,12 @@ package net.luis.client.games.ttt.player;
 import com.google.common.collect.Lists;
 import net.luis.client.game.player.AbstractClientGamePlayer;
 import net.luis.client.games.ttt.player.figure.TTTClientFigure;
-import net.luis.common.player.Player;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
+import net.luis.player.Player;
 import net.luis.utils.util.ToString;
 
 import java.util.List;

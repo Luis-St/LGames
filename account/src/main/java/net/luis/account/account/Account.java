@@ -1,11 +1,11 @@
 package net.luis.account.account;
 
 import javafx.scene.control.TreeItem;
-import net.luis.common.util.EnumRepresentable;
-import net.luis.common.util.annotation.DecodingConstructor;
 import net.luis.language.TranslationKey;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.FriendlyByteBuffer;
+import net.luis.util.EnumRepresentable;
+import net.luis.util.annotation.DecodingConstructor;
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;

@@ -25,12 +25,9 @@ import javafx.scene.layout.VBox;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
-import net.luis.common.Constants;
-import net.luis.common.application.GameApplication;
-import net.luis.common.player.GameProfile;
-import net.luis.common.util.ExceptionHandler;
-import net.luis.common.util.Tickable;
-import net.luis.common.util.Util;
+import net.luis.Constants;
+import net.luis.application.ApplicationType;
+import net.luis.application.GameApplication;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.Game;
 import net.luis.game.player.GamePlayer;
@@ -40,13 +37,15 @@ import net.luis.language.LanguageProvider;
 import net.luis.language.Languages;
 import net.luis.language.TranslationKey;
 import net.luis.network.Connection;
-import net.luis.network.NetworkSide;
-import net.luis.network.exception.InvalidNetworkSideException;
 import net.luis.network.packet.PacketDecoder;
 import net.luis.network.packet.PacketEncoder;
+import net.luis.player.GameProfile;
 import net.luis.server.network.ServerPacketHandler;
 import net.luis.server.player.ServerPlayer;
 import net.luis.server.players.PlayerList;
+import net.luis.util.ExceptionHandler;
+import net.luis.util.Tickable;
+import net.luis.util.Util;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import org.jetbrains.annotations.Nullable;
@@ -81,10 +80,10 @@ public class Server extends GameApplication implements Tickable {
 	private Game game;
 	
 	public static Server getInstance() {
-		if (NetworkSide.SERVER.isOn()) {
-			return (Server) instance;
+		if (GameApplication.getInstance() instanceof Server server) {
+			return server;
 		}
-		throw new InvalidNetworkSideException(NetworkSide.SERVER);
+		throw new NullPointerException("The server instance is not yet available because the server has not yet been initialized");
 	}
 	
 	@Override
@@ -246,18 +245,8 @@ public class Server extends GameApplication implements Tickable {
 	}
 	
 	@Override
-	protected String getThreadName() {
-		return "server";
-	}
-	
-	@Override
-	protected String getName() {
-		return "virtual game collection server";
-	}
-	
-	@Override
-	public NetworkSide getNetworkSide() {
-		return NetworkSide.SERVER;
+	public ApplicationType getApplicationType() {
+		return ApplicationType.SERVER;
 	}
 	
 	@Override

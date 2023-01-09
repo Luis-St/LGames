@@ -2,8 +2,8 @@ package net.luis.language;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.luis.common.data.codec.CodecConstructor;
-import net.luis.common.data.codec.CodecGetter;
+import net.luis.data.codec.CodecConstructor;
+import net.luis.data.codec.CodecGetter;
 import net.luis.utils.util.Utils;
 
 import java.util.List;

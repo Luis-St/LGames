@@ -13,7 +13,6 @@ import net.luis.fxutils.FxUtils;
 import net.luis.game.map.field.GameField;
 import net.luis.games.ttt.map.field.TTTFieldType;
 import net.luis.language.TranslationKey;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.listener.PacketListener;
@@ -28,7 +27,7 @@ import net.luis.network.packet.server.game.SelectGameFieldPacket;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
+@PacketSubscriber("#getStage#getScene#getScreen")
 public class TTTScreen extends GameScreen {
 	
 	private final TTTClientGame game;

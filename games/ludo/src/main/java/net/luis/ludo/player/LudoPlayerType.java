@@ -5,9 +5,9 @@ import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
 import net.vgc.game.player.GamePlayerType;
 import net.vgc.language.TranslationKey;
-import net.vgc.network.Network;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -69,7 +69,7 @@ public enum LudoPlayerType implements GamePlayerType {
 		if (this.path == null) {
 			return null;
 		}
-		return FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
+		return FxUtils.makeImageView(Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
 	}
 	
 	@Override

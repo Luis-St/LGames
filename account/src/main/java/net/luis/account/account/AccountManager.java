@@ -1,7 +1,7 @@
 package net.luis.account.account;
 
+import net.luis.Constants;
 import net.luis.account.AccountServer;
-import net.luis.common.Constants;
 import net.luis.utils.math.Mth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

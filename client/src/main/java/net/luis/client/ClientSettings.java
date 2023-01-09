@@ -1,13 +1,13 @@
 package net.luis.client;
 
 import com.google.common.collect.Lists;
-import net.luis.common.settings.AbstractSettings;
-import net.luis.common.settings.Setting;
-import net.luis.common.settings.SettingValueTypes;
 import net.luis.language.Language;
 import net.luis.language.LanguageProvider;
 import net.luis.language.Languages;
 import net.luis.language.TranslationKey;
+import net.luis.settings.AbstractSettings;
+import net.luis.settings.Setting;
+import net.luis.settings.SettingValueTypes;
 import net.luis.utils.data.tag.tags.CompoundTag;
 
 /**

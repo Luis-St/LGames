@@ -1,3 +1,4 @@
+rootProject.name = "SchoolProject"
 include "account"
 include "client"
 include "common"

@@ -8,6 +8,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import net.luis.Constants;
 import net.luis.client.Client;
 import net.luis.client.fx.game.wrapper.GridPaneWrapper;
 import net.luis.client.fx.game.wrapper.ToggleButtonWrapper;
@@ -15,8 +16,6 @@ import net.luis.client.game.map.AbstractClientGameMap;
 import net.luis.client.games.ludo.map.field.LudoClientField;
 import net.luis.client.games.ludo.player.LudoClientPlayer;
 import net.luis.client.player.LocalPlayer;
-import net.luis.common.Constants;
-import net.luis.common.player.GameProfile;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldInfo;
@@ -28,11 +27,11 @@ import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ludo.map.field.LudoFieldPos;
 import net.luis.games.ludo.map.field.LudoFieldType;
 import net.luis.games.ludo.player.LudoPlayerType;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
+import net.luis.player.GameProfile;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 
@@ -47,7 +46,7 @@ import java.util.stream.Stream;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
+@PacketSubscriber("#getGame#getMap")
 public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrapper {
 	
 	private final ToggleGroup group;

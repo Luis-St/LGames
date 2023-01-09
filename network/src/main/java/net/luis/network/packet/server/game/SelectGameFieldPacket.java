@@ -1,11 +1,11 @@
 package net.luis.network.packet.server.game;
 
-import net.luis.common.player.GameProfile;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.listener.PacketGetter;
 import net.luis.network.packet.server.ServerPacket;
+import net.luis.player.GameProfile;
 
 /**
  *

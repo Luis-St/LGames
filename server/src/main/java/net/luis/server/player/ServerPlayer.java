@@ -1,11 +1,11 @@
 package net.luis.server.player;
 
 import javafx.scene.control.TreeItem;
-import net.luis.common.player.GameProfile;
-import net.luis.common.player.Player;
 import net.luis.game.score.PlayerScore;
 import net.luis.language.TranslationKey;
 import net.luis.network.Connection;
+import net.luis.player.GameProfile;
+import net.luis.player.Player;
 import net.luis.server.Server;
 
 /**

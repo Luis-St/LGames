@@ -1,7 +1,5 @@
 package net.luis.network.packet.listener;
 
-import net.luis.network.NetworkSide;
-
 import java.lang.annotation.*;
 
 /**
@@ -15,10 +13,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PacketSubscriber {
 	
-	NetworkSide[] value() default {
-			NetworkSide.CLIENT, NetworkSide.SERVER, NetworkSide.ACCOUNT
-	};
-	
-	String getter() default "";
+	String value() default "";
 	
 }

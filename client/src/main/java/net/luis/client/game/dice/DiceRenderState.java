@@ -1,10 +1,12 @@
 package net.luis.client.game.dice;
 
 import javafx.scene.image.ImageView;
-import net.luis.common.util.EnumRepresentable;
+import net.luis.application.GameApplication;
 import net.luis.fxutils.FxUtils;
-import net.luis.network.Network;
+import net.luis.util.EnumRepresentable;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  *
@@ -43,7 +45,7 @@ public enum DiceRenderState implements EnumRepresentable {
 	}
 	
 	public @NotNull ImageView getImage(double width, double height) {
-		return FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
+		return FxUtils.makeImageView(Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
 	}
 	
 	@Override

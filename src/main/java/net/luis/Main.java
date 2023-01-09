@@ -5,9 +5,8 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.luis.account.AccountServer;
 import net.luis.client.Client;
-import net.luis.common.Constants;
-import net.luis.common.util.Util;
 import net.luis.server.Server;
+import net.luis.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

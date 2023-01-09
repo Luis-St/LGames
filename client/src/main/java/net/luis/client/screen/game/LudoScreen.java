@@ -13,7 +13,6 @@ import net.luis.client.games.ludo.map.LudoClientMap;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.map.field.GameField;
 import net.luis.language.TranslationKey;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.dice.RolledDicePacket;
@@ -29,7 +28,7 @@ import net.luis.network.packet.server.game.SelectGameFieldPacket;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getStage#getScene#getScreen")
+@PacketSubscriber("#getStage#getScene#getScreen")
 public class LudoScreen extends GameScreen {
 	
 	private final LudoClientGame game;

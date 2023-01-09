@@ -1,13 +1,13 @@
 package net.luis.network.packet.listener;
 
+import net.luis.application.GameApplication;
 import net.luis.network.Connection;
-import net.luis.network.Network;
 import net.luis.network.packet.Packet;
 import net.luis.utils.util.ReflectionHelper;
-import net.vgc.common.application.GameApplication;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Objects;
 
 import static net.luis.network.packet.listener.PacketInvokHelper.createException;
 import static net.luis.network.packet.listener.PacketInvokHelper.validateSignature;
@@ -22,8 +22,8 @@ public class PacketInvoker {
 	
 	public static void invoke(Connection connection, Packet packet) {
 		ReflectionHelper.enableExceptionThrowing();
-		GameApplication application = Network.INSTANCE.getApplication();
-		for (Class<?> clazz : PacketInvokHelper.getSubscribers(application.getNetworkSide())) {
+		GameApplication application = Objects.requireNonNull(GameApplication.getInstance());
+		for (Class<?> clazz : PacketInvokHelper.getSubscribers(application.getApplicationType())) {
 			Object instanceObject = PacketInvokHelper.getInstanceObject(application, clazz, clazz.getAnnotation(PacketSubscriber.class));
 			for (Method method : PacketInvokHelper.getListeners(clazz, packet)) {
 				if (Modifier.isStatic(method.getModifiers())) {

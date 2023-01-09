@@ -5,6 +5,8 @@ import javafx.animation.Timeline;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.luis.application.ApplicationType;
+import net.luis.application.GameApplication;
 import net.luis.client.fx.ScreenScene;
 import net.luis.client.fx.Screenable;
 import net.luis.client.network.ClientPacketHandler;
@@ -15,16 +17,13 @@ import net.luis.client.screen.LoadingScreen;
 import net.luis.client.screen.MenuScreen;
 import net.luis.client.screen.Screen;
 import net.luis.client.window.LoginWindow;
-import net.luis.common.application.GameApplication;
-import net.luis.common.player.GameProfile;
-import net.luis.common.util.Tickable;
-import net.luis.common.util.Util;
 import net.luis.game.Game;
 import net.luis.network.ConnectionHandler;
-import net.luis.network.NetworkSide;
-import net.luis.network.exception.InvalidNetworkSideException;
 import net.luis.network.packet.account.ClientExitPacket;
 import net.luis.network.packet.server.ClientLeavePacket;
+import net.luis.player.GameProfile;
+import net.luis.util.Tickable;
+import net.luis.util.Util;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
 import net.luis.utils.util.Utils;
@@ -72,10 +71,10 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	private Game game;
 	
 	public static Client getInstance() {
-		if (NetworkSide.CLIENT.isOn()) {
-			return (Client) GameApplication.instance;
+		if (GameApplication.getInstance() instanceof Client client) {
+			return client;
 		}
-		throw new InvalidNetworkSideException(NetworkSide.CLIENT);
+		throw new NullPointerException("The client instance is not yet available because the client has not yet been initialized");
 	}
 	
 	@Override
@@ -190,18 +189,8 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	@Override
-	protected String getThreadName() {
-		return "client";
-	}
-	
-	@Override
-	protected String getName() {
-		return "virtual game collection";
-	}
-	
-	@Override
-	public NetworkSide getNetworkSide() {
-		return NetworkSide.CLIENT;
+	public ApplicationType getApplicationType() {
+		return ApplicationType.CLIENT;
 	}
 	
 	@Override

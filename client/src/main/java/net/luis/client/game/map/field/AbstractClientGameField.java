@@ -1,6 +1,7 @@
 package net.luis.client.game.map.field;
 
 import javafx.scene.image.ImageView;
+import net.luis.application.GameApplication;
 import net.luis.client.Client;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.GameResult;
@@ -10,7 +11,8 @@ import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
-import net.luis.network.Network;
+
+import java.util.Objects;
 
 /**
  *
@@ -43,7 +45,7 @@ public abstract class AbstractClientGameField extends AbstractGameField {
 	}
 	
 	protected ImageView makeImage(String path, double scale) {
-		return FxUtils.makeImageView(Network.INSTANCE.getResourceDirectory().resolve(path).toString(), this.getSize() * scale, this.getSize() * scale);
+		return FxUtils.makeImageView(Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve(path).toString(), this.getSize() * scale, this.getSize() * scale);
 	}
 	
 	@Override

@@ -11,7 +11,6 @@ import net.luis.game.score.PlayerScore;
 import net.luis.game.type.GameType;
 import net.luis.game.type.GameTypes;
 import net.luis.games.ludo.player.LudoPlayerType;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.CanSelectGameFieldPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
@@ -40,7 +39,7 @@ import java.util.Random;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getGame")
+@PacketSubscriber("#getGame")
 public class LudoServerGame extends AbstractServerGame {
 	
 	private final LudoDiceHandler diceHandler;

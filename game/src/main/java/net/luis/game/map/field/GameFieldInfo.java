@@ -1,10 +1,10 @@
 package net.luis.game.map.field;
 
-import net.luis.common.player.GameProfile;
-import net.luis.common.util.annotation.DecodingConstructor;
 import net.luis.game.player.GamePlayerType;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.FriendlyByteBuffer;
+import net.luis.player.GameProfile;
+import net.luis.util.annotation.DecodingConstructor;
 import net.luis.utils.util.ToString;
 
 import java.util.Objects;

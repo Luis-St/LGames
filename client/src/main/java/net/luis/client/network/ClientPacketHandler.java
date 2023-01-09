@@ -8,14 +8,11 @@ import net.luis.client.player.RemotePlayer;
 import net.luis.client.screen.LobbyScreen;
 import net.luis.client.screen.MenuScreen;
 import net.luis.client.window.LoginWindow;
-import net.luis.common.player.GameProfile;
-import net.luis.common.player.Player;
 import net.luis.game.Game;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerInfo;
 import net.luis.game.score.PlayerScore;
 import net.luis.game.type.GameType;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.PacketHandler;
 import net.luis.network.packet.client.*;
 import net.luis.network.packet.client.game.*;
@@ -24,6 +21,8 @@ import net.luis.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.luis.network.packet.client.game.dice.RolledDicePacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
+import net.luis.player.GameProfile;
+import net.luis.player.Player;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -38,7 +37,7 @@ import java.util.UUID;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getPacketHandler")
+@PacketSubscriber("#getPacketHandler")
 public class ClientPacketHandler implements PacketHandler {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

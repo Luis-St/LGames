@@ -3,7 +3,7 @@ package net.luis.client.fx;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import net.luis.client.screen.Screen;
-import net.luis.common.util.Tickable;
+import net.luis.util.Tickable;
 
 /**
  *

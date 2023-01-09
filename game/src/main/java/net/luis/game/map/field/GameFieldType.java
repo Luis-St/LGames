@@ -1,6 +1,6 @@
 package net.luis.game.map.field;
 
-import net.luis.common.util.EnumRepresentable;
+import net.luis.util.EnumRepresentable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

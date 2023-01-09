@@ -1,6 +1,6 @@
 package net.luis.language;
 
-import net.luis.network.Network;
+import net.luis.application.GameApplication;
 import net.luis.utils.util.ToString;
 
 import java.nio.file.Path;
@@ -15,7 +15,7 @@ import java.util.Objects;
 public record Language(String name, String fileName) {
 	
 	public Path getPath() {
-		return Network.INSTANCE.getResourceDirectory().resolve("lang/" + this.fileName + ".json");
+		return Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve("lang/" + this.fileName + ".json");
 	}
 	
 	@Override

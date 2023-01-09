@@ -1,13 +1,13 @@
 package net.luis.network.packet.listener;
 
 import com.google.common.collect.Lists;
+import net.luis.application.ApplicationType;
+import net.luis.application.GameApplication;
 import net.luis.network.Connection;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.Packet;
 import net.luis.utils.util.ClassPathInspector;
 import net.luis.utils.util.ReflectionHelper;
 import net.luis.utils.util.SimpleEntry;
-import net.vgc.common.application.GameApplication;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 
@@ -28,11 +28,11 @@ import java.util.stream.Collectors;
 
 class PacketInvokHelper {
 	
-	static List<Class<?>> getSubscribers(NetworkSide side) {
+	static List<Class<?>> getSubscribers(ApplicationType type) {
 		return ClassPathInspector.getClasses().stream().filter((clazz) -> {
 			return clazz.isAnnotationPresent(PacketSubscriber.class);
 		}).filter((clazz) -> {
-			return Lists.newArrayList(clazz.getAnnotation(PacketSubscriber.class).value()).contains(side);
+			return clazz.getPackageName().replace("net.luis.", "").toLowerCase().startsWith(type.getShortName().toLowerCase());
 		}).collect(Collectors.toList());
 	}
 	
@@ -51,11 +51,11 @@ class PacketInvokHelper {
 	}
 	
 	static Object getInstanceObject(GameApplication application, Class<?> clazz, PacketSubscriber subscriber) {
-		if (subscriber.getter().trim().isEmpty()) {
+		if (subscriber.value().trim().isEmpty()) {
 			return null;
 		}
 		Object instanceObject = application;
-		for (String getter : splitInstanceGetters(subscriber.getter())) {
+		for (String getter : splitInstanceGetters(subscriber.value())) {
 			Class<?> instanceClass = instanceObject.getClass();
 			if (ReflectionHelper.hasMethod(instanceClass, getter)) {
 				instanceObject = ReflectionHelper.invoke(instanceClass, getter, instanceObject);

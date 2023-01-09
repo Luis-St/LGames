@@ -1,8 +1,8 @@
 package net.luis.client.player;
 
-import net.luis.common.player.GameProfile;
-import net.luis.common.player.Player;
 import net.luis.game.score.PlayerScore;
+import net.luis.player.GameProfile;
+import net.luis.player.Player;
 
 import java.util.Objects;
 

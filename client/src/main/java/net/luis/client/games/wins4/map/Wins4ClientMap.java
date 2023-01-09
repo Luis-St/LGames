@@ -12,7 +12,6 @@ import net.luis.client.fx.game.IndexToggleButton;
 import net.luis.client.fx.game.wrapper.StackPaneWrapper;
 import net.luis.client.game.map.AbstractClientGameMap;
 import net.luis.client.games.wins4.map.field.Wins4ClientField;
-import net.luis.common.player.GameProfile;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.Game;
 import net.luis.game.GameResult;
@@ -24,12 +23,12 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.wins4.map.field.Wins4FieldPos;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
+import net.luis.player.GameProfile;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 
@@ -42,7 +41,7 @@ import java.util.UUID;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
+@PacketSubscriber("#getGame#getMap")
 public class Wins4ClientMap extends AbstractClientGameMap implements StackPaneWrapper {
 	
 	private final ToggleGroup group;

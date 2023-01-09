@@ -5,7 +5,6 @@ import net.luis.account.account.Account;
 import net.luis.account.account.AccountType;
 import net.luis.account.account.LoginType;
 import net.luis.network.Connection;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.PacketHandler;
 import net.luis.network.packet.account.ClientExitPacket;
 import net.luis.network.packet.account.ClientLoginPacket;
@@ -29,7 +28,7 @@ import java.util.UUID;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.ACCOUNT, getter = "#getPacketHandler")
+@PacketSubscriber("#getPacketHandler")
 public class AccountPacketHandler implements PacketHandler {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

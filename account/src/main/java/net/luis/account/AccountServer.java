@@ -25,14 +25,14 @@ import javafx.stage.Stage;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.luis.Constants;
 import net.luis.account.account.Account;
 import net.luis.account.account.AccountManager;
 import net.luis.account.account.AccountType;
 import net.luis.account.network.AccountPacketHandler;
 import net.luis.account.window.AccountCreationWindow;
-import net.luis.common.Constants;
-import net.luis.common.application.GameApplication;
-import net.luis.common.util.ExceptionHandler;
+import net.luis.application.ApplicationType;
+import net.luis.application.GameApplication;
 import net.luis.fxutils.FxUtils;
 import net.luis.fxutils.PropertyListeners;
 import net.luis.language.Language;
@@ -40,10 +40,9 @@ import net.luis.language.LanguageProvider;
 import net.luis.language.Languages;
 import net.luis.language.TranslationKey;
 import net.luis.network.Connection;
-import net.luis.network.NetworkSide;
-import net.luis.network.exception.InvalidNetworkSideException;
 import net.luis.network.packet.PacketDecoder;
 import net.luis.network.packet.PacketEncoder;
+import net.luis.util.ExceptionHandler;
 import net.luis.utils.data.serialization.SerializationUtils;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
@@ -73,10 +72,10 @@ public class AccountServer extends GameApplication {
 	private AccountManager manager;
 	
 	public static AccountServer getInstance() {
-		if (NetworkSide.ACCOUNT.isOn()) {
-			return (AccountServer) GameApplication.instance;
+		if (GameApplication.getInstance() instanceof AccountServer account) {
+			return account;
 		}
-		throw new InvalidNetworkSideException(NetworkSide.ACCOUNT);
+		throw new NullPointerException("The account server instance is not yet available because the account server has not yet been initialized");
 	}
 	
 	@Override
@@ -264,18 +263,8 @@ public class AccountServer extends GameApplication {
 	}
 	
 	@Override
-	protected String getThreadName() {
-		return "account";
-	}
-	
-	@Override
-	protected String getName() {
-		return "account server";
-	}
-	
-	@Override
-	public NetworkSide getNetworkSide() {
-		return NetworkSide.ACCOUNT;
+	public ApplicationType getApplicationType() {
+		return ApplicationType.ACCOUNT;
 	}
 	
 	public AccountPacketHandler getPacketHandler() {

@@ -1,8 +1,6 @@
 package net.luis.server.network;
 
 import com.google.common.collect.Lists;
-import net.luis.common.player.GameProfile;
-import net.luis.common.util.Util;
 import net.luis.game.Game;
 import net.luis.game.dice.DiceHandler;
 import net.luis.game.player.GamePlayer;
@@ -10,7 +8,6 @@ import net.luis.game.player.GamePlayerInfo;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.game.type.GameType;
 import net.luis.network.Connection;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.PacketHandler;
 import net.luis.network.packet.client.ClientJoinedPacket;
 import net.luis.network.packet.client.game.CancelPlayAgainGameRequestPacket;
@@ -28,8 +25,10 @@ import net.luis.network.packet.server.PlayGameRequestPacket;
 import net.luis.network.packet.server.game.ExitGameRequestPacket;
 import net.luis.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
+import net.luis.player.GameProfile;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
+import net.luis.util.Util;
 import net.luis.utils.util.Utils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +44,7 @@ import java.util.stream.Collectors;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getPacketHandler")
+@PacketSubscriber("#getPacketHandler")
 public class ServerPacketHandler implements PacketHandler {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

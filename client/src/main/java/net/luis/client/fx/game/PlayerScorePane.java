@@ -4,11 +4,11 @@ import com.google.common.collect.Lists;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import net.luis.common.Constants;
-import net.luis.common.player.Player;
+import net.luis.Constants;
 import net.luis.game.Game;
 import net.luis.game.player.GamePlayer;
 import net.luis.language.TranslationKey;
+import net.luis.player.Player;
 import net.luis.utils.util.SimpleEntry;
 
 import java.util.List;

@@ -6,6 +6,9 @@ plugins {
 repositories {
 	mavenCentral()
 	maven {
+		url "https://libraries.minecraft.net"
+	}
+	maven {
 		url uri("${project.rootProject.projectDir}/maven/repositories")
 	}
 }

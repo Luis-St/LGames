@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import net.luis.common.data.json.JsonHelper;
+import net.luis.data.json.JsonHelper;
 import net.luis.language.Language;
 import net.luis.language.LanguageFile;
 import net.luis.language.Languages;

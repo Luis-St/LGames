@@ -1,8 +1,8 @@
 package net.luis.game.player;
 
 import javafx.scene.image.ImageView;
-import net.luis.common.util.EnumRepresentable;
 import net.luis.language.TranslationKey;
+import net.luis.util.EnumRepresentable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

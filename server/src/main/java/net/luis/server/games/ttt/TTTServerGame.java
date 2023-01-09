@@ -1,7 +1,6 @@
 package net.luis.server.games.ttt;
 
 import net.luis.client.games.ttt.TTTClientGame;
-import net.luis.common.player.Player;
 import net.luis.game.GameResult;
 import net.luis.game.map.field.GameField;
 import net.luis.game.player.GamePlayer;
@@ -11,7 +10,6 @@ import net.luis.game.type.GameType;
 import net.luis.game.type.GameTypes;
 import net.luis.game.win.GameResultLine;
 import net.luis.games.ttt.player.TTTPlayerType;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.GameActionFailedPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
@@ -20,6 +18,7 @@ import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
+import net.luis.player.Player;
 import net.luis.server.Server;
 import net.luis.server.game.AbstractServerGame;
 import net.luis.server.games.ttt.map.TTTServerMap;
@@ -38,7 +37,7 @@ import java.util.function.Consumer;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.SERVER, getter = "#getGame")
+@PacketSubscriber("#getGame")
 public class TTTServerGame extends AbstractServerGame {
 	
 	public TTTServerGame(Server server, List<ServerPlayer> players) {

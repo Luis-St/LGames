@@ -1,17 +1,17 @@
 package net.luis.server.players;
 
 import com.google.common.collect.Lists;
-import net.luis.common.player.GameProfile;
-import net.luis.common.util.Tickable;
-import net.luis.common.util.Util;
 import net.luis.network.Connection;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.client.PlayerAddPacket;
 import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.ServerClosedPacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
+import net.luis.player.GameProfile;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
+import net.luis.util.Tickable;
+import net.luis.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;

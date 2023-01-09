@@ -1,14 +1,14 @@
 package net.luis.server.games.ludo.player;
 
 import com.google.common.collect.Lists;
-import net.luis.common.exception.InvalidValueException;
-import net.luis.common.player.Player;
+import net.luis.exception.InvalidValueException;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ludo.map.field.LudoFieldPos;
+import net.luis.player.Player;
 import net.luis.server.game.player.AbstractServerGamePlayer;
 import net.luis.server.games.ludo.player.figure.LudoServerFigure;
 import net.luis.utils.math.Mth;
