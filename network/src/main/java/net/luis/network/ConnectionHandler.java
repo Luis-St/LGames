@@ -16,7 +16,6 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.PacketDecoder;
 import net.luis.network.packet.PacketEncoder;
-import net.luis.util.ExceptionHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +47,12 @@ public class ConnectionHandler {
 	
 	public void connect(String host, int port) {
 		try {
-			ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("client network").setUncaughtExceptionHandler(new ExceptionHandler()).build();
+			ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("client network").setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+				@Override
+				public void uncaughtException(Thread thread, Throwable throwable) {
+					LogManager.getLogger().warn("Error in thread " + thread.getName(), throwable);
+				}
+			}).build();
 			this.group = NATIVE ? new EpollEventLoopGroup(0, threadFactory) : new NioEventLoopGroup(0, threadFactory);
 			this.connection = new Connection();
 			this.channel = new Bootstrap().group(this.group).channel(NATIVE ? EpollSocketChannel.class : NioSocketChannel.class).handler(new ChannelInitializer<>() {

@@ -2,7 +2,7 @@ package net.luis.player;
 
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.util.annotation.DecodingConstructor;
+import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;

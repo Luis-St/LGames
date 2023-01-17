@@ -1,6 +1,6 @@
 package net.luis.loading;
 
-import net.luis.util.EnumRepresentable;
+import net.luis.network.buffer.EnumRepresentable;
 
 /**
  *

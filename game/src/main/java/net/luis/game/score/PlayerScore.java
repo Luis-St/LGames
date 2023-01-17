@@ -3,7 +3,7 @@ package net.luis.game.score;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.player.GameProfile;
-import net.luis.util.annotation.DecodingConstructor;
+import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.util.ToString;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.logging.log4j.LogManager;

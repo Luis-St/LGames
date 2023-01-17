@@ -3,7 +3,7 @@ package net.luis.application;
 import net.luis.account.AccountServer;
 import net.luis.client.Client;
 import net.luis.server.Server;
-import net.luis.util.EnumRepresentable;
+import net.luis.network.buffer.EnumRepresentable;
 
 /**
  *

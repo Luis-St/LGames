@@ -4,8 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.luis.util.EnumRepresentable;
-import net.luis.util.annotation.DecodingConstructor;
+import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.util.ReflectionHelper;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -13,10 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -150,13 +146,13 @@ public class FriendlyByteBuffer {
 		return null;
 	}
 	
-	public <T extends EnumRepresentable> void writeEnum(T value) {
-		this.writeInt(value.getId());
+	public <T extends Enum<T>> void writeEnum(T value) {
+		this.writeInt(value.ordinal());
 	}
 	
-	public <T extends EnumRepresentable> T readEnum(Class<T> clazz) {
-		int id = this.readInt();
-		return EnumRepresentable.fromId(clazz, id);
+	public <T extends Enum<T>> T readEnum(Class<T> clazz) {
+		int ordinal = this.readInt();
+		return clazz.getEnumConstants()[ordinal];
 	}
 	
 	public <T> void writeList(List<T> list, Consumer<T> encoder) {
@@ -196,7 +192,7 @@ public class FriendlyByteBuffer {
 	
 	public <T extends Encodable> void writeOptional(Optional<T> optional) {
 		this.writeBoolean(optional.isPresent());
-		optional.ifPresent((value) -> this.write(value));
+		optional.ifPresent(this::write);
 	}
 	
 	public <T extends Encodable> Optional<T> readOptional(Class<T> clazz) {
@@ -208,12 +204,12 @@ public class FriendlyByteBuffer {
 		return Optional.empty();
 	}
 	
-	public <T extends EnumRepresentable> void writeEnumOptional(Optional<T> optional) {
+	public <T extends Enum<T>> void writeEnumOptional(Optional<T> optional) {
 		this.writeBoolean(optional.isPresent());
 		optional.ifPresent(this::writeEnum);
 	}
 	
-	public <T extends EnumRepresentable> Optional<T> readEnumOptional(Class<T> clazz) {
+	public <T extends Enum<T>> Optional<T> readEnumOptional(Class<T> clazz) {
 		boolean present = this.readBoolean();
 		if (present) {
 			T value = this.readEnum(clazz);
@@ -233,15 +229,15 @@ public class FriendlyByteBuffer {
 		return this.read((Class<T>) ReflectionHelper.getClassForName(className));
 	}
 	
-	public <T extends EnumRepresentable> void writeEnumInterface(T value) {
+	public <T extends Enum<T>> void writeEnumInterface(T value) {
 		this.writeString(value.getClass().getName());
 		this.writeEnum(value);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends EnumRepresentable> T readEnumInterface() {
+	public <T extends Enum<T>> T readEnumInterface() {
 		String className = this.readString();
-		return this.readEnum((Class<T>) ReflectionHelper.getClassForName(className));
+		return this.readEnum((Class<T>) Objects.requireNonNull(ReflectionHelper.getClassForName(className)));
 	}
 	
 	public ByteBuf toBuffer() {

@@ -1,8 +1,6 @@
 package net.luis.network.packet.listener;
 
 import com.google.common.collect.Lists;
-import net.luis.application.ApplicationType;
-import net.luis.application.GameApplication;
 import net.luis.network.Connection;
 import net.luis.network.packet.Packet;
 import net.luis.utils.util.ClassPathInspector;
@@ -28,11 +26,16 @@ import java.util.stream.Collectors;
 
 class PacketInvokHelper {
 	
-	static List<Class<?>> getSubscribers(ApplicationType type) {
+	private static final Class<?> APPLICATION_TYPE_CLASS = Objects.requireNonNull(ReflectionHelper.getClassForName("net.luis.application.ApplicationType"));
+	
+	static List<Class<?>> getSubscribers(Object type) {
+		assert APPLICATION_TYPE_CLASS.isInstance(type);
 		return ClassPathInspector.getClasses().stream().filter((clazz) -> {
 			return clazz.isAnnotationPresent(PacketSubscriber.class);
 		}).filter((clazz) -> {
-			return clazz.getPackageName().replace("net.luis.", "").toLowerCase().startsWith(type.getShortName().toLowerCase());
+			Object object = ReflectionHelper.invoke(ReflectionHelper.getMethod(APPLICATION_TYPE_CLASS, "getShortName"), type);
+			assert object instanceof String;
+			return clazz.getPackageName().replace("net.luis.", "").toLowerCase().startsWith(((String) object).toLowerCase());
 		}).collect(Collectors.toList());
 	}
 	
@@ -50,7 +53,7 @@ class PacketInvokHelper {
 		return excludeFirst.contains(getters[0]) ? ArrayUtils.remove(getters, 0) : getters;
 	}
 	
-	static Object getInstanceObject(GameApplication application, Class<?> clazz, PacketSubscriber subscriber) {
+	static Object getInstanceObject(Object application, Class<?> clazz, PacketSubscriber subscriber) {
 		if (subscriber.value().trim().isEmpty()) {
 			return null;
 		}
@@ -133,7 +136,7 @@ class PacketInvokHelper {
 		}).toArray(GetterInfo[]::new);
 	}
 	
-	private static Object[] sortBySignature(GameApplication application, Method method, List<Entry<GetterInfo, Object>> objects, List<Class<?>> objectInfo) {
+	private static Object[] sortBySignature(Object application, Method method, List<Entry<GetterInfo, Object>> objects, List<Class<?>> objectInfo) {
 		List<Object> parameters = Lists.newArrayList();
 		if (application != null) {
 			parameters.add(application);
@@ -168,7 +171,7 @@ class PacketInvokHelper {
 		return objectClasses;
 	}
 	
-	static Object[] getPacketObjects(GameApplication application, Packet packet, Method method) {
+	static Object[] getPacketObjects(Object application, Packet packet, Method method) {
 		List<Entry<GetterInfo, Object>> objects = Lists.newArrayList();
 		for (GetterInfo getterInfo : getObjectGetters(packet)) {
 			Object object = Objects.requireNonNull(ReflectionHelper.invoke(packet.getClass(), getterInfo.getterName(), packet), "Getter " + getterInfo.getterName() + " in packet " + packet.getClass().getName() + " must not return null");

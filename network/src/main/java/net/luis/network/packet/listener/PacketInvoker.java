@@ -1,6 +1,5 @@
 package net.luis.network.packet.listener;
 
-import net.luis.application.GameApplication;
 import net.luis.network.Connection;
 import net.luis.network.packet.Packet;
 import net.luis.utils.util.ReflectionHelper;
@@ -20,10 +19,13 @@ import static net.luis.network.packet.listener.PacketInvokHelper.validateSignatu
 
 public class PacketInvoker {
 	
+	private static final Class<?> GAME_APPLICATION_CLASS = Objects.requireNonNull(ReflectionHelper.getClassForName("net.luis.application.GameApplication"));
+	
 	public static void invoke(Connection connection, Packet packet) {
 		ReflectionHelper.enableExceptionThrowing();
-		GameApplication application = Objects.requireNonNull(GameApplication.getInstance());
-		for (Class<?> clazz : PacketInvokHelper.getSubscribers(application.getApplicationType())) {
+		Object application = ReflectionHelper.invoke(ReflectionHelper.getMethod(GAME_APPLICATION_CLASS, "getInstance"), null);
+		assert GAME_APPLICATION_CLASS.isInstance(application);
+		for (Class<?> clazz : PacketInvokHelper.getSubscribers(ReflectionHelper.invoke(ReflectionHelper.getMethod(GAME_APPLICATION_CLASS, "getApplicationType"), application))) {
 			Object instanceObject = PacketInvokHelper.getInstanceObject(application, clazz, clazz.getAnnotation(PacketSubscriber.class));
 			for (Method method : PacketInvokHelper.getListeners(clazz, packet)) {
 				if (Modifier.isStatic(method.getModifiers())) {
@@ -40,7 +42,7 @@ public class PacketInvoker {
 		ReflectionHelper.disableExceptionThrowing();
 	}
 	
-	private static void invokeStatic(Connection connection, GameApplication application, Packet packet, Method method) {
+	private static void invokeStatic(Connection connection, Object application, Packet packet, Method method) {
 		PacketInvokHelper.setConnectionInstance(connection, method.getDeclaringClass(), null);
 		Object[] objects = PacketInvokHelper.getPacketObjects(application, packet, method);
 		int parameterCount = method.getParameterCount();

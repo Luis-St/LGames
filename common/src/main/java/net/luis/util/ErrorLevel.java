@@ -1,6 +1,7 @@
 package net.luis.util;
 
 import javafx.scene.paint.Color;
+import net.luis.network.buffer.EnumRepresentable;
 
 /**
  *
