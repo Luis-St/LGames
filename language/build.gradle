@@ -19,9 +19,6 @@ javafx {
 }
 
 dependencies {
-	// Modules
-	implementation project(":common")
-	implementation project(":network")
 	// Local
 	implementation "org.controlsfx:ControlsFX:1.1" // Fx
 	implementation "net.luis:LUtils:2.0" // Utility

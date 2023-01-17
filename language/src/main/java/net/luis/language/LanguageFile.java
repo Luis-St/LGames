@@ -2,8 +2,6 @@ package net.luis.language;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.luis.data.codec.CodecConstructor;
-import net.luis.data.codec.CodecGetter;
 import net.luis.utils.util.Utils;
 
 import java.util.List;
@@ -35,12 +33,10 @@ public class LanguageFile {
 		this.language = language;
 	}
 	
-	@CodecConstructor
 	private LanguageFile(Map<String, String> languageTranslations) {
 		this.translations = Utils.mapToList(languageTranslations, Translation::new);
 	}
 	
-	@CodecGetter
 	private Map<String, String> getLanguageKeyMap() {
 		return this.translations.stream().collect(Collectors.toMap(Translation::key, Translation::value));
 	}
