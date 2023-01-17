@@ -7,7 +7,7 @@ import net.luis.Constants;
 import net.luis.client.Client;
 import net.luis.client.fx.Box;
 import net.luis.client.player.LocalPlayer;
-import net.luis.client.game.dice.DiceRenderState;
+import net.luis.game.dice.DiceRenderState;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
 
 import java.util.Objects;

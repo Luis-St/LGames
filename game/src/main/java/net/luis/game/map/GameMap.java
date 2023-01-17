@@ -1,6 +1,7 @@
 package net.luis.game.map;
 
 import com.google.common.collect.ImmutableList;
+import net.luis.application.ApplicationType;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
@@ -26,9 +27,15 @@ public interface GameMap {
 	
 	Logger LOGGER = LogManager.getLogger();
 	
-	void init();
+	default void init() {
 	
-	void init(List<GamePlayer> players);
+	}
+	
+	default void init(List<GamePlayer> players) {
+		if (ApplicationType.CLIENT.isOn()) {
+			this.getFields().forEach(GameField::clear);
+		}
+	}
 	
 	void addFields();
 	
@@ -83,10 +90,14 @@ public interface GameMap {
 		return false;
 	}
 	
-	boolean moveFigureTo(GameFigure figure, GameField field);
+	default boolean moveFigureTo(GameFigure figure, GameField field) {
+		return ApplicationType.SERVER.isOn();
+	}
 	
 	@Nullable
-	GameField getSelectedField();
+	default GameField getSelectedField() {
+		return null;
+	}
 	
 	default void reset() {
 		this.getFields().forEach(GameField::clear);

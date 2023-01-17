@@ -1,4 +1,4 @@
-package net.luis.client.game.dice;
+package net.luis.game.dice;
 
 import javafx.scene.image.ImageView;
 import net.luis.application.GameApplication;

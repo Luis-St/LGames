@@ -1,7 +1,6 @@
-package net.luis.game.type;
+package net.luis.game;
 
 import net.luis.client.Client;
-import net.luis.game.Game;
 import net.luis.game.player.GamePlayerInfo;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;

@@ -1,5 +1,9 @@
 package net.luis.game.map.field;
 
+import javafx.scene.image.ImageView;
+import net.luis.application.ApplicationType;
+import net.luis.application.GameApplication;
+import net.luis.fxutils.FxUtils;
 import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;
 import net.luis.game.player.GamePlayerType;
@@ -19,14 +23,22 @@ public abstract class AbstractGameField implements GameField {
 	private final GameFieldType fieldType;
 	private final GamePlayerType colorType;
 	private final GameFieldPos fieldPos;
+	protected final double fieldSize;
 	private GameFigure figure;
 	private GameResult result = GameResult.NO;
+	private boolean shadowed = false;
 	
-	protected AbstractGameField(GameMap map, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos) {
+	protected AbstractGameField(GameMap map, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos, double fieldSize) {
 		this.map = map;
 		this.fieldType = fieldType;
 		this.colorType = colorType;
 		this.fieldPos = fieldPos;
+		this.fieldSize = fieldSize;
+	}
+	
+	@Override
+	public void init() {
+	
 	}
 	
 	@Override
@@ -57,6 +69,7 @@ public abstract class AbstractGameField implements GameField {
 	@Override
 	public void setFigure(GameFigure figure) {
 		this.figure = figure;
+		this.updateFieldGraphic();
 	}
 	
 	@Override
@@ -67,6 +80,31 @@ public abstract class AbstractGameField implements GameField {
 	@Override
 	public void setResult(GameResult result) {
 		this.result = result;
+		this.updateFieldGraphic();
+	}
+	
+	@Override
+	public boolean isShadowed() {
+		return ApplicationType.CLIENT.isOn() && this.shadowed;
+	}
+	
+	@Override
+	public void setShadowed(boolean shadowed) {
+		this.shadowed = ApplicationType.CLIENT.isOn() && shadowed;
+		this.updateFieldGraphic();
+	}
+	
+	@Override
+	public void updateFieldGraphic() {
+	
+	}
+	
+	protected ImageView makeImage(String path) {
+		return this.makeImage(path, 1.0);
+	}
+	
+	protected ImageView makeImage(String path, double scale) {
+		return FxUtils.makeImageView(Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve(path).toString(), this.fieldSize * scale, this.fieldSize * scale);
 	}
 	
 	@Override
@@ -74,15 +112,18 @@ public abstract class AbstractGameField implements GameField {
 		if (this == o) return true;
 		if (!(o instanceof AbstractGameField that)) return false;
 		
+		if (Double.compare(that.fieldSize, this.fieldSize) != 0) return false;
+		if (this.shadowed != that.shadowed) return false;
+		if (!this.map.equals(that.map)) return false;
 		if (!this.fieldType.equals(that.fieldType)) return false;
 		if (!this.colorType.equals(that.colorType)) return false;
 		if (!this.fieldPos.equals(that.fieldPos)) return false;
-		if (!this.figure.equals(that.figure)) return false;
+		if (!Objects.equals(this.figure, that.figure)) return false;
 		return this.result == that.result;
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.fieldType, this.colorType, this.fieldPos, this.figure, this.result);
+		return Objects.hash(this.map, this.fieldType, this.colorType, this.fieldPos, this.fieldSize, this.figure, this.result, this.shadowed);
 	}
 }

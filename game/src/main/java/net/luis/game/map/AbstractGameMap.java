@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameField;
-import net.luis.game.player.GamePlayer;
 
 import java.util.List;
 
@@ -25,11 +24,6 @@ public abstract class AbstractGameMap implements GameMap {
 	}
 	
 	@Override
-	public void init(List<GamePlayer> players) {
-		this.getFields().forEach(GameField::clear);
-	}
-	
-	@Override
 	public Game getGame() {
 		return this.game;
 	}
@@ -42,5 +36,4 @@ public abstract class AbstractGameMap implements GameMap {
 	protected void addField(GameField field) {
 		this.fields.add(field);
 	}
-	
 }

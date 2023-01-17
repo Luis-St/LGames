@@ -1,11 +1,12 @@
 package net.luis.game.type;
 
+import net.luis.application.ApplicationType;
 import net.luis.client.Client;
 import net.luis.client.screen.game.GameScreen;
 import net.luis.game.Game;
+import net.luis.game.GameFactory;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerInfo;
-import net.luis.network.NetworkSide;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
 import net.luis.utils.math.Mth;
@@ -81,7 +82,7 @@ public class GameType<S extends Game, C extends Game> {
 	}
 	
 	public void openScreen(Client client, C game) {
-		if (NetworkSide.CLIENT.isOn()) {
+		if (ApplicationType.CLIENT.isOn()) {
 			client.setScreen(this.screenFactory.apply(game));
 		}
 	}

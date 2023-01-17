@@ -1,6 +1,7 @@
 package net.luis.game.map.field;
 
 import javafx.scene.image.ImageView;
+import net.luis.application.ApplicationType;
 import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;
 import net.luis.game.player.GamePlayerType;
@@ -52,6 +53,7 @@ public interface GameField {
 		return this.getFigure() == null;
 	}
 	
+	@Deprecated
 	default void clearFigure() {
 		this.setFigure(null);
 	}
@@ -60,22 +62,23 @@ public interface GameField {
 	
 	void setResult(GameResult result);
 	
-	boolean canSelect();
+	default boolean canSelect() {
+		return ApplicationType.CLIENT.isOn();
+	}
 	
 	boolean isShadowed();
 	
 	void setShadowed(boolean shadowed);
 	
-	default void clearShadow() {
+	default void clear() {
+		this.setFigure(null);
 		this.setShadowed(false);
 	}
 	
-	default void clear() {
-		this.clearFigure();
-	}
-	
 	@Nullable
-	ImageView getFieldBackground();
+	default ImageView getFieldBackground() {
+		return null;
+	}
 	
 	void updateFieldGraphic();
 	
