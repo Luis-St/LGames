@@ -181,7 +181,7 @@ public class FriendlyByteBuffer {
 	
 	public <K, V> Map<K, V> readMap(Supplier<K> keyDecoder, Supplier<V> valueDecoder) {
 		Map<K, V> map = Maps.newHashMap();
-		int size = buffer.readInt();
+		int size = this.buffer.readInt();
 		for (int i = 0; i < size; i++) {
 			K key = keyDecoder.get();
 			V value = valueDecoder.get();
