@@ -2,10 +2,9 @@ package net.luis.account.account;
 
 import javafx.scene.control.TreeItem;
 import net.luis.language.TranslationKey;
+import net.luis.network.annotation.DecodingConstructor;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.buffer.EnumRepresentable;
-import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;
@@ -97,7 +96,7 @@ public class Account implements Encodable, Serializable {
 			calendar.set(year, month, day);
 			this.birthday = calendar.getTime();
 		}
-		this.type = EnumRepresentable.fromId(AccountType.class, tag.getInt("Type"));
+		this.type = AccountType.values()[tag.getInt("Type")];
 	}
 	
 	public String getName() {

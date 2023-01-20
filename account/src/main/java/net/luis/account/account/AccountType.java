@@ -1,7 +1,6 @@
 package net.luis.account.account;
 
 import net.luis.language.TranslationKey;
-import net.luis.network.buffer.EnumRepresentable;
 
 /**
  *
@@ -9,31 +8,18 @@ import net.luis.network.buffer.EnumRepresentable;
  *
  */
 
-public enum AccountType implements EnumRepresentable {
+public enum AccountType {
 	
-	USER("user", 0), GUEST("guest", 1), TEST("test", 2), UNKNOWN("unknown", 3);
+	USER("user"), GUEST("guest"), TEST("test"), UNKNOWN("unknown");
 	
 	private final String name;
-	private final int id;
 	
-	AccountType(String name, int id) {
+	AccountType(String name) {
 		this.name = name;
-		this.id = id;
 	}
 	
-	@Override
 	public String getName() {
 		return this.name;
-	}
-	
-	@Override
-	public int getId() {
-		return this.id;
-	}
-	
-	@Override
-	public Enum<AccountType> getDefault() {
-		return UNKNOWN;
 	}
 	
 	public String getTranslation() {

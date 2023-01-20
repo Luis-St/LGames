@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
+import net.luis.utility.data.json.JsonHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +63,7 @@ public class LanguageProvider {
 	private LanguageFile loadLanguage(Path resourceDirectory, Language language) {
 		Path path = language.getPath(resourceDirectory);
 		if (Files.exists(path)) {
-			Optional<Pair<LanguageFile, JsonElement>> optional = JsonOps.INSTANCE.withDecoder(LanguageFile.CODEC).apply(this.loadJsonElement(path)).result();
+			Optional<Pair<LanguageFile, JsonElement>> optional = JsonOps.INSTANCE.withDecoder(LanguageFile.CODEC).apply(JsonHelper.load(resourceDirectory)).result();
 			if (optional.isPresent()) {
 				return optional.get().getFirst();
 			} else {
@@ -72,23 +73,6 @@ public class LanguageProvider {
 		} else {
 			LOGGER.warn("Fail to load language file {} for language {}, since it does not exists", path, language.name());
 			return null;
-		}
-	}
-	
-	@Nullable
-	private JsonElement loadJsonElement(Path path) {
-		try {
-			if (!Files.exists(path)) {
-				LOGGER.warn("Unable to load file {}, since it does not exists", path);
-				return null;
-			}
-			BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
-			JsonElement element = JsonParser.parseReader(reader);
-			reader.close();
-			return element;
-		} catch (IOException e) {
-			LOGGER.error("Fail to load json element from file {}", path);
-			throw new RuntimeException(e);
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package net.luis.settings;
+package net.luis.utility.settings;
 
 import com.google.common.collect.Lists;
 import net.luis.data.tag.TagUtil;

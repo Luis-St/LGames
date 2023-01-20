@@ -6,7 +6,7 @@ import net.luis.client.Client;
 import net.luis.client.fx.ScreenScene;
 import net.luis.client.fx.Showable;
 import net.luis.language.TranslationKey;
-import net.luis.util.Tickable;
+import net.luis.utility.Tickable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

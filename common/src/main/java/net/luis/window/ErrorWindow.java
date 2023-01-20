@@ -7,15 +7,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import net.luis.account.AccountServer;
-import net.luis.client.Client;
+import net.luis.application.GameApplication;
 import net.luis.language.TranslationKey;
-import net.luis.network.NetworkSide;
-import net.luis.server.Server;
 import net.luis.util.ErrorLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  *
@@ -41,13 +40,7 @@ public class ErrorWindow extends AbstractWindow {
 	
 	public static ErrorWindow makeCrash(String errorMessage) {
 		return new ErrorWindow("Error", errorMessage, () -> {
-			if (NetworkSide.CLIENT.isOn()) {
-				Client.getInstance().exit();
-			} else if (NetworkSide.ACCOUNT.isOn()) {
-				AccountServer.getInstance().exit();
-			} else if (NetworkSide.SERVER.isOn()) {
-				Server.getInstance().exit();
-			}
+			Objects.requireNonNull(GameApplication.getInstance()).exit();
 			LOGGER.trace("Something went wrong while handle a critical error");
 		}).setErrorLevel(ErrorLevel.CRITICAL);
 	}

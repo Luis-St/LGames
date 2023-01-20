@@ -1,38 +1,23 @@
 package net.luis.info;
 
-import net.luis.network.buffer.EnumRepresentable;
-
 /**
  *
  * @author Luis-st
  *
  */
 
-public enum Result implements EnumRepresentable {
+public enum Result {
 	
-	SUCCESS("success", 0), FAILED("failed", 1), UNKNOWN("unknown", 2);
+	SUCCESS("success"), FAILED("failed"), UNKNOWN("unknown");
 	
 	private final String name;
-	private final int id;
 	
-	Result(String name, int id) {
+	Result(String name) {
 		this.name = name;
-		this.id = id;
 	}
 	
-	@Override
 	public String getName() {
 		return this.name;
-	}
-	
-	@Override
-	public int getId() {
-		return this.id;
-	}
-	
-	@Override
-	public Enum<Result> getDefault() {
-		return UNKNOWN;
 	}
 	
 	@Override

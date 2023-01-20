@@ -1,0 +1,52 @@
+plugins {
+    id "java"
+    id "org.openjfx.javafxplugin"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://libraries.minecraft.net"
+    }
+    maven {
+        url uri("${project.rootProject.projectDir}/maven/repositories")
+    }
+}
+
+javafx {
+    version = "17"
+    modules = ["javafx.controls"]
+}
+
+dependencies {
+    // Local
+    implementation "org.controlsfx:ControlsFX:1.1" // Fx
+    implementation "net.luis:LUtils:2.0" // Utility
+    implementation "net.luis:FxUtils:2.2" // Fx Utility
+    // Google
+    implementation "com.google.guava:guava:31.0.1-jre" // Utility
+    implementation "com.google.code.gson:gson:2.8.9" // Json
+    // Apache
+    implementation "org.apache.logging.log4j:log4j-api:2.14.1" // Logging
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.1' // Logging
+    implementation "org.apache.commons:commons-lang3:3.0" // Utility
+    implementation "org.apache.commons:commons-email:1.5" // E-Mail
+    implementation "commons-codec:commons-codec:1.15" // Cryptic
+    // Netty
+    implementation 'io.netty:netty-all:4.1.25.Final' // Network
+    // Other
+    implementation "net.sf.jopt-simple:jopt-simple:5.0.4" // Startup
+    implementation "com.mojang:datafixerupper:4.0.26" // Codec/Json helper
+    implementation "org.jetbrains:annotations:23.0.0" // Annotations
+    // Test
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.1"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.8.1"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava {
+    options.compilerArgs << "-parameters"
+}

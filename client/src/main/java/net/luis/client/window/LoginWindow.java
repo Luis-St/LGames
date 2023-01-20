@@ -26,7 +26,7 @@ import net.luis.network.packet.Packet;
 import net.luis.network.packet.account.ClientLoginPacket;
 import net.luis.network.packet.account.ClientLogoutPacket;
 import net.luis.network.packet.account.ClientRegistrationPacket;
-import net.luis.util.Util;
+import net.luis.utility.Util;
 import net.luis.window.AbstractWindow;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;

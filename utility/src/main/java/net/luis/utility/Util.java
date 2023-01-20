@@ -1,12 +1,12 @@
-package net.luis.util;
+package net.luis.utility;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import net.luis.Constants;
-import net.luis.util.streams.DebugPrintStream;
-import net.luis.util.streams.InfoPrintStream;
+import net.luis.utility.streams.DebugPrintStream;
+import net.luis.utility.streams.InfoPrintStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

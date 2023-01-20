@@ -1,4 +1,4 @@
-package net.luis.data;
+package net.luis.utility.data;
 
 import java.io.IOException;
 

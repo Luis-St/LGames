@@ -1,4 +1,4 @@
-package net.luis.data.tag;
+package net.luis.utility.data.tag;
 
 import net.luis.language.TranslationKey;
 import net.luis.utils.data.tag.tags.CompoundTag;

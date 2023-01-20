@@ -1,38 +1,23 @@
 package net.luis.loading;
 
-import net.luis.network.buffer.EnumRepresentable;
-
 /**
  *
  * @author Luis-st
  *
  */
 
-public enum LaunchState implements EnumRepresentable {
+public enum LaunchState {
 	
-	STARTING("starting", 0), STARTED("started", 1), STOPPING("stopping", 2), STOPPED("stopped", 3), UNKNOWN("unknown", 4);
+	STARTING("starting"), STARTED("started"), STOPPING("stopping"), STOPPED("stopped"), UNKNOWN("unknown");
 	
 	private final String name;
-	private final int id;
 	
-	LaunchState(String name, int id) {
+	LaunchState(String name) {
 		this.name = name;
-		this.id = id;
 	}
 	
-	@Override
 	public String getName() {
 		return this.name;
-	}
-	
-	@Override
-	public int getId() {
-		return this.id;
-	}
-	
-	@Override
-	public Enum<LaunchState> getDefault() {
-		return UNKNOWN;
 	}
 	
 	@Override

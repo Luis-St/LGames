@@ -21,7 +21,7 @@ import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
-import net.luis.util.Util;
+import net.luis.utility.Util;
 
 /**
  *

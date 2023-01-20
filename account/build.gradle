@@ -23,6 +23,7 @@ dependencies {
 	implementation project(":common")
 	implementation project(":language")
 	implementation project(":network")
+	implementation project(":utility")
 	// Local
 	implementation "org.controlsfx:ControlsFX:1.1" // Fx
 	implementation "net.luis:LUtils:2.0" // Utility

@@ -1,4 +1,4 @@
-package net.luis.settings;
+package net.luis.utility.settings;
 
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.Tag;

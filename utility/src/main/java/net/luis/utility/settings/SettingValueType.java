@@ -1,4 +1,4 @@
-package net.luis.settings;
+package net.luis.utility.settings;
 
 import org.jetbrains.annotations.NotNull;
 

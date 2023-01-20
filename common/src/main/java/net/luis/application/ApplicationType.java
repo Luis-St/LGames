@@ -3,7 +3,6 @@ package net.luis.application;
 import net.luis.account.AccountServer;
 import net.luis.client.Client;
 import net.luis.server.Server;
-import net.luis.network.buffer.EnumRepresentable;
 
 /**
  *
@@ -11,32 +10,24 @@ import net.luis.network.buffer.EnumRepresentable;
  *
  */
 
-public enum ApplicationType implements EnumRepresentable {
+public enum ApplicationType {
 	
-	CLIENT("virtual game collection", "client", 0), SERVER("account server", "server", 1), ACCOUNT("virtual game collection server", "account", 2);
+	CLIENT("virtual game collection", "client"), SERVER("account server", "server"), ACCOUNT("virtual game collection server", "account");
 	
 	private final String name;
 	private final String shortName;
-	private final int id;
 	
-	ApplicationType(String name, String shortName, int id) {
+	ApplicationType(String name, String shortName) {
 		this.name = name;
 		this.shortName = shortName;
-		this.id = id;
 	}
 	
-	@Override
 	public String getName() {
 		return this.name;
 	}
 	
 	public String getShortName() {
 		return this.shortName;
-	}
-	
-	@Override
-	public int getId() {
-		return this.id;
 	}
 	
 	public boolean isOn() {

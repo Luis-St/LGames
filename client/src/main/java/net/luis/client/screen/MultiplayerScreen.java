@@ -17,7 +17,7 @@ import net.luis.language.TranslationKey;
 import net.luis.network.ConnectionHandler;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.server.ClientJoinPacket;
-import net.luis.util.Util;
+import net.luis.utility.Util;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;

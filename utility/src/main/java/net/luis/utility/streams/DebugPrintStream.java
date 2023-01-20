@@ -1,4 +1,4 @@
-package net.luis.util.streams;
+package net.luis.utility.streams;
 
 import java.io.OutputStream;
 

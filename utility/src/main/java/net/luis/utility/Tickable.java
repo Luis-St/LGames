@@ -1,4 +1,4 @@
-package net.luis.util;
+package net.luis.utility;
 
 /**
  *

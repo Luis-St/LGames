@@ -19,7 +19,7 @@ import net.luis.network.packet.client.game.CancelPlayGameRequestPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.PlayGameRequestPacket;
-import net.luis.util.Util;
+import net.luis.utility.Util;
 
 import java.util.List;
 

@@ -4,6 +4,8 @@ import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.util.ReflectionHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -18,11 +20,14 @@ public class EncodableObject implements Encodable {
 		this.object = object;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@DecodingConstructor
+	@SuppressWarnings("unchecked")
 	private EncodableObject(FriendlyByteBuffer buffer) {
+		ReflectionHelper.enableExceptionLogging();
 		Class<? extends Encodable> clazz = (Class<? extends Encodable>) ReflectionHelper.getClassForName(buffer.readString());
-		this.object = buffer.read(clazz);
+		ReflectionHelper.disableExceptionLogging();
+		assert clazz != null;
+		this.object = Objects.requireNonNull(buffer.read(clazz), "Can not read object of type " + clazz.getName() + " because the type does not exists");
 	}
 	
 	@Override
@@ -35,8 +40,8 @@ public class EncodableObject implements Encodable {
 		return this.object;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Nullable
+	@SuppressWarnings("unchecked")
 	public <T extends Encodable> T getAs(Class<T> clazz) {
 		if (clazz.isInstance(this.object)) {
 			return (T) this.object;

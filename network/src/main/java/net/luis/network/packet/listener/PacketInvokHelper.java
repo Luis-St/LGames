@@ -8,9 +8,11 @@ import net.luis.utils.util.ReflectionHelper;
 import net.luis.utils.util.SimpleEntry;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -112,34 +114,53 @@ class PacketInvokHelper {
 		return Lists.newArrayList(packet.getClass().getDeclaredMethods()).stream().filter((method) -> {
 			return method.isAnnotationPresent(PacketGetter.class);
 		}).map((method) -> {
+			String packetName = packet.getClass().getName();
+			boolean nullable = method.isAnnotationPresent(Nullable.class);
 			PacketGetter getter = method.getAnnotation(PacketGetter.class);
 			if (getter.parameterName().isEmpty()) {
 				if (!getter.getterPrefix().isEmpty()) {
 					String prefix = getter.getterPrefix();
 					if (method.getName().startsWith(prefix)) {
 						String name = method.getName().substring(prefix.length());
-						return new GetterInfo(name.substring(0, 1).toLowerCase() + name.substring(1), method.getName());
+						return new GetterInfo(packetName, name.substring(0, 1).toLowerCase() + name.substring(1), method.getName(), nullable);
 					} else {
 						throw new RuntimeException("Getters in packet " + packet.getClass().getName() + " specify a prefix, but do not start with the prefix '" + prefix + "'");
 					}
 				} else if (method.getName().startsWith("get")) {
 					String name = method.getName().substring(3);
-					return new GetterInfo(name.substring(0, 1).toLowerCase() + name.substring(1), method.getName());
+					return new GetterInfo(packetName, name.substring(0, 1).toLowerCase() + name.substring(1), method.getName(), nullable);
 				} else if (method.getName().startsWith("is")) {
 					String name = method.getName().substring(2);
-					return new GetterInfo(name.substring(0, 1).toLowerCase() + name.substring(1), method.getName());
+					return new GetterInfo(packetName, name.substring(0, 1).toLowerCase() + name.substring(1), method.getName(), nullable);
 				} else {
-					throw new RuntimeException("Method " + method.getName() + " in packet " + packet.getClass().getName() + " was declared as a getter, but does not specify a valid prefix");
+					throw new RuntimeException("Method " + method.getName() + " in packet " + packetName + " was declared as a getter, but does not specify a valid prefix");
 				}
 			}
-			return new GetterInfo(getter.parameterName(), method.getName());
+			return new GetterInfo(packetName, getter.parameterName(), method.getName(), nullable);
 		}).toArray(GetterInfo[]::new);
 	}
 	
+	private static void checkNullValues(Method method, List<Entry<GetterInfo, Object>> objects, List<Object> values) {
+		Parameter[] parameters = method.getParameters();
+		if (parameters.length != values.size()) {
+			throw createException(method, values.toArray());
+		}
+		for (int i = 0; i < parameters.length; i++) {
+			if (values.get(i) == null) {
+				GetterInfo info = objects.get(i).getKey();
+				if (!info.nullable()) {
+					throw new RuntimeException("Getter " + info.getterName() + " in packet " + info.packetName() + " returned null but the getter is not marked as Nullable");
+				} else if (!parameters[0].isAnnotationPresent(Nullable.class)) {
+					throw new RuntimeException("Parameter " + parameters[0].getName() + " of type " + parameters[0].getType().getName() + " is not marked as Nullable but the value returned from the packet getter is null");
+				}
+			}
+		}
+	}
+	
 	private static Object[] sortBySignature(Object application, Method method, List<Entry<GetterInfo, Object>> objects, List<Class<?>> objectInfo) {
-		List<Object> parameters = Lists.newArrayList();
+		List<Object> values = Lists.newArrayList();
 		if (application != null) {
-			parameters.add(application);
+			values.add(application);
 		}
 		for (int i = 0; i < method.getParameters().length; i++) {
 			Class<?> parameter = method.getParameterTypes()[i];
@@ -148,19 +169,20 @@ class PacketInvokHelper {
 				boolean multipleObjects = Collections.frequency(objectInfo, entry.getValue().getClass()) > 1;
 				if (ClassUtils.primitiveToWrapper(parameter).isInstance(entry.getValue())) {
 					if (entry.getKey().parameterName().equals(parameterName)) {
-						parameters.add(entry.getValue());
+						values.add(entry.getValue());
 						break;
 					} else if (!multipleObjects) {
-						parameters.add(entry.getValue());
+						values.add(entry.getValue());
 						break;
 					}
 				}
 			}
 		}
-		if (parameters.size() != objects.size()) {
+		if (values.size() != objects.size()) {
 			throw new RuntimeException("Sorting parameters of method " + method.getDeclaringClass().getName() + "#" + method.getName() + " by signature failed");
 		}
-		return parameters.toArray();
+		checkNullValues(method, objects, values);
+		return values.toArray();
 	}
 	
 	private static List<Class<?>> generateObjectInfo(List<Entry<GetterInfo, Object>> objects) {
@@ -174,8 +196,7 @@ class PacketInvokHelper {
 	static Object[] getPacketObjects(Object application, Packet packet, Method method) {
 		List<Entry<GetterInfo, Object>> objects = Lists.newArrayList();
 		for (GetterInfo getterInfo : getObjectGetters(packet)) {
-			Object object = Objects.requireNonNull(ReflectionHelper.invoke(packet.getClass(), getterInfo.getterName(), packet), "Getter " + getterInfo.getterName() + " in packet " + packet.getClass().getName() + " must not return null");
-			objects.add(new SimpleEntry<>(getterInfo, object));
+			objects.add(new SimpleEntry<>(getterInfo, ReflectionHelper.invoke(packet.getClass(), getterInfo.getterName(), packet)));
 		}
 		return sortBySignature(application, method, objects, generateObjectInfo(objects));
 	}
@@ -199,11 +220,11 @@ class PacketInvokHelper {
 	static RuntimeException createException(Method method, Object... objects) {
 		String name = method.getDeclaringClass().getSimpleName() + "#" + method.getName();
 		String expectedParameters = Arrays.stream(method.getParameterTypes()).map(Class::getName).toList().toString();
-		String obtainedParameters = Arrays.stream(objects).map(Object::getClass).map(Class::getName).toList().toString();
+		String obtainedParameters = Arrays.stream(objects).map(Object::getClass).map(Class::getName).toList().toString(); // TODO: add null check
 		return new RuntimeException("Invalid method signature of method " + name + ", expected parameter " + expectedParameters + " but " + obtainedParameters + " was passed");
 	}
 	
-	private record GetterInfo(String parameterName, String getterName) {
+	private record GetterInfo(String packetName, String parameterName, String getterName, boolean nullable) {
 		
 	}
 	

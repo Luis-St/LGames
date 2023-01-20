@@ -1,4 +1,4 @@
-package net.luis.data.json;
+package net.luis.utility.data.json;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

@@ -5,9 +5,9 @@ import net.luis.language.Language;
 import net.luis.language.LanguageProvider;
 import net.luis.language.Languages;
 import net.luis.language.TranslationKey;
-import net.luis.settings.AbstractSettings;
-import net.luis.settings.Setting;
-import net.luis.settings.SettingValueTypes;
+import net.luis.utility.settings.AbstractSettings;
+import net.luis.utility.settings.Setting;
+import net.luis.utility.settings.SettingValueTypes;
 import net.luis.utils.data.tag.tags.CompoundTag;
 
 /**

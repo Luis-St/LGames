@@ -14,3 +14,6 @@ project(":wins4").projectDir = file("/games/wins4")
 include "language"
 include "network"
 include "server"
+
+include "utility"
+

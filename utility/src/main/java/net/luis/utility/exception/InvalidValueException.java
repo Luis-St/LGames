@@ -1,4 +1,4 @@
-package net.luis.exception;
+package net.luis.utility.exception;
 
 import java.io.Serial;
 

@@ -42,7 +42,7 @@ import net.luis.language.TranslationKey;
 import net.luis.network.Connection;
 import net.luis.network.packet.PacketDecoder;
 import net.luis.network.packet.PacketEncoder;
-import net.luis.util.ExceptionHandler;
+import net.luis.utility.ExceptionHandler;
 import net.luis.utils.data.serialization.SerializationUtils;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
