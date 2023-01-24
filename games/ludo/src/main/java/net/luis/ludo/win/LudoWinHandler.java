@@ -1,11 +1,10 @@
-package net.luis.server.games.ludo.win;
+package net.luis.ludo.win;
 
 import net.luis.game.Game;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.win.AbstractWinHandler;
-import net.luis.server.games.ludo.player.LudoServerPlayer;
 
 /**
  *
@@ -22,10 +21,7 @@ public class LudoWinHandler extends AbstractWinHandler {
 	
 	@Override
 	public boolean hasPlayerFinished(GamePlayer gamePlayer) {
-		if (gamePlayer instanceof LudoServerPlayer player) {
-			return player.hasAllFiguresAt(GameField::isWin);
-		}
-		return false;
+		return gamePlayer.hasAllFiguresAt(GameField::isWin);
 	}
 	
 	@Override

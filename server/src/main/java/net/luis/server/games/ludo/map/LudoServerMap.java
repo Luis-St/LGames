@@ -156,46 +156,6 @@ public class LudoServerMap extends AbstractServerGameMap {
 	}
 	
 	@Override
-	public List<GameField> getHomeFields(GamePlayerType playerType) {
-		return switch ((LudoPlayerType) playerType) {
-			case LudoPlayerType.GREEN -> this.homeFields.subList(0, 4);
-			case LudoPlayerType.YELLOW -> this.homeFields.subList(4, 8);
-			case LudoPlayerType.BLUE -> this.homeFields.subList(8, 12);
-			case LudoPlayerType.RED -> this.homeFields.subList(12, 16);
-			default -> {
-				GameMap.LOGGER.warn("Fail to get home fields for type {}", playerType);
-				yield Lists.newArrayList();
-			}
-		};
-	}
-	
-	@Override
-	public List<GameField> getStartFields(GamePlayerType playerType) {
-		return switch ((LudoPlayerType) playerType) {
-			case LudoPlayerType.GREEN, LudoPlayerType.YELLOW, LudoPlayerType.BLUE, LudoPlayerType.RED ->
-					Lists.newArrayList(this.getFields().get(Objects.requireNonNull(LudoFieldPos.of(playerType, 0)).getPosition()));
-			default -> {
-				GameMap.LOGGER.warn("Fail to get start field for type {}", playerType);
-				yield Lists.newArrayList();
-			}
-		};
-	}
-	
-	@Override
-	public List<GameField> getWinFields(GamePlayerType playerType) {
-		return switch ((LudoPlayerType) playerType) {
-			case LudoPlayerType.GREEN -> this.winFields.subList(0, 4);
-			case LudoPlayerType.YELLOW -> this.winFields.subList(4, 8);
-			case LudoPlayerType.BLUE -> this.winFields.subList(8, 12);
-			case LudoPlayerType.RED -> this.winFields.subList(12, 16);
-			default -> {
-				GameMap.LOGGER.warn("Fail to get win fields for type {}", playerType);
-				yield Lists.newArrayList();
-			}
-		};
-	}
-	
-	@Override
 	public boolean moveFigureTo(GameFigure figure, GameField field) {
 		String playerName = figure.getPlayer().getPlayer().getProfile().getName();
 		if (field != null) {

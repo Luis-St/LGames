@@ -2,7 +2,10 @@ package net.luis.game.player;
 
 import net.luis.application.ApplicationType;
 import net.luis.game.Game;
+import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.figure.GameFiguresFactory;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,12 +19,14 @@ public abstract class AbstractGamePlayer implements GamePlayer {
 	private final Game game;
 	private final Player player;
 	private final GamePlayerType playerType;
+	private final List<GameFigure> figures;
 	private int rollCount = 0;
 	
-	protected AbstractGamePlayer(Game game, Player player, GamePlayerType playerType) {
+	protected AbstractGamePlayer(Game game, Player player, GamePlayerType playerType, GameFiguresFactory figuresFactory) {
 		this.game = game;
 		this.player = player;
 		this.playerType = playerType;
+		this.figures = figuresFactory.create(this);
 	}
 	
 	@Override
@@ -37,6 +42,11 @@ public abstract class AbstractGamePlayer implements GamePlayer {
 	@Override
 	public GamePlayerType getPlayerType() {
 		return this.playerType;
+	}
+	
+	@Override
+	public List<GameFigure> getFigures() {
+		return this.figures;
 	}
 	
 	@Override

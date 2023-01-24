@@ -7,6 +7,8 @@ import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.GameProfile;
+import net.luis.game.player.Player;
 import net.luis.game.type.GameType;
 import net.luis.game.win.WinHandler;
 import net.luis.network.Connection;
@@ -15,8 +17,6 @@ import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.ExitGamePacket;
 import net.luis.network.packet.client.game.StopGamePacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
-import net.luis.game.player.GameProfile;
-import net.luis.game.player.Player;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -105,8 +105,9 @@ public interface Game {
 	}
 	
 	default void nextPlayer(boolean random) {
-		ApplicationType.SERVER.executeIfOn(() -> {
-			List<? extends GamePlayer> players = this.getPlayers();
+		if (ApplicationType.SERVER.isOn()) {
+			List<? extends GamePlayer> players = Lists.newArrayList(this.getPlayers());
+			players.removeIf(Objects.requireNonNull(this.getWinHandler()).getWinOrder()::contains);
 			if (!players.isEmpty()) {
 				if (random) {
 					this.setPlayer(players.get(new Random().nextInt(players.size())));
@@ -132,7 +133,7 @@ public interface Game {
 			} else {
 				LOGGER.warn("Unable to change player, since there is no player present");
 			}
-		});
+		}
 	}
 	
 	default boolean removePlayer(GamePlayer gamePlayer, boolean sendExit) {

@@ -1,10 +1,10 @@
-package net.luis.client.games.ludo.player.figure;
+package net.luis.ludo.player.figure;
 
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.figure.AbstractGameFigure;
 import net.luis.game.player.figure.GameFigure;
-import net.luis.games.ludo.map.field.LudoFieldPos;
+import net.luis.ludo.map.field.LudoFieldPos;
 import net.luis.utils.util.ToString;
 
 import java.util.UUID;
@@ -15,9 +15,9 @@ import java.util.UUID;
  *
  */
 
-public class LudoClientFigure extends AbstractGameFigure {
+public class LudoFigure extends AbstractGameFigure {
 	
-	public LudoClientFigure(GamePlayer player, int count, UUID uuid) {
+	public LudoFigure(GamePlayer player, int count, UUID uuid) {
 		super(player, count, uuid);
 	}
 	

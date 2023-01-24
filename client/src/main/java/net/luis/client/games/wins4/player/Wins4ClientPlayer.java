@@ -7,8 +7,8 @@ import net.luis.game.Game;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
-import net.luis.game.player.figure.GameFigure;
 import net.luis.game.player.Player;
+import net.luis.game.player.figure.GameFigure;
 import net.luis.utils.util.ToString;
 
 import java.util.List;

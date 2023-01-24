@@ -2,10 +2,10 @@ package net.luis.ludo.player;
 
 import com.google.common.collect.Lists;
 import javafx.scene.image.ImageView;
-import net.luis.language.TranslationKey;
 import net.luis.application.GameApplication;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.player.GamePlayerType;
+import net.luis.language.TranslationKey;
 
 import java.util.List;
 import java.util.Objects;

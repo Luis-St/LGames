@@ -23,6 +23,7 @@ import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.GameProfile;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ludo.map.field.LudoFieldPos;
 import net.luis.games.ludo.map.field.LudoFieldType;
@@ -31,7 +32,6 @@ import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
-import net.luis.game.player.GameProfile;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 
@@ -272,46 +272,6 @@ public class LudoClientMap extends AbstractClientGameMap implements GridPaneWrap
 		}
 		GameMap.LOGGER.warn("Fail to get next field for figure {} of player {}, since the current field is null", figure.getCount(), playerName);
 		return null;
-	}
-	
-	@Override
-	public List<GameField> getHomeFields(GamePlayerType playerType) {
-		switch ((LudoPlayerType) playerType) {
-			case LudoPlayerType.GREEN -> this.homeFields.subList(0, 4);
-			case LudoPlayerType.YELLOW -> this.homeFields.subList(4, 8);
-			case LudoPlayerType.BLUE -> this.homeFields.subList(8, 12);
-			case LudoPlayerType.RED -> this.homeFields.subList(12, 16);
-			default -> {
-			}
-		}
-		GameMap.LOGGER.warn("Fail to get home fields for type {}", playerType);
-		return Lists.newArrayList();
-	}
-	
-	@Override
-	public List<GameField> getStartFields(GamePlayerType playerType) {
-		return switch ((LudoPlayerType) playerType) {
-			case LudoPlayerType.GREEN, LudoPlayerType.YELLOW, LudoPlayerType.BLUE, LudoPlayerType.RED ->
-					Lists.newArrayList(this.getFields().get(Objects.requireNonNull(LudoFieldPos.of(playerType, 0)).getPosition()));
-			default -> {
-				GameMap.LOGGER.warn("Fail to get start field for type {}", playerType);
-				yield Lists.newArrayList();
-			}
-		};
-	}
-	
-	@Override
-	public List<GameField> getWinFields(GamePlayerType playerType) {
-		switch ((LudoPlayerType) playerType) {
-			case LudoPlayerType.GREEN -> this.homeFields.subList(0, 4);
-			case LudoPlayerType.YELLOW -> this.homeFields.subList(4, 8);
-			case LudoPlayerType.BLUE -> this.homeFields.subList(8, 12);
-			case LudoPlayerType.RED -> this.homeFields.subList(12, 16);
-			default -> {
-			}
-		}
-		GameMap.LOGGER.warn("Fail to get win fields for type {}", playerType);
-		return Lists.newArrayList();
 	}
 	
 	@Override

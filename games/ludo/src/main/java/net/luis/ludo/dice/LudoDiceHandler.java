@@ -1,4 +1,4 @@
-package net.luis.server.games.ludo.dice;
+package net.luis.ludo.dice;
 
 import com.google.common.collect.Lists;
 import net.luis.game.Game;
@@ -9,7 +9,6 @@ import net.luis.game.dice.SimpleDice;
 import net.luis.game.map.field.GameField;
 import net.luis.game.player.GamePlayer;
 import net.luis.network.packet.client.game.CanSelectGameFieldPacket;
-import net.luis.server.player.ServerPlayer;
 import net.luis.utils.util.Utils;
 
 import java.util.List;
@@ -27,14 +26,13 @@ public class LudoDiceHandler implements DiceHandler {
 	private final int min;
 	private final int max;
 	private final Dice dice;
-	private final List<PlayerDiceInfo> countHistory;
+	private final List<PlayerDiceInfo> countHistory = Lists.newArrayList();
 	
 	public LudoDiceHandler(Game game, int min, int max) {
 		this.game = game;
 		this.min = min;
 		this.max = max;
 		this.dice = new SimpleDice(this.min, this.max);
-		this.countHistory = Lists.newArrayList();
 	}
 	
 	@Override
@@ -95,8 +93,8 @@ public class LudoDiceHandler implements DiceHandler {
 	
 	@Override
 	public void performGameAction(GamePlayer gamePlayer, int count) {
-		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
-			Objects.requireNonNull(player.getConnection()).send(new CanSelectGameFieldPacket());
+		if (!gamePlayer.getPlayer().isClient()) {
+			Objects.requireNonNull(gamePlayer.getPlayer().getConnection()).send(new CanSelectGameFieldPacket());
 		}
 	}
 	
