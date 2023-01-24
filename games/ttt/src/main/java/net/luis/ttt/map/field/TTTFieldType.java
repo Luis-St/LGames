@@ -1,6 +1,6 @@
 package net.luis.ttt.map.field;
 
-import net.vgc.game.map.field.GameFieldType;
+import net.luis.game.map.field.GameFieldType;
 
 /**
  *
@@ -10,29 +10,16 @@ import net.vgc.game.map.field.GameFieldType;
 
 public enum TTTFieldType implements GameFieldType {
 	
-	DEFAULT("default", 0);
+	DEFAULT("default");
 	
 	private final String name;
-	private final int id;
 	
-	TTTFieldType(String name, int id) {
+	TTTFieldType(String name) {
 		this.name = name;
-		this.id = id;
 	}
 	
-	@Override
 	public String getName() {
 		return this.name;
-	}
-	
-	@Override
-	public int getId() {
-		return this.id;
-	}
-	
-	@Override
-	public Enum<TTTFieldType> getDefault() {
-		return DEFAULT;
 	}
 	
 	@Override

@@ -2,9 +2,10 @@ package net.luis.ludo.player;
 
 import com.google.common.collect.Lists;
 import javafx.scene.image.ImageView;
+import net.luis.language.TranslationKey;
+import net.luis.application.GameApplication;
 import net.luis.fxutils.FxUtils;
-import net.vgc.game.player.GamePlayerType;
-import net.vgc.language.TranslationKey;
+import net.luis.game.player.GamePlayerType;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,30 +18,22 @@ import java.util.Objects;
 
 public enum LudoPlayerType implements GamePlayerType {
 	
-	GREEN("green", 0, new TranslationKey("screen.ludo.green_player"), "textures/ludo/figure/figure_green"), YELLOW("yellow", 1, new TranslationKey("screen.ludo.yellow_player"), "textures/ludo/figure/figure_yellow"),
-	BLUE("blue", 2, new TranslationKey("screen.ludo.blue_player"), "textures/ludo/figure/figure_blue"), RED("red", 3, new TranslationKey("screen.ludo.red_player"), "textures/ludo/figure/figure_red"),
-	NO("no", 4, new TranslationKey("screen.ludo.no_player"), null);
+	GREEN("green", new TranslationKey("screen.ludo.green_player"), "textures/ludo/figure/figure_green"), YELLOW("yellow", new TranslationKey("screen.ludo.yellow_player"), "textures/ludo/figure/figure_yellow"),
+	BLUE("blue", new TranslationKey("screen.ludo.blue_player"), "textures/ludo/figure/figure_blue"), RED("red", new TranslationKey("screen.ludo.red_player"), "textures/ludo/figure/figure_red"),
+	NO("no", new TranslationKey("screen.ludo.no_player"), null);
 	
 	private final String name;
-	private final int id;
 	private final TranslationKey translation;
 	private final String path;
 	
-	LudoPlayerType(String name, int id, TranslationKey translation, String path) {
+	LudoPlayerType(String name, TranslationKey translation, String path) {
 		this.name = name;
-		this.id = id;
 		this.translation = translation;
 		this.path = path;
 	}
 	
-	@Override
 	public String getName() {
 		return this.name;
-	}
-	
-	@Override
-	public int getId() {
-		return this.id;
 	}
 	
 	@Override
@@ -57,11 +50,6 @@ public enum LudoPlayerType implements GamePlayerType {
 			case RED -> Lists.newArrayList(GREEN, YELLOW, BLUE);
 			default -> Lists.newArrayList(NO);
 		};
-	}
-	
-	@Override
-	public Enum<LudoPlayerType> getDefault() {
-		return NO;
 	}
 	
 	@Override

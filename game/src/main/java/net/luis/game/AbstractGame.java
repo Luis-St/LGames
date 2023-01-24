@@ -10,7 +10,7 @@ import net.luis.game.player.GamePlayerFactory;
 import net.luis.game.player.GamePlayerInfo;
 import net.luis.game.win.WinHandler;
 import net.luis.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.utils.util.Utils;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,7 +74,7 @@ public abstract class AbstractGame implements Game {
 		LOGGER.info("Update current player from {} to {}", Utils.runIfNotNull(this.getPlayer(), GamePlayer::getName), Utils.runIfNotNull(player, GamePlayer::getName));
 		this.player = player;
 		if (ApplicationType.SERVER.isOn() && this.getPlayer() != null) {
-			this.broadcastPlayers(new CurrentPlayerUpdatePacket(this.getPlayer()));
+			this.broadcastPlayers(new CurrentPlayerUpdatePacket(this.getPlayer().getPlayer().getProfile()));
 		}
 	}
 	

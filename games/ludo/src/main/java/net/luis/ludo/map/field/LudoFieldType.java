@@ -1,6 +1,6 @@
 package net.luis.ludo.map.field;
 
-import net.vgc.game.map.field.GameFieldType;
+import net.luis.game.map.field.GameFieldType;
 
 /**
  *
@@ -10,29 +10,16 @@ import net.vgc.game.map.field.GameFieldType;
 
 public enum LudoFieldType implements GameFieldType {
 	
-	DEFAULT("default", 0), HOME("home", 1), WIN("win", 2);
+	DEFAULT("default"), HOME("home"), WIN("win");
 	
 	private final String name;
-	private final int id;
 	
-	LudoFieldType(String name, int id) {
+	LudoFieldType(String name) {
 		this.name = name;
-		this.id = id;
 	}
 	
-	@Override
 	public String getName() {
 		return this.name;
-	}
-	
-	@Override
-	public int getId() {
-		return this.id;
-	}
-	
-	@Override
-	public Enum<LudoFieldType> getDefault() {
-		return DEFAULT;
 	}
 	
 	@Override

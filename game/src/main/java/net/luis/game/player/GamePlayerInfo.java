@@ -1,8 +1,8 @@
 package net.luis.game.player;
 
 import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableEnum;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.player.GameProfile;
 import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.util.ToString;
 
@@ -19,12 +19,13 @@ import java.util.UUID;
 public class GamePlayerInfo implements Encodable {
 	
 	private final GameProfile profile;
-	private final GamePlayerType playerType;
+	private final EncodableEnum playerType;
 	private final List<UUID> uuids;
 	
+	@SuppressWarnings("unchecked")
 	public GamePlayerInfo(GameProfile profile, GamePlayerType playerType, List<UUID> uuids) {
 		this.profile = profile;
-		this.playerType = playerType;
+		this.playerType = new EncodableEnum((Enum<? extends GamePlayerType>) playerType);
 		this.uuids = uuids;
 	}
 	
@@ -32,7 +33,7 @@ public class GamePlayerInfo implements Encodable {
 	public GamePlayerInfo(FriendlyByteBuffer buffer) {
 		GameProfile profile = buffer.read(GameProfile.class);
 		this.profile = profile.equals(GameProfile.EMPTY) ? GameProfile.EMPTY : profile;
-		this.playerType = buffer.readEnumInterface();
+		this.playerType = buffer.read(EncodableEnum.class);
 		this.uuids = buffer.readList(buffer::readUUID);
 	}
 	
@@ -41,7 +42,7 @@ public class GamePlayerInfo implements Encodable {
 	}
 	
 	public GamePlayerType getPlayerType() {
-		return this.playerType;
+		return this.playerType.getAsOrThrow(GamePlayerType.class);
 	}
 	
 	public List<UUID> getUUIDs() {
@@ -51,7 +52,7 @@ public class GamePlayerInfo implements Encodable {
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
-		buffer.writeEnumInterface(this.playerType);
+		buffer.write(this.playerType);
 		buffer.writeList(this.uuids, buffer::writeUUID);
 	}
 	

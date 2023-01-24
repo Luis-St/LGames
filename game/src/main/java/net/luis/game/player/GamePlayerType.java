@@ -2,7 +2,6 @@ package net.luis.game.player;
 
 import javafx.scene.image.ImageView;
 import net.luis.language.TranslationKey;
-import net.luis.network.buffer.EnumRepresentable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
  *
  */
 
-public interface GamePlayerType extends EnumRepresentable {
+public interface GamePlayerType {
 	
 	TranslationKey getTranslation();
 	

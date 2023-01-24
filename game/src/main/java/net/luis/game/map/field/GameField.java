@@ -6,7 +6,7 @@ import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

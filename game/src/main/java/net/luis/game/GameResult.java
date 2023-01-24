@@ -1,38 +1,23 @@
 package net.luis.game;
 
-import net.luis.network.buffer.EnumRepresentable;
-
 /**
  *
  * @author Luis-st
  *
  */
 
-public enum GameResult implements EnumRepresentable {
+public enum GameResult {
 	
-	WIN("win", 0), LOSE("lose", 1), DRAW("draw", 2), NO("no", 3);
+	WIN("win"), LOSE("lose"), DRAW("draw"), NO("no");
 	
 	private final String name;
-	private final int id;
 	
-	GameResult(String name, int id) {
+	GameResult(String name) {
 		this.name = name;
-		this.id = id;
 	}
 	
-	@Override
 	public String getName() {
 		return this.name;
-	}
-	
-	@Override
-	public int getId() {
-		return this.id;
-	}
-	
-	@Override
-	public Enum<GameResult> getDefault() {
-		return NO;
 	}
 	
 	@Override

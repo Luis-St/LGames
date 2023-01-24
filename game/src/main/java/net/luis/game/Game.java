@@ -2,9 +2,6 @@ package net.luis.game;
 
 import com.google.common.collect.Lists;
 import net.luis.application.ApplicationType;
-import net.luis.client.Client;
-import net.luis.client.player.AbstractClientPlayer;
-import net.luis.client.screen.LobbyScreen;
 import net.luis.game.dice.DiceHandler;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
@@ -12,15 +9,14 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.type.GameType;
 import net.luis.game.win.WinHandler;
+import net.luis.network.Connection;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.ExitGamePacket;
 import net.luis.network.packet.client.game.StopGamePacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
-import net.luis.player.GameProfile;
-import net.luis.player.Player;
-import net.luis.server.Server;
-import net.luis.server.player.ServerPlayer;
+import net.luis.game.player.GameProfile;
+import net.luis.game.player.Player;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -49,7 +45,7 @@ public interface Game {
 		
 	}
 	
-	GameType<? extends Game, ? extends Game> getType();
+	GameType<?> getType();
 	
 	GameMap getMap();
 	
@@ -142,24 +138,21 @@ public interface Game {
 	default boolean removePlayer(GamePlayer gamePlayer, boolean sendExit) {
 		if (ApplicationType.SERVER.isOn()) {
 			if (this.getPlayers().remove(gamePlayer)) {
-				if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
-					if (sendExit) {
-						player.connection.send(new ExitGamePacket());
-					}
-					player.setPlaying(false);
-					Game.LOGGER.info("Remove player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
-					if (Objects.equals(this.getPlayer(), gamePlayer)) {
-						this.nextPlayer(false);
-					}
-					if (!Mth.isInBounds(this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
-						this.stop();
-					}
-					player.getScore().reset();
-					this.broadcastPlayersExclude(new SyncPlayerDataPacket(player), gamePlayer);
-					return true;
-				} else {
-					Game.LOGGER.warn("Fail to remove player {}, since the player is not a server player", gamePlayer.getName());
+				Player player = gamePlayer.getPlayer();
+				if (sendExit) {
+					Objects.requireNonNull(player.getConnection()).send(new ExitGamePacket());
 				}
+				player.setPlaying(false);
+				Game.LOGGER.info("Remove player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
+				if (Objects.equals(this.getPlayer(), gamePlayer)) {
+					this.nextPlayer(false);
+				}
+				if (!Mth.isInBounds(this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers())) {
+					this.stop();
+				}
+				gamePlayer.getPlayer().getScore().reset();
+				this.broadcastPlayersExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
+				return true;
 			} else if (gamePlayer != null) {
 				Game.LOGGER.warn("Fail to remove player {}, since the player does not playing game {}", gamePlayer.getName(), this.getType().getInfoName());
 				if (gamePlayer.getPlayer().isPlaying()) {
@@ -204,38 +197,32 @@ public interface Game {
 	
 	default void stop() {
 		Game.LOGGER.info("Stopping the current game {}", this.getType().getInfoName());
-		ApplicationType.SERVER.executeIfOn(() -> {
-			for (ServerPlayer player : Server.getInstance().getPlayerList().getPlayers()) {
-				if (player.isPlaying()) {
-					if (Utils.mapList(this.getPlayers(), GamePlayer::getPlayer).contains(player)) {
-						player.setPlaying(false);
-					} else {
-						player.setPlaying(false);
-						Game.LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getName());
-					}
-				}
-			}
-			for (GamePlayer gamePlayer : this.getPlayers()) {
+		for (GamePlayer gamePlayer : this.getPlayers()) {
+			Player player = gamePlayer.getPlayer();
+			player.setPlaying(false);
+			player.getScore().reset();
+			if (ApplicationType.SERVER.isOn()) {
 				this.broadcastPlayer(new StopGamePacket(), gamePlayer);
-				gamePlayer.getPlayer().getScore().reset();
-				this.broadcastPlayersExclude(new SyncPlayerDataPacket(gamePlayer), gamePlayer);
+				this.broadcastPlayersExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
 			}
-			this.getPlayers().clear();
-			Server.getInstance().setGame(null);
-		});
-		ApplicationType.CLIENT.executeIfOn(() -> {
-			for (AbstractClientPlayer player : Client.getInstance().getPlayers()) {
-				player.setPlaying(false);
-				player.getScore().reset();
-			}
-			Client.getInstance().setScreen(new LobbyScreen());
-		});
+		}
+		this.getPlayers().clear();
+		// TODO:
+		/*
+		 * Server.getInstance().setGame(null);
+		 * Client.getInstance().setScreen(new LobbyScreen());
+		 * Correcting value of all players on server and client -> Game.LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getName());
+		 *
+		 *
+		 *
+		 */
 		Game.LOGGER.info("Game {} was successfully stopped", this.getType().getInfoName());
 	}
 	
 	default void broadcastPlayer(Packet packet, GamePlayer gamePlayer) {
-		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
-			player.connection.send(packet);
+		Connection connection = gamePlayer.getPlayer().getConnection();
+		if (connection != null) {
+			connection.send(packet);
 		}
 	}
 	

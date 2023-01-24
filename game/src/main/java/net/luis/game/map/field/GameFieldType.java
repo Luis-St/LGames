@@ -1,6 +1,5 @@
 package net.luis.game.map.field;
 
-import net.luis.network.buffer.EnumRepresentable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,7 +9,7 @@ import org.apache.logging.log4j.Logger;
  *
  */
 
-public interface GameFieldType extends EnumRepresentable {
+public interface GameFieldType {
 	
 	Logger LOGGER = LogManager.getLogger();
 	

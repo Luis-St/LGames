@@ -2,8 +2,9 @@ package net.luis.game.map.field;
 
 import net.luis.game.player.GamePlayerType;
 import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableEnum;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.util.ToString;
 
@@ -18,16 +19,17 @@ import java.util.UUID;
 
 public class GameFieldInfo implements Encodable {
 	
-	private final GameFieldType fieldType;
-	private final GamePlayerType playerType;
+	private final EncodableEnum fieldType;
+	private final EncodableEnum playerType;
 	private final GameFieldPos fieldPos;
 	private final GameProfile profile;
 	private final int figureCount;
 	private final UUID figureUUID;
 	
+	@SuppressWarnings("unchecked")
 	public GameFieldInfo(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos, GameProfile profile, int figureCount, UUID figureUUID) {
-		this.fieldType = fieldType;
-		this.playerType = playerType;
+		this.fieldType = new EncodableEnum((Enum<? extends GameFieldType>) fieldType);
+		this.playerType = new EncodableEnum((Enum<? extends GamePlayerType>) playerType);
 		this.fieldPos = fieldPos;
 		this.profile = profile;
 		this.figureCount = figureCount;
@@ -36,8 +38,8 @@ public class GameFieldInfo implements Encodable {
 	
 	@DecodingConstructor
 	public GameFieldInfo(FriendlyByteBuffer buffer) {
-		this.fieldType = buffer.readEnumInterface();
-		this.playerType = buffer.readEnumInterface();
+		this.fieldType = buffer.read(EncodableEnum.class);
+		this.playerType = buffer.read(EncodableEnum.class);
 		this.fieldPos = buffer.readInterface();
 		GameProfile profile = buffer.read(GameProfile.class);
 		this.profile = profile.equals(GameProfile.EMPTY) ? GameProfile.EMPTY : profile;
@@ -46,11 +48,11 @@ public class GameFieldInfo implements Encodable {
 	}
 	
 	public GameFieldType getFieldType() {
-		return this.fieldType;
+		return this.fieldType.getAsOrThrow(GameFieldType.class);
 	}
 	
 	public GamePlayerType getPlayerType() {
-		return this.playerType;
+		return this.playerType.getAsOrThrow(GamePlayerType.class);
 	}
 	
 	public GameFieldPos getFieldPos() {
@@ -71,8 +73,8 @@ public class GameFieldInfo implements Encodable {
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeEnumInterface(this.fieldType);
-		buffer.writeEnumInterface(this.playerType);
+		buffer.write(this.fieldType);
+		buffer.write(this.playerType);
 		buffer.writeInterface(this.fieldPos);
 		buffer.write(this.profile);
 		buffer.writeInt(this.figureCount);

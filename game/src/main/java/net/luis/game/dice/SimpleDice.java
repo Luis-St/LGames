@@ -1,6 +1,6 @@
 package net.luis.game.dice;
 
-import net.luis.exception.InvalidValueException;
+import net.luis.utils.exception.InvalidValueException;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.ToString;
 

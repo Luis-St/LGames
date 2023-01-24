@@ -1,20 +1,14 @@
 package net.luis.game.type;
 
-import net.luis.application.ApplicationType;
-import net.luis.client.Client;
-import net.luis.client.screen.game.GameScreen;
+import net.luis.application.GameApplication;
 import net.luis.game.Game;
 import net.luis.game.GameFactory;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerInfo;
-import net.luis.server.Server;
-import net.luis.server.player.ServerPlayer;
 import net.luis.utils.math.Mth;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  *
@@ -22,20 +16,24 @@ import java.util.function.Function;
  *
  */
 
-public class GameType<S extends Game, C extends Game> {
+public class GameType<T extends Game> {
 	
+	private final int id;
 	private final String name;
 	private final int minPlayers;
 	private final int maxPlayers;
-	private final GameFactory<S, C> gameFactory;
-	private final Function<C, ? extends GameScreen> screenFactory;
+	private final GameFactory<T> gameFactory;
 	
-	public GameType(String name, int minPlayers, int maxPlayers, GameFactory<S, C> gameFactory, Function<C, ? extends GameScreen> screenFactory) {
+	public GameType(int id, String name, int minPlayers, int maxPlayers, GameFactory<T> gameFactory) {
+		this.id = id;
 		this.name = name;
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
 		this.gameFactory = gameFactory;
-		this.screenFactory = screenFactory;
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 	
 	public String getName() {
@@ -66,32 +64,19 @@ public class GameType<S extends Game, C extends Game> {
 		return this.minPlayers + " - " + this.maxPlayers;
 	}
 	
-	@Nullable
-	public S createServerGame(Server server, List<ServerPlayer> players) {
-		if (this.hasEnoughPlayers(players.size())) {
-			return this.gameFactory.createServerGame(server, players);
-		}
-		return null;
-	}
-	
-	public C createClientGame(Client client, List<GamePlayerInfo> playerInfos) {
+	public T createGame(GameApplication application, List<GamePlayerInfo> playerInfos) {
 		if (this.hasEnoughPlayers(playerInfos.size())) {
-			return this.gameFactory.createClientGame(client, playerInfos);
+			return this.gameFactory.createGame(application, playerInfos);
 		}
 		return null;
-	}
-	
-	public void openScreen(Client client, C game) {
-		if (ApplicationType.CLIENT.isOn()) {
-			client.setScreen(this.screenFactory.apply(game));
-		}
 	}
 	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof GameType<?, ?> gameType)) return false;
+		if (!(o instanceof GameType<?> gameType)) return false;
 		
+		if (this.id != gameType.id) return false;
 		if (this.minPlayers != gameType.minPlayers) return false;
 		if (this.maxPlayers != gameType.maxPlayers) return false;
 		return this.name.equals(gameType.name);
@@ -99,7 +84,7 @@ public class GameType<S extends Game, C extends Game> {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.name, this.minPlayers, this.maxPlayers);
+		return Objects.hash(this.id, this.name, this.minPlayers, this.maxPlayers);
 	}
 	
 	@Override
