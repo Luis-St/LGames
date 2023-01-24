@@ -4,9 +4,6 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import net.luis.Constants;
-import net.luis.utility.streams.DebugPrintStream;
-import net.luis.utility.streams.InfoPrintStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,18 +32,6 @@ public class Util {
 		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(millis), name, (event) -> action.run()));
 		timeline.setCycleCount(cycleCount);
 		timeline.play();
-	}
-	
-	public static void warpStreams(boolean debugMode) {
-		LOGGER.info("Warp System PrintStreams to type {}", debugMode ? "DEBUG" : "INFO");
-		Constants.DEBUG = debugMode;
-		if (debugMode) {
-			System.setOut(new DebugPrintStream("STDOUT", System.out));
-			System.setErr(new DebugPrintStream("STDERR", System.err));
-		} else {
-			System.setOut(new InfoPrintStream("STDOUT", System.out));
-			System.setErr(new InfoPrintStream("STDERR", System.err));
-		}
 	}
 	
 }

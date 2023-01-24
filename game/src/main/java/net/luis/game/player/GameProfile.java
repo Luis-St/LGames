@@ -1,4 +1,4 @@
-package net.luis.player;
+package net.luis.game.player;
 
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.FriendlyByteBuffer;
