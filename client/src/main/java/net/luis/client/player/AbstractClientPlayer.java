@@ -1,8 +1,10 @@
 package net.luis.client.player;
 
+import net.luis.application.GameApplication;
+import net.luis.client.Client;
 import net.luis.game.score.PlayerScore;
-import net.luis.player.GameProfile;
-import net.luis.player.Player;
+import net.luis.game.player.GameProfile;
+import net.luis.game.player.Player;
 
 import java.util.Objects;
 
@@ -18,7 +20,7 @@ public abstract class AbstractClientPlayer extends Player {
 	private boolean current = false;
 	
 	public AbstractClientPlayer(GameProfile profile, PlayerScore score) {
-		super(profile, score);
+		super(profile, score, Client.getInstance());
 	}
 	
 	@Override

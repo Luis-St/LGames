@@ -28,7 +28,7 @@ import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 

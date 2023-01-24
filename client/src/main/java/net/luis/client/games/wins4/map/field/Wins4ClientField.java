@@ -16,7 +16,7 @@ import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.wins4.map.field.Wins4FieldType;
 import net.luis.games.wins4.player.Wins4PlayerType;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;
 

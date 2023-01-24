@@ -21,7 +21,7 @@ import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
-import net.luis.player.Player;
+import net.luis.game.player.Player;
 import net.luis.server.Server;
 import net.luis.server.game.AbstractServerGame;
 import net.luis.server.games.wins4.map.Wins4ServerMap;

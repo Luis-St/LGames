@@ -7,11 +7,11 @@ import net.luis.network.packet.client.PlayerAddPacket;
 import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.ServerClosedPacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
-import net.luis.util.Tickable;
-import net.luis.util.Util;
+import net.luis.utility.Tickable;
+import net.luis.utility.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +46,7 @@ public class PlayerList implements Tickable {
 	
 	public void addPlayer(Connection connection, ServerPlayer player) {
 		if (this.getPlayer(player.getProfile().getUUID()) == null) {
-			player.connection = connection;
+			player.setConnection(connection);
 			this.players.add(player);
 			this.broadcastAllExclude(new PlayerAddPacket(player.getProfile()), player);
 			if (this.server.isAdmin(player)) {
@@ -55,7 +55,7 @@ public class PlayerList implements Tickable {
 				});
 			} else if (this.server.getAdminPlayer() != null) {
 				Util.runDelayed("DelayedPacketSender", 250, () -> {
-					player.connection.send(new SyncPermissionPacket(this.server.getAdminPlayer().getProfile()));
+					Objects.requireNonNull(player.getConnection()).send(new SyncPermissionPacket(this.server.getAdminPlayer().getProfile()));
 				});
 			}
 			this.server.refreshPlayers();
@@ -129,8 +129,9 @@ public class PlayerList implements Tickable {
 	}
 	
 	private void broadcast(Packet packet, ServerPlayer player) {
-		if (player.connection.isConnected()) {
-			player.connection.send(packet);
+		Connection connection = Objects.requireNonNull(player.getConnection());
+		if (connection.isConnected()) {
+			connection.send(packet);
 		} else if (this.players.contains(player)) {
 			LOGGER.info("Fail to send packet of type {} to player {}, since the connection is closed", packet.getClass().getSimpleName(), player.getProfile().getName());
 		} else {

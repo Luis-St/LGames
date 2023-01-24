@@ -6,7 +6,7 @@ import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
-import net.luis.player.Player;
+import net.luis.game.player.Player;
 import net.luis.server.game.player.AbstractServerGamePlayer;
 import net.luis.server.games.wins4.player.figure.Wins4ServerFigure;
 import net.luis.utils.util.ToString;

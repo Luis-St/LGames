@@ -8,7 +8,7 @@ import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ttt.map.field.TTTFieldType;
 import net.luis.games.ttt.player.TTTPlayerType;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.server.game.map.field.AbstractServerGameField;
 import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;

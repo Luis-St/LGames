@@ -25,16 +25,17 @@ import net.luis.network.packet.server.PlayGameRequestPacket;
 import net.luis.network.packet.server.game.ExitGameRequestPacket;
 import net.luis.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
-import net.luis.util.Util;
+import net.luis.utility.Util;
 import net.luis.utils.util.Utils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,7 @@ public class ServerPacketHandler implements PacketHandler {
 	@PacketListener(ClientJoinPacket.class)
 	public void handleClientJoin(String name, UUID uuid) {
 		this.server.enterPlayer(this.connection, new GameProfile(name, uuid));
-		this.connection.send(new ClientJoinedPacket(this.server.getPlayerList().getPlayers()));
+		this.connection.send(new ClientJoinedPacket(Utils.mapList(this.server.getPlayerList().getPlayers(), ServerPlayer::getProfile)));
 	}
 	
 	@PacketListener(ClientLeavePacket.class)
@@ -68,7 +69,7 @@ public class ServerPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(PlayGameRequestPacket.class)
-	public <S extends Game, C extends Game> void handlePlayGameRequest(GameType<S, C> gameType, List<GameProfile> profiles) {
+	public <T extends Game> void handlePlayGameRequest(GameType<T> gameType, List<GameProfile> profiles) {
 		MutableBoolean mutable = new MutableBoolean(false);
 		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(profiles).stream().filter((player) -> {
 			if (player.isPlaying()) {
@@ -76,17 +77,17 @@ public class ServerPacketHandler implements PacketHandler {
 				return false;
 			}
 			return true;
-		}).collect(Collectors.toList());
+		}).toList();
 		if (players.size() == profiles.size()) {
 			if (mutable.isFalse()) {
 				if (this.server.getGame() == null) {
-					S game = gameType.createServerGame(this.server, players);
+					T game = gameType.createGame(this.server, /*players*/Lists.newArrayList()); // TODO: find solution
 					if (game != null) {
 						this.server.setGame(game);
 						game.start();
 						for (ServerPlayer player : players) {
 							player.setPlaying(true);
-							player.connection.send(new StartGamePacket(gameType, this.createPlayerInfos(game.getPlayers())));
+							Objects.requireNonNull(player.getConnection()).send(new StartGamePacket(gameType.getId(), this.createPlayerInfos(game.getPlayers())));
 						}
 						Util.runDelayed("DelayedSetStartPlayer", 250, game::getStartPlayer);
 					}
@@ -206,7 +207,7 @@ public class ServerPacketHandler implements PacketHandler {
 			}
 			ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 			if (player != null) {
-				player.connection.send(new ExitGamePacket());
+				Objects.requireNonNull(player.getConnection()).send(new ExitGamePacket());
 			} else {
 				LOGGER.warn("Fail to remove player {} from game, since there is no running game", profile.getName());
 			}

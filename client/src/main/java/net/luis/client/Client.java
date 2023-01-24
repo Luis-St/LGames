@@ -21,7 +21,7 @@ import net.luis.game.Game;
 import net.luis.network.ConnectionHandler;
 import net.luis.network.packet.account.ClientExitPacket;
 import net.luis.network.packet.server.ClientLeavePacket;
-import net.luis.player.GameProfile;
+import net.luis.game.player.GameProfile;
 import net.luis.utility.Tickable;
 import net.luis.utility.Util;
 import net.luis.utils.data.tag.Tag;

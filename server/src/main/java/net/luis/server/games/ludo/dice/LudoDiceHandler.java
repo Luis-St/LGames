@@ -96,7 +96,7 @@ public class LudoDiceHandler implements DiceHandler {
 	@Override
 	public void performGameAction(GamePlayer gamePlayer, int count) {
 		if (gamePlayer.getPlayer() instanceof ServerPlayer player) {
-			player.connection.send(new CanSelectGameFieldPacket());
+			Objects.requireNonNull(player.getConnection()).send(new CanSelectGameFieldPacket());
 		}
 	}
 	

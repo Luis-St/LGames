@@ -20,6 +20,7 @@ import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.PlayGameRequestPacket;
 import net.luis.utility.Util;
+import net.luis.utils.util.Utils;
 
 import java.util.List;
 
@@ -32,13 +33,13 @@ import java.util.List;
 @PacketSubscriber("#getStage#getScene#getScreen")
 public class PlayerSelectScreen extends Screen {
 	
-	private final GameType<?, ?> gameType;
+	private final GameType<?> gameType;
 	private final Screen backScreen;
 	private ListView<String> playerList;
 	private ButtonBox backButtonBox;
 	private ButtonBox playButtonBox;
 	
-	public PlayerSelectScreen(GameType<?, ?> gameType, Screen backScreen) {
+	public PlayerSelectScreen(GameType<?> gameType, Screen backScreen) {
 		this.gameType = gameType;
 		this.backScreen = backScreen;
 	}
@@ -82,7 +83,7 @@ public class PlayerSelectScreen extends Screen {
 					this.playerList.getSelectionModel().clearSelection();
 				} else {
 					LOGGER.debug("Send play game request to server");
-					this.client.getServerHandler().send(new PlayGameRequestPacket(this.gameType, players));
+					this.client.getServerHandler().send(new PlayGameRequestPacket(this.gameType.getId(), Utils.mapList(players, AbstractClientPlayer::getProfile)));
 				}
 			}
 		} else {

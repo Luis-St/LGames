@@ -8,7 +8,7 @@ import net.luis.Constants;
 import net.luis.game.Game;
 import net.luis.game.player.GamePlayer;
 import net.luis.language.TranslationKey;
-import net.luis.player.Player;
+import net.luis.game.player.Player;
 import net.luis.utils.util.SimpleEntry;
 
 import java.util.List;

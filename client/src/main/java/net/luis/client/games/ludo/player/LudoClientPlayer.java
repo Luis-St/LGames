@@ -9,7 +9,7 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.ludo.map.field.LudoFieldPos;
-import net.luis.player.Player;
+import net.luis.game.player.Player;
 import net.luis.utils.util.ToString;
 
 import java.util.List;

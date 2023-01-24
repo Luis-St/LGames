@@ -10,7 +10,7 @@ import net.luis.fxutils.FxUtils;
 import net.luis.game.Game;
 import net.luis.game.player.GamePlayer;
 import net.luis.language.TranslationKey;
-import net.luis.util.Util;
+import net.luis.utility.Util;
 
 import java.util.Objects;
 
