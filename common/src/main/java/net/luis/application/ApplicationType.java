@@ -1,8 +1,6 @@
 package net.luis.application;
 
-import net.luis.account.AccountServer;
-import net.luis.client.Client;
-import net.luis.server.Server;
+import java.util.Objects;
 
 /**
  *
@@ -32,14 +30,10 @@ public enum ApplicationType {
 	
 	public boolean isOn() {
 		GameApplication application = GameApplication.getInstance();
-		if (this == CLIENT) {
-			return application instanceof Client;
-		} else if (this == SERVER) {
-			return application instanceof Server;
-		} else if (this == ACCOUNT) {
-			return application instanceof AccountServer;
+		if (application == null) {
+			throw new NullPointerException("Cannot check application type because \"application\" is null");
 		}
-		return false;
+		return Objects.requireNonNull(application.getApplicationType()) == this;
 	}
 	
 	public void executeIfOn(Runnable action) {

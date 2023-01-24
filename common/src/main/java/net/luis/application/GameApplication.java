@@ -5,10 +5,10 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import net.luis.data.DataHandler;
 import net.luis.language.LanguageProvider;
 import net.luis.loading.LaunchState;
-import net.luis.util.ExceptionHandler;
+import net.luis.utility.ExceptionHandler;
+import net.luis.utility.data.DataHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -73,7 +73,7 @@ public abstract class GameApplication extends Application implements DataHandler
 			LOGGER.error("Fail to load {}", this.getApplicationType().getName());
 			throw new RuntimeException(e);
 		}
-		LanguageProvider.INSTANCE.load();
+		LanguageProvider.INSTANCE.load(this.getResourceDirectory());
 		this.launchState = LaunchState.STARTED;
 		LOGGER.info("Successfully start of {}", this.getApplicationType().getName());
 	}
@@ -125,7 +125,7 @@ public abstract class GameApplication extends Application implements DataHandler
 		Platform.exit();
 	}
 	
-	public void stop() throws Exception {
+	public void stop() {
 		LOGGER.info("Stopping {}", this.getApplicationType().getName());
 		this.launchState = LaunchState.STOPPING;
 		try {
