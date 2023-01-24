@@ -2,8 +2,8 @@ package net.luis.ttt.player;
 
 import com.google.common.collect.Lists;
 import javafx.scene.image.ImageView;
-import net.luis.language.TranslationKey;
 import net.luis.game.player.GamePlayerType;
+import net.luis.language.TranslationKey;
 
 import java.util.List;
 

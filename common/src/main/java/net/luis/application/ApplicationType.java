@@ -36,6 +36,7 @@ public enum ApplicationType {
 		return Objects.requireNonNull(application.getApplicationType()) == this;
 	}
 	
+	@Deprecated
 	public void executeIfOn(Runnable action) {
 		if (this.isOn()) {
 			action.run();

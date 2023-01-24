@@ -2,9 +2,9 @@ package net.luis.game.win;
 
 import com.google.common.collect.Lists;
 import net.luis.game.map.field.GameFieldPos;
+import net.luis.network.annotation.DecodingConstructor;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.util.ToString;
 
 import java.util.List;

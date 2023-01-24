@@ -1,7 +1,7 @@
 package net.luis.client.player;
 
-import net.luis.game.score.PlayerScore;
 import net.luis.game.player.GameProfile;
+import net.luis.game.score.PlayerScore;
 
 /**
  *

@@ -5,6 +5,7 @@ import net.luis.game.Game;
 import net.luis.game.dice.DiceHandler;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerInfo;
+import net.luis.game.player.GameProfile;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.game.type.GameType;
 import net.luis.network.Connection;
@@ -25,7 +26,6 @@ import net.luis.network.packet.server.PlayGameRequestPacket;
 import net.luis.network.packet.server.game.ExitGameRequestPacket;
 import net.luis.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.luis.game.player.GameProfile;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
 import net.luis.utility.Util;
@@ -37,7 +37,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  *

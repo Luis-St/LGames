@@ -1,13 +1,13 @@
 package net.luis.server.players;
 
 import com.google.common.collect.Lists;
+import net.luis.game.player.GameProfile;
 import net.luis.network.Connection;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.client.PlayerAddPacket;
 import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.ServerClosedPacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
-import net.luis.game.player.GameProfile;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
 import net.luis.utility.Tickable;

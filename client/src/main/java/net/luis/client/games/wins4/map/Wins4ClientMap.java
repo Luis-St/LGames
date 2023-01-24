@@ -21,6 +21,7 @@ import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.GameProfile;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.games.wins4.map.field.Wins4FieldPos;
 import net.luis.network.packet.client.ClientPacket;
@@ -28,7 +29,6 @@ import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.listener.PacketListener;
 import net.luis.network.packet.listener.PacketSubscriber;
-import net.luis.game.player.GameProfile;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 

@@ -1,9 +1,9 @@
 package net.luis.game.player;
 
+import net.luis.network.annotation.DecodingConstructor;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.EncodableEnum;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.annotation.DecodingConstructor;
 import net.luis.utils.util.ToString;
 
 import java.util.List;

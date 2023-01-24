@@ -1,6 +1,7 @@
 package net.luis.utility;
 
 import javafx.scene.paint.Color;
+
 /**
  *
  * @author Luis-st

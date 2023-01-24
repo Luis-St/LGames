@@ -19,11 +19,11 @@ import java.util.Objects;
 
 public abstract class AbstractGameField implements GameField {
 	
+	protected final double fieldSize;
 	private final GameMap map;
 	private final GameFieldType fieldType;
 	private final GamePlayerType colorType;
 	private final GameFieldPos fieldPos;
-	protected final double fieldSize;
 	private GameFigure figure;
 	private GameResult result = GameResult.NO;
 	private boolean shadowed = false;

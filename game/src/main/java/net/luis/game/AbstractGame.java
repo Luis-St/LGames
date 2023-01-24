@@ -8,9 +8,9 @@ import net.luis.game.map.GameMapFactory;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerFactory;
 import net.luis.game.player.GamePlayerInfo;
+import net.luis.game.player.GameProfile;
 import net.luis.game.win.WinHandler;
 import net.luis.network.packet.client.game.CurrentPlayerUpdatePacket;
-import net.luis.game.player.GameProfile;
 import net.luis.utils.util.Utils;
 import org.jetbrains.annotations.Nullable;
 
