@@ -1,13 +1,10 @@
 package net.luis.network.packet.client.game;
 
-import net.luis.game.GameResult;
-import net.luis.game.win.GameResultLine;
 import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableObject;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.listener.PacketGetter;
-import net.luis.utils.util.ReflectionHelper;
-import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -17,53 +14,33 @@ import org.jetbrains.annotations.Nullable;
 
 public class GameResultPacket implements ClientPacket {
 	
-	private final GameResult result;
-	private final Encodable object;
+	private final EncodableObject result;
+	private final EncodableObject object;
 	
-	public GameResultPacket(GameResult result, Encodable object) {
-		this.result = result;
-		this.object = object;
+	public GameResultPacket(Encodable result, Encodable object) {
+		this.result = new EncodableObject(result);
+		this.object = new EncodableObject(object);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public GameResultPacket(FriendlyByteBuffer buffer) {
-		this.result = buffer.readEnum(GameResult.class);
-		boolean nullObject = buffer.readBoolean();
-		if (!nullObject) {
-			String clazz = buffer.readString();
-			this.object = buffer.read((Class<Encodable>) ReflectionHelper.getClassForName(clazz));
-		} else {
-			this.object = null;
-		}
+		this.result = buffer.read(EncodableObject.class);
+		this.object = buffer.read(EncodableObject.class);
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeEnum(this.result);
-		buffer.writeBoolean(this.object == null);
-		if (this.object != null) {
-			buffer.writeString(this.object.getClass().getName());
-			buffer.write(this.object);
-		}
+		buffer.write(this.result);
+		buffer.write(this.object);
 	}
 	
 	@PacketGetter
-	public GameResult getResult() {
-		return this.result;
+	public Encodable getResult() {
+		return this.result.get();
 	}
 	
 	@PacketGetter
 	public Encodable getObject() {
-		return this.object;
-	}
-	
-	@Nullable
-	@PacketGetter
-	public GameResultLine getResultLine() {
-		if (this.object instanceof GameResultLine resultLine) {
-			return resultLine;
-		}
-		return null;
+		return this.object.get();
 	}
 	
 }

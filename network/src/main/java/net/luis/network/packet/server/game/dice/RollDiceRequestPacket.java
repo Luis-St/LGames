@@ -1,9 +1,10 @@
 package net.luis.network.packet.server.game.dice;
 
+import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableObject;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.listener.PacketGetter;
 import net.luis.network.packet.server.ServerPacket;
-import net.luis.player.GameProfile;
 
 /**
  *
@@ -13,14 +14,14 @@ import net.luis.player.GameProfile;
 
 public class RollDiceRequestPacket implements ServerPacket {
 	
-	private final GameProfile profile;
+	private final EncodableObject profile;
 	
-	public RollDiceRequestPacket(GameProfile profile) {
-		this.profile = profile;
+	public RollDiceRequestPacket(Encodable profile) {
+		this.profile = new EncodableObject(profile);
 	}
 	
 	public RollDiceRequestPacket(FriendlyByteBuffer buffer) {
-		this.profile = buffer.read(GameProfile.class);
+		this.profile = buffer.read(EncodableObject.class);
 	}
 	
 	@Override
@@ -29,8 +30,8 @@ public class RollDiceRequestPacket implements ServerPacket {
 	}
 	
 	@PacketGetter
-	public GameProfile getProfile() {
-		return this.profile;
+	public Encodable getProfile() {
+		return this.profile.get();
 	}
 	
 }

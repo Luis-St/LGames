@@ -1,9 +1,11 @@
 package net.luis.network.packet.client.game;
 
-import net.luis.game.map.field.GameFieldInfo;
+import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableObject;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.listener.PacketGetter;
+import net.luis.utils.util.Utils;
 
 import java.util.List;
 
@@ -15,16 +17,14 @@ import java.util.List;
 
 public class UpdateGameMapPacket implements ClientPacket {
 	
-	private final List<GameFieldInfo> fieldInfos;
+	private final List<EncodableObject> fieldInfos;
 	
-	public UpdateGameMapPacket(List<GameFieldInfo> fieldInfos) {
-		this.fieldInfos = fieldInfos;
+	public UpdateGameMapPacket(List<Encodable> fieldInfos) {
+		this.fieldInfos = Utils.mapList(fieldInfos, EncodableObject::new);
 	}
 	
 	public UpdateGameMapPacket(FriendlyByteBuffer buffer) {
-		this.fieldInfos = buffer.readList(() -> {
-			return buffer.read(GameFieldInfo.class);
-		});
+		this.fieldInfos = buffer.readList(() -> buffer.read(EncodableObject.class));
 	}
 	
 	@Override
@@ -33,8 +33,8 @@ public class UpdateGameMapPacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public List<GameFieldInfo> getFieldInfos() {
-		return this.fieldInfos;
+	public List<Encodable> getFieldInfos() {
+		return Utils.mapList(this.fieldInfos, EncodableObject::get);
 	}
 	
 }

@@ -1,12 +1,12 @@
 package net.luis.network.packet.client;
 
+import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableObject;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.listener.PacketGetter;
-import net.luis.player.GameProfile;
-import net.luis.server.player.ServerPlayer;
+import net.luis.utils.util.Utils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 
 public class ClientJoinedPacket implements ClientPacket {
 	
-	private final List<GameProfile> profiles;
+	private final List<EncodableObject> profiles;
 	
-	public ClientJoinedPacket(List<ServerPlayer> players) {
-		this.profiles = players.stream().map(ServerPlayer::getProfile).collect(Collectors.toList());
+	public ClientJoinedPacket(List<? extends Encodable> profiles) {
+		this.profiles = Utils.mapList(profiles, EncodableObject::new);
 	}
 	
 	public ClientJoinedPacket(FriendlyByteBuffer buffer) {
-		this.profiles = buffer.readList(() -> buffer.read(GameProfile.class));
+		this.profiles = buffer.readList(() -> buffer.read(EncodableObject.class));
 	}
 	
 	@Override
@@ -32,8 +32,8 @@ public class ClientJoinedPacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public List<GameProfile> getProfiles() {
-		return this.profiles;
+	public List<? extends Encodable> getProfiles() {
+		return Utils.mapList(this.profiles, EncodableObject::get);
 	}
 	
 }

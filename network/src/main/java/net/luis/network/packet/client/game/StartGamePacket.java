@@ -1,11 +1,11 @@
 package net.luis.network.packet.client.game;
 
-import net.luis.game.player.GamePlayerInfo;
-import net.luis.game.type.GameType;
-import net.luis.game.type.GameTypes;
+import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableObject;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.listener.PacketGetter;
+import net.luis.utils.util.Utils;
 
 import java.util.List;
 
@@ -17,33 +17,33 @@ import java.util.List;
 
 public class StartGamePacket implements ClientPacket {
 	
-	private final GameType<?, ?> gameType;
-	private final List<GamePlayerInfo> playerInfos;
+	private final int gameType;
+	private final List<EncodableObject> playerInfos;
 	
-	public StartGamePacket(GameType<?, ?> gameType, List<GamePlayerInfo> playerInfos) {
+	public StartGamePacket(int gameType, List<? extends Encodable> playerInfos) {
 		this.gameType = gameType;
-		this.playerInfos = playerInfos;
+		this.playerInfos = Utils.mapList(playerInfos, EncodableObject::new);
 	}
 	
 	public StartGamePacket(FriendlyByteBuffer buffer) {
-		this.gameType = GameTypes.fromName(buffer.readString());
-		this.playerInfos = buffer.readList(() -> buffer.read(GamePlayerInfo.class));
+		this.gameType = buffer.readInt();
+		this.playerInfos = buffer.readList(() -> buffer.read(EncodableObject.class));
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeString(this.gameType.getName());
+		buffer.writeInt(this.gameType);
 		buffer.writeList(this.playerInfos, buffer::write);
 	}
 	
 	@PacketGetter
-	public GameType<?, ?> getGameType() {
+	public int getGameType() {
 		return this.gameType;
 	}
 	
 	@PacketGetter
-	public List<GamePlayerInfo> getPlayerInfos() {
-		return this.playerInfos;
+	public List<? extends Encodable> getPlayerInfos() {
+		return Utils.mapList(this.playerInfos, EncodableObject::get);
 	}
 	
 }

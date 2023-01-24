@@ -1,10 +1,10 @@
 package net.luis.network.packet.client.game;
 
-import net.luis.game.player.GamePlayer;
+import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableObject;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.listener.PacketGetter;
-import net.luis.player.GameProfile;
 
 /**
  *
@@ -14,14 +14,14 @@ import net.luis.player.GameProfile;
 
 public class CurrentPlayerUpdatePacket implements ClientPacket {
 	
-	private final GameProfile profile;
+	private final EncodableObject profile;
 	
-	public CurrentPlayerUpdatePacket(GamePlayer player) {
-		this.profile = player.getPlayer().getProfile();
+	public CurrentPlayerUpdatePacket(Encodable player) {
+		this.profile = new EncodableObject(player);
 	}
 	
 	public CurrentPlayerUpdatePacket(FriendlyByteBuffer buffer) {
-		this.profile = buffer.read(GameProfile.class);
+		this.profile = buffer.read(EncodableObject.class);
 	}
 	
 	@Override
@@ -30,8 +30,8 @@ public class CurrentPlayerUpdatePacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public GameProfile getProfile() {
-		return this.profile;
+	public Encodable getProfile() {
+		return this.profile.get();
 	}
 	
 }

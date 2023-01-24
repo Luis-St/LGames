@@ -1,6 +1,6 @@
 package net.luis.network.packet.client;
 
-import net.luis.account.account.LoginType;
+import net.luis.network.buffer.EncodableEnum;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.listener.PacketGetter;
 
@@ -14,14 +14,14 @@ import java.util.UUID;
 
 public class ClientLoggedInPacket implements ClientPacket {
 	
-	private final LoginType loginType;
+	private final EncodableEnum loginType;
 	private final String name;
 	private final int id;
 	private final String mail;
 	private final UUID uuid;
 	
-	public ClientLoggedInPacket(LoginType loginType, String name, int id, String mail, UUID uuid) {
-		this.loginType = loginType;
+	public ClientLoggedInPacket(Enum<?> loginType, String name, int id, String mail, UUID uuid) {
+		this.loginType = new EncodableEnum(loginType);
 		this.name = name;
 		this.id = id;
 		this.mail = mail;
@@ -29,7 +29,7 @@ public class ClientLoggedInPacket implements ClientPacket {
 	}
 	
 	public ClientLoggedInPacket(FriendlyByteBuffer buffer) {
-		this.loginType = buffer.readEnum(LoginType.class);
+		this.loginType = buffer.read(EncodableEnum.class);
 		this.name = buffer.readString();
 		this.id = buffer.readInt();
 		this.mail = buffer.readString();
@@ -38,7 +38,7 @@ public class ClientLoggedInPacket implements ClientPacket {
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeEnum(this.loginType);
+		buffer.write(this.loginType);
 		buffer.writeString(this.name);
 		buffer.writeInt(this.id);
 		buffer.writeString(this.mail);
@@ -46,8 +46,8 @@ public class ClientLoggedInPacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public LoginType getLoginType() {
-		return this.loginType;
+	public Enum<?> getLoginType() {
+		return this.loginType.get();
 	}
 	
 	@PacketGetter

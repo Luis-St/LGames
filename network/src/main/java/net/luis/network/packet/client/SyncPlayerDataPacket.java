@@ -1,11 +1,9 @@
 package net.luis.network.packet.client;
 
-import net.luis.game.player.GamePlayer;
-import net.luis.game.score.PlayerScore;
+import net.luis.network.buffer.Encodable;
+import net.luis.network.buffer.EncodableObject;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.listener.PacketGetter;
-import net.luis.player.GameProfile;
-import net.luis.player.Player;
 
 /**
  *
@@ -15,28 +13,20 @@ import net.luis.player.Player;
 
 public class SyncPlayerDataPacket implements ClientPacket {
 	
-	private final GameProfile profile;
+	private final EncodableObject profile;
 	private final boolean playing;
-	private final PlayerScore score;
+	private final EncodableObject score;
 	
-	public SyncPlayerDataPacket(GamePlayer player) {
-		this(player.getPlayer());
-	}
-	
-	public SyncPlayerDataPacket(Player player) {
-		this(player.getProfile(), player.isPlaying(), player.getScore());
-	}
-	
-	public SyncPlayerDataPacket(GameProfile profile, boolean playing, PlayerScore score) {
-		this.profile = profile;
+	public SyncPlayerDataPacket(Encodable profile, boolean playing, Encodable score) {
+		this.profile = new EncodableObject(profile);
 		this.playing = playing;
-		this.score = score;
+		this.score = new EncodableObject(score);
 	}
 	
 	public SyncPlayerDataPacket(FriendlyByteBuffer buffer) {
-		this.profile = buffer.read(GameProfile.class);
+		this.profile = buffer.read(EncodableObject.class);
 		this.playing = buffer.readBoolean();
-		this.score = buffer.read(PlayerScore.class);
+		this.score = buffer.read(EncodableObject.class);
 	}
 	
 	@Override
@@ -47,8 +37,8 @@ public class SyncPlayerDataPacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public GameProfile getProfile() {
-		return this.profile;
+	public Encodable getProfile() {
+		return this.profile.get();
 	}
 	
 	@PacketGetter
@@ -57,8 +47,8 @@ public class SyncPlayerDataPacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public PlayerScore getScore() {
-		return this.score;
+	public Encodable getScore() {
+		return this.score.get();
 	}
 	
 }

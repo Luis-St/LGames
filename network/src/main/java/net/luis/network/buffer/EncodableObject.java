@@ -23,19 +23,28 @@ public class EncodableObject implements Encodable {
 	@DecodingConstructor
 	@SuppressWarnings("unchecked")
 	private EncodableObject(FriendlyByteBuffer buffer) {
-		ReflectionHelper.enableExceptionLogging();
-		Class<? extends Encodable> clazz = (Class<? extends Encodable>) ReflectionHelper.getClassForName(buffer.readString());
-		ReflectionHelper.disableExceptionLogging();
-		assert clazz != null;
-		this.object = Objects.requireNonNull(buffer.read(clazz), "Can not read object of type " + clazz.getName() + " because the type does not exists");
+		boolean nullObject = buffer.readBoolean();
+		if (nullObject) {
+			this.object = null;
+		} else {
+			ReflectionHelper.enableExceptionLogging();
+			Class<? extends Encodable> clazz = (Class<? extends Encodable>) ReflectionHelper.getClassForName(buffer.readString());
+			ReflectionHelper.disableExceptionLogging();
+			assert clazz != null;
+			this.object = Objects.requireNonNull(buffer.read(clazz), "Can not read object of type " + clazz.getName() + " because the type does not exists");
+		}
 	}
 	
 	@Override
 	public void encode(FriendlyByteBuffer buffer) {
-		buffer.writeString(this.object.getClass().getName());
-		buffer.write(this.object);
+		buffer.writeBoolean(this.object == null);
+		if (this.object != null) {
+			buffer.writeString(this.object.getClass().getName());
+			buffer.write(this.object);
+		}
 	}
 	
+	@Nullable
 	public Encodable get() {
 		return this.object;
 	}

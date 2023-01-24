@@ -190,34 +190,6 @@ public class FriendlyByteBuffer {
 		return map;
 	}
 	
-	public <T extends Encodable> void writeOptional(Optional<T> optional) {
-		this.writeBoolean(optional.isPresent());
-		optional.ifPresent(this::write);
-	}
-	
-	public <T extends Encodable> Optional<T> readOptional(Class<T> clazz) {
-		boolean present = this.readBoolean();
-		if (present) {
-			T value = this.read(clazz);
-			return Optional.of(value);
-		}
-		return Optional.empty();
-	}
-	
-	public <T extends Enum<T>> void writeEnumOptional(Optional<T> optional) {
-		this.writeBoolean(optional.isPresent());
-		optional.ifPresent(this::writeEnum);
-	}
-	
-	public <T extends Enum<T>> Optional<T> readEnumOptional(Class<T> clazz) {
-		boolean present = this.readBoolean();
-		if (present) {
-			T value = this.readEnum(clazz);
-			return Optional.of(value);
-		}
-		return Optional.empty();
-	}
-	
 	public <T extends Encodable> void writeInterface(T value) {
 		this.writeString(value.getClass().getName());
 		this.write(value);
