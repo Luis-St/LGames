@@ -22,7 +22,7 @@ dependencies {
 	// Modules
 	implementation project(":account")
 	implementation project(":client")
-	implementation project(":common")
+	implementation project(":fx")
 	implementation project(":game")
 	implementation project(":ludo")
 	implementation project(":network")

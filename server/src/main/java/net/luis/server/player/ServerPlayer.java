@@ -3,7 +3,7 @@ package net.luis.server.player;
 import javafx.scene.control.TreeItem;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
-import net.luis.game.score.PlayerScore;
+import net.luis.game.player.score.PlayerScore;
 import net.luis.language.TranslationKey;
 import net.luis.network.Connection;
 import net.luis.server.Server;

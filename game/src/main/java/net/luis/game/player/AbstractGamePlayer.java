@@ -1,7 +1,7 @@
 package net.luis.game.player;
 
-import net.luis.application.ApplicationType;
 import net.luis.game.Game;
+import net.luis.game.application.ApplicationType;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.game.player.figure.GameFiguresFactory;
 

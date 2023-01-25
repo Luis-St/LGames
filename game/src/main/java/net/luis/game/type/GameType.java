@@ -1,8 +1,8 @@
 package net.luis.game.type;
 
-import net.luis.application.GameApplication;
 import net.luis.game.Game;
 import net.luis.game.GameFactory;
+import net.luis.game.application.GameApplication;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerInfo;
 import net.luis.utils.math.Mth;

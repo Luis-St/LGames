@@ -1,8 +1,8 @@
 package net.luis.game.dice;
 
 import javafx.scene.image.ImageView;
-import net.luis.application.GameApplication;
 import net.luis.fxutils.FxUtils;
+import net.luis.game.application.GameApplication;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

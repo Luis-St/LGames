@@ -7,7 +7,7 @@ import net.luis.game.map.field.GameField;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.Player;
 import net.luis.game.player.figure.GameFigure;
-import net.luis.game.score.PlayerScore;
+import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
 import net.luis.game.type.GameTypes;
 import net.luis.game.win.GameResultLine;

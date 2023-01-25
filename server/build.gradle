@@ -20,7 +20,6 @@ javafx {
 
 dependencies {
 	// Modules
-	implementation project(":common")
 	implementation project(":game")
 	implementation project(":network")
 	implementation project(":utility")

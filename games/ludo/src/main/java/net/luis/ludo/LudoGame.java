@@ -1,8 +1,8 @@
 package net.luis.ludo;
 
-import net.luis.application.ApplicationType;
 import net.luis.game.AbstractGame;
 import net.luis.game.GameResult;
+import net.luis.game.application.ApplicationType;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
@@ -11,7 +11,7 @@ import net.luis.game.player.GamePlayerFactory;
 import net.luis.game.player.GamePlayerInfo;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.figure.GameFigure;
-import net.luis.game.score.PlayerScore;
+import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
 import net.luis.game.type.GameTypes;
 import net.luis.ludo.dice.LudoDiceHandler;
@@ -23,7 +23,6 @@ import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.luis.network.packet.listener.PacketListener;
-import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
 import net.luis.utils.util.Utils;
@@ -38,7 +37,6 @@ import java.util.Objects;
  *
  */
 
-@PacketSubscriber("#getGame")
 public class LudoGame extends AbstractGame {
 	
 	private final LudoDiceHandler diceHandler = new LudoDiceHandler(this, 1, 6);

@@ -1,8 +1,8 @@
 package net.luis.game.player;
 
-import net.luis.application.ApplicationType;
-import net.luis.application.GameApplication;
-import net.luis.game.score.PlayerScore;
+import net.luis.game.application.ApplicationType;
+import net.luis.game.application.GameApplication;
+import net.luis.game.player.score.PlayerScore;
 import net.luis.network.Connection;
 import net.luis.utility.Tickable;
 import net.luis.utils.util.ToString;

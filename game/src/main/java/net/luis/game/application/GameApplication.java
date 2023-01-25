@@ -1,4 +1,4 @@
-package net.luis.application;
+package net.luis.game.application;
 
 import io.netty.channel.epoll.Epoll;
 import javafx.animation.Timeline;
@@ -6,7 +6,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import net.luis.language.LanguageProvider;
-import net.luis.loading.LaunchState;
 import net.luis.utility.ExceptionHandler;
 import net.luis.utility.data.DataHandler;
 import org.apache.logging.log4j.LogManager;
@@ -148,4 +147,29 @@ public abstract class GameApplication extends Application implements DataHandler
 		
 	}
 	
+	/**
+	 *
+	 * @author Luis-st
+	 *
+	 */
+	public enum LaunchState {
+		
+		STARTING("starting"), STARTED("started"), STOPPING("stopping"), STOPPED("stopped"), UNKNOWN("unknown");
+		
+		private final String name;
+		
+		LaunchState(String name) {
+			this.name = name;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		@Override
+		public String toString() {
+			return this.name;
+		}
+		
+	}
 }

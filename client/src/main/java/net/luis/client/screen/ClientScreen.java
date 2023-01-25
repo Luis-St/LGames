@@ -1,15 +1,9 @@
 package net.luis.client.screen;
 
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import net.luis.client.Client;
-import net.luis.fx.ScreenScene;
 import net.luis.fx.Showable;
 import net.luis.fx.screen.AbstractScreen;
-import net.luis.language.TranslationKey;
 import net.luis.utility.Tickable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 

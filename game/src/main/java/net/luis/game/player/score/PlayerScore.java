@@ -1,4 +1,4 @@
-package net.luis.game.score;
+package net.luis.game.player.score;
 
 import net.luis.game.player.GameProfile;
 import net.luis.network.annotation.DecodingConstructor;

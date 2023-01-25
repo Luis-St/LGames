@@ -13,7 +13,7 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerInfo;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
-import net.luis.game.score.PlayerScore;
+import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
 import net.luis.network.packet.PacketHandler;
 import net.luis.network.packet.client.*;

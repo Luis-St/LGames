@@ -1,10 +1,10 @@
 package net.luis.game.map.field;
 
 import javafx.scene.image.ImageView;
-import net.luis.application.ApplicationType;
-import net.luis.application.GameApplication;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.GameResult;
+import net.luis.game.application.ApplicationType;
+import net.luis.game.application.GameApplication;
 import net.luis.game.map.GameMap;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.figure.GameFigure;

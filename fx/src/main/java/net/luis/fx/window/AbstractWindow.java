@@ -1,4 +1,4 @@
-package net.luis.window;
+package net.luis.fx.window;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 public abstract class AbstractWindow {
 	
-	protected static final Logger LOGGER = LogManager.getLogger(ErrorWindow.class);
+	protected static final Logger LOGGER = LogManager.getLogger();
 	
 	protected final Stage stage;
 	private final double width;

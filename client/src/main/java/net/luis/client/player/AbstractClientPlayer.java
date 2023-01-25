@@ -3,7 +3,7 @@ package net.luis.client.player;
 import net.luis.client.Client;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
-import net.luis.game.score.PlayerScore;
+import net.luis.game.player.score.PlayerScore;
 
 import java.util.Objects;
 

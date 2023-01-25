@@ -1,4 +1,4 @@
-package net.luis.application;
+package net.luis.game.application;
 
 import java.util.Objects;
 

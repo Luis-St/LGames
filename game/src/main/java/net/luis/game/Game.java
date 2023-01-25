@@ -1,7 +1,7 @@
 package net.luis.game;
 
 import com.google.common.collect.Lists;
-import net.luis.application.ApplicationType;
+import net.luis.game.application.ApplicationType;
 import net.luis.game.dice.DiceHandler;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;

@@ -2,7 +2,6 @@ package net.luis.client.screen.game;
 
 import net.luis.client.player.LocalPlayer;
 import net.luis.client.screen.ClientScreen;
-import net.luis.fx.screen.Screen;
 
 /**
  *

@@ -1,8 +1,8 @@
 package net.luis.game.map;
 
 import com.google.common.collect.ImmutableList;
-import net.luis.application.ApplicationType;
 import net.luis.game.Game;
+import net.luis.game.application.ApplicationType;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;

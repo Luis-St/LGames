@@ -5,12 +5,10 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import net.luis.Constants;
 import net.luis.client.Client;
-import net.luis.fx.Box;
 import net.luis.client.player.LocalPlayer;
+import net.luis.fx.Box;
 import net.luis.game.dice.DiceRenderState;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
-
-import java.util.Objects;
 
 /**
  *

@@ -14,6 +14,7 @@ import net.luis.account.account.LoginType;
 import net.luis.client.Client;
 import net.luis.client.ClientAccount;
 import net.luis.client.fx.Box;
+import net.luis.fx.window.AbstractWindow;
 import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.EventHandlers;
 import net.luis.fxutils.FxUtils;
@@ -27,7 +28,6 @@ import net.luis.network.packet.account.ClientLoginPacket;
 import net.luis.network.packet.account.ClientLogoutPacket;
 import net.luis.network.packet.account.ClientRegistrationPacket;
 import net.luis.utility.Util;
-import net.luis.window.AbstractWindow;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
 

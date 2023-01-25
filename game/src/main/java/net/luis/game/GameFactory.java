@@ -1,6 +1,6 @@
 package net.luis.game;
 
-import net.luis.application.GameApplication;
+import net.luis.game.application.GameApplication;
 import net.luis.game.player.GamePlayerInfo;
 
 import java.util.List;
