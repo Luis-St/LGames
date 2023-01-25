@@ -5,7 +5,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import net.luis.Constants;
 import net.luis.client.Client;
-import net.luis.client.fx.game.wrapper.LabelWrapper;
+import net.luis.fx.game.wrapper.LabelWrapper;
 import net.luis.client.game.map.field.AbstractClientGameField;
 import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;

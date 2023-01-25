@@ -1,8 +1,8 @@
-package net.luis.client.fx;
+package net.luis.fx;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import net.luis.client.screen.Screen;
+import net.luis.fx.screen.AbstractScreen;
 import net.luis.utility.Tickable;
 
 /**
@@ -13,14 +13,14 @@ import net.luis.utility.Tickable;
 
 public class ScreenScene extends Scene implements Tickable {
 	
-	private final Screen screen;
+	private final AbstractScreen screen;
 	
-	public ScreenScene(Parent root, double width, double height, Screen screen) {
+	public ScreenScene(Parent root, double width, double height, AbstractScreen screen) {
 		super(root, width, height);
 		this.screen = screen;
 	}
 	
-	public Screen getScreen() {
+	public AbstractScreen getScreen() {
 		return this.screen;
 	}
 	

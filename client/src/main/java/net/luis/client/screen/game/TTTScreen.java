@@ -4,11 +4,11 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import net.luis.client.fx.ButtonBox;
-import net.luis.client.fx.game.PlayerInfoPane;
-import net.luis.client.fx.game.PlayerScorePane;
 import net.luis.client.games.ttt.TTTClientGame;
 import net.luis.client.games.ttt.map.TTTClientMap;
+import net.luis.fx.ButtonBox;
+import net.luis.client.fx.PlayerInfoPane;
+import net.luis.client.fx.PlayerScorePane;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.map.field.GameField;
 import net.luis.games.ttt.map.field.TTTFieldType;
@@ -37,9 +37,8 @@ public class TTTScreen extends GameScreen {
 	private ButtonBox confirmActionButton;
 	
 	public TTTScreen(TTTClientGame game) {
+		super(TranslationKey.createAndGet("client.constans.name"), 900, 700);
 		this.game = game;
-		this.width = 900;
-		this.height = 700;
 	}
 	
 	@Override

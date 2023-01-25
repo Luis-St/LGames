@@ -4,12 +4,12 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import net.luis.client.fx.ButtonBox;
-import net.luis.client.fx.game.DiceButton;
-import net.luis.client.fx.game.PlayerInfoPane;
-import net.luis.client.fx.game.PlayerScorePane;
 import net.luis.client.games.ludo.LudoClientGame;
 import net.luis.client.games.ludo.map.LudoClientMap;
+import net.luis.fx.ButtonBox;
+import net.luis.client.fx.DiceButton;
+import net.luis.client.fx.PlayerInfoPane;
+import net.luis.client.fx.PlayerScorePane;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.map.field.GameField;
 import net.luis.language.TranslationKey;
@@ -39,9 +39,8 @@ public class LudoScreen extends GameScreen {
 	private ButtonBox confirmActionButton;
 	
 	public LudoScreen(LudoClientGame game) {
+		super(TranslationKey.createAndGet("client.constans.name"), 1375, 1050);
 		this.game = game;
-		this.width = 1375;
-		this.height = 1050;
 	}
 	
 	@Override

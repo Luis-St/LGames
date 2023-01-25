@@ -7,7 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import net.luis.client.ClientSettings;
-import net.luis.client.fx.ButtonBox;
+import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.language.Language;
 import net.luis.language.TranslationKey;
@@ -18,14 +18,15 @@ import net.luis.language.TranslationKey;
  *
  */
 
-public class SettingsScreen extends Screen {
+public class SettingsScreen extends ClientScreen {
 	
-	private final Screen backScreen;
+	private final ClientScreen backScreen;
 	private ComboBox<String> languageSettingBox;
 	private GridPane languageSetting;
 	private ButtonBox backButtonBox;
 	
-	public SettingsScreen(Screen backScreen) {
+	public SettingsScreen(ClientScreen backScreen) {
+		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
 		this.backScreen = backScreen;
 	}
 	

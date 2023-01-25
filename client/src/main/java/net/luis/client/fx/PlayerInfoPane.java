@@ -1,4 +1,4 @@
-package net.luis.client.fx.game;
+package net.luis.client.fx;
 
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;

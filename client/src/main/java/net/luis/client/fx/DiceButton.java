@@ -1,11 +1,11 @@
-package net.luis.client.fx.game;
+package net.luis.client.fx;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import net.luis.Constants;
 import net.luis.client.Client;
-import net.luis.client.fx.Box;
+import net.luis.fx.Box;
 import net.luis.client.player.LocalPlayer;
 import net.luis.game.dice.DiceRenderState;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
@@ -45,12 +45,8 @@ public class DiceButton extends Button {
 	}
 	
 	private void updateState() {
-		ImageView image = Objects.requireNonNull(DiceRenderState.fromCount(this.count)).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
-		if (image != null) {
-			this.setGraphic(new Box<>(image, Pos.CENTER));
-		} else {
-			this.setGraphic(null);
-		}
+		ImageView image = DiceRenderState.fromCount(this.count).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
+		this.setGraphic(new Box<>(image, Pos.CENTER));
 	}
 	
 	public int getCount() {

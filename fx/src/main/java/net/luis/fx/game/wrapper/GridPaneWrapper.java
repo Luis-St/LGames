@@ -1,4 +1,4 @@
-package net.luis.client.fx.game.wrapper;
+package net.luis.fx.game.wrapper;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

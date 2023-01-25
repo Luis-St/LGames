@@ -1,7 +1,8 @@
 package net.luis.client.screen.game;
 
 import net.luis.client.player.LocalPlayer;
-import net.luis.client.screen.Screen;
+import net.luis.client.screen.ClientScreen;
+import net.luis.fx.screen.Screen;
 
 /**
  *
@@ -9,10 +10,10 @@ import net.luis.client.screen.Screen;
  *
  */
 
-public abstract class GameScreen extends Screen {
+public abstract class GameScreen extends ClientScreen {
 	
-	public GameScreen() {
-		
+	protected GameScreen(String title, int width, int height) {
+		super(title, width, height);
 	}
 	
 	protected LocalPlayer getPlayer() {

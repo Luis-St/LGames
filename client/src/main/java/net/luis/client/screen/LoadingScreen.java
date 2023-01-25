@@ -6,7 +6,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import net.luis.client.fx.Box;
+import net.luis.fx.Box;
 import net.luis.fxutils.FxUtils;
 import net.luis.language.TranslationKey;
 import net.luis.utils.math.Mth;
@@ -17,7 +17,7 @@ import net.luis.utils.math.Mth;
  *
  */
 
-public class LoadingScreen extends Screen {
+public class LoadingScreen extends ClientScreen {
 	
 	private Box<Text> vgcTextBox;
 	private Box<Text> loadingTextBox;
@@ -25,9 +25,7 @@ public class LoadingScreen extends Screen {
 	private boolean enterMenu;
 	
 	public LoadingScreen() {
-		this.title = TranslationKey.createAndGet("screen.loading.title");
-		this.width = 400;
-		this.height = 550;
+		super(TranslationKey.createAndGet("screen.loading.title"), 400, 550);
 	}
 	
 	@Override

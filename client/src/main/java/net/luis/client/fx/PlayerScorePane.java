@@ -1,4 +1,4 @@
-package net.luis.client.fx.game;
+package net.luis.client.fx;
 
 import com.google.common.collect.Lists;
 import javafx.geometry.Pos;

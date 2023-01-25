@@ -1,4 +1,4 @@
-package net.luis.client.fx.game.wrapper;
+package net.luis.fx.game.wrapper;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;

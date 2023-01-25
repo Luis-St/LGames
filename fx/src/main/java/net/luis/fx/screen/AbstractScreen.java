@@ -1,11 +1,9 @@
-package net.luis.client.screen;
+package net.luis.fx.screen;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import net.luis.client.Client;
-import net.luis.client.fx.ScreenScene;
-import net.luis.client.fx.Showable;
-import net.luis.language.TranslationKey;
+import net.luis.fx.ScreenScene;
+import net.luis.fx.Showable;
 import net.luis.utility.Tickable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,17 +14,18 @@ import org.apache.logging.log4j.Logger;
  *
  */
 
-public abstract class Screen implements Showable, Tickable {
+public abstract class AbstractScreen implements Showable, Tickable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger();
 	
-	protected final Client client;
-	public String title = TranslationKey.createAndGet("client.constans.name");
-	public int width = 600;
-	public int height = 600;
+	public final String title;
+	public final int width;
+	public final int height;
 	
-	public Screen() {
-		this.client = Client.getInstance();
+	protected AbstractScreen(String title, int width, int height) {
+		this.title = title;
+		this.width = width;
+		this.height = height;
 	}
 	
 	public void init() {
@@ -36,14 +35,6 @@ public abstract class Screen implements Showable, Tickable {
 	@Override
 	public void tick() {
 		
-	}
-	
-	protected void showScreen(Screen screen) {
-		this.client.setScreen(screen);
-	}
-	
-	protected void reapplyScreen() {
-		this.client.setScreen(this);
 	}
 	
 	protected abstract Pane createPane();

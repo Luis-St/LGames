@@ -6,8 +6,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import net.luis.client.fx.ButtonBox;
 import net.luis.client.player.AbstractClientPlayer;
+import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.type.GameType;
 import net.luis.language.TranslationKey;
@@ -31,15 +31,16 @@ import java.util.List;
  */
 
 @PacketSubscriber("#getStage#getScene#getScreen")
-public class PlayerSelectScreen extends Screen {
+public class PlayerSelectScreen extends ClientScreen {
 	
 	private final GameType<?> gameType;
-	private final Screen backScreen;
+	private final ClientScreen backScreen;
 	private ListView<String> playerList;
 	private ButtonBox backButtonBox;
 	private ButtonBox playButtonBox;
 	
-	public PlayerSelectScreen(GameType<?> gameType, Screen backScreen) {
+	public PlayerSelectScreen(GameType<?> gameType, ClientScreen backScreen) {
+		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
 		this.gameType = gameType;
 		this.backScreen = backScreen;
 	}

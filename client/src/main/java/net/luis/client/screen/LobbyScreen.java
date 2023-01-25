@@ -8,7 +8,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import net.luis.client.fx.ButtonBox;
+import net.luis.fx.ButtonBox;
 import net.luis.client.player.AbstractClientPlayer;
 import net.luis.client.player.LocalPlayer;
 import net.luis.client.screen.game.GameScreen;
@@ -39,7 +39,7 @@ public class LobbyScreen extends GameScreen {
 	private ButtonBox wins4ButtonBox;
 	
 	public LobbyScreen() {
-		
+		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
 	}
 	
 	@Override

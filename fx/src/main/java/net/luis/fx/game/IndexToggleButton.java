@@ -1,4 +1,4 @@
-package net.luis.client.fx.game;
+package net.luis.fx.game;
 
 import javafx.scene.control.ToggleButton;
 

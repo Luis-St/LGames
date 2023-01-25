@@ -7,8 +7,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import net.luis.client.fx.ButtonBox;
 import net.luis.client.window.LoginWindow;
+import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.language.TranslationKey;
 
@@ -18,12 +18,16 @@ import net.luis.language.TranslationKey;
  *
  */
 
-public class MenuScreen extends Screen {
+public class MenuScreen extends ClientScreen {
 	
 	private Button loginButton;
 	private ButtonBox multiplayerButtonBox;
 	private ButtonBox settingsButtonBox;
 	private VBox centerBox;
+	
+	public MenuScreen() {
+		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
+	}
 	
 	@Override
 	public void init() {

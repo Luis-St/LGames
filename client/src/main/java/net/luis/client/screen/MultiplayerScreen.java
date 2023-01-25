@@ -8,8 +8,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import net.luis.Constants;
 import net.luis.client.ClientAccount;
-import net.luis.client.fx.ButtonBox;
 import net.luis.client.window.LoginWindow;
+import net.luis.fx.ButtonBox;
 import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.FxUtils;
 import net.luis.fxutils.fx.InputValidationPane;
@@ -28,16 +28,17 @@ import java.util.Objects;
  *
  */
 
-public class MultiplayerScreen extends Screen {
+public class MultiplayerScreen extends ClientScreen {
 	
-	private final Screen backScreen;
+	private final ClientScreen backScreen;
 	private InputValidationPane<TextField> hostPane;
 	private InputValidationPane<TextField> portPane;
 	private ButtonBox connectButtonBox;
 	private ButtonBox connectLocalButtonBox;
 	private ButtonBox backButtonBox;
 	
-	public MultiplayerScreen(Screen backScreen) {
+	public MultiplayerScreen(ClientScreen backScreen) {
+		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
 		this.backScreen = backScreen;
 	}
 	

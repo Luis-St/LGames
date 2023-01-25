@@ -7,16 +7,16 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.luis.application.ApplicationType;
 import net.luis.application.GameApplication;
-import net.luis.client.fx.ScreenScene;
-import net.luis.client.fx.Screenable;
 import net.luis.client.network.ClientPacketHandler;
 import net.luis.client.player.AbstractClientPlayer;
 import net.luis.client.player.LocalPlayer;
 import net.luis.client.player.RemotePlayer;
 import net.luis.client.screen.LoadingScreen;
 import net.luis.client.screen.MenuScreen;
-import net.luis.client.screen.Screen;
 import net.luis.client.window.LoginWindow;
+import net.luis.fx.ScreenScene;
+import net.luis.fx.screen.Screenable;
+import net.luis.fx.screen.AbstractScreen;
 import net.luis.game.Game;
 import net.luis.game.player.GameProfile;
 import net.luis.network.ConnectionHandler;
@@ -178,7 +178,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	}
 	
 	@Override
-	public void setScreen(Screen screen) {
+	public void setScreen(AbstractScreen screen) {
 		screen.init();
 		if (screen.title != null) {
 			this.stage.setTitle(screen.title);
