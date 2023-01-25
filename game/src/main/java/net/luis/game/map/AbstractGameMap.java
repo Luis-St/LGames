@@ -21,6 +21,7 @@ public abstract class AbstractGameMap implements GameMap {
 	protected AbstractGameMap(Game game) {
 		this.game = game;
 		this.fields = Lists.newArrayList();
+		this.init();
 		this.addFields();
 	}
 	

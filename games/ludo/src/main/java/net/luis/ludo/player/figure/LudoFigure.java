@@ -5,7 +5,6 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.figure.AbstractGameFigure;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.ludo.map.field.LudoFieldPos;
-import net.luis.utils.util.ToString;
 
 import java.util.UUID;
 
@@ -39,11 +38,6 @@ public class LudoFigure extends AbstractGameFigure {
 	@Override
 	public boolean canKick(GameFigure figure) {
 		return !this.equals(figure) && this.getPlayerType() != figure.getPlayerType();
-	}
-	
-	@Override
-	public String toString() {
-		return ToString.toString(this, "player");
 	}
 	
 }

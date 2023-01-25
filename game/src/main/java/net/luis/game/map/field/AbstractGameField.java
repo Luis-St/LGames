@@ -34,6 +34,7 @@ public abstract class AbstractGameField implements GameField {
 		this.colorType = colorType;
 		this.fieldPos = fieldPos;
 		this.fieldSize = fieldSize;
+		this.init();
 	}
 	
 	@Override

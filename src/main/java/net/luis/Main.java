@@ -6,7 +6,6 @@ import joptsimple.OptionSpec;
 import net.luis.account.AccountServer;
 import net.luis.client.Client;
 import net.luis.server.Server;
-import net.luis.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +36,6 @@ public class Main {
 		boolean client = set.has("client");
 		boolean server = set.has("server");
 		boolean account = set.has("account");
-		Util.warpStreams(set.has(debugMode) ? set.valueOf(debugMode) : false);
 		Constants.IDE = set.has("ide");
 		checkLaunch(client, server, account);
 		if (client) {

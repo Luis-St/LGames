@@ -2,7 +2,6 @@ package net.luis.game.map.field;
 
 import javafx.scene.image.ImageView;
 import net.luis.game.GameResult;
-import net.luis.game.application.ApplicationType;
 import net.luis.game.map.GameMap;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.GameProfile;
@@ -63,7 +62,7 @@ public interface GameField {
 	void setResult(GameResult result);
 	
 	default boolean canSelect() {
-		return ApplicationType.CLIENT.isOn();
+		return !this.isEmpty();
 	}
 	
 	boolean isShadowed();

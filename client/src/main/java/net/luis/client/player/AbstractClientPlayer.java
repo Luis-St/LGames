@@ -16,7 +16,6 @@ import java.util.Objects;
 public abstract class AbstractClientPlayer extends Player {
 	
 	private boolean admin = false;
-	private boolean current = false;
 	
 	public AbstractClientPlayer(GameProfile profile, PlayerScore score) {
 		super(profile, score, Client.getInstance());
@@ -35,27 +34,17 @@ public abstract class AbstractClientPlayer extends Player {
 		this.admin = admin;
 	}
 	
-	public boolean isCurrent() {
-		return this.current;
-	}
-	
-	public void setCurrent(boolean current) {
-		this.current = current;
-	}
-	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof AbstractClientPlayer that)) return false;
 		if (!super.equals(o)) return false;
 		
-		if (this.admin != that.admin) return false;
-		return this.current == that.current;
+		return this.admin == that.admin;
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.admin, this.current);
+		return Objects.hash(super.hashCode(), this.admin);
 	}
-	
 }

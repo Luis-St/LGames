@@ -22,7 +22,11 @@ public abstract class Player implements Tickable {
 	private final PlayerScore score;
 	private final GameApplication application;
 	private Connection connection;
-	private boolean playing;
+	private boolean playing = false;
+	private boolean current = false;
+	private boolean canSelect = false;
+	private boolean canRollDice = false;
+	private int count = -1;
 	
 	public Player(GameProfile profile, PlayerScore score, GameApplication application) {
 		this.profile = profile;
@@ -69,20 +73,56 @@ public abstract class Player implements Tickable {
 		this.playing = playing;
 	}
 	
+	public boolean isCurrent() {
+		return this.current;
+	}
+	
+	public void setCurrent(boolean current) {
+		this.current = current;
+	}
+	
+	public boolean canSelect() {
+		return this.canSelect;
+	}
+	
+	public void setCanSelect(boolean canSelect) {
+		this.canSelect = canSelect;
+	}
+	
+	public boolean canRollDice() {
+		return this.canRollDice;
+	}
+	
+	public void setCanRollDice(boolean canRollDice) {
+		this.canRollDice = canRollDice;
+	}
+	
+	public int getCount() {
+		return this.count;
+	}
+	
+	public void setCount(int count) {
+		this.count = count;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Player that)) return false;
+		if (!(o instanceof Player player)) return false;
 		
-		if (this.playing != that.playing) return false;
-		if (!this.profile.equals(that.profile)) return false;
-		if (!this.score.equals(that.score)) return false;
-		return Objects.equals(this.connection, that.connection);
+		if (this.playing != player.playing) return false;
+		if (this.current != player.current) return false;
+		if (this.canSelect != player.canSelect) return false;
+		if (this.canRollDice != player.canRollDice) return false;
+		if (this.count != player.count) return false;
+		if (!this.profile.equals(player.profile)) return false;
+		if (!this.score.equals(player.score)) return false;
+		return Objects.equals(this.connection, player.connection);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.profile, this.score, this.playing, this.connection);
+		return Objects.hash(this.profile, this.score, this.connection, this.playing, this.current, this.canSelect, this.canRollDice, this.count);
 	}
 	
 	@Override
