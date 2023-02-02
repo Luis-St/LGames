@@ -1,4 +1,4 @@
-rootProject.name = "SchoolProject"
+rootProject.name = "School-Project"
 include "account"
 include "client"
 include "common"

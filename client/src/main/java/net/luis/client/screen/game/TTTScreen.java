@@ -6,12 +6,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import net.luis.client.fx.PlayerInfoPane;
 import net.luis.client.fx.PlayerScorePane;
-import net.luis.client.games.ttt.TTTClientGame;
-import net.luis.client.games.ttt.map.TTTClientMap;
 import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.map.field.GameField;
-import net.luis.games.ttt.map.field.TTTFieldType;
 import net.luis.language.TranslationKey;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
@@ -20,6 +17,9 @@ import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.game.ExitGameRequestPacket;
 import net.luis.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
+import net.luis.ttt.TTTGame;
+import net.luis.ttt.map.TTTMap;
+import net.luis.ttt.map.field.TTTFieldType;
 
 /**
  *
@@ -30,13 +30,13 @@ import net.luis.network.packet.server.game.SelectGameFieldPacket;
 @PacketSubscriber("#getStage#getScene#getScreen")
 public class TTTScreen extends GameScreen {
 	
-	private final TTTClientGame game;
+	private final TTTGame game;
 	private PlayerInfoPane playerInfo;
 	private ButtonBox leaveButton;
 	private ButtonBox playAgainButton;
 	private ButtonBox confirmActionButton;
 	
-	public TTTScreen(TTTClientGame game) {
+	public TTTScreen(TTTGame game) {
 		super(TranslationKey.createAndGet("client.constans.name"), 900, 700);
 		this.game = game;
 	}
@@ -97,7 +97,7 @@ public class TTTScreen extends GameScreen {
 	}
 	
 	private Pane createGamePane() {
-		if (this.game.getMap() instanceof TTTClientMap map) {
+		if (this.game.getMap() instanceof TTTMap map) {
 			return map.getGridPane();
 		}
 		throw new NullPointerException("The map of game tic tac toe is null");

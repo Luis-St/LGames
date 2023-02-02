@@ -1,4 +1,4 @@
-package net.luis.client.games.ttt.map;
+package net.luis.ttt.map;
 
 import com.google.common.collect.Lists;
 import javafx.geometry.Insets;
@@ -10,29 +10,27 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import net.luis.Constants;
-import net.luis.client.Client;
-import net.luis.client.game.map.AbstractClientGameMap;
-import net.luis.client.games.ttt.map.field.TTTClientField;
-import net.luis.common.GameProfile;
 import net.luis.fx.game.wrapper.GridPaneWrapper;
 import net.luis.fx.game.wrapper.ToggleButtonWrapper;
 import net.luis.game.Game;
 import net.luis.game.GameResult;
+import net.luis.game.map.AbstractGameMap;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldInfo;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.GameProfile;
 import net.luis.game.player.figure.GameFigure;
 import net.luis.game.win.GameResultLine;
-import net.luis.games.ttt.map.field.TTTFieldPos;
-import net.luis.network.NetworkSide;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.listener.PacketListener;
-import net.luis.network.packet.listener.PacketSubscriber;
+import net.luis.ttt.map.field.TTTField;
+import net.luis.ttt.map.field.TTTFieldPos;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,18 +42,14 @@ import java.util.UUID;
  *
  */
 
-@PacketSubscriber(value = NetworkSide.CLIENT, getter = "#getGame#getMap")
-public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapper {
+
+public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
 	
-	private final ToggleGroup group;
-	private final GridPane gridPane;
+	private final ToggleGroup group = new ToggleGroup();
+	private final GridPane gridPane = new GridPane();
 	
-	public TTTClientMap(Client client, Game game) {
-		super(client, game);
-		this.group = new ToggleGroup();
-		this.gridPane = new GridPane();
-		this.init();
-		this.addFields();
+	public TTTMap(Game game) {
+		super(game);
 		this.addBorders();
 	}
 	
@@ -72,15 +66,18 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		this.setPadding(new Insets(20.0));
 		this.setGridLinesVisible(Constants.DEBUG);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-			if (oldValue instanceof ToggleButton oldButton && oldButton.getUserData() instanceof TTTClientField oldField) {
-				if (newValue instanceof ToggleButton newButton && newButton.getUserData() instanceof TTTClientField newField) {
-					
-				} else {
+			if (oldValue instanceof ToggleButton oldButton && oldButton.getUserData() instanceof TTTField oldField) {
+				if (!(newValue instanceof ToggleButton newButton && newButton.getUserData() instanceof TTTField)) {
 					oldField.setSelected(true);
 				}
 			}
-			this.getFields().stream().filter(GameField::isShadowed).forEach(GameField::clearShadow);
+			this.getFields().stream().filter(GameField::isShadowed).forEach((field) -> field.setShadowed(false));
 		});
+	}
+	
+	@Override
+	public void init(List<GamePlayer> players) {
+		this.getFields().forEach(GameField::clear);
 	}
 	
 	@Override
@@ -97,9 +94,9 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 	}
 	
 	private void addField(TTTFieldPos fieldPos, int column, int row) {
-		TTTClientField field = new TTTClientField(this.getClient(), this, this.group, fieldPos, 150.0);
+		TTTField field = new TTTField(this, this.group, fieldPos);
 		field.setOnAction((event) -> {
-			if (this.getClient().getPlayer().isCurrent()) {
+			if (!Objects.requireNonNull(this.getGame().getPlayer()).getPlayer().isCurrent()) {
 				if (field.isEmpty() && field.getResult() == GameResult.NO) {
 					field.setShadowed(true);
 				}
@@ -130,14 +127,14 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		this.add(new Rectangle(width, height, Color.BLACK), column, row);
 	}
 	
+	
 	@Override
-	public GameField getField(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos) {
+	public @Nullable GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, GameFieldPos fieldPos) {
 		return this.getFields().get(fieldPos.getPosition());
 	}
 	
 	@Override
-	public final GameField getNextField(GameFigure figure, int count) {
-		LOGGER.warn("Fail to get next field for figure {} of player {}, since tic tac toe figures does not have a next field", figure.getCount(), figure.getPlayer().getPlayer().getProfile().getName());
+	public @Nullable GameField getNextField(GameFigure figure, int count) {
 		return null;
 	}
 	
@@ -173,10 +170,10 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 		return null;
 	}
 	
-	@PacketListener
+	@PacketListener(ClientPacket.class)
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
-			for (GameFieldInfo fieldInfo : packet.getFieldInfos()) {
+			for (GameFieldInfo fieldInfo : packet.getFieldInfos().stream().map(GameFieldInfo.class::cast).toList()) {
 				GameProfile profile = fieldInfo.getProfile();
 				GameFieldPos fieldPos = fieldInfo.getFieldPos();
 				GameField field = this.getField(null, null, fieldPos);
@@ -208,9 +205,9 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 				}
 			}
 		} else if (clientPacket instanceof GameResultPacket packet) {
-			GameResult result = packet.getResult();
+			GameResult result = (GameResult) packet.getResult();
 			if (result != GameResult.NO) {
-				GameResultLine resultLine = packet.getResultLine();
+				GameResultLine resultLine = packet.getObject().cast(GameResultLine.class);
 				if (result == GameResult.DRAW) {
 					for (GameField field : this.getFields()) {
 						field.setResult(GameResult.DRAW);
@@ -229,11 +226,6 @@ public class TTTClientMap extends AbstractClientGameMap implements GridPaneWrapp
 				LOGGER.warn("Fail to handle game result {}", result);
 			}
 		}
-	}
-	
-	@Override
-	public String toString() {
-		return "TTTClientMap";
 	}
 	
 }

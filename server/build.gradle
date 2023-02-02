@@ -21,6 +21,9 @@ javafx {
 dependencies {
 	// Modules
 	implementation project(":game")
+	implementation project(":ludo")
+	implementation project(":ttt")
+	implementation project(":wins4")
 	implementation project(":network")
 	implementation project(":utility")
 	// Local

@@ -79,10 +79,10 @@ public class ServerPacketHandler implements PacketHandler {
 		}).toList();
 		if (players.size() == profiles.size()) {
 			if (mutable.isFalse()) {
-				if (this.server.getGame() == null) {
+				if (this.server.getGameManager().getGame() == null) {
 					T game = gameType.createGame(this.server, /*players*/Lists.newArrayList()); // TODO: find solution
 					if (game != null) {
-						this.server.setGame(game);
+						this.server.getGameManager().setGame(game);
 						game.start();
 						for (ServerPlayer player : players) {
 							player.setPlaying(true);
@@ -91,7 +91,7 @@ public class ServerPacketHandler implements PacketHandler {
 						Util.runDelayed("DelayedSetStartPlayer", 250, game::getStartPlayer);
 					}
 				} else {
-					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getInfoName(), this.server.getGame().getType().getInfoName());
+					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getInfoName(), this.server.getGameManager().getGame().getType().getInfoName());
 					this.connection.send(new CancelPlayGameRequestPacket());
 				}
 			} else {
@@ -121,7 +121,7 @@ public class ServerPacketHandler implements PacketHandler {
 		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
 		if (player != null) {
 			if (this.server.isAdmin(player)) {
-				Game game = this.server.getGame();
+				Game game = this.server.getGameManager().getGame();
 				if (game != null) {
 					if (!game.nextMatch()) {
 						LOGGER.warn("Fail to start new match of game {}", game.getType().getInfoName());
@@ -144,7 +144,7 @@ public class ServerPacketHandler implements PacketHandler {
 	
 	@PacketListener(RollDiceRequestPacket.class)
 	public void handleRollDiceRequest(GameProfile profile) {
-		Game game = this.server.getGame();
+		Game game = this.server.getGameManager().getGame();
 		if (game != null) {
 			GamePlayer player = game.getPlayerFor(profile);
 			if (player != null) {
@@ -192,7 +192,7 @@ public class ServerPacketHandler implements PacketHandler {
 	
 	@PacketListener(ExitGameRequestPacket.class)
 	public void handleExitGameRequest(GameProfile profile) {
-		Game game = this.server.getGame();
+		Game game = this.server.getGameManager().getGame();
 		if (game != null) {
 			if (!game.removePlayer(game.getPlayerFor(profile), true)) {
 				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getInfoName());

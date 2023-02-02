@@ -5,6 +5,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import net.luis.game.manager.GameManager;
 import net.luis.language.LanguageProvider;
 import net.luis.utility.ExceptionHandler;
 import net.luis.utility.data.DataHandler;
@@ -89,6 +90,8 @@ public abstract class GameApplication extends Application implements DataHandler
 	}
 	
 	public abstract ApplicationType getApplicationType();
+	
+	public abstract GameManager getGameManager();
 	
 	@Nullable
 	protected Timeline getTicker() {

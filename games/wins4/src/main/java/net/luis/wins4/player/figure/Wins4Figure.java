@@ -1,10 +1,9 @@
-package net.luis.server.games.wins4.player.figure;
+package net.luis.wins4.player.figure;
 
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.figure.AbstractGameFigure;
-import net.luis.games.wins4.map.field.Wins4FieldPos;
-import net.luis.utils.util.ToString;
+import net.luis.wins4.map.field.Wins4FieldPos;
 
 import java.util.UUID;
 
@@ -14,9 +13,9 @@ import java.util.UUID;
  *
  */
 
-public class Wins4ServerFigure extends AbstractGameFigure {
+public class Wins4Figure extends AbstractGameFigure {
 	
-	public Wins4ServerFigure(GamePlayer player, int count, UUID uuid) {
+	public Wins4Figure(GamePlayer player, int count, UUID uuid) {
 		super(player, count, uuid);
 	}
 	
@@ -29,10 +28,4 @@ public class Wins4ServerFigure extends AbstractGameFigure {
 	public GameFieldPos getStartPos() {
 		return Wins4FieldPos.NO;
 	}
-	
-	@Override
-	public String toString() {
-		return ToString.toString(this, "player");
-	}
-	
 }

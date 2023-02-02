@@ -18,6 +18,7 @@ javafx {
 	modules = ["javafx.controls"]
 }
 
+
 dependencies {
 	// Modules
 	implementation project(":account")
@@ -60,7 +61,7 @@ test {
 
 tasks.register("runClient", JavaExec) {
 	group = "runs"
-	getMainClass().set("net.luis.Main")
+	main = "net.luis.server.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("assets"), "--accountHost", "localhost", "--accountPort", "8081")
@@ -70,7 +71,7 @@ tasks.register("runClient", JavaExec) {
 
 tasks.register("runServer", JavaExec) {
 	group = "runs"
-	getMainClass().set("net.luis.Main")
+	main = "net.luis.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--server", "--gameDir", file("run/server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8080", "--language", "en_us")
@@ -80,7 +81,7 @@ tasks.register("runServer", JavaExec) {
 
 tasks.register("runAccount", JavaExec) {
 	group = "runs"
-	getMainClass().set("net.luis.Main")
+	main = "net.luis.Main"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--account", "--gameDir", file("run/account_server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8081", "--language", "en_us")
@@ -89,7 +90,7 @@ tasks.register("runAccount", JavaExec) {
 
 tasks.register("runTest", JavaExec) {
 	group = "test runs"
-	getMainClass().set("net.luis.Test")
+	main = "net.luis.Test"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
@@ -97,7 +98,7 @@ tasks.register("runTest", JavaExec) {
 
 tasks.register("runFxTest", JavaExec) {
 	group = "test runs"
-	getMainClass().set("net.luis.FxTest")
+	main = "net.luis.FxTest"
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
@@ -107,16 +108,17 @@ compileJava {
 	options.compilerArgs << "-parameters"
 }
 
+
 jar {
-	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+/*	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)*/
 	manifest {
 		attributes([
-				"Main-Class"   : "net.vgc.Main",
+				"Main-Class"   : "net.luis.Main"/*,
 				"Built-By"     : "Luis Staudt, (Felix Stenzel and Luca Loos)",
-				"Multi-Release": "true"
+				"Multi-Release": "true"*/
 		])
 	}
-	from {
+/*	from {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-	}
+	}*/
 }

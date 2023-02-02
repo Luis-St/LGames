@@ -66,12 +66,7 @@ public interface Game {
 	
 	@Nullable
 	default GamePlayer getPlayerFor(Player player) {
-		for (GamePlayer gamePlayer : this.getPlayers()) {
-			if (gamePlayer.getPlayer().equals(player)) {
-				return gamePlayer;
-			}
-		}
-		return null;
+		return this.getPlayerFor(player.getProfile());
 	}
 	
 	@Nullable

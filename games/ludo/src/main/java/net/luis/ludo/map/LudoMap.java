@@ -79,9 +79,7 @@ public class LudoMap extends AbstractGameMap implements GridPaneWrapper {
 			} else {
 				this.group.selectToggle(null);
 			}
-			this.getFields().stream().filter(GameField::isShadowed).forEach((field) -> {
-				field.setShadowed(false);
-			});
+			this.getFields().stream().filter(GameField::isShadowed).forEach((field) -> field.setShadowed(false));
 		});
 	}
 	
@@ -344,7 +342,7 @@ public class LudoMap extends AbstractGameMap implements GridPaneWrapper {
 		return null;
 	}
 	
-	@PacketListener
+	@PacketListener(ClientPacket.class)
 	public void handlePacket(ClientPacket clientPacket) {
 		if (clientPacket instanceof UpdateGameMapPacket packet) {
 			for (GameFieldInfo fieldInfo : packet.getFieldInfos().stream().map(GameFieldInfo.class::cast).toList()) {

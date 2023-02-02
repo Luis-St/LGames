@@ -1,4 +1,4 @@
-package net.luis.server.games.wins4.win;
+package net.luis.wins4.win;
 
 import com.google.common.collect.Lists;
 import net.luis.game.Game;
@@ -9,11 +9,9 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.win.AbstractWinHandler;
 import net.luis.game.win.GameResultLine;
-import net.luis.games.wins4.map.field.Wins4FieldPos;
-import net.luis.games.wins4.player.Wins4PlayerType;
-import net.luis.server.games.wins4.map.Wins4ServerMap;
-import net.luis.server.games.wins4.player.Wins4ServerPlayer;
 import net.luis.utils.util.Utils;
+import net.luis.wins4.map.field.Wins4FieldPos;
+import net.luis.wins4.player.Wins4PlayerType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,21 +57,15 @@ public class Wins4WinHandler extends AbstractWinHandler {
 	
 	@Override
 	public boolean hasPlayerFinished(GamePlayer gamePlayer) {
-		if (gamePlayer instanceof Wins4ServerPlayer player) {
-			return this.getWinType((Wins4ServerMap) player.getMap()) == player.getPlayerType();
-		}
-		return false;
+		return this.getWinType(gamePlayer.getMap()) == gamePlayer.getPlayerType();
 	}
 	
 	@Override
-	public boolean isDraw(GameMap gameMap) {
-		if (gameMap instanceof Wins4ServerMap map) {
-			return !map.hasEmptyField() && this.getWinType(map) == Wins4PlayerType.NO;
-		}
-		return false;
+	public boolean isDraw(GameMap map) {
+		return !map.hasEmptyField() && this.getWinType(map) == Wins4PlayerType.NO;
 	}
 	
-	private GamePlayerType getWinType(Wins4ServerMap map) {
+	private GamePlayerType getWinType(GameMap map) {
 		GameResultLine resultLine = this.getResultLine(map);
 		if (resultLine != GameResultLine.EMPTY) {
 			return this.getFieldType(map, resultLine.getPos(0));
@@ -81,7 +73,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return Wins4PlayerType.NO;
 	}
 	
-	public GameResultLine getResultLine(Wins4ServerMap map) {
+	public GameResultLine getResultLine(GameMap map) {
 		for (GameResultLine resultLine : this.resultLines) {
 			if (this.getLineWinType(map, resultLine) != Wins4PlayerType.NO) {
 				return resultLine;
@@ -90,7 +82,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return GameResultLine.EMPTY;
 	}
 	
-	private GamePlayerType getLineWinType(Wins4ServerMap map, GameResultLine resultLine) {
+	private GamePlayerType getLineWinType(GameMap map, GameResultLine resultLine) {
 		GamePlayerType playerType = this.getFieldType(map, resultLine.getPos(0));
 		if (playerType != Wins4PlayerType.NO) {
 			if (this.getFieldType(map, resultLine.getPos(1)) == playerType && this.getFieldType(map, resultLine.getPos(2)) == playerType && this.getFieldType(map, resultLine.getPos(2)) == playerType) {
@@ -100,7 +92,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return Wins4PlayerType.NO;
 	}
 	
-	private GamePlayerType getFieldType(Wins4ServerMap map, GameFieldPos fieldPos) {
+	private GamePlayerType getFieldType(GameMap map, GameFieldPos fieldPos) {
 		GameField field = map.getField(null, null, fieldPos);
 		if (field != null) {
 			if (field.isEmpty()) {

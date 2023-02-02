@@ -1,4 +1,4 @@
-package net.luis.server.games.ttt.win;
+package net.luis.ttt.win;
 
 import com.google.common.collect.Lists;
 import net.luis.game.Game;
@@ -9,10 +9,8 @@ import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GamePlayerType;
 import net.luis.game.win.AbstractWinHandler;
 import net.luis.game.win.GameResultLine;
-import net.luis.games.ttt.map.field.TTTFieldPos;
-import net.luis.games.ttt.player.TTTPlayerType;
-import net.luis.server.games.ttt.map.TTTServerMap;
-import net.luis.server.games.ttt.player.TTTServerPlayer;
+import net.luis.ttt.map.field.TTTFieldPos;
+import net.luis.ttt.player.TTTPlayerType;
 import net.luis.utils.util.Utils;
 
 import java.util.List;
@@ -44,18 +42,12 @@ public class TTTWinHandler extends AbstractWinHandler {
 	
 	@Override
 	public boolean hasPlayerFinished(GamePlayer gamePlayer) {
-		if (gamePlayer instanceof TTTServerPlayer player) {
-			return this.getWinType(player.getMap()) == player.getPlayerType();
-		}
-		return false;
+		return this.getWinType(gamePlayer.getMap()) == gamePlayer.getPlayerType();
 	}
 	
 	@Override
-	public boolean isDraw(GameMap gameMap) {
-		if (gameMap instanceof TTTServerMap map) {
-			return !map.hasEmptyField() && this.getWinType(map) == TTTPlayerType.NO;
-		}
-		return false;
+	public boolean isDraw(GameMap map) {
+		return !map.hasEmptyField() && this.getWinType(map) == TTTPlayerType.NO;
 	}
 	
 	private GamePlayerType getWinType(GameMap map) {

@@ -1,10 +1,9 @@
-package net.luis.server.games.ttt.player.figure;
+package net.luis.ttt.player.figure;
 
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.figure.AbstractGameFigure;
-import net.luis.games.ttt.map.field.TTTFieldPos;
-import net.luis.utils.util.ToString;
+import net.luis.ttt.map.field.TTTFieldPos;
 
 import java.util.UUID;
 
@@ -14,9 +13,10 @@ import java.util.UUID;
  *
  */
 
-public class TTTServerFigure extends AbstractGameFigure {
+public class TTTFigure extends AbstractGameFigure {
 	
-	public TTTServerFigure(GamePlayer player, int count, UUID uuid) {
+	
+	public TTTFigure(GamePlayer player, int count, UUID uuid) {
 		super(player, count, uuid);
 	}
 	
@@ -29,10 +29,4 @@ public class TTTServerFigure extends AbstractGameFigure {
 	public GameFieldPos getStartPos() {
 		return TTTFieldPos.NO;
 	}
-	
-	@Override
-	public String toString() {
-		return ToString.toString(this, "player");
-	}
-	
 }

@@ -7,12 +7,12 @@ import javafx.scene.layout.Pane;
 import net.luis.client.fx.DiceButton;
 import net.luis.client.fx.PlayerInfoPane;
 import net.luis.client.fx.PlayerScorePane;
-import net.luis.client.games.ludo.LudoClientGame;
-import net.luis.client.games.ludo.map.LudoClientMap;
 import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.map.field.GameField;
 import net.luis.language.TranslationKey;
+import net.luis.ludo.LudoGame;
+import net.luis.ludo.map.LudoMap;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.dice.RolledDicePacket;
@@ -31,14 +31,14 @@ import net.luis.network.packet.server.game.SelectGameFieldPacket;
 @PacketSubscriber("#getStage#getScene#getScreen")
 public class LudoScreen extends GameScreen {
 	
-	private final LudoClientGame game;
+	private final LudoGame game;
 	private PlayerInfoPane playerInfo;
 	private DiceButton diceButton;
 	private ButtonBox leaveButton;
 	private ButtonBox playAgainButton;
 	private ButtonBox confirmActionButton;
 	
-	public LudoScreen(LudoClientGame game) {
+	public LudoScreen(LudoGame game) {
 		super(TranslationKey.createAndGet("client.constans.name"), 1375, 1050);
 		this.game = game;
 	}
@@ -68,7 +68,7 @@ public class LudoScreen extends GameScreen {
 		GameField field = this.game.getMap().getSelectedField();
 		if (field != null) {
 			if (this.getPlayer().canSelect()) {
-				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), field.getFieldType(), field.getFieldPos()));
+				this.client.getServerHandler().send(new SelectGameFieldPacket(this.getPlayer().getProfile(), (Enum<?>) field.getFieldType(), field.getFieldPos()));
 				this.getPlayer().setCanSelect(false);
 			} else {
 				LOGGER.info("It is not the turn of the local player {}", this.getPlayer().getProfile().getName());
@@ -110,7 +110,7 @@ public class LudoScreen extends GameScreen {
 	}
 	
 	private Pane createGamePane() {
-		if (this.game.getMap() instanceof LudoClientMap map) {
+		if (this.game.getMap() instanceof LudoMap map) {
 			return map.getGridPane();
 		}
 		throw new NullPointerException("The map of game ludo is null");

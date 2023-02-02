@@ -6,12 +6,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import net.luis.client.fx.PlayerInfoPane;
 import net.luis.client.fx.PlayerScorePane;
-import net.luis.client.games.wins4.Wins4ClientGame;
-import net.luis.client.games.wins4.map.Wins4ClientMap;
 import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
-import net.luis.games.wins4.map.field.Wins4FieldPos;
-import net.luis.games.wins4.map.field.Wins4FieldType;
 import net.luis.language.TranslationKey;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
@@ -20,6 +16,10 @@ import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.network.packet.server.game.ExitGameRequestPacket;
 import net.luis.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
+import net.luis.wins4.Wins4Game;
+import net.luis.wins4.map.Wins4Map;
+import net.luis.wins4.map.field.Wins4FieldPos;
+import net.luis.wins4.map.field.Wins4FieldType;
 
 /**
  *
@@ -30,16 +30,15 @@ import net.luis.network.packet.server.game.SelectGameFieldPacket;
 @PacketSubscriber("#getStage#getScene#getScreen")
 public class Wins4Screen extends GameScreen {
 	
-	private final Wins4ClientGame game;
+	private final Wins4Game game;
 	private PlayerInfoPane playerInfo;
 	private ButtonBox leaveButton;
 	private ButtonBox playAgainButton;
 	private ButtonBox confirmActionButton;
 	
-	public Wins4Screen(Wins4ClientGame game) {
+	public Wins4Screen(Wins4Game game) {
+		super(TranslationKey.createAndGet("client.constans.name"), 1150, 860);
 		this.game = game;
-		this.width = 1150;
-		this.height = 860;
 	}
 	
 	@Override
@@ -64,7 +63,7 @@ public class Wins4Screen extends GameScreen {
 	
 	private void handleConfirmAction() {
 		int column;
-		if (this.game.getMap() instanceof Wins4ClientMap map) {
+		if (this.game.getMap() instanceof Wins4Map map) {
 			column = map.getSelectedColumn();
 		} else {
 			throw new NullPointerException("The map of game 4 wins is null");
@@ -103,7 +102,7 @@ public class Wins4Screen extends GameScreen {
 	}
 	
 	private Pane createGamePane() {
-		if (this.game.getMap() instanceof Wins4ClientMap map) {
+		if (this.game.getMap() instanceof Wins4Map map) {
 			return map.getStackPane();
 		}
 		throw new NullPointerException("The map of game 4 wins is null");

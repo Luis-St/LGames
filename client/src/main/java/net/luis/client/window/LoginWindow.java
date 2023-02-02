@@ -13,7 +13,7 @@ import net.luis.Constants;
 import net.luis.account.account.LoginType;
 import net.luis.client.Client;
 import net.luis.client.ClientAccount;
-import net.luis.client.fx.Box;
+import net.luis.fx.Box;
 import net.luis.fx.window.AbstractWindow;
 import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.EventHandlers;

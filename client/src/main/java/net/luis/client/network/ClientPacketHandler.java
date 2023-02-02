@@ -15,6 +15,7 @@ import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
+import net.luis.game.type.GameTypes;
 import net.luis.network.packet.PacketHandler;
 import net.luis.network.packet.client.*;
 import net.luis.network.packet.client.game.*;
@@ -29,6 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -185,8 +187,8 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(CurrentPlayerUpdatePacket.class)
 	public void handleCurrentPlayerUpdate(GameProfile profile) {
 		boolean flag = false;
-		if (this.client.getGame() != null) {
-			Game game = this.client.getGame();
+		if (this.client.getGameManager().getGame() != null) {
+			Game game = this.client.getGameManager().getGame();
 			for (AbstractClientPlayer player : this.client.getPlayers()) {
 				if (player.getProfile().equals(profile)) {
 					game.setPlayer(game.getPlayerFor(player));
@@ -208,9 +210,10 @@ public class ClientPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(StartGamePacket.class)
-	public <S extends Game, C extends Game> void handleStartGame(GameType<S, C> gameType, List<GamePlayerInfo> playerInfos) {
-		if (this.client.getGame() == null) {
-			C game = gameType.createClientGame(this.client, playerInfos);
+	public <T extends Game> void handleStartGame(int type, List<GamePlayerInfo> playerInfos) {
+		GameType<?> gameType = Objects.requireNonNull(GameTypes.fromId(type));
+		if (this.client.getGameManager().getGame() == null) {
+			Game game = gameType.createGame(this.client, playerInfos);
 			game.start();
 			boolean flag = false;
 			for (Player player : Utils.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
@@ -220,9 +223,10 @@ public class ClientPacketHandler implements PacketHandler {
 				}
 			}
 			if (flag) {
-				gameType.openScreen(this.client, game);
+				//gameType.openScreen(this.client, game); // TODO: add screen back
 				LOGGER.info("Start game {}", gameType.getInfoName());
-				this.client.setGame(game);
+				this.client.getGameManager().setGame(game);
+				this.client.getGameManager().setLocalProfile(this.client.getPlayer().getProfile());
 			} else {
 				LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", gameType.getInfoName());
 				this.client.setScreen(new LobbyScreen());
@@ -254,8 +258,9 @@ public class ClientPacketHandler implements PacketHandler {
 		if (this.client.getPlayer().isPlaying()) {
 			this.client.getPlayer().setPlaying(false);
 			this.client.getPlayer().getScore().reset();
-			if (this.client.getGame() != null) {
-				this.client.setGame(null);
+			if (this.client.getGameManager().getGame() != null) {
+				this.client.getGameManager().setGame(null);
+				this.client.getGameManager().setLocalProfile(null);
 			} else {
 				LOGGER.warn("Received a exit game packet, but there is no active game");
 			}
@@ -272,8 +277,9 @@ public class ClientPacketHandler implements PacketHandler {
 			player.setPlaying(false);
 			player.getScore().reset();
 		}
-		if (this.client.getGame() != null) {
-			this.client.setGame(null);
+		if (this.client.getGameManager().getGame() != null) {
+			this.client.getGameManager().setGame(null);
+			this.client.getGameManager().setLocalProfile(null);
 		} else {
 			LOGGER.warn("Received a stop game packet, but there is no active game");
 		}

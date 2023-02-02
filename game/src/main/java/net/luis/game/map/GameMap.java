@@ -91,7 +91,7 @@ public interface GameMap {
 	}
 	
 	default boolean moveFigureTo(GameFigure figure, GameField field) {
-		return ApplicationType.SERVER.isOn();
+		return false;
 	}
 	
 	@Nullable

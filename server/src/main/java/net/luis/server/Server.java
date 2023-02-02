@@ -27,9 +27,9 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.luis.Constants;
 import net.luis.fxutils.FxUtils;
-import net.luis.game.Game;
 import net.luis.game.application.ApplicationType;
 import net.luis.game.application.GameApplication;
+import net.luis.game.manager.GameManager;
 import net.luis.game.player.GamePlayer;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.score.PlayerScore;
@@ -71,13 +71,13 @@ public class Server extends GameApplication implements Tickable {
 	private final List<Channel> channels = Lists.newArrayList();
 	private final List<Connection> connections = Lists.newArrayList();
 	private final ServerPacketHandler packetHandler = new ServerPacketHandler(this);
+	private final GameManager gameManager = new GameManager();
 	private final PlayerList playerList = new PlayerList(this);
 	private String host;
 	private int port;
 	private UUID admin;
 	private ServerPlayer adminPlayer;
 	private TreeItem<String> playersTreeItem;
-	private Game game;
 	
 	public static Server getInstance() {
 		if (GameApplication.getInstance() instanceof Server server) {
@@ -250,6 +250,11 @@ public class Server extends GameApplication implements Tickable {
 	}
 	
 	@Override
+	public GameManager getGameManager() {
+		return this.gameManager;
+	}
+	
+	@Override
 	protected Timeline getTicker() {
 		return this.ticker;
 	}
@@ -286,16 +291,8 @@ public class Server extends GameApplication implements Tickable {
 		return this.playerList;
 	}
 	
-	public Game getGame() {
-		return this.game;
-	}
-	
-	public void setGame(Game game) {
-		this.game = game;
-	}
-	
 	public void enterPlayer(Connection connection, GameProfile profile) {
-		ServerPlayer player = new ServerPlayer(profile, new PlayerScore(profile), this);
+		ServerPlayer player = new ServerPlayer(profile, new PlayerScore(profile));
 		this.playerList.addPlayer(connection, player);
 		if (this.admin != null && this.admin.equals(profile.getUUID())) {
 			if (this.adminPlayer == null) {
@@ -320,10 +317,10 @@ public class Server extends GameApplication implements Tickable {
 				LOGGER.info("Server admin left the server");
 				this.adminPlayer = null;
 			}
-			if (this.game != null) {
-				GamePlayer gamePlayer = this.game.getPlayerFor(player);
+			if (this.gameManager.getGame() != null) {
+				GamePlayer gamePlayer = this.gameManager.getGame().getPlayerFor(player);
 				if (gamePlayer != null) {
-					this.game.removePlayer(gamePlayer, false);
+					this.gameManager.getGame().removePlayer(gamePlayer, false);
 				}
 			}
 		}

@@ -15,9 +15,9 @@ import net.luis.client.window.LoginWindow;
 import net.luis.fx.ScreenScene;
 import net.luis.fx.screen.AbstractScreen;
 import net.luis.fx.screen.Screenable;
-import net.luis.game.Game;
 import net.luis.game.application.ApplicationType;
 import net.luis.game.application.GameApplication;
+import net.luis.game.manager.GameManager;
 import net.luis.game.player.GameProfile;
 import net.luis.network.ConnectionHandler;
 import net.luis.network.packet.account.ClientExitPacket;
@@ -47,6 +47,7 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	private final Timeline ticker = Util.createTicker("ClientTicker", this);
 	private final List<AbstractClientPlayer> players = Lists.newArrayList();
 	private final ClientPacketHandler packetHandler = new ClientPacketHandler(this);
+	private final GameManager gameManager = new GameManager();
 	private boolean instantLoading;
 	private boolean safeLoading;
 	private boolean cachePasswordLocal;
@@ -68,7 +69,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	private ClientSettings settings;
 	private String accountHost;
 	private int accountPort;
-	private Game game;
 	
 	public static Client getInstance() {
 		if (GameApplication.getInstance() instanceof Client client) {
@@ -191,6 +191,11 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	@Override
 	public ApplicationType getApplicationType() {
 		return ApplicationType.CLIENT;
+	}
+	
+	@Override
+	public GameManager getGameManager() {
+		return this.gameManager;
 	}
 	
 	@Override
@@ -332,14 +337,6 @@ public class Client extends GameApplication implements Tickable, Screenable {
 	
 	public int getAccountPort() {
 		return this.accountPort;
-	}
-	
-	public Game getGame() {
-		return this.game;
-	}
-	
-	public void setGame(Game game) {
-		this.game = game;
 	}
 	
 	@Override

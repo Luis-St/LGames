@@ -35,6 +35,7 @@ import net.luis.fxutils.FxUtils;
 import net.luis.fxutils.PropertyListeners;
 import net.luis.game.application.ApplicationType;
 import net.luis.game.application.GameApplication;
+import net.luis.game.manager.GameManager;
 import net.luis.language.Language;
 import net.luis.language.LanguageProvider;
 import net.luis.language.Languages;
@@ -265,6 +266,11 @@ public class AccountServer extends GameApplication {
 	@Override
 	public ApplicationType getApplicationType() {
 		return ApplicationType.ACCOUNT;
+	}
+	
+	@Override
+	public GameManager getGameManager() {
+		throw new RuntimeException("Can not get game manager from account server");
 	}
 	
 	public AccountPacketHandler getPacketHandler() {
