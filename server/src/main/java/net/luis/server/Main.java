@@ -1,5 +1,7 @@
 package net.luis.server;
 
+import net.luis.utils.util.ClassPathInspector;
+
 /**
  *
  * @author Luis-st
@@ -7,8 +9,14 @@ package net.luis.server;
  */
 
 public class Main {
+	
+	
+	
+	
 	public static void main(String[] args) {
-		System.out.println("Hello World");
+		for (Class<?> clazz : ClassPathInspector.getClasses()) {
+			System.out.println(clazz.getName());
+		}
 	}
 	
 }

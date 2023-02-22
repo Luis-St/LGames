@@ -108,17 +108,14 @@ compileJava {
 	options.compilerArgs << "-parameters"
 }
 
-
 jar {
-/*	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)*/
+	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 	manifest {
 		attributes([
-				"Main-Class"   : "net.luis.Main"/*,
-				"Built-By"     : "Luis Staudt, (Felix Stenzel and Luca Loos)",
-				"Multi-Release": "true"*/
+				"Main-Class"   : "net.luis.Main"
 		])
 	}
-/*	from {
+	from {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-	}*/
+	}
 }
