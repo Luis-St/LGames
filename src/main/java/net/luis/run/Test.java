@@ -1,4 +1,4 @@
-package net.luis;
+package net.luis.run;
 
 import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;

@@ -19,7 +19,7 @@ import static net.luis.network.packet.listener.PacketInvokHelper.validateSignatu
 
 public class PacketInvoker {
 	
-	private static final Class<?> GAME_APPLICATION_CLASS = Objects.requireNonNull(ReflectionHelper.getClassForName("net.luis.application.GameApplication"));
+	private static final Class<?> GAME_APPLICATION_CLASS = Objects.requireNonNull(ReflectionHelper.getClassForName("net.luis.game.application.GameApplication"));
 	
 	public static void invoke(Connection connection, Packet packet) {
 		ReflectionHelper.enableExceptionThrowing();

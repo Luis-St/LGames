@@ -1,4 +1,4 @@
-package net.luis;
+package net.luis.run;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

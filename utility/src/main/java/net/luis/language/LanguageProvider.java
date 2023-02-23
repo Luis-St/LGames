@@ -59,7 +59,7 @@ public class LanguageProvider {
 	private LanguageFile loadLanguage(Path resourceDirectory, Language language) {
 		Path path = language.getPath(resourceDirectory);
 		if (Files.exists(path)) {
-			Optional<Pair<LanguageFile, JsonElement>> optional = JsonOps.INSTANCE.withDecoder(LanguageFile.CODEC).apply(JsonHelper.load(resourceDirectory)).result();
+			Optional<Pair<LanguageFile, JsonElement>> optional = JsonOps.INSTANCE.withDecoder(LanguageFile.CODEC).apply(JsonHelper.load(path)).result();
 			if (optional.isPresent()) {
 				return optional.get().getFirst();
 			} else {

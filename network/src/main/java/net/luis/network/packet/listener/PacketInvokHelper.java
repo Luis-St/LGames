@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 class PacketInvokHelper {
 	
-	private static final Class<?> APPLICATION_TYPE_CLASS = Objects.requireNonNull(ReflectionHelper.getClassForName("net.luis.application.ApplicationType"));
+	private static final Class<?> APPLICATION_TYPE_CLASS = Objects.requireNonNull(ReflectionHelper.getClassForName("net.luis.game.application.ApplicationType"));
 	
 	static List<Class<?>> getSubscribers(Object type) {
 		assert APPLICATION_TYPE_CLASS.isInstance(type);

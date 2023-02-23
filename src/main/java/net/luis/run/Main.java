@@ -1,8 +1,9 @@
-package net.luis;
+package net.luis.run;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.luis.Constants;
 import net.luis.account.AccountServer;
 import net.luis.client.Client;
 import net.luis.server.Server;

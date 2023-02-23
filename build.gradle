@@ -61,7 +61,7 @@ test {
 
 tasks.register("runClient", JavaExec) {
 	group = "runs"
-	main = "net.luis.server.Main"
+	getMainClass().set("net.luis.run.Main")
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("assets"), "--accountHost", "localhost", "--accountPort", "8081")
@@ -71,7 +71,7 @@ tasks.register("runClient", JavaExec) {
 
 tasks.register("runServer", JavaExec) {
 	group = "runs"
-	main = "net.luis.Main"
+	getMainClass().set("net.luis.run.Main")
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--server", "--gameDir", file("run/server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8080", "--language", "en_us")
@@ -81,7 +81,7 @@ tasks.register("runServer", JavaExec) {
 
 tasks.register("runAccount", JavaExec) {
 	group = "runs"
-	main = "net.luis.Main"
+	getMainClass().set("net.luis.run.Main")
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	args("--debugMode", "false", "--ide", "--account", "--gameDir", file("run/account_server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8081", "--language", "en_us")
@@ -90,7 +90,7 @@ tasks.register("runAccount", JavaExec) {
 
 tasks.register("runTest", JavaExec) {
 	group = "test runs"
-	main = "net.luis.Test"
+	getMainClass().set("net.luis.run.Test")
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
@@ -98,7 +98,7 @@ tasks.register("runTest", JavaExec) {
 
 tasks.register("runFxTest", JavaExec) {
 	group = "test runs"
-	main = "net.luis.FxTest"
+	getMainClass().set("net.luis.run.FxTest")
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
