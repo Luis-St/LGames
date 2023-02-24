@@ -25,7 +25,8 @@ public class PacketInvoker {
 		ReflectionHelper.enableExceptionThrowing();
 		Object application = ReflectionHelper.invoke(ReflectionHelper.getMethod(GAME_APPLICATION_CLASS, "getInstance"), null);
 		assert GAME_APPLICATION_CLASS.isInstance(application);
-		for (Class<?> clazz : PacketInvokHelper.getSubscribers(ReflectionHelper.invoke(ReflectionHelper.getMethod(GAME_APPLICATION_CLASS, "getApplicationType"), application))) {
+		Object type = ReflectionHelper.invoke(ReflectionHelper.getMethod(GAME_APPLICATION_CLASS, "getApplicationType"), application);
+		for (Class<?> clazz : PacketInvokHelper.getSubscribers(type)) {
 			Object instanceObject = PacketInvokHelper.getInstanceObject(application, clazz, clazz.getAnnotation(PacketSubscriber.class));
 			for (Method method : PacketInvokHelper.getListeners(clazz, packet)) {
 				if (Modifier.isStatic(method.getModifiers())) {

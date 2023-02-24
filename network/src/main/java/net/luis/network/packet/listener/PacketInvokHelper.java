@@ -32,7 +32,7 @@ class PacketInvokHelper {
 	
 	static List<Class<?>> getSubscribers(Object type) {
 		assert APPLICATION_TYPE_CLASS.isInstance(type);
-		return ClassPathInspector.getClasses().stream().filter((clazz) -> {
+		return ClassPathInspector.getClasses("net.luis").stream().filter((clazz) -> {
 			return clazz.isAnnotationPresent(PacketSubscriber.class);
 		}).filter((clazz) -> {
 			Object object = ReflectionHelper.invoke(ReflectionHelper.getMethod(APPLICATION_TYPE_CLASS, "getShortName"), type);
