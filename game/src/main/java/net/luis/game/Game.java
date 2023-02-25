@@ -33,6 +33,7 @@ import java.util.Random;
  *
  */
 
+// TODO add PacketSubscriber back
 public interface Game {
 	
 	Logger LOGGER = LogManager.getLogger();

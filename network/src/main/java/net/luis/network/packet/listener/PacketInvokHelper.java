@@ -220,7 +220,7 @@ class PacketInvokHelper {
 	static RuntimeException createException(Method method, Object... objects) {
 		String name = method.getDeclaringClass().getSimpleName() + "#" + method.getName();
 		String expectedParameters = Arrays.stream(method.getParameterTypes()).map(Class::getName).toList().toString();
-		String obtainedParameters = Arrays.stream(objects).map(Object::getClass).map(Class::getName).toList().toString(); // TODO: add null check
+		String obtainedParameters = Arrays.stream(objects).filter(Objects::nonNull).map(Object::getClass).map(Class::getName).toList().toString();
 		return new RuntimeException("Invalid method signature of method " + name + ", expected parameter " + expectedParameters + " but " + obtainedParameters + " was passed");
 	}
 	
