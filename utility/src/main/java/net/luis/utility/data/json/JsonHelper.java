@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -22,10 +23,9 @@ import java.nio.file.Path;
 
 public class JsonHelper {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(JsonHelper.class);
 	
-	@Nullable
-	public static JsonElement load(Path path) {
+	public @Nullable static JsonElement load(@NotNull Path path) {
 		try {
 			if (!Files.exists(path)) {
 				LOGGER.warn("Unable to load file {}, since it does not exists", path);
@@ -41,7 +41,7 @@ public class JsonHelper {
 		}
 	}
 	
-	public static void save(Gson gson, JsonElement jsonElement, Path path) {
+	public static void save(@NotNull Gson gson, @NotNull JsonElement jsonElement, @NotNull Path path) {
 		try {
 			String element = gson.toJson(jsonElement);
 			if (!Files.exists(path)) {

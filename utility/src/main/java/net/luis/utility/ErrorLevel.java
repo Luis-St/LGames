@@ -1,6 +1,7 @@
 package net.luis.utility;
 
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -15,21 +16,21 @@ public enum ErrorLevel {
 	private final String name;
 	private final Color color;
 	
-	ErrorLevel(String name, Color color) {
+	ErrorLevel(@NotNull String name, @NotNull Color color) {
 		this.name = name;
 		this.color = color;
 	}
 	
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
-	public Color getColor() {
+	public @NotNull Color getColor() {
 		return this.color;
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.name;
 	}
 	

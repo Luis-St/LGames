@@ -7,6 +7,7 @@ import com.mojang.serialization.JsonOps;
 import net.luis.utility.data.json.JsonHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Files;
@@ -24,12 +25,12 @@ public class LanguageProvider {
 	
 	public static final LanguageProvider INSTANCE = new LanguageProvider();
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(LanguageProvider.class);
 	
 	private List<LanguageFile> loadLanguageFiles;
 	private Language currentLanguage = Languages.EN_US;
 	
-	public void load(Path resourceDirectory) {
+	public void load(@NotNull Path resourceDirectory) {
 		List<LanguageFile> languageFiles = Lists.newArrayList();
 		for (Language language : Languages.LANGUAGES) {
 			Path path = language.getPath(resourceDirectory);
@@ -51,44 +52,44 @@ public class LanguageProvider {
 			}
 		}
 		if (languageFiles.isEmpty()) {
-			LOGGER.warn("Unable to load languages");
+			LOGGER.error("Unable to load languages");
 		}
 		this.loadLanguageFiles = languageFiles;
 	}
 	
-	private LanguageFile loadLanguage(Path resourceDirectory, Language language) {
+	private LanguageFile loadLanguage(@NotNull Path resourceDirectory, @NotNull Language language) {
 		Path path = language.getPath(resourceDirectory);
 		if (Files.exists(path)) {
 			Optional<Pair<LanguageFile, JsonElement>> optional = JsonOps.INSTANCE.withDecoder(LanguageFile.CODEC).apply(JsonHelper.load(path)).result();
 			if (optional.isPresent()) {
 				return optional.get().getFirst();
 			} else {
-				LOGGER.warn("Fail to decode language file {} for language {}", path, language.name());
+				LOGGER.error("Fail to decode language file {} for language {}", path, language.name());
 				return null;
 			}
 		} else {
-			LOGGER.warn("Fail to load language file {} for language {}, since it does not exists", path, language.name());
+			LOGGER.error("Fail to load language file {} for language {}, since it does not exists", path, language.name());
 			return null;
 		}
 	}
 	
-	public Language getCurrentLanguage() {
+	public @NotNull Language getCurrentLanguage() {
 		return this.currentLanguage;
 	}
 	
-	public void setCurrentLanguage(Language currentLanguage) {
-		LOGGER.debug("Change language from {} to {}", this.currentLanguage, currentLanguage);
+	public void setCurrentLanguage(@NotNull Language currentLanguage) {
+		LOGGER.info("Change language from {} to {}", this.currentLanguage, currentLanguage);
 		this.currentLanguage = currentLanguage;
 	}
 	
-	public boolean isLanguageLoad(Language language) {
+	public boolean isLanguageLoad(@NotNull Language language) {
 		return this.loadLanguageFiles.stream().map(LanguageFile::getLanguage).toList().contains(language);
 	}
 	
 	@Nullable
-	public LanguageFile getFileForLanguage(Language language) {
+	public LanguageFile getFileForLanguage(@NotNull Language language) {
 		for (LanguageFile languageFile : this.loadLanguageFiles) {
-			if (languageFile.getLanguage().equals(language)) {
+			if (language.equals(languageFile.getLanguage())) {
 				return languageFile;
 			}
 		}
@@ -96,7 +97,7 @@ public class LanguageProvider {
 		return null;
 	}
 	
-	public String getTranslation(Language language, TranslationKey key) {
+	public @NotNull String getTranslation(@NotNull Language language, @NotNull TranslationKey key) {
 		if (this.isLanguageLoad(language)) {
 			LanguageFile languageFile = this.getFileForLanguage(language);
 			if (languageFile != null) {
@@ -115,7 +116,7 @@ public class LanguageProvider {
 		return key.key();
 	}
 	
-	public String getTranslation(TranslationKey key) {
+	public @NotNull String getTranslation(@NotNull TranslationKey key) {
 		return this.getTranslation(this.currentLanguage, key);
 	}
 	

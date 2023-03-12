@@ -1,5 +1,8 @@
 package net.luis.language;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -8,10 +11,10 @@ import java.util.Objects;
  *
  */
 
-public record Translation(String key, String value) {
+public record Translation(@NotNull String key, @NotNull String value) {
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
 		if (!(o instanceof Translation that)) return false;
 		
@@ -25,7 +28,7 @@ public record Translation(String key, String value) {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.key + ":" + this.value;
 	}
 	

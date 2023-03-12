@@ -3,6 +3,8 @@ package net.luis.language;
 import com.google.common.collect.Lists;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -13,23 +15,23 @@ import java.util.Objects;
  *
  */
 
-public record TranslationKey(String key) {
+public record TranslationKey(@NotNull String key) {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(TranslationKey.class);
 	
-	public static String createAndGet(String key, Object... objects) {
+	public static @NotNull String createAndGet(@NotNull String key, @NotNull Object... objects) {
 		return new TranslationKey(key).getValue(objects);
 	}
 	
-	public static String createAndGet(Language language, String key, Object... objects) {
+	public static @NotNull String createAndGet(@NotNull Language language, @NotNull String key, @NotNull Object... objects) {
 		return new TranslationKey(key).getValue(language, objects);
 	}
 	
-	public String getValue(Object... objects) {
+	public @NotNull String getValue(@NotNull Object... objects) {
 		return this.getValue(LanguageProvider.INSTANCE.getCurrentLanguage(), objects);
 	}
 	
-	public String getValue(Language language, Object... objects) {
+	public @NotNull String getValue(@NotNull Language language, @NotNull Object... objects) {
 		List<Object> objectList = Lists.newArrayList(objects);
 		String translation = LanguageProvider.INSTANCE.getTranslation(language, this);
 		for (int i = 0; i < objectList.size(); i++) {
@@ -48,7 +50,7 @@ public record TranslationKey(String key) {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
 		if (!(o instanceof TranslationKey that)) return false;
 		
@@ -61,7 +63,7 @@ public record TranslationKey(String key) {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.key;
 	}
 	

@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -15,20 +16,18 @@ import org.apache.logging.log4j.Logger;
 
 public class Util {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
-	
-	public static Timeline createTicker(String name, Tickable tickable) {
-		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(50), name, (event) -> tickable.tick()));
+	public static @NotNull Timeline createTicker(@NotNull String name, @NotNull Runnable action) {
+		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(50), name, (event) -> action.run()));
 		timeline.setCycleCount(Animation.INDEFINITE);
 		return timeline;
 	}
 	
-	public static void runDelayed(String name, int millis, Runnable action) {
+	public static void runDelayed(@NotNull String name, int millis, @NotNull Runnable action) {
 		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(millis), name, (event) -> action.run()));
 		timeline.play();
 	}
 	
-	public static void runCycled(String name, int millis, int cycleCount, Runnable action) {
+	public static void runCycled(@NotNull String name, int millis, int cycleCount, @NotNull Runnable action) {
 		Timeline timeline = new Timeline(20.0, new KeyFrame(Duration.millis(millis), name, (event) -> action.run()));
 		timeline.setCycleCount(cycleCount);
 		timeline.play();

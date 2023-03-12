@@ -15,6 +15,7 @@ import java.util.Map.Entry;
  *
  */
 
+@Deprecated
 public class SettingValueTypes {
 	
 	private static final Map<Integer, SettingValueType<?>> INT_TO_TYPE = Maps.newHashMap();

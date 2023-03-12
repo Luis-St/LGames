@@ -3,6 +3,8 @@ package net.luis.language;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.luis.utils.util.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -24,24 +26,24 @@ public class LanguageFile {
 	private final List<Translation> translations;
 	private Language language;
 	
-	public LanguageFile(List<Translation> translations) {
+	public LanguageFile(@NotNull List<Translation> translations) {
 		this.translations = translations;
 	}
 	
-	public LanguageFile(List<Translation> translations, Language language) {
+	public LanguageFile(@NotNull List<Translation> translations, Language language) {
 		this.translations = translations;
 		this.language = language;
 	}
 	
-	private LanguageFile(Map<String, String> languageTranslations) {
+	private LanguageFile(@NotNull Map<String, String> languageTranslations) {
 		this.translations = Utils.mapToList(languageTranslations, Translation::new);
 	}
 	
-	private Map<String, String> getLanguageKeyMap() {
+	private @NotNull Map<String, String> getLanguageKeyMap() {
 		return this.translations.stream().collect(Collectors.toMap(Translation::key, Translation::value));
 	}
 	
-	public List<Translation> getLanguageKeys() {
+	public @NotNull List<Translation> getLanguageKeys() {
 		return this.translations;
 	}
 	
@@ -49,16 +51,16 @@ public class LanguageFile {
 		return this.translations.isEmpty();
 	}
 	
-	public Language getLanguage() {
+	public @Nullable Language getLanguage() {
 		return this.language;
 	}
 	
-	public void setLanguage(Language language) {
+	public void setLanguage(@Nullable Language language) {
 		this.language = language;
 	}
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
 		if (!(o instanceof LanguageFile that)) return false;
 		

@@ -24,9 +24,10 @@ import java.util.function.BiConsumer;
  *
  */
 
+@Deprecated
 public class Setting<T> implements Serializable {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(Setting.class);
 	
 	private final List<BiConsumer<T, T>> listeners = Lists.newArrayList();
 	private final TranslationKey name;

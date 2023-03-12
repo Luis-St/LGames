@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
+@Deprecated
 public interface SettingValueType<T> {
 	
 	@NotNull

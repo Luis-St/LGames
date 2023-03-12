@@ -16,9 +16,10 @@ import java.util.function.BiConsumer;
  *
  */
 
+@Deprecated
 public abstract class AbstractSettings implements Serializable {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	protected static final Logger LOGGER = LogManager.getLogger(AbstractSettings.class);
 	
 	private final List<Setting<?>> settings;
 	
