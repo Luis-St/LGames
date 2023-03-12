@@ -1,24 +1,27 @@
 package net.luis.client.screen;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import net.luis.Constants;
-import net.luis.client.ClientAccount;
+import net.luis.client.account.ClientAccount;
 import net.luis.client.window.LoginWindow;
 import net.luis.fx.ButtonBox;
+import net.luis.fx.ScreenScene;
 import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.FxUtils;
 import net.luis.fxutils.fx.InputValidationPane;
+import net.luis.game.network.NetworkController;
 import net.luis.language.TranslationKey;
-import net.luis.network.ConnectionHandler;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.server.ClientJoinPacket;
 import net.luis.utility.Util;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -30,6 +33,8 @@ import java.util.Objects;
 
 public class MultiplayerScreen extends ClientScreen {
 	
+	private static final Logger LOGGER = LogManager.getLogger(MultiplayerScreen.class);
+	
 	private final ClientScreen backScreen;
 	private InputValidationPane<TextField> hostPane;
 	private InputValidationPane<TextField> portPane;
@@ -37,7 +42,7 @@ public class MultiplayerScreen extends ClientScreen {
 	private ButtonBox connectLocalButtonBox;
 	private ButtonBox backButtonBox;
 	
-	public MultiplayerScreen(ClientScreen backScreen) {
+	public MultiplayerScreen(@NotNull ClientScreen backScreen) {
 		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
 		this.backScreen = backScreen;
 	}
@@ -66,10 +71,10 @@ public class MultiplayerScreen extends ClientScreen {
 	}
 	
 	private boolean canConnect() {
-		if (this.client.isLoggedIn()) {
+		if (this.client.getAccountManager().isLoggedIn()) {
 			return true;
 		} else {
-			if (this.client.getLoginWindow() == null) {
+			if (this.client.getAccountManager().getLoginWindow() == null) {
 				LoginWindow window = new LoginWindow(this.client, new Stage());
 				window.show();
 			}
@@ -90,7 +95,7 @@ public class MultiplayerScreen extends ClientScreen {
 			} else if (port.isEmpty()) {
 				this.portPane.validateInput();
 			} else {
-				ClientAccount account = this.client.getAccount();
+				ClientAccount account = Objects.requireNonNull(this.client.getAccountManager().getAccount());
 				this.connectAndSend(host, Integer.parseInt(port), new ClientJoinPacket(account.name(), account.uuid()));
 			}
 		}
@@ -102,21 +107,17 @@ public class MultiplayerScreen extends ClientScreen {
 			this.hostPane.validateInput();
 			this.portPane.getInputNode().setText("8080");
 			this.portPane.validateInput();
-			ClientAccount account = this.client.getAccount();
+			ClientAccount account = Objects.requireNonNull(this.client.getAccountManager().getAccount());
 			this.connectAndSend("127.0.0.1", 8080, new ClientJoinPacket(account.name(), account.uuid()));
 		}
 	}
 	
-	private void connectAndSend(String host, int port, Packet packet) {
-		ConnectionHandler handler = this.client.getServerHandler();
+	private void connectAndSend(@NotNull String host, int port, @NotNull Packet packet) {
+		NetworkController networkController = this.client.getServerController();
 		try {
-			handler.connect(host, port);
+			networkController.getInstance().open(host, port);
 			Util.runDelayed("DelayedPacketSender", 250, () -> {
-				if (handler.isConnected()) {
-					handler.send(packet);
-				} else {
-					LOGGER.warn("Unable to send packet of type {} to virtual game collection server, since connection is closed", packet.getClass().getSimpleName());
-				}
+				networkController.send(packet);
 			});
 		} catch (Exception e) {
 			LOGGER.warn("Fail to connect to virtual game collection server", e);
@@ -128,10 +129,10 @@ public class MultiplayerScreen extends ClientScreen {
 	}
 	
 	@Override
-	protected Pane createPane() {
+	protected @NotNull Pane createPane() {
 		GridPane outerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		GridPane innerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
-		if (Constants.IDE) {
+		if (Constants.DEV_MODE) {
 			innerPane.addColumn(0, this.connectButtonBox, this.connectLocalButtonBox, this.backButtonBox);
 		} else {
 			innerPane.addColumn(0, this.connectButtonBox, this.backButtonBox);
@@ -141,7 +142,10 @@ public class MultiplayerScreen extends ClientScreen {
 	}
 	
 	@Override
-	protected void onSceneShow(Scene scene) {
+	protected @NotNull ScreenScene createScene() {
+		ScreenScene scene = super.createScene();
 		scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/style.css")).toExternalForm());
+		return scene;
 	}
+	
 }

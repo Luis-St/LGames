@@ -5,10 +5,12 @@ import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.luis.network.annotation.DecodingConstructor;
-import net.luis.utils.util.ReflectionHelper;
 import net.luis.utils.util.Utils;
+import net.luis.utils.util.reflection.ReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +29,7 @@ import java.util.function.Supplier;
 
 public class FriendlyByteBuffer {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(FriendlyByteBuffer.class);
 	
 	private final ByteBuf buffer;
 	
@@ -35,7 +37,7 @@ public class FriendlyByteBuffer {
 		this(Unpooled.buffer());
 	}
 	
-	public FriendlyByteBuffer(ByteBuf buffer) {
+	public FriendlyByteBuffer(@NotNull ByteBuf buffer) {
 		this.buffer = buffer;
 	}
 	
@@ -103,33 +105,33 @@ public class FriendlyByteBuffer {
 		return this.buffer.readBoolean();
 	}
 	
-	public void writeString(String value) {
+	public void writeString(@NotNull String value) {
 		this.buffer.writeInt(value.length());
 		this.buffer.writeCharSequence(value, StandardCharsets.UTF_8);
 	}
 	
-	public String readString() {
+	public @NotNull String readString() {
 		int length = this.buffer.readInt();
 		return this.buffer.readCharSequence(length, StandardCharsets.UTF_8).toString();
 	}
 	
-	public void writeUUID(UUID value) {
+	public void writeUUID(@NotNull UUID value) {
 		this.writeLong(value.getMostSignificantBits());
 		this.writeLong(value.getLeastSignificantBits());
 	}
 	
-	public UUID readUUID() {
+	public @NotNull UUID readUUID() {
 		long most = this.readLong();
 		long least = this.readLong();
 		UUID uuid = new UUID(most, least);
 		return uuid.equals(Utils.EMPTY_UUID) ? Utils.EMPTY_UUID : uuid;
 	}
 	
-	public <T extends Encodable> void write(T value) {
+	public <T extends Encodable> void write(@NotNull T value) {
 		value.encode(this);
 	}
 	
-	public <T extends Encodable> T read(Class<T> clazz) {
+	public <T extends Encodable> @Nullable T read(@NotNull Class<T> clazz) {
 		if (ReflectionHelper.hasConstructor(clazz, FriendlyByteBuffer.class)) {
 			Constructor<T> constructor = ReflectionHelper.getConstructor(clazz, FriendlyByteBuffer.class);
 			assert constructor != null;
@@ -138,34 +140,34 @@ public class FriendlyByteBuffer {
 				if (value != null) {
 					return value;
 				} else {
-					LOGGER.warn("Fail to read object of type {} from buffer, since there was an error in creating a new instance of the class {}", clazz.getSimpleName(), clazz.getName());
+					LOGGER.error("Failed to read object of type {} from buffer because an error occurred while creating a new instance of class {}", clazz.getSimpleName(), clazz.getName());
 				}
 			} else {
-				LOGGER.warn("Fail to read object of type {} from buffer, since the decode constructor is not annotated with @DecodingConstructor", clazz.getSimpleName());
+				LOGGER.error("Failed to read object of type {} from buffer because decoding constructor is not annotated with @DecodingConstructor", clazz.getSimpleName());
 			}
 		} else {
-			LOGGER.warn("Fail to read object of type {} from buffer, since there is no FriendlyByteBuffer constructor", clazz.getSimpleName());
+			LOGGER.warn("Failed to read an object of type {} from the buffer because there is no FriendlyByteBuffer constructor", clazz.getSimpleName());
 		}
 		return null;
 	}
 	
-	public <T extends Enum<T>> void writeEnum(T value) {
+	public <T extends Enum<T>> void writeEnum(@NotNull T value) {
 		this.writeInt(value.ordinal());
 	}
 	
-	public <T extends Enum<T>> T readEnum(Class<T> clazz) {
+	public <T extends Enum<T>> @NotNull T readEnum(@NotNull Class<T> clazz) {
 		int ordinal = this.readInt();
 		return clazz.getEnumConstants()[ordinal];
 	}
 	
-	public <T> void writeList(List<T> list, Consumer<T> encoder) {
+	public <T> void writeList(@NotNull List<T> list, @NotNull Consumer<T> encoder) {
 		this.writeInt(list.size());
 		for (T t : list) {
 			encoder.accept(t);
 		}
 	}
 	
-	public <T> List<T> readList(Supplier<T> decoder) {
+	public <T> @NotNull List<T> readList(@NotNull Supplier<T> decoder) {
 		List<T> list = Lists.newArrayList();
 		int size = this.readInt();
 		for (int i = 0; i < size; i++) {
@@ -174,7 +176,7 @@ public class FriendlyByteBuffer {
 		return list;
 	}
 	
-	public <K, V> void writeMap(Map<K, V> map, Consumer<K> keyEncoder, Consumer<V> valueEncoder) {
+	public <K, V> void writeMap(@NotNull Map<K, V> map, @NotNull Consumer<K> keyEncoder, @NotNull Consumer<V> valueEncoder) {
 		this.writeInt(map.size());
 		for (Map.Entry<K, V> entry : map.entrySet()) {
 			keyEncoder.accept(entry.getKey());
@@ -182,7 +184,7 @@ public class FriendlyByteBuffer {
 		}
 	}
 	
-	public <K, V> Map<K, V> readMap(Supplier<K> keyDecoder, Supplier<V> valueDecoder) {
+	public <K, V> @NotNull Map<K, V> readMap(@NotNull Supplier<K> keyDecoder, @NotNull Supplier<V> valueDecoder) {
 		Map<K, V> map = Maps.newHashMap();
 		int size = this.buffer.readInt();
 		for (int i = 0; i < size; i++) {
@@ -193,29 +195,29 @@ public class FriendlyByteBuffer {
 		return map;
 	}
 	
-	public <T extends Encodable> void writeInterface(T value) {
+	public <T extends Encodable> void writeInterface(@NotNull T value) {
 		this.writeString(value.getClass().getName());
 		this.write(value);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Encodable> T readInterface() {
+	public <T extends Encodable> @Nullable T readInterface() {
 		String className = this.readString();
-		return this.read((Class<T>) ReflectionHelper.getClassForName(className));
+		return this.read((Class<T>) Objects.requireNonNull(ReflectionHelper.getClassForName(className)));
 	}
 	
-	public <T extends Enum<T>> void writeEnumInterface(T value) {
+	public <T extends Enum<T>> void writeEnumInterface(@NotNull T value) {
 		this.writeString(value.getClass().getName());
 		this.writeEnum(value);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Enum<T>> T readEnumInterface() {
+	public <T extends Enum<T>> @NotNull T readEnumInterface() {
 		String className = this.readString();
 		return this.readEnum((Class<T>) Objects.requireNonNull(ReflectionHelper.getClassForName(className)));
 	}
 	
-	public ByteBuf toBuffer() {
+	public @NotNull ByteBuf toBuffer() {
 		return this.buffer;
 	}
 	

@@ -1,9 +1,10 @@
 package net.luis.ttt.player.figure;
 
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.figure.AbstractGameFigure;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.figure.AbstractGameFigure;
 import net.luis.ttt.map.field.TTTFieldPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -21,12 +22,12 @@ public class TTTFigure extends AbstractGameFigure {
 	}
 	
 	@Override
-	public GameFieldPos getHomePos() {
+	public @NotNull GameFieldPos getHomePos() {
 		return TTTFieldPos.NO;
 	}
 	
 	@Override
-	public GameFieldPos getStartPos() {
+	public @NotNull GameFieldPos getStartPos() {
 		return TTTFieldPos.NO;
 	}
 }

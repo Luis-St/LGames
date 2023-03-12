@@ -2,16 +2,17 @@ package net.luis.game;
 
 import com.google.common.collect.Lists;
 import net.luis.game.application.ApplicationType;
+import net.luis.game.application.FxApplication;
+import net.luis.game.application.GameApplication;
 import net.luis.game.dice.DiceHandler;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.type.GameType;
 import net.luis.game.win.WinHandler;
-import net.luis.network.Connection;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.ExitGamePacket;
@@ -20,12 +21,13 @@ import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  *
@@ -36,8 +38,6 @@ import java.util.Random;
 // TODO add PacketSubscriber back
 public interface Game {
 	
-	Logger LOGGER = LogManager.getLogger();
-	
 	default void init() {
 		
 	}
@@ -46,13 +46,22 @@ public interface Game {
 		
 	}
 	
-	GameType<?> getType();
+	@NotNull GameType<?> getType();
 	
-	GameMap getMap();
+	@NotNull UUID getUniqueId();
 	
-	List<GamePlayer> getPlayers();
+	default @NotNull GameApplication getApplication() {
+		if (FxApplication.getInstance() instanceof GameApplication application) {
+			return application;
+		}
+		throw new IllegalStateException("Cannot get application because it is not a game application");
+	}
 	
-	default List<GamePlayer> getEnemies(GamePlayer gamePlayer) {
+	@NotNull GameMap getMap();
+	
+	@NotNull List<GamePlayer> getPlayers();
+	
+	default @NotNull List<GamePlayer> getEnemies(@NotNull GamePlayer gamePlayer) {
 		List<GamePlayer> enemies = Lists.newArrayList();
 		for (GamePlayer player : this.getPlayers()) {
 			if (!player.equals(gamePlayer)) {
@@ -60,18 +69,16 @@ public interface Game {
 			}
 		}
 		if (enemies.isEmpty()) {
-			LOGGER.warn("Fail to get enemies for player {}", gamePlayer.getName());
+			LogManager.getLogger(Game.class).warn("Fail to get enemies for player {}", gamePlayer.getName());
 		}
 		return enemies;
 	}
 	
-	@Nullable
-	default GamePlayer getPlayerFor(Player player) {
+	default @Nullable GamePlayer getPlayerFor(@NotNull Player player) {
 		return this.getPlayerFor(player.getProfile());
 	}
 	
-	@Nullable
-	default GamePlayer getPlayerFor(GameProfile profile) {
+	default @Nullable GamePlayer getPlayerFor(@NotNull GameProfile profile) {
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.getPlayer().getProfile().equals(profile)) {
 				return gamePlayer;
@@ -80,8 +87,7 @@ public interface Game {
 		return null;
 	}
 	
-	@Nullable
-	default GamePlayerType getPlayerType(GamePlayer player) {
+	default @Nullable GamePlayerType getPlayerType(@NotNull GamePlayer player) {
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.equals(player)) {
 				return gamePlayer.getPlayerType();
@@ -90,12 +96,11 @@ public interface Game {
 		return null;
 	}
 	
-	@Nullable
-	GamePlayer getPlayer();
+	@Nullable GamePlayer getPlayer();
 	
-	void setPlayer(GamePlayer player);
+	void setPlayer(@NotNull GamePlayer player);
 	
-	default GamePlayer getStartPlayer() {
+	default @Nullable GamePlayer getStartPlayer() {
 		this.nextPlayer(true);
 		return ApplicationType.SERVER.isOn() ? this.getPlayer() : null;
 	}
@@ -121,18 +126,18 @@ public interface Game {
 								this.setPlayer(players.get(index));
 							}
 						} else {
-							LOGGER.warn("Fail to get next player, since the player {} does not exists", player.getName());
+							LogManager.getLogger(Game.class).warn("Fail to get next player, since the player {} does not exists", player.getName());
 							this.setPlayer(players.get(0));
 						}
 					}
 				}
 			} else {
-				LOGGER.warn("Unable to change player, since there is no player present");
+				LogManager.getLogger(Game.class).warn("Unable to change player, since there is no player present");
 			}
 		}
 	}
 	
-	default boolean removePlayer(GamePlayer gamePlayer, boolean sendExit) {
+	default boolean removePlayer(@NotNull GamePlayer gamePlayer, boolean sendExit) {
 		if (ApplicationType.SERVER.isOn()) {
 			if (this.getPlayers().remove(gamePlayer)) {
 				Player player = gamePlayer.getPlayer();
@@ -140,7 +145,7 @@ public interface Game {
 					Objects.requireNonNull(player.getConnection()).send(new ExitGamePacket());
 				}
 				player.setPlaying(false);
-				Game.LOGGER.info("Remove player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
+				LogManager.getLogger(Game.class).info("Remove player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
 				if (Objects.equals(this.getPlayer(), gamePlayer)) {
 					this.nextPlayer(false);
 				}
@@ -150,11 +155,11 @@ public interface Game {
 				gamePlayer.getPlayer().getScore().reset();
 				this.broadcastPlayersExclude(new SyncPlayerDataPacket(player.getProfile(), player.isPlaying(), player.getScore()), gamePlayer);
 				return true;
-			} else if (gamePlayer != null) {
-				Game.LOGGER.warn("Fail to remove player {}, since the player does not playing game {}", gamePlayer.getName(), this.getType().getInfoName());
+			} else {
+				LogManager.getLogger(Game.class).warn("Fail to remove player {}, since the player does not playing game {}", gamePlayer.getName(), this.getType().getInfoName());
 				if (gamePlayer.getPlayer().isPlaying()) {
 					gamePlayer.getPlayer().setPlaying(false);
-					Game.LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", gamePlayer.getName());
+					LogManager.getLogger(Game.class).info("Correcting the playing value of player {} to false, since it was not correctly reset", gamePlayer.getName());
 				}
 			}
 		}
@@ -165,13 +170,11 @@ public interface Game {
 		return false;
 	}
 	
-	@Nullable
-	default DiceHandler getDiceHandler() {
+	default @Nullable DiceHandler getDiceHandler() {
 		return null;
 	}
 	
-	@Nullable
-	default WinHandler getWinHandler() {
+	default @Nullable WinHandler getWinHandler() {
 		return null;
 	}
 	
@@ -185,15 +188,15 @@ public interface Game {
 			Objects.requireNonNull(this.getWinHandler()).reset();
 			this.nextPlayer(true);
 			this.broadcastPlayers(new UpdateGameMapPacket(Utils.mapList(this.getMap().getFields(), GameField::getFieldInfo)));
-			LOGGER.info("Start a new match of game {} with players {}", this.getType().getInfoName(), Utils.mapList(this.getPlayers(), GamePlayer::getName));
+			LogManager.getLogger(Game.class).info("Start a new match of game {} with players {}", this.getType().getInfoName(), Utils.mapList(this.getPlayers(), GamePlayer::getName));
 			return true;
 		}
-		LOGGER.warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
+		LogManager.getLogger(Game.class).warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
 		return false;
 	}
 	
 	default void stop() {
-		Game.LOGGER.info("Stopping the current game {}", this.getType().getInfoName());
+		LogManager.getLogger(Game.class).info("Stopping the current game {}", this.getType().getInfoName());
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			Player player = gamePlayer.getPlayer();
 			player.setPlaying(false);
@@ -204,32 +207,30 @@ public interface Game {
 			}
 		}
 		this.getPlayers().clear();
-		// TODO:
-		/*
-		 * Server.getInstance().setGame(null);
-		 * Client.getInstance().setScreen(new LobbyScreen());
-		 * Correcting value of all players on server and client -> Game.LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getName());
-		 *
-		 *
-		 *
-		 */
-		Game.LOGGER.info("Game {} was successfully stopped", this.getType().getInfoName());
-	}
-	
-	default void broadcastPlayer(Packet packet, GamePlayer gamePlayer) {
-		Connection connection = gamePlayer.getPlayer().getConnection();
-		if (connection != null) {
-			connection.send(packet);
+		if (ApplicationType.SERVER.isOn()) {
+			this.getApplication().getGameManager().removeGame(this);
 		}
+		for (Player player : this.getApplication().getPlayerList()) {
+			if (player.isPlaying()) {
+				player.setPlaying(false);
+				player.getScore().reset();
+				LogManager.getLogger(Game.class).info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getName());
+			}
+		}
+		LogManager.getLogger(Game.class).info("Game {} was successfully stopped", this.getType().getInfoName());
 	}
 	
-	default void broadcastPlayers(Packet packet) {
+	default void broadcastPlayer(@NotNull Packet packet, @NotNull GamePlayer gamePlayer) {
+		gamePlayer.getPlayer().getConnection().send(packet);
+	}
+	
+	default void broadcastPlayers(@NotNull Packet packet) {
 		for (GamePlayer player : this.getPlayers()) {
 			this.broadcastPlayer(packet, player);
 		}
 	}
 	
-	default void broadcastPlayersExclude(Packet packet, GamePlayer... gamePlayers) {
+	default void broadcastPlayersExclude(@NotNull Packet packet, @NotNull GamePlayer... gamePlayers) {
 		for (GamePlayer player : this.getPlayers()) {
 			if (!Lists.newArrayList(gamePlayers).contains(player)) {
 				this.broadcastPlayer(packet, player);

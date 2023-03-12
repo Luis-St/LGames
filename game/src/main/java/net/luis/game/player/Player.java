@@ -1,11 +1,10 @@
 package net.luis.game.player;
 
-import net.luis.game.application.ApplicationType;
-import net.luis.game.application.GameApplication;
+import net.luis.game.application.FxApplication;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.network.Connection;
-import net.luis.utility.Tickable;
 import net.luis.utils.util.ToString;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -16,53 +15,54 @@ import java.util.Objects;
  *
  */
 
-public abstract class Player implements Tickable {
+public abstract class Player {
 	
+	private final FxApplication application;
 	private final GameProfile profile;
+	private final Connection connection;
 	private final PlayerScore score;
-	private final GameApplication application;
-	private Connection connection;
+	private boolean admin = false;
 	private boolean playing = false;
 	private boolean current = false;
 	private boolean canSelect = false;
 	private boolean canRollDice = false;
 	private int count = -1;
 	
-	public Player(GameProfile profile, PlayerScore score, GameApplication application) {
-		this.profile = profile;
-		this.score = score;
+	public Player(@NotNull FxApplication application, @NotNull GameProfile profile, @Nullable Connection connection, @NotNull PlayerScore score) {
 		this.application = application;
-	}
-	
-	@Override
-	public void tick() {
-	
+		this.profile = profile;
+		this.connection = connection;
+		this.score = score;
 	}
 	
 	public abstract boolean isClient();
 	
-	public GameProfile getProfile() {
-		return this.profile;
-	}
-	
-	public String getName() {
-		return this.getProfile().getName();
-	}
-	
-	public PlayerScore getScore() {
-		return this.score;
-	}
-	
-	public GameApplication getApplication() {
+	public @NotNull FxApplication getApplication() {
 		return this.application;
 	}
 	
-	public @Nullable Connection getConnection() {
-		return ApplicationType.SERVER.isOn() ? this.connection : null;
+	public @NotNull GameProfile getProfile() {
+		return this.profile;
 	}
 	
-	public void setConnection(@Nullable Connection connection) {
-		this.connection = ApplicationType.SERVER.isOn() ? connection : null;
+	public @NotNull String getName() {
+		return this.getProfile().getName();
+	}
+	
+	public @NotNull Connection getConnection() {
+		return Objects.requireNonNull(this.connection);
+	}
+	
+	public @NotNull PlayerScore getScore() {
+		return this.score;
+	}
+	
+	public boolean isAdmin() {
+		return this.admin;
+	}
+	
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 	
 	public boolean isPlaying() {
@@ -110,23 +110,25 @@ public abstract class Player implements Tickable {
 		if (this == o) return true;
 		if (!(o instanceof Player player)) return false;
 		
+		if (this.admin != player.admin) return false;
 		if (this.playing != player.playing) return false;
 		if (this.current != player.current) return false;
 		if (this.canSelect != player.canSelect) return false;
 		if (this.canRollDice != player.canRollDice) return false;
 		if (this.count != player.count) return false;
+		if (!this.application.equals(player.application)) return false;
 		if (!this.profile.equals(player.profile)) return false;
-		if (!this.score.equals(player.score)) return false;
-		return Objects.equals(this.connection, player.connection);
+		if (!this.connection.equals(player.connection)) return false;
+		return this.score.equals(player.score);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.profile, this.score, this.connection, this.playing, this.current, this.canSelect, this.canRollDice, this.count);
+		return Objects.hash(this.application, this.profile, this.connection, this.score, this.admin, this.playing, this.current, this.canSelect, this.canRollDice, this.count);
 	}
 	
 	@Override
-	public String toString() {
-		return ToString.toString(this, "playing");
+	public @NotNull String toString() {
+		return ToString.toString(this, "application", "connection");
 	}
 }

@@ -1,7 +1,8 @@
 package net.luis.game;
 
-import net.luis.game.application.GameApplication;
-import net.luis.game.player.GamePlayerInfo;
+import net.luis.game.application.FxApplication;
+import net.luis.game.player.game.GamePlayerInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -14,6 +15,6 @@ import java.util.List;
 @FunctionalInterface
 public interface GameFactory<T extends Game> {
 	
-	T createGame(GameApplication application, List<GamePlayerInfo> playerInfos);
+	@NotNull T createGame(@NotNull FxApplication application, @NotNull List<GamePlayerInfo> playerInfos);
 	
 }

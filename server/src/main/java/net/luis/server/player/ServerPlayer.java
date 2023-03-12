@@ -7,6 +7,7 @@ import net.luis.game.player.score.PlayerScore;
 import net.luis.language.TranslationKey;
 import net.luis.network.Connection;
 import net.luis.server.Server;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -16,10 +17,8 @@ import net.luis.server.Server;
 
 public class ServerPlayer extends Player {
 	
-	public Connection connection;
-	
-	public ServerPlayer(GameProfile profile, PlayerScore score) {
-		super(profile, score, Server.getInstance());
+	public ServerPlayer(@NotNull GameProfile profile, @NotNull Connection connection) {
+		super(Server.getInstance(), profile, connection, new PlayerScore(profile));
 	}
 	
 	@Override
@@ -27,13 +26,13 @@ public class ServerPlayer extends Player {
 		return false;
 	}
 	
-	public TreeItem<String> display() {
+	public @NotNull TreeItem<String> display() {
 		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("server.window.player", this.getProfile().getName()));
 		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_name", this.getProfile().getName())));
-		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_uuid", this.getProfile().getUUID())));
+		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_uuid", this.getProfile().getUniqueId())));
 		String trueTranslation = TranslationKey.createAndGet("window.create_account.true");
 		String falseTranslation = TranslationKey.createAndGet("window.create_account.false");
-		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_admin", ((Server) this.getApplication()).isAdmin(this) ? trueTranslation : falseTranslation)));
+		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_admin", this.isAdmin() ? trueTranslation : falseTranslation)));
 		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_playing", this.isPlaying() ? trueTranslation : falseTranslation)));
 		return treeItem;
 	}
@@ -41,7 +40,7 @@ public class ServerPlayer extends Player {
 	@Override
 	public void setPlaying(boolean playing) {
 		super.setPlaying(playing);
-		((Server) this.getApplication()).refreshPlayers();
+		this.getApplication().getScreen().refresh();
 	}
 	
 }

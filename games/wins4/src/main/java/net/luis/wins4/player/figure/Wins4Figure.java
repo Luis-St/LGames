@@ -1,9 +1,10 @@
 package net.luis.wins4.player.figure;
 
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.figure.AbstractGameFigure;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.figure.AbstractGameFigure;
 import net.luis.wins4.map.field.Wins4FieldPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -20,12 +21,12 @@ public class Wins4Figure extends AbstractGameFigure {
 	}
 	
 	@Override
-	public GameFieldPos getHomePos() {
+	public @NotNull GameFieldPos getHomePos() {
 		return Wins4FieldPos.NO;
 	}
 	
 	@Override
-	public GameFieldPos getStartPos() {
+	public @NotNull GameFieldPos getStartPos() {
 		return Wins4FieldPos.NO;
 	}
 }

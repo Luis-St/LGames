@@ -1,6 +1,7 @@
 package net.luis.fx.game;
 
 import javafx.scene.control.ToggleButton;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -16,7 +17,7 @@ public class IndexToggleButton extends ToggleButton {
 		this.index = index;
 	}
 	
-	public IndexToggleButton(String text, int index) {
+	public IndexToggleButton(@NotNull String text, int index) {
 		super(text);
 		this.index = index;
 	}

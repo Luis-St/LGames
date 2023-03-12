@@ -3,9 +3,10 @@ package net.luis.ludo.player;
 import com.google.common.collect.Lists;
 import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
-import net.luis.game.application.GameApplication;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.application.FxApplication;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.language.TranslationKey;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,12 +38,12 @@ public enum LudoPlayerType implements GamePlayerType {
 	}
 	
 	@Override
-	public TranslationKey getTranslation() {
+	public @NotNull TranslationKey getTranslation() {
 		return this.translation;
 	}
 	
 	@Override
-	public List<LudoPlayerType> getOpponents() {
+	public @NotNull List<LudoPlayerType> getOpponents() {
 		return switch (this) {
 			case GREEN -> Lists.newArrayList(YELLOW, BLUE, RED);
 			case YELLOW -> Lists.newArrayList(GREEN, BLUE, RED);
@@ -57,7 +58,7 @@ public enum LudoPlayerType implements GamePlayerType {
 		if (this.path == null) {
 			return null;
 		}
-		return FxUtils.makeImageView(Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
+		return FxUtils.makeImageView(Objects.requireNonNull(FxApplication.getInstance()).getResourceManager().resourceDirectory().resolve(this.path + ".png").toString(), width, height);
 	}
 	
 	@Override

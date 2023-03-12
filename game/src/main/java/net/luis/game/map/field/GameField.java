@@ -3,12 +3,11 @@ package net.luis.game.map.field;
 import javafx.scene.image.ImageView;
 import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.GameProfile;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.utils.util.Utils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -19,23 +18,25 @@ import org.jetbrains.annotations.Nullable;
 
 public interface GameField {
 	
-	Logger LOGGER = LogManager.getLogger();
-	
 	void init();
 	
+	@NotNull
 	GameMap getMap();
 	
+	@NotNull
 	GameFieldType getFieldType();
 	
+	@NotNull
 	GamePlayerType getColorType();
 	
+	@NotNull
 	GameFieldPos getFieldPos();
 	
 	boolean isHome();
 	
 	boolean isStart();
 	
-	boolean isStartFor(GameFigure figure);
+	boolean isStartFor(@NotNull GameFigure figure);
 	
 	boolean isWin();
 	
@@ -57,9 +58,10 @@ public interface GameField {
 		this.setFigure(null);
 	}
 	
+	@NotNull
 	GameResult getResult();
 	
-	void setResult(GameResult result);
+	void setResult(@NotNull GameResult result);
 	
 	default boolean canSelect() {
 		return !this.isEmpty();
@@ -74,20 +76,19 @@ public interface GameField {
 		this.setShadowed(false);
 	}
 	
-	@Nullable
-	default ImageView getFieldBackground() {
+	default @Nullable ImageView getFieldBackground() {
 		return null;
 	}
 	
 	void updateFieldGraphic();
 	
-	default GameFieldInfo getFieldInfo() {
+	default @NotNull GameFieldInfo getFieldInfo() {
 		if (this.isEmpty()) {
 			return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), GameProfile.EMPTY, -1, Utils.EMPTY_UUID);
 		}
 		GameFigure figure = this.getFigure();
 		assert figure != null;
-		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUUID());
+		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUniqueId());
 	}
 	
 }

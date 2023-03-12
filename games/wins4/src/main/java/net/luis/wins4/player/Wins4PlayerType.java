@@ -3,9 +3,10 @@ package net.luis.wins4.player;
 import com.google.common.collect.Lists;
 import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
-import net.luis.game.application.GameApplication;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.application.FxApplication;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.language.TranslationKey;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,12 +37,12 @@ public enum Wins4PlayerType implements GamePlayerType {
 	}
 	
 	@Override
-	public TranslationKey getTranslation() {
+	public @NotNull TranslationKey getTranslation() {
 		return this.translation;
 	}
 	
 	@Override
-	public List<Wins4PlayerType> getOpponents() {
+	public @NotNull List<Wins4PlayerType> getOpponents() {
 		if (this == NO) {
 			return Lists.newArrayList(NO);
 		}
@@ -53,7 +54,7 @@ public enum Wins4PlayerType implements GamePlayerType {
 		if (this.path == null) {
 			return null;
 		}
-		return FxUtils.makeImageView(Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
+		return FxUtils.makeImageView(Objects.requireNonNull(FxApplication.getInstance()).getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
 	}
 	
 	@Override

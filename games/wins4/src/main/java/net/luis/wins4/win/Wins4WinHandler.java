@@ -5,13 +5,14 @@ import net.luis.game.Game;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.win.AbstractWinHandler;
 import net.luis.game.win.GameResultLine;
 import net.luis.utils.util.Utils;
 import net.luis.wins4.map.field.Wins4FieldPos;
 import net.luis.wins4.player.Wins4PlayerType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,12 +57,12 @@ public class Wins4WinHandler extends AbstractWinHandler {
 	}
 	
 	@Override
-	public boolean hasPlayerFinished(GamePlayer gamePlayer) {
+	public boolean hasPlayerFinished(@NotNull GamePlayer gamePlayer) {
 		return this.getWinType(gamePlayer.getMap()) == gamePlayer.getPlayerType();
 	}
 	
 	@Override
-	public boolean isDraw(GameMap map) {
+	public boolean isDraw(@NotNull GameMap map) {
 		return !map.hasEmptyField() && this.getWinType(map) == Wins4PlayerType.NO;
 	}
 	
@@ -73,7 +74,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 		return Wins4PlayerType.NO;
 	}
 	
-	public GameResultLine getResultLine(GameMap map) {
+	public @NotNull GameResultLine getResultLine(@NotNull GameMap map) {
 		for (GameResultLine resultLine : this.resultLines) {
 			if (this.getLineWinType(map, resultLine) != Wins4PlayerType.NO) {
 				return resultLine;
@@ -105,7 +106,7 @@ public class Wins4WinHandler extends AbstractWinHandler {
 	}
 	
 	@Override
-	public int getScoreFor(Game game, GamePlayer player) {
+	public int getScoreFor(@NotNull Game game, @NotNull GamePlayer player) {
 		return this.getFinishedPlayers().contains(player) ? 1 : 0;
 	}
 	

@@ -1,12 +1,14 @@
 package net.luis.game.map.field;
 
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.GameProfile;
 import net.luis.network.annotation.DecodingConstructor;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.EncodableEnum;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.utils.util.ToString;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -27,7 +29,7 @@ public class GameFieldInfo implements Encodable {
 	private final UUID figureUUID;
 	
 	@SuppressWarnings("unchecked")
-	public GameFieldInfo(GameFieldType fieldType, GamePlayerType playerType, GameFieldPos fieldPos, GameProfile profile, int figureCount, UUID figureUUID) {
+	public GameFieldInfo(@NotNull GameFieldType fieldType, @NotNull GamePlayerType playerType, @NotNull GameFieldPos fieldPos, @NotNull GameProfile profile, int figureCount, @NotNull UUID figureUUID) {
 		this.fieldType = new EncodableEnum((Enum<? extends GameFieldType>) fieldType);
 		this.playerType = new EncodableEnum((Enum<? extends GamePlayerType>) playerType);
 		this.fieldPos = fieldPos;
@@ -37,7 +39,7 @@ public class GameFieldInfo implements Encodable {
 	}
 	
 	@DecodingConstructor
-	public GameFieldInfo(FriendlyByteBuffer buffer) {
+	public GameFieldInfo(@NotNull FriendlyByteBuffer buffer) {
 		this.fieldType = buffer.read(EncodableEnum.class);
 		this.playerType = buffer.read(EncodableEnum.class);
 		this.fieldPos = buffer.readInterface();
@@ -47,19 +49,19 @@ public class GameFieldInfo implements Encodable {
 		this.figureUUID = buffer.readUUID();
 	}
 	
-	public GameFieldType getFieldType() {
+	public @NotNull GameFieldType getFieldType() {
 		return this.fieldType.getAsOrThrow(GameFieldType.class);
 	}
 	
-	public GamePlayerType getPlayerType() {
+	public @NotNull GamePlayerType getPlayerType() {
 		return this.playerType.getAsOrThrow(GamePlayerType.class);
 	}
 	
-	public GameFieldPos getFieldPos() {
+	public @NotNull GameFieldPos getFieldPos() {
 		return this.fieldPos;
 	}
 	
-	public GameProfile getProfile() {
+	public @NotNull GameProfile getProfile() {
 		return this.profile;
 	}
 	
@@ -67,12 +69,12 @@ public class GameFieldInfo implements Encodable {
 		return this.figureCount;
 	}
 	
-	public UUID getFigureUUID() {
+	public @NotNull UUID getFigureUUID() {
 		return this.figureUUID;
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.write(this.fieldType);
 		buffer.write(this.playerType);
 		buffer.writeInterface(this.fieldPos);
@@ -82,7 +84,7 @@ public class GameFieldInfo implements Encodable {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
 		if (!(o instanceof GameFieldInfo that)) return false;
 		
@@ -100,7 +102,7 @@ public class GameFieldInfo implements Encodable {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return ToString.toString(this);
 	}
 	

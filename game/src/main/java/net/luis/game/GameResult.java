@@ -1,5 +1,7 @@
 package net.luis.game;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  *
  * @author Luis-st
@@ -12,16 +14,16 @@ public enum GameResult {
 	
 	private final String name;
 	
-	GameResult(String name) {
+	GameResult(@NotNull String name) {
 		this.name = name;
 	}
 	
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.name;
 	}
 	

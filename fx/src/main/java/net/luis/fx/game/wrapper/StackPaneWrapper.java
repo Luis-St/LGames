@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -14,17 +15,18 @@ import javafx.scene.layout.StackPane;
 
 public interface StackPaneWrapper {
 	
+	@NotNull
 	StackPane getStackPane();
 	
-	default void setAlignment(Pos value) {
+	default void setAlignment(@NotNull Pos value) {
 		this.getStackPane().setAlignment(value);
 	}
 	
-	default void setPadding(Insets value) {
+	default void setPadding(@NotNull Insets value) {
 		this.getStackPane().setPadding(value);
 	}
 	
-	default ObservableList<Node> getChildren() {
+	default @NotNull ObservableList<Node> getChildren() {
 		return this.getStackPane().getChildren();
 	}
 	

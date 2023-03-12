@@ -5,17 +5,21 @@ import com.google.common.collect.Lists;
 import net.luis.game.application.ApplicationType;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.GameMapFactory;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerFactory;
-import net.luis.game.player.GamePlayerInfo;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerFactory;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.GameProfile;
 import net.luis.game.win.WinHandler;
 import net.luis.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.luis.utils.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  *
@@ -25,6 +29,9 @@ import java.util.Objects;
 
 public abstract class AbstractGame implements Game {
 	
+	private static final Logger LOGGER = LogManager.getLogger(AbstractGame.class);
+	
+	private final UUID uuid = UUID.randomUUID();
 	private final GameMap map;
 	private final List<GamePlayer> players;
 	private final WinHandler winHandler;
@@ -38,10 +45,10 @@ public abstract class AbstractGame implements Game {
 	
 	private static List<GamePlayer> createPlayers(Game game, List<GamePlayerInfo> playerInfos, GamePlayerFactory playerFactory) {
 		if (!game.getType().hasEnoughPlayers(playerInfos.size())) {
-			Game.LOGGER.error("Fail to create game players list with size {}, since a player list with size in bounds {} was expected", playerInfos.size(), game.getType().getBounds());
+			LOGGER.error("Fail to create game players list with size {}, since a player list with size in bounds {} was expected", playerInfos.size(), game.getType().getBounds());
 			throw new IllegalStateException("Fail to create game players list with size " + playerInfos.size() + ", since a player list with size in bounds " + game.getType().getBounds() + " was expected");
 		}
-		Game.LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Utils.mapList(playerInfos, GamePlayerInfo::getProfile, GameProfile::getName));
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Utils.mapList(playerInfos, GamePlayerInfo::getProfile, GameProfile::getName));
 		List<GamePlayer> gamePlayers = Lists.newArrayList();
 		for (GamePlayerInfo playerInfo : playerInfos) {
 			gamePlayers.add(playerFactory.create(game, playerInfo.getProfile(), playerInfo.getPlayerType(), playerInfo.getUUIDs()));
@@ -55,12 +62,17 @@ public abstract class AbstractGame implements Game {
 	}
 	
 	@Override
-	public GameMap getMap() {
+	public @NotNull UUID getUniqueId() {
+		return this.uuid;
+	}
+	
+	@Override
+	public @NotNull GameMap getMap() {
 		return this.map;
 	}
 	
 	@Override
-	public List<GamePlayer> getPlayers() {
+	public @NotNull List<GamePlayer> getPlayers() {
 		return ApplicationType.SERVER.isOn() ? this.players : ImmutableList.copyOf(this.players);
 	}
 	
@@ -70,7 +82,7 @@ public abstract class AbstractGame implements Game {
 	}
 	
 	@Override
-	public void setPlayer(GamePlayer player) {
+	public void setPlayer(@NotNull GamePlayer player) {
 		LOGGER.info("Update current player from {} to {}", Utils.runIfNotNull(this.getPlayer(), GamePlayer::getName), Utils.runIfNotNull(player, GamePlayer::getName));
 		this.player = player;
 		if (ApplicationType.SERVER.isOn() && this.getPlayer() != null) {

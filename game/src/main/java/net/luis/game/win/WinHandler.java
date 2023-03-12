@@ -2,9 +2,8 @@ package net.luis.game.win;
 
 import net.luis.game.Game;
 import net.luis.game.map.GameMap;
-import net.luis.game.player.GamePlayer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.luis.game.player.game.GamePlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -16,37 +15,35 @@ import java.util.List;
 
 public interface WinHandler {
 	
-	Logger LOGGER = LogManager.getLogger();
-	
 	boolean hasMultipleWinners();
 	
 	boolean hasWinner();
 	
-	GamePlayer getWinningPlayer();
+	@NotNull GamePlayer getWinningPlayer();
 	
 	boolean hasWinners();
 	
-	List<GamePlayer> getWinningPlayers();
+	@NotNull List<GamePlayer> getWinningPlayers();
 	
-	boolean hasPlayerFinished(GamePlayer player);
+	boolean hasPlayerFinished(@NotNull GamePlayer player);
 	
-	boolean isDraw(GameMap map);
+	boolean isDraw(@NotNull GameMap map);
 	
-	default boolean canPlayerWin(GamePlayer player) {
+	default boolean canPlayerWin(@NotNull GamePlayer player) {
 		return true;
 	}
 	
-	default GameResultLine getResultLine(GameMap map) {
+	default @NotNull GameResultLine getResultLine(@NotNull GameMap map) {
 		return GameResultLine.EMPTY;
 	}
 	
-	void onPlayerFinished(GamePlayer player);
+	void onPlayerFinished(@NotNull GamePlayer player);
 	
-	List<GamePlayer> getFinishedPlayers();
+	@NotNull List<GamePlayer> getFinishedPlayers();
 	
-	List<GamePlayer> getWinOrder();
+	@NotNull List<GamePlayer> getWinOrder();
 	
-	int getScoreFor(Game game, GamePlayer player);
+	int getScoreFor(@NotNull Game game, @NotNull GamePlayer player);
 	
 	void reset();
 	

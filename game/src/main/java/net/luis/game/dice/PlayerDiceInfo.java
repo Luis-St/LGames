@@ -1,7 +1,9 @@
 package net.luis.game.dice;
 
-import net.luis.game.player.GamePlayer;
+import net.luis.game.player.game.GamePlayer;
 import net.luis.utils.util.ToString;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -11,10 +13,10 @@ import java.util.Objects;
  *
  */
 
-public record PlayerDiceInfo(GamePlayer player, int count) {
+public record PlayerDiceInfo(@NotNull GamePlayer player, int count) {
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
 		if (!(o instanceof PlayerDiceInfo that)) return false;
 		
@@ -28,7 +30,7 @@ public record PlayerDiceInfo(GamePlayer player, int count) {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return ToString.toString(this);
 	}
 	

@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import net.luis.Constants;
 import net.luis.account.account.LoginType;
 import net.luis.client.Client;
-import net.luis.client.ClientAccount;
+import net.luis.client.account.ClientAccount;
 import net.luis.fx.Box;
 import net.luis.fx.window.AbstractWindow;
 import net.luis.fxutils.CssUtils;
@@ -22,14 +22,15 @@ import net.luis.fxutils.PropertyListeners;
 import net.luis.fxutils.fx.InputPane;
 import net.luis.fxutils.fx.InputValidationPane;
 import net.luis.language.TranslationKey;
-import net.luis.network.ConnectionHandler;
-import net.luis.network.packet.Packet;
+import net.luis.network.SecondaryConnection;
 import net.luis.network.packet.account.ClientLoginPacket;
 import net.luis.network.packet.account.ClientLogoutPacket;
 import net.luis.network.packet.account.ClientRegistrationPacket;
-import net.luis.utility.Util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -45,17 +46,21 @@ import java.util.regex.Pattern;
 
 public class LoginWindow extends AbstractWindow {
 	
+	private static final Logger LOGGER = LogManager.getLogger(LoginWindow.class);
 	private static final Pattern PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
 	
 	private final Client client;
+	private final SecondaryConnection connection;
 	
-	public LoginWindow(Client client, Stage stage) {
+	public LoginWindow(@NotNull Client client, @NotNull Stage stage) {
 		super(stage, 350, 225.0);
 		this.client = client;
-		this.client.setLoginWindow(this);
+		this.client.getAccountManager().setLoginWindow(this);
+		this.connection = new SecondaryConnection();
+		this.connection.open(this.client.getAccountHost(), this.client.getAccountPort());
 	}
 	
-	private Pane main() {
+	private @NotNull Pane main() {
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		Button registrationButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.register"), () -> this.updateScene(this.registration1()));
 		Button loginButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.login"), () -> this.updateScene(this.loginSelect()));
@@ -64,24 +69,21 @@ public class LoginWindow extends AbstractWindow {
 		return pane;
 	}
 	
-	private Pane profile() {
+	private @NotNull Pane profile() {
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
-		ClientAccount account = this.client.getAccount();
+		ClientAccount account = Objects.requireNonNull(this.client.getAccountManager().getAccount());
 		InputPane<TextField> namePane = new InputPane<>(TranslationKey.createAndGet("window.create_account.name"), new TextField());
 		namePane.getInputNode().setEditable(false);
 		namePane.getInputNode().setText(account.name());
 		pane.add(namePane, 0, 0);
 		Button logoutButton = FxUtils.makeButton(TranslationKey.createAndGet("window.logout.logout"), () -> {
-			ConnectionHandler handler = this.client.getAccountHandler();
-			if (handler.isConnected()) {
-				handler.send(new ClientLogoutPacket(account.name(), account.id(), account.uuid()));
-			}
+			this.connection.send(new ClientLogoutPacket(account.name(), account.id(), account.uuid()));
 		});
 		logoutButton.setAlignment(Pos.CENTER);
-		if (!account.guest() && this.client.isPasswordCachedLocal()) {
+		if (!account.guest() && this.client.getAccountManager().isPasswordCachedLocal()) {
 			InputPane<TextField> passwordPane = new InputPane<>(TranslationKey.createAndGet("window.create_account.password"), new TextField());
 			passwordPane.getInputNode().setEditable(false);
-			passwordPane.getInputNode().setText(this.client.getPassword());
+			passwordPane.getInputNode().setText(this.client.getAccountManager().getPassword());
 			pane.add(passwordPane, 0, 1);
 			pane.add(logoutButton, 0, 2);
 		} else {
@@ -90,7 +92,7 @@ public class LoginWindow extends AbstractWindow {
 		return pane;
 	}
 	
-	private Pane registration1() {
+	private @NotNull Pane registration1() {
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		InputValidationPane<TextField> namePane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.name"), new TextField(), (field) -> {
 			if (StringUtils.trimToEmpty(field.getText()).isEmpty()) {
@@ -126,26 +128,26 @@ public class LoginWindow extends AbstractWindow {
 		pane.add(namePane, 0, 0);
 		pane.add(passwordPane.getValue(), 0, 1);
 		pane.add(confirmPasswordPane, 1, 1);
-		pane.add(FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> this.updateScene(this.client.isLoggedIn() ? this.profile() : this.main())), 0, 2);
+		pane.add(FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> this.updateScene(this.client.getAccountManager().isLoggedIn() ? this.profile() : this.main())), 0, 2);
 		pane.add(FxUtils.makeButton(TranslationKey.createAndGet("window.login.next"), () -> {
 			String name = namePane.getInputNode().getText();
 			String password = passwordPane.getValue().getInputNode().getText();
 			String confirmPassword = confirmPasswordPane.getInputNode().getText();
 			if (StringUtils.isBlank(name)) {
-				AbstractWindow.LOGGER.warn("No name set");
+				LOGGER.warn("No name set");
 				namePane.validateInput();
 			} else if (StringUtils.isBlank(password)) {
-				AbstractWindow.LOGGER.warn("No password set");
+				LOGGER.warn("No password set");
 				passwordPane.getValue().validateInput();
 			} else if (StringUtils.isBlank(confirmPassword)) {
-				AbstractWindow.LOGGER.warn("The password has not been confirmed");
+				LOGGER.warn("The password has not been confirmed");
 				confirmPasswordPane.validateInput();
 			} else if (this.isValidPassword(password)) {
-				AbstractWindow.LOGGER.warn("The password is not valid");
+				LOGGER.warn("The password is not valid");
 				passwordPane.getValue().validateInput();
 				confirmPasswordPane.validateInput();
 			} else if (!password.trim().equals(confirmPassword.trim())) {
-				AbstractWindow.LOGGER.warn("The password was not confirmed correctly");
+				LOGGER.warn("The password was not confirmed correctly");
 				passwordPane.getValue().validateInput();
 				confirmPasswordPane.validateInput();
 			} else {
@@ -156,10 +158,10 @@ public class LoginWindow extends AbstractWindow {
 	}
 	
 	private boolean isValidPassword(String password) {
-		return (!PATTERN.matcher(password).matches() || password.length() <= 4) && !Constants.IDE;
+		return (!PATTERN.matcher(password).matches() || password.length() <= 4) && !Constants.DEV_MODE;
 	}
 	
-	private Pane registration2(String name, String password) {
+	private @NotNull Pane registration2(@NotNull String name, @NotNull String password) {
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		InputPane<TextField> firstNamePane = new InputPane<>(TranslationKey.createAndGet("window.create_account.first_name"), new TextField());
 		InputPane<TextField> lastNamePane = new InputPane<>(TranslationKey.createAndGet("window.create_account.last_name"), new TextField());
@@ -188,11 +190,11 @@ public class LoginWindow extends AbstractWindow {
 			String mail = StringUtils.trimToEmpty(mailPane.getInputNode().getText());
 			LocalDate date = datePane.getInputNode().getValue();
 			if (date == null) {
-				AbstractWindow.LOGGER.warn("No birthday set");
+				LOGGER.warn("No birthday set");
 				datePane.validateInput();
 			} else {
-				this.client.setPassword(password);
-				this.connectAndSend(new ClientRegistrationPacket(name, mail, password.hashCode(), firstName, lastName, Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())));
+				this.client.getAccountManager().setPassword(password);
+				this.connection.send(new ClientRegistrationPacket(name, mail, password.hashCode(), firstName, lastName, Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())));
 			}
 		});
 		pane.add(backButton, 0, 2);
@@ -200,16 +202,16 @@ public class LoginWindow extends AbstractWindow {
 		return pane;
 	}
 	
-	private Pane loginSelect() {
+	private @NotNull Pane loginSelect() {
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		Button userButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.user"), () -> this.updateScene(this.loginUser()));
 		Button guestButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.guest"), () -> this.updateScene(this.loginGuest()));
-		Button backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> this.updateScene(this.client.isLoggedIn() ? this.profile() : this.main()));
+		Button backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> this.updateScene(this.client.getAccountManager().isLoggedIn() ? this.profile() : this.main()));
 		pane.addColumn(0, new Box<>(userButton), new Box<>(guestButton), new Box<>(backButton));
 		return pane;
 	}
 	
-	private Pane loginUser() {
+	private @NotNull Pane loginUser() {
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		InputValidationPane<TextField> namePane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.name"), new TextField(), (field) -> {
 			if (StringUtils.trimToEmpty(field.getText()).isEmpty()) {
@@ -232,13 +234,13 @@ public class LoginWindow extends AbstractWindow {
 			String password = StringUtils.trimToEmpty(passwordPane.getInputNode().getText());
 			if (name.isEmpty()) {
 				namePane.validateInput();
-				AbstractWindow.LOGGER.info("Username is not set");
+				LOGGER.info("Username is not set");
 			} else if (password.isEmpty()) {
 				passwordPane.validateInput();
-				AbstractWindow.LOGGER.info("Password is not set");
+				LOGGER.info("Password is not set");
 			} else {
-				this.client.setPassword(password);
-				this.connectAndSend(new ClientLoginPacket(LoginType.USER_LOGIN, name, password.hashCode()));
+				this.client.getAccountManager().setPassword(password);
+				this.connection.send(new ClientLoginPacket(LoginType.USER_LOGIN, name, password.hashCode()));
 			}
 		};
 		passwordPane.getInputNode().setOnAction(EventHandlers.create(loginRunnable));
@@ -249,7 +251,7 @@ public class LoginWindow extends AbstractWindow {
 		return pane;
 	}
 	
-	private Pane loginGuest() {
+	private @NotNull Pane loginGuest() {
 		GridPane pane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		InputValidationPane<TextField> namePane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.name"), new TextField(), (field) -> {
 			if (StringUtils.trimToEmpty(field.getText()).isEmpty()) {
@@ -265,32 +267,14 @@ public class LoginWindow extends AbstractWindow {
 			String name = StringUtils.trimToEmpty(namePane.getInputNode().getText());
 			if (name.isEmpty()) {
 				namePane.validateInput();
-				AbstractWindow.LOGGER.warn("Guest name is not set");
+				LOGGER.warn("Guest name is not set");
 			} else {
-				this.client.setPassword("");
-				this.connectAndSend(new ClientLoginPacket(LoginType.GUEST_LOGIN, name, "".hashCode()));
+				this.client.getAccountManager().setPassword("");
+				this.connection.send(new ClientLoginPacket(LoginType.GUEST_LOGIN, name, "".hashCode()));
 			}
 		}), 1, 0);
 		pane.addColumn(1, namePane, innerPane);
 		return pane;
-	}
-	
-	private void connectAndSend(Packet packet) {
-		ConnectionHandler handler = this.client.getAccountHandler();
-		if (!handler.isConnected()) {
-			try {
-				handler.connect(this.client.getAccountHost(), this.client.getAccountPort());
-			} catch (Exception e) {
-				AbstractWindow.LOGGER.warn("Fail to connect to account server", e);
-			}
-		}
-		Util.runDelayed("DelayedPacketSender", 250, () -> {
-			if (handler.isConnected()) {
-				handler.send(packet);
-			} else {
-				AbstractWindow.LOGGER.warn("Unable to send Packet of type {} to account server, since connection is closed", packet.getClass().getSimpleName());
-			}
-		});
 	}
 	
 	public void handleLoggedIn() {
@@ -304,13 +288,13 @@ public class LoginWindow extends AbstractWindow {
 	}
 	
 	@Override
-	protected void onUpdateScene(Scene scene) {
+	protected void onUpdateScene(@NotNull Scene scene) {
 		scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/style.css")).toExternalForm());
 	}
 	
 	@Override
 	public void show() {
-		boolean loggedIn = this.client.isLoggedIn();
+		boolean loggedIn = this.client.getAccountManager().isLoggedIn();
 		this.updateScene(loggedIn ? this.profile() : this.main());
 		this.stage.setTitle(loggedIn ? TranslationKey.createAndGet("screen.menu.profile") : TranslationKey.createAndGet("screen.menu.login"));
 		Stage stage = this.client.getStage();
@@ -321,9 +305,9 @@ public class LoginWindow extends AbstractWindow {
 	
 	@Override
 	protected void exit() {
-		this.client.setLoginWindow(null);
-		if (!this.client.isLoggedIn()) {
-			this.client.getAccountHandler().close();
+		this.client.getAccountManager().setLoginWindow(null);
+		if (!this.client.getAccountManager().isLoggedIn()) {
+			this.client.getAccountController().getInstance().close();
 		}
 	}
 	

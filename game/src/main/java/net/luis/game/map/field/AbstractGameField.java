@@ -4,10 +4,12 @@ import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.GameResult;
 import net.luis.game.application.ApplicationType;
-import net.luis.game.application.GameApplication;
+import net.luis.game.application.FxApplication;
 import net.luis.game.map.GameMap;
-import net.luis.game.player.GamePlayerType;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.GamePlayerType;
+import net.luis.game.player.game.figure.GameFigure;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -28,7 +30,7 @@ public abstract class AbstractGameField implements GameField {
 	private GameResult result = GameResult.NO;
 	private boolean shadowed = false;
 	
-	protected AbstractGameField(GameMap map, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos, double fieldSize) {
+	protected AbstractGameField(@NotNull GameMap map, @NotNull GameFieldType fieldType, @NotNull GamePlayerType colorType, @NotNull GameFieldPos fieldPos, double fieldSize) {
 		this.map = map;
 		this.fieldType = fieldType;
 		this.colorType = colorType;
@@ -43,43 +45,43 @@ public abstract class AbstractGameField implements GameField {
 	}
 	
 	@Override
-	public GameMap getMap() {
+	public @NotNull GameMap getMap() {
 		return this.map;
 	}
 	
 	@Override
-	public GameFieldType getFieldType() {
+	public @NotNull GameFieldType getFieldType() {
 		return this.fieldType;
 	}
 	
 	@Override
-	public GamePlayerType getColorType() {
+	public @NotNull GamePlayerType getColorType() {
 		return this.colorType;
 	}
 	
 	@Override
-	public GameFieldPos getFieldPos() {
+	public @NotNull GameFieldPos getFieldPos() {
 		return this.fieldPos;
 	}
 	
 	@Override
-	public GameFigure getFigure() {
+	public @Nullable GameFigure getFigure() {
 		return this.figure;
 	}
 	
 	@Override
-	public void setFigure(GameFigure figure) {
+	public void setFigure(@Nullable GameFigure figure) {
 		this.figure = figure;
 		this.updateFieldGraphic();
 	}
 	
 	@Override
-	public GameResult getResult() {
+	public @NotNull GameResult getResult() {
 		return this.result;
 	}
 	
 	@Override
-	public void setResult(GameResult result) {
+	public void setResult(@NotNull GameResult result) {
 		this.result = result;
 		this.updateFieldGraphic();
 	}
@@ -100,16 +102,16 @@ public abstract class AbstractGameField implements GameField {
 	
 	}
 	
-	protected ImageView makeImage(String path) {
+	protected ImageView makeImage(@NotNull String path) {
 		return this.makeImage(path, 1.0);
 	}
 	
-	protected ImageView makeImage(String path, double scale) {
-		return FxUtils.makeImageView(Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve(path).toString(), this.fieldSize * scale, this.fieldSize * scale);
+	protected ImageView makeImage(@NotNull String path, double scale) {
+		return FxUtils.makeImageView(FxApplication.getInstance().getResourceManager().resourceDirectory().resolve(path).toString(), this.fieldSize * scale, this.fieldSize * scale);
 	}
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
 		if (!(o instanceof AbstractGameField that)) return false;
 		

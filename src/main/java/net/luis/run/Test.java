@@ -27,7 +27,7 @@ import java.util.function.Function;
 
 public class Test {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(Test.class);
 	
 	public static void main(String[] args) {
 		LOGGER.info("");

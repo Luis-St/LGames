@@ -22,7 +22,7 @@ import java.io.IOException;
 
 public class FxTest extends Application {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(FxTest.class);
 	
 	public static void main(String[] args) {
 		launch(args);

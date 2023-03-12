@@ -2,11 +2,10 @@ package net.luis.game.dice;
 
 import net.luis.game.Game;
 import net.luis.game.map.field.GameField;
-import net.luis.game.player.GamePlayer;
+import net.luis.game.player.game.GamePlayer;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -18,39 +17,37 @@ import java.util.List;
 
 public interface DiceHandler {
 	
-	Logger LOGGER = LogManager.getLogger();
-	
-	Game getGame();
+	@NotNull Game getGame();
 	
 	int getMin();
 	
 	int getMax();
 	
-	Dice getDice();
+	@NotNull Dice getDice();
 	
-	boolean canRoll(GamePlayer player);
+	boolean canRoll(@NotNull GamePlayer player);
 	
-	int roll(GamePlayer player);
+	int roll(@NotNull GamePlayer player);
 	
-	int rollExclude(GamePlayer player, int value);
+	int rollExclude(@NotNull GamePlayer player, int value);
 	
-	int rollPreferred(GamePlayer player, int value, int rolls);
+	int rollPreferred(@NotNull GamePlayer player, int value, int rolls);
 	
-	boolean canRollAgain(GamePlayer player, int count);
+	boolean canRollAgain(@NotNull GamePlayer player, int count);
 	
-	boolean canPerformGameAction(GamePlayer player, int count);
+	boolean canPerformGameAction(@NotNull GamePlayer player, int count);
 	
-	void performGameAction(GamePlayer player, int count);
+	void performGameAction(@NotNull GamePlayer player, int count);
 	
-	boolean canRollAfterMove(GamePlayer player, GameField oldField, GameField newField, int count);
+	boolean canRollAfterMove(@NotNull GamePlayer player, @NotNull GameField oldField, @NotNull GameField newField, int count);
 	
-	default boolean hasPlayerRolledDice(GamePlayer player) {
+	default boolean hasPlayerRolledDice(@NotNull GamePlayer player) {
 		return Utils.mapList(this.getCountHistory(), PlayerDiceInfo::player).contains(player) && Mth.isInBounds(this.getLastCount(player), this.getMin(), this.getMax());
 	}
 	
-	int getLastCount(GamePlayer player);
+	int getLastCount(@NotNull GamePlayer player);
 	
-	List<PlayerDiceInfo> getCountHistory();
+	@NotNull List<PlayerDiceInfo> getCountHistory();
 	
 	void reset();
 	

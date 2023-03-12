@@ -6,11 +6,10 @@ import net.luis.game.application.ApplicationType;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerType;
-import net.luis.game.player.figure.GameFigure;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerType;
+import net.luis.game.player.game.figure.GameFigure;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,13 +24,11 @@ import java.util.function.Predicate;
 
 public interface GameMap {
 	
-	Logger LOGGER = LogManager.getLogger();
-	
 	default void init() {
 	
 	}
 	
-	default void init(List<GamePlayer> players) {
+	default void init(@NotNull List<GamePlayer> players) {
 		if (ApplicationType.CLIENT.isOn()) {
 			this.getFields().forEach(GameField::clear);
 		}
@@ -39,16 +36,15 @@ public interface GameMap {
 	
 	void addFields();
 	
-	Game getGame();
+	@NotNull Game getGame();
 	
-	List<GameField> getFields();
+	@NotNull List<GameField> getFields();
 	
-	default List<GameField> getFields(Predicate<GameField> predicate) {
+	default @NotNull List<GameField> getFields(Predicate<GameField> predicate) {
 		return this.getFields().stream().filter(predicate).collect(ImmutableList.toImmutableList());
 	}
 	
-	@Nullable
-	default GameField getField(GameFigure figure) {
+	default @Nullable GameField getField(@NotNull GameFigure figure) {
 		for (GameField field : this.getFields()) {
 			if (!field.isEmpty() && Objects.equals(field.getFigure(), figure)) {
 				return field;
@@ -57,17 +53,15 @@ public interface GameMap {
 		return null;
 	}
 	
-	@Nullable
-	GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, GameFieldPos fieldPos);
+	@Nullable GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, @NotNull GameFieldPos fieldPos);
 	
-	@Nullable
-	GameField getNextField(GameFigure figure, int count);
+	@Nullable GameField getNextField(@NotNull GameFigure figure, int count);
 	
-	List<GameField> getHomeFields(GamePlayerType playerType);
+	@NotNull List<GameField> getHomeFields(@NotNull GamePlayerType playerType);
 	
-	List<GameField> getStartFields(GamePlayerType playerType);
+	@NotNull List<GameField> getStartFields(@NotNull GamePlayerType playerType);
 	
-	List<GameField> getWinFields(GamePlayerType playerType);
+	@NotNull List<GameField> getWinFields(@NotNull GamePlayerType playerType);
 	
 	default boolean hasEmptyField() {
 		for (GameField field : this.getFields()) {
@@ -78,11 +72,11 @@ public interface GameMap {
 		return false;
 	}
 	
-	default GameFigure getFigure(GamePlayer player, int figure) {
+	default @Nullable GameFigure getFigure(@NotNull GamePlayer player, int figure) {
 		return player.getFigure(figure);
 	}
 	
-	default boolean moveFigure(GameFigure figure, int count) {
+	default boolean moveFigure(@NotNull GameFigure figure, int count) {
 		GameField field = this.getNextField(figure, count);
 		if (field != null) {
 			return this.moveFigureTo(figure, field);
@@ -90,12 +84,11 @@ public interface GameMap {
 		return false;
 	}
 	
-	default boolean moveFigureTo(GameFigure figure, GameField field) {
+	default boolean moveFigureTo(@NotNull GameFigure figure, @NotNull GameField field) {
 		return false;
 	}
 	
-	@Nullable
-	default GameField getSelectedField() {
+	default @Nullable GameField getSelectedField() {
 		return null;
 	}
 	

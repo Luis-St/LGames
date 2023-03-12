@@ -8,6 +8,8 @@ import net.luis.utils.util.ToString;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ import java.util.Objects;
 
 public class PlayerScore implements Encodable {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(PlayerScore.class);
 	
 	private final GameProfile profile;
 	private final MutableInt win;
@@ -27,11 +29,11 @@ public class PlayerScore implements Encodable {
 	private final MutableInt draw;
 	private final MutableInt score;
 	
-	public PlayerScore(GameProfile profile) {
+	public PlayerScore(@NotNull GameProfile profile) {
 		this(profile, 0, 0, 0, 0);
 	}
 	
-	public PlayerScore(GameProfile profile, int win, int lose, int draw, int score) {
+	public PlayerScore(@NotNull GameProfile profile, int win, int lose, int draw, int score) {
 		this.profile = profile;
 		this.win = new MutableInt(win);
 		this.lose = new MutableInt(lose);
@@ -40,7 +42,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	@DecodingConstructor
-	private PlayerScore(FriendlyByteBuffer buffer) {
+	private PlayerScore(@NotNull FriendlyByteBuffer buffer) {
 		this.profile = buffer.read(GameProfile.class);
 		this.win = new MutableInt(buffer.readInt());
 		this.lose = new MutableInt(buffer.readInt());
@@ -48,7 +50,7 @@ public class PlayerScore implements Encodable {
 		this.score = new MutableInt(buffer.readInt());
 	}
 	
-	public void sync(PlayerScore score) {
+	public void sync(@NotNull PlayerScore score) {
 		if (this.profile.equals(score.profile)) {
 			this.win.setValue(score.getWins());
 			this.lose.setValue(score.getLoses());
@@ -59,7 +61,7 @@ public class PlayerScore implements Encodable {
 		}
 	}
 	
-	public GameProfile getProfile() {
+	public @NotNull GameProfile getProfile() {
 		return this.profile;
 	}
 	
@@ -135,7 +137,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
 		buffer.writeInt(this.win.getValue());
 		buffer.writeInt(this.lose.getValue());
@@ -144,7 +146,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
 		if (!(o instanceof PlayerScore that)) return false;
 		
@@ -161,7 +163,7 @@ public class PlayerScore implements Encodable {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return ToString.toString(this);
 	}
 	

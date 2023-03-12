@@ -7,9 +7,12 @@ import net.luis.game.dice.DiceHandler;
 import net.luis.game.dice.PlayerDiceInfo;
 import net.luis.game.dice.SimpleDice;
 import net.luis.game.map.field.GameField;
-import net.luis.game.player.GamePlayer;
+import net.luis.game.player.game.GamePlayer;
 import net.luis.network.packet.client.game.CanSelectGameFieldPacket;
 import net.luis.utils.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +24,8 @@ import java.util.Objects;
  */
 
 public class LudoDiceHandler implements DiceHandler {
+	
+	private static final Logger LOGGER = LogManager.getLogger(LudoDiceHandler.class);
 	
 	private final Game game;
 	private final int min;
@@ -36,7 +41,7 @@ public class LudoDiceHandler implements DiceHandler {
 	}
 	
 	@Override
-	public Game getGame() {
+	public @NotNull Game getGame() {
 		return this.game;
 	}
 	
@@ -51,27 +56,27 @@ public class LudoDiceHandler implements DiceHandler {
 	}
 	
 	@Override
-	public Dice getDice() {
+	public @NotNull Dice getDice() {
 		return this.dice;
 	}
 	
 	@Override
-	public boolean canRoll(GamePlayer player) {
+	public boolean canRoll(@NotNull GamePlayer player) {
 		return Objects.equals(this.game.getPlayer(), player) && player.getRollCount() > 0;
 	}
 	
 	@Override
-	public int roll(GamePlayer player) {
+	public int roll(@NotNull GamePlayer player) {
 		return this.handleRolled(player, this.dice.roll());
 	}
 	
 	@Override
-	public int rollExclude(GamePlayer player, int value) {
+	public int rollExclude(@NotNull GamePlayer player, int value) {
 		return this.handleRolled(player, this.dice.rollExclude(value));
 	}
 	
 	@Override
-	public int rollPreferred(GamePlayer player, int value, int rolls) {
+	public int rollPreferred(@NotNull GamePlayer player, int value, int rolls) {
 		return this.handleRolled(player, this.dice.rollPreferred(value, rolls));
 	}
 	
@@ -82,40 +87,40 @@ public class LudoDiceHandler implements DiceHandler {
 	}
 	
 	@Override
-	public boolean canRollAgain(GamePlayer player, int count) {
+	public boolean canRollAgain(@NotNull GamePlayer player, int count) {
 		return this.canRoll(player) && player.hasAllFiguresAt(GameField::isHome) && count != 6;
 	}
 	
 	@Override
-	public boolean canPerformGameAction(GamePlayer player, int count) {
+	public boolean canPerformGameAction(@NotNull GamePlayer player, int count) {
 		return player.canMoveAnyFigure(count);
 	}
 	
 	@Override
-	public void performGameAction(GamePlayer gamePlayer, int count) {
+	public void performGameAction(@NotNull GamePlayer gamePlayer, int count) {
 		if (!gamePlayer.getPlayer().isClient()) {
 			Objects.requireNonNull(gamePlayer.getPlayer().getConnection()).send(new CanSelectGameFieldPacket());
 		}
 	}
 	
 	@Override
-	public boolean canRollAfterMove(GamePlayer player, GameField oldField, GameField newField, int count) {
+	public boolean canRollAfterMove(@NotNull GamePlayer player, @NotNull GameField oldField, @NotNull GameField newField, int count) {
 		return Objects.equals(this.game.getPlayer(), player) && count == 6;
 	}
 	
 	@Override
-	public int getLastCount(GamePlayer player) {
+	public int getLastCount(@NotNull GamePlayer player) {
 		for (PlayerDiceInfo diceInfo : Utils.reverseList(this.countHistory)) {
 			if (diceInfo.player().equals(player)) {
 				return diceInfo.count();
 			}
 		}
-		DiceHandler.LOGGER.warn("Player {} has not rolled the dice yet", player.getPlayer().getProfile().getName());
+		LOGGER.warn("Player {} has not rolled the dice yet", player.getPlayer().getProfile().getName());
 		return -1;
 	}
 	
 	@Override
-	public List<PlayerDiceInfo> getCountHistory() {
+	public @NotNull List<PlayerDiceInfo> getCountHistory() {
 		return this.countHistory;
 	}
 	

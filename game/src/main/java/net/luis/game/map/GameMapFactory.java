@@ -1,6 +1,7 @@
 package net.luis.game.map;
 
 import net.luis.game.Game;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -11,6 +12,7 @@ import net.luis.game.Game;
 @FunctionalInterface
 public interface GameMapFactory {
 	
-	GameMap create(Game game);
+	@NotNull
+	GameMap create(@NotNull Game game);
 	
 }

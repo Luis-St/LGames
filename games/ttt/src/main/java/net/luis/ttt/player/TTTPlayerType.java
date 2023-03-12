@@ -2,8 +2,9 @@ package net.luis.ttt.player;
 
 import com.google.common.collect.Lists;
 import javafx.scene.image.ImageView;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.language.TranslationKey;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -39,12 +40,12 @@ public enum TTTPlayerType implements GamePlayerType {
 	}
 	
 	@Override
-	public TranslationKey getTranslation() {
+	public @NotNull TranslationKey getTranslation() {
 		return this.translation;
 	}
 	
 	@Override
-	public List<TTTPlayerType> getOpponents() {
+	public @NotNull List<TTTPlayerType> getOpponents() {
 		if (this == NO) {
 			return Lists.newArrayList(NO);
 		}

@@ -20,6 +20,7 @@ javafx {
 
 dependencies {
 	// Modules
+	implementation project(":fx")
 	implementation project(":network")
 	implementation project(":utility")
 	// Local

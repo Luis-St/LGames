@@ -19,17 +19,18 @@ import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldInfo;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.GameProfile;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.win.GameResultLine;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
-import net.luis.network.packet.listener.PacketListener;
+import net.luis.network.listener.PacketListener;
 import net.luis.ttt.map.field.TTTField;
 import net.luis.ttt.map.field.TTTFieldPos;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
 	}
 	
 	@Override
-	public GridPane getGridPane() {
+	public @NotNull GridPane getGridPane() {
 		return this.gridPane;
 	}
 	
@@ -64,7 +65,7 @@ public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
 		this.setHgap(10.0);
 		this.setVgap(10.0);
 		this.setPadding(new Insets(20.0));
-		this.setGridLinesVisible(Constants.DEBUG);
+		this.setGridLinesVisible(Constants.DEBUG_MODE);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (oldValue instanceof ToggleButton oldButton && oldButton.getUserData() instanceof TTTField oldField) {
 				if (!(newValue instanceof ToggleButton newButton && newButton.getUserData() instanceof TTTField)) {
@@ -76,7 +77,7 @@ public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
 	}
 	
 	@Override
-	public void init(List<GamePlayer> players) {
+	public void init(@NotNull List<GamePlayer> players) {
 		this.getFields().forEach(GameField::clear);
 	}
 	
@@ -129,27 +130,27 @@ public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
 	
 	
 	@Override
-	public @Nullable GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, GameFieldPos fieldPos) {
+	public @Nullable GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, @NotNull GameFieldPos fieldPos) {
 		return this.getFields().get(fieldPos.getPosition());
 	}
 	
 	@Override
-	public @Nullable GameField getNextField(GameFigure figure, int count) {
+	public @Nullable GameField getNextField(@NotNull GameFigure figure, int count) {
 		return null;
 	}
 	
 	@Override
-	public List<GameField> getHomeFields(GamePlayerType playerType) {
+	public @NotNull List<GameField> getHomeFields(@NotNull GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 	
 	@Override
-	public List<GameField> getStartFields(GamePlayerType playerType) {
+	public @NotNull List<GameField> getStartFields(@NotNull GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 	
 	@Override
-	public List<GameField> getWinFields(GamePlayerType playerType) {
+	public @NotNull List<GameField> getWinFields(@NotNull GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 	
@@ -188,7 +189,7 @@ public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
 					if (player != null) {
 						GameFigure figure = player.getFigure(fieldInfo.getFigureCount());
 						assert figure != null;
-						UUID uuid = figure.getUUID();
+						UUID uuid = figure.getUniqueId();
 						UUID serverUUID = fieldInfo.getFigureUUID();
 						if (uuid.equals(serverUUID)) {
 							field.setFigure(figure);

@@ -47,7 +47,7 @@ public class Account implements Encodable, Serializable {
 	private final AccountType type;
 	private boolean taken;
 	
-	Account(String name, int passwordHash, int id, UUID uuid, String mail, String firstName, String lastName, Date birthday, AccountType type) {
+	Account(@NotNull String name, int passwordHash, int id, @NotNull UUID uuid, @NotNull String mail, @NotNull String firstName, @NotNull String lastName, @NotNull Date birthday, @NotNull AccountType type) {
 		this.name = name;
 		this.passwordHash = passwordHash;
 		this.id = id;
@@ -60,7 +60,7 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	@DecodingConstructor
-	private Account(FriendlyByteBuffer buffer) {
+	private Account(@NotNull FriendlyByteBuffer buffer) {
 		this.name = buffer.readString();
 		this.passwordHash = buffer.readInt();
 		this.id = buffer.readInt();
@@ -99,7 +99,7 @@ public class Account implements Encodable, Serializable {
 		this.type = AccountType.values()[tag.getInt("Type")];
 	}
 	
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
@@ -111,27 +111,27 @@ public class Account implements Encodable, Serializable {
 		return this.id;
 	}
 	
-	public UUID getUUID() {
+	public @NotNull UUID getUUID() {
 		return this.uuid;
 	}
 	
-	public String getMail() {
+	public @NotNull String getMail() {
 		return this.mail;
 	}
 	
-	public String getFirstName() {
+	public @NotNull String getFirstName() {
 		return this.firstName;
 	}
 	
-	public String getLastName() {
+	public @NotNull String getLastName() {
 		return this.lastName;
 	}
 	
-	public Date getBirthday() {
+	public @NotNull Date getBirthday() {
 		return this.birthday;
 	}
 	
-	public AccountType getType() {
+	public @NotNull AccountType getType() {
 		return this.type;
 	}
 	
@@ -143,7 +143,11 @@ public class Account implements Encodable, Serializable {
 		this.taken = taken;
 	}
 	
-	public TreeItem<String> display() {
+	public boolean isSingleSession() {
+		return this.getType() == AccountType.GUEST || this.getType() == AccountType.TEST || this.getType() == AccountType.UNKNOWN;
+	}
+	
+	public @NotNull TreeItem<String> display() {
 		TreeItem<String> rootItem = new TreeItem<>(TranslationKey.createAndGet("account.window.account", this.name + "#" + this.getDisplayId()));
 		TreeItem<String> userDataItem = new TreeItem<>(TranslationKey.createAndGet("account.window.user_data"));
 		userDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.name", this.name)));
@@ -175,7 +179,7 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeString(this.name);
 		buffer.writeInt(this.passwordHash);
 		buffer.writeInt(this.id);
@@ -194,7 +198,7 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	@Override
-	public CompoundTag serialize() {
+	public @NotNull CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Name", this.name);
 		tag.putInt("PasswordHash", this.passwordHash);
@@ -217,7 +221,7 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@NotNull Object o) {
 		if (this == o) return true;
 		if (!(o instanceof Account account)) return false;
 		
@@ -239,11 +243,11 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return ToString.toString(this);
 	}
 	
-	public String toShortString() {
+	public @NotNull String toShortString() {
 		return this.name + "#" + this.id;
 	}
 	

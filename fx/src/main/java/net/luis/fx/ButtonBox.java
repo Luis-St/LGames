@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import net.luis.fxutils.EventHandlers;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -15,25 +16,25 @@ public class ButtonBox extends Box<Button> {
 	
 	private final Runnable action;
 	
-	public ButtonBox(String text, Runnable action) {
+	public ButtonBox(@NotNull String text, @NotNull Runnable action) {
 		this(text, Pos.CENTER, action);
 	}
 	
-	public ButtonBox(String text, Pos pos, Runnable action) {
+	public ButtonBox(@NotNull String text, @NotNull Pos pos, @NotNull Runnable action) {
 		this(text, Pos.CENTER, 0.0, 0.0, 0.0, 0.0, action);
 	}
 	
-	public ButtonBox(String text, Pos pos, double padding, Runnable action) {
+	public ButtonBox(@NotNull String text, @NotNull Pos pos, double padding, @NotNull Runnable action) {
 		super(new Button(text), pos, new Insets(padding, padding, padding, padding));
 		this.action = action;
 	}
 	
-	public ButtonBox(String text, Pos pos, double top, double right, double bottom, double left, Runnable action) {
+	public ButtonBox(@NotNull String text, @NotNull Pos pos, double top, double right, double bottom, double left, @NotNull Runnable action) {
 		super(new Button(text), pos, new Insets(top, right, bottom, left));
 		this.action = action;
 	}
 	
-	public ButtonBox(String text, Pos pos, Insets padding, Runnable action) {
+	public ButtonBox(@NotNull String text, @NotNull Pos pos, @NotNull Insets padding, @NotNull Runnable action) {
 		super(new Button(text), pos, padding);
 		this.action = action;
 	}

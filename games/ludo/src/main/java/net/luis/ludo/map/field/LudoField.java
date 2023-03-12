@@ -12,9 +12,13 @@ import net.luis.game.map.GameMap;
 import net.luis.game.map.field.AbstractGameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
-import net.luis.game.player.GamePlayerType;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.GamePlayerType;
+import net.luis.game.player.game.figure.GameFigure;
+import net.luis.ludo.LudoGame;
 import net.luis.ludo.player.LudoPlayerType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -23,6 +27,8 @@ import net.luis.ludo.player.LudoPlayerType;
  */
 
 public class LudoField extends AbstractGameField implements ToggleButtonWrapper {
+	
+	private static final Logger LOGGER = LogManager.getLogger(LudoGame.class);
 	
 	private final ToggleButton button = new ToggleButton();
 	private final ToggleGroup group;
@@ -33,7 +39,7 @@ public class LudoField extends AbstractGameField implements ToggleButtonWrapper 
 	}
 	
 	@Override
-	public ToggleButton getToggleButton() {
+	public @NotNull ToggleButton getToggleButton() {
 		this.button.setUserData(this);
 		return this.button;
 	}
@@ -43,7 +49,7 @@ public class LudoField extends AbstractGameField implements ToggleButtonWrapper 
 		this.setToggleGroup(this.group);
 		this.setPrefSize(this.fieldSize, this.fieldSize);
 		this.setFocusTraversable(false);
-		if (!Constants.DEBUG) {
+		if (!Constants.DEBUG_MODE) {
 			this.setBackground(null);
 		}
 		this.updateFieldGraphic();
@@ -60,7 +66,7 @@ public class LudoField extends AbstractGameField implements ToggleButtonWrapper 
 	}
 	
 	@Override
-	public boolean isStartFor(GameFigure figure) {
+	public boolean isStartFor(@NotNull GameFigure figure) {
 		return figure.getStartPos().equals(this.getFieldPos());
 	}
 	

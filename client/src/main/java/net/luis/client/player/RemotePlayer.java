@@ -1,7 +1,11 @@
 package net.luis.client.player;
 
+import net.luis.client.Client;
 import net.luis.game.player.GameProfile;
+import net.luis.game.player.Player;
 import net.luis.game.player.score.PlayerScore;
+import net.luis.network.Connection;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -9,10 +13,19 @@ import net.luis.game.player.score.PlayerScore;
  *
  */
 
-public class RemotePlayer extends AbstractClientPlayer {
+public class RemotePlayer extends Player {
 	
-	public RemotePlayer(GameProfile profile) {
-		super(profile, new PlayerScore(profile));
+	public RemotePlayer(@NotNull GameProfile profile) {
+		super(Client.getInstance(), profile, null, new PlayerScore(profile));
 	}
 	
+	@Override
+	public boolean isClient() {
+		return true;
+	}
+	
+	@Override
+	public @NotNull Connection getConnection() {
+		throw new IllegalStateException("RemotePlayer does not have a connection");
+	}
 }

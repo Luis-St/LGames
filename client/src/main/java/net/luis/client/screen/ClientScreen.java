@@ -1,11 +1,8 @@
 package net.luis.client.screen;
 
 import net.luis.client.Client;
-import net.luis.fx.Showable;
 import net.luis.fx.screen.AbstractScreen;
-import net.luis.utility.Tickable;
-
-import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -13,24 +10,23 @@ import java.util.Objects;
  *
  */
 
-public abstract class ClientScreen extends AbstractScreen implements Showable, Tickable {
+public abstract class ClientScreen extends AbstractScreen {
 	
-	protected final Client client = Objects.requireNonNull(Client.getInstance());
+	protected final Client client = Client.getInstance();
 	
-	protected ClientScreen(String title, int width, int height) {
+	protected ClientScreen(@NotNull String title, int width, int height) {
 		super(title, width, height);
+	}
+	
+	protected ClientScreen(@NotNull String title, int width, int height, boolean resizable) {
+		super(title, width, height, resizable);
 	}
 	
 	public void init() {
 	
 	}
 	
-	@Override
-	public void tick() {
-	
-	}
-	
-	protected void showScreen(ClientScreen screen) {
+	protected void showScreen(@NotNull ClientScreen screen) {
 		this.client.setScreen(screen);
 	}
 	

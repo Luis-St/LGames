@@ -3,6 +3,10 @@ package net.luis.game.dice;
 import net.luis.utils.exception.InvalidValueException;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.ToString;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Random;
@@ -15,6 +19,8 @@ import java.util.Random;
 
 public class SimpleDice implements Dice {
 	
+	private static final Logger LOGGER = LogManager.getLogger(SimpleDice.class);
+	
 	private final int min;
 	private final int max;
 	private final Random rng;
@@ -23,7 +29,7 @@ public class SimpleDice implements Dice {
 		this(min, max, new Random());
 	}
 	
-	public SimpleDice(int min, int max, Random rng) {
+	public SimpleDice(int min, int max, @NotNull Random rng) {
 		this.min = min;
 		this.max = max;
 		this.rng = rng;
@@ -79,7 +85,7 @@ public class SimpleDice implements Dice {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
 		if (!(o instanceof SimpleDice that)) return false;
 		
@@ -93,7 +99,7 @@ public class SimpleDice implements Dice {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return ToString.toString(this, "rng");
 	}
 	

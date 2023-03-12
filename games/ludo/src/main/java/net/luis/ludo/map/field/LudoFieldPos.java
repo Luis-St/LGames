@@ -1,12 +1,16 @@
 package net.luis.ludo.map.field;
 
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayerType;
+import net.luis.ludo.LudoGame;
 import net.luis.ludo.player.LudoPlayerType;
 import net.luis.network.annotation.DecodingConstructor;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.ToString;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -18,6 +22,8 @@ import java.util.Objects;
  */
 
 public class LudoFieldPos implements GameFieldPos {
+	
+	private static final Logger LOGGER = LogManager.getLogger(LudoGame.class);
 	
 	private final int green;
 	private final int yellow;
@@ -39,45 +45,43 @@ public class LudoFieldPos implements GameFieldPos {
 		this.red = buffer.readInt();
 	}
 	
-	public static LudoFieldPos of(int pos) {
+	public static @NotNull LudoFieldPos of(int pos) {
 		return new LudoFieldPos(pos, pos, pos, pos);
 	}
 	
-	@Nullable
-	public static LudoFieldPos of(GamePlayerType playerType, int pos) {
+	public static @Nullable LudoFieldPos of(GamePlayerType playerType, int pos) {
 		if (playerType instanceof LudoPlayerType) {
 			return of((LudoPlayerType) playerType, pos);
 		}
 		throw new ClassCastException("Can not cast playerType of type " + playerType.getClass().getSimpleName() + " to LudoPlayerType");
 	}
 	
-	@Nullable
-	private static LudoFieldPos of(LudoPlayerType playerType, int pos) {
-		switch (playerType) {
+	private static @Nullable LudoFieldPos of(LudoPlayerType playerType, int pos) {
+		return switch (playerType) {
 			case GREEN -> ofGreen(pos);
 			case YELLOW -> ofYellow(pos);
 			case BLUE -> ofBlue(pos);
 			case RED -> ofRed(pos);
 			default -> {
+				LOGGER.warn("Fail to create field pos for ludo type {}", playerType);
+				yield null;
 			}
-		}
-		LOGGER.warn("Fail to create field pos for ludo type {}", playerType);
-		return null;
+		};
 	}
 	
-	public static LudoFieldPos ofGreen(int green) {
+	public static @NotNull LudoFieldPos ofGreen(int green) {
 		return new LudoFieldPos(green, (green + 30) % 40, (green + 20) % 40, (green + 10) % 40);
 	}
 	
-	public static LudoFieldPos ofYellow(int yellow) {
+	public static @NotNull LudoFieldPos ofYellow(int yellow) {
 		return new LudoFieldPos((yellow + 10) % 40, yellow, (yellow + 30) % 40, (yellow + 20) % 40);
 	}
 	
-	public static LudoFieldPos ofBlue(int blue) {
+	public static @NotNull LudoFieldPos ofBlue(int blue) {
 		return new LudoFieldPos((blue + 20) % 40, (blue + 10) % 40, blue, (blue + 30) % 40);
 	}
 	
-	public static LudoFieldPos ofRed(int red) {
+	public static @NotNull LudoFieldPos ofRed(int red) {
 		return new LudoFieldPos((red + 30) % 40, (red + 20) % 40, (red + 10) % 40, red);
 	}
 	
@@ -103,7 +107,7 @@ public class LudoFieldPos implements GameFieldPos {
 	}
 	
 	@Override
-	public int getPositionFor(GamePlayerType playerType) {
+	public int getPositionFor(@NotNull GamePlayerType playerType) {
 		if (playerType instanceof LudoPlayerType) {
 			return switch ((LudoPlayerType) playerType) {
 				case GREEN -> this.green;
@@ -133,7 +137,7 @@ public class LudoFieldPos implements GameFieldPos {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeInt(this.green);
 		buffer.writeInt(this.yellow);
 		buffer.writeInt(this.blue);

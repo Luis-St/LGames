@@ -17,18 +17,19 @@ import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldInfo;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.GameProfile;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
-import net.luis.network.packet.listener.PacketListener;
+import net.luis.network.listener.PacketListener;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import net.luis.wins4.map.field.Wins4Field;
 import net.luis.wins4.map.field.Wins4FieldPos;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class Wins4Map extends AbstractGameMap implements StackPaneWrapper {
 	}
 	
 	@Override
-	public StackPane getStackPane() {
+	public @NotNull StackPane getStackPane() {
 		return this.stackPane;
 	}
 	
@@ -66,7 +67,7 @@ public class Wins4Map extends AbstractGameMap implements StackPaneWrapper {
 	}
 	
 	@Override
-	public void init(List<GamePlayer> players) {
+	public void init(@NotNull List<GamePlayer> players) {
 		this.getFields().forEach(GameField::clear);
 	}
 	
@@ -119,12 +120,12 @@ public class Wins4Map extends AbstractGameMap implements StackPaneWrapper {
 	}
 	
 	@Override
-	public @Nullable GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, GameFieldPos fieldPos) {
+	public @Nullable GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, @NotNull GameFieldPos fieldPos) {
 		return this.getFields().get(fieldPos.getPosition());
 	}
 	
 	@Override
-	public @Nullable GameField getNextField(GameFigure figure, int count) {
+	public @Nullable GameField getNextField(@NotNull GameFigure figure, int count) {
 		return null;
 	}
 	
@@ -140,17 +141,17 @@ public class Wins4Map extends AbstractGameMap implements StackPaneWrapper {
 	}
 	
 	@Override
-	public List<GameField> getHomeFields(GamePlayerType playerType) {
+	public @NotNull List<GameField> getHomeFields(@NotNull GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 	
 	@Override
-	public List<GameField> getStartFields(GamePlayerType playerType) {
+	public @NotNull List<GameField> getStartFields(@NotNull GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 	
 	@Override
-	public List<GameField> getWinFields(GamePlayerType playerType) {
+	public @NotNull List<GameField> getWinFields(@NotNull GamePlayerType playerType) {
 		return Lists.newArrayList();
 	}
 	
@@ -181,7 +182,7 @@ public class Wins4Map extends AbstractGameMap implements StackPaneWrapper {
 					if (player != null) {
 						GameFigure figure = player.getFigure(fieldInfo.getFigureCount());
 						assert figure != null;
-						UUID uuid = figure.getUUID();
+						UUID uuid = figure.getUniqueId();
 						UUID serverUUID = fieldInfo.getFigureUUID();
 						if (uuid.equals(serverUUID)) {
 							field.setFigure(figure);

@@ -2,32 +2,34 @@ package net.luis.client.network;
 
 import net.luis.account.account.LoginType;
 import net.luis.client.Client;
-import net.luis.client.player.AbstractClientPlayer;
+import net.luis.client.account.AccountManager;
 import net.luis.client.player.LocalPlayer;
-import net.luis.client.player.RemotePlayer;
+import net.luis.client.players.ClientPlayerList;
 import net.luis.client.screen.LobbyScreen;
 import net.luis.client.screen.MenuScreen;
 import net.luis.client.window.LoginWindow;
 import net.luis.game.Game;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerInfo;
+import net.luis.game.GameManager;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
 import net.luis.game.type.GameTypes;
+import net.luis.network.Connection;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.PacketHandler;
 import net.luis.network.packet.client.*;
 import net.luis.network.packet.client.game.*;
 import net.luis.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.luis.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.luis.network.packet.client.game.dice.RolledDicePacket;
-import net.luis.network.packet.listener.PacketListener;
-import net.luis.network.packet.listener.PacketSubscriber;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,47 +41,50 @@ import java.util.UUID;
  *
  */
 
-@PacketSubscriber("#getPacketHandler")
 public class ClientPacketHandler implements PacketHandler {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(ClientPacketHandler.class);
 	
 	private final Client client;
+	private final AccountManager accountManager;
+	private Connection connection;
 	
-	public ClientPacketHandler(Client client) {
+	public ClientPacketHandler(@NotNull Client client) {
 		this.client = client;
+		this.accountManager = this.client.getAccountManager();
 	}
 	
 	@PacketListener(ClientLoggedInPacket.class)
-	public void handleClientLoggedIn(LoginType loginType, String name, int id, String mail, UUID uuid) {
-		LoginWindow loginWindow = this.client.getLoginWindow();
-		if (!this.client.isLoggedIn()) {
+	public void handleClientLoggedIn(@NotNull LoginType loginType, @NotNull String name, int id, @NotNull String mail, @NotNull UUID uuid) {
+		AccountManager accountManager = this.client.getAccountManager();
+		LoginWindow loginWindow = accountManager.getLoginWindow();
+		if (!accountManager.isLoggedIn()) {
 			switch (loginType) {
 				case REGISTRATION -> {
 					LOGGER.info("Create successfully a new account");
-					this.client.login(name, id, mail, uuid, false);
+					accountManager.login(name, id, mail, uuid, false);
 					if (loginWindow != null) {
 						loginWindow.handleLoggedIn();
 					}
 				}
 				case USER_LOGIN -> {
 					LOGGER.debug("Successfully logged in");
-					this.client.login(name, id, mail, uuid, false);
+					accountManager.login(name, id, mail, uuid, false);
 					if (loginWindow != null) {
 						loginWindow.handleLoggedIn();
 					}
 				}
 				case GUEST_LOGIN -> {
 					LOGGER.debug("Successfully logged in as a guest");
-					this.client.login(name, id, mail, uuid, true);
+					accountManager.login(name, id, mail, uuid, true);
 					if (loginWindow != null) {
 						loginWindow.handleLoggedIn();
 					}
-					this.client.setPassword("");
+					accountManager.setPassword("");
 				}
 				case UNKNOWN -> {
 					LOGGER.warn("Fail to log in");
-					this.client.setPassword("");
+					accountManager.setPassword("");
 				}
 			}
 		} else {
@@ -89,10 +94,11 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(ClientLoggedOutPacket.class)
 	public void handleClientLoggedOut(boolean successful) {
-		LoginWindow loginWindow = this.client.getLoginWindow();
+		AccountManager accountManager = this.client.getAccountManager();
+		LoginWindow loginWindow = accountManager.getLoginWindow();
 		if (successful) {
 			LOGGER.info("Successfully logged out");
-			this.client.logout();
+			accountManager.logout();
 			if (loginWindow != null) {
 				loginWindow.handleLoggedOut();
 			}
@@ -102,43 +108,46 @@ public class ClientPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(ClientJoinedPacket.class)
-	public void handleClientJoined(List<GameProfile> profiles) {
+	public void handleClientJoined(@NotNull List<GameProfile> profiles) {
+		ClientPlayerList playerList = this.client.getPlayerList();
 		for (GameProfile profile : profiles) {
-			if (this.client.getAccount().uuid().equals(profile.getUUID())) {
-				this.client.setPlayer(new LocalPlayer(profile));
+			if (Objects.requireNonNull(this.accountManager.getAccount()).uuid().equals(profile.getUniqueId())) {
+				playerList.addPlayer(new LocalPlayer(profile, this.connection));
 			} else {
-				this.client.addRemotePlayer(new RemotePlayer(profile));
+				playerList.addRemotePlayer(profile);
 			}
 		}
 		this.client.setScreen(new LobbyScreen());
 	}
 	
 	@PacketListener(PlayerAddPacket.class)
-	public void handlePlayerAdd(GameProfile profile) {
-		if (this.client.getAccount().uuid().equals(profile.getUUID())) {
-			if (this.client.getPlayer() == null) {
+	public void handlePlayerAdd(@NotNull GameProfile profile) {
+		ClientPlayerList playerList = this.client.getPlayerList();
+		if (Objects.requireNonNull(this.accountManager.getAccount()).uuid().equals(profile.getUniqueId())) {
+			if (playerList.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
-				this.client.setPlayer(new LocalPlayer(profile));
+				playerList.addPlayer(new LocalPlayer(profile, this.connection));
 			} else {
-				LOGGER.warn("The local player is already set to {}, but there is another player with the same id {}", this.client.getPlayer().getProfile(), profile);
+				LOGGER.warn("The local player is already set to {}, but there is another player with the same id {}", playerList.getPlayer().getProfile(), profile);
 			}
 		} else {
-			this.client.addRemotePlayer(new RemotePlayer(profile));
+			playerList.addRemotePlayer(profile);
 		}
 	}
 	
 	@PacketListener(PlayerRemovePacket.class)
-	public void handlePlayerRemove(GameProfile profile) {
-		if (this.client.getAccount().uuid().equals(profile.getUUID())) {
-			this.client.removePlayer();
+	public void handlePlayerRemove(@NotNull GameProfile profile) {
+		ClientPlayerList playerList = this.client.getPlayerList();
+		if (Objects.requireNonNull(this.accountManager.getAccount()).uuid().equals(profile.getUniqueId())) {
+			playerList.removePlayer(Objects.requireNonNull(playerList.getPlayer(profile)));
 		} else {
-			this.client.removeRemotePlayer(new RemotePlayer(profile));
+			playerList.removePlayer(Objects.requireNonNull(playerList.getPlayer(profile)));
 		}
 	}
 	
 	@PacketListener(SyncPermissionPacket.class)
-	public void handleSyncPermission(GameProfile profile) {
-		for (AbstractClientPlayer player : this.client.getPlayers()) {
+	public void handleSyncPermission(@NotNull GameProfile profile) {
+		for (Player player : this.client.getPlayerList().getPlayers()) {
 			if (player.getProfile().equals(profile)) {
 				player.setAdmin(true);
 				LOGGER.debug("Player {} is now a admin", player.getProfile().getName());
@@ -150,8 +159,8 @@ public class ClientPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(SyncPlayerDataPacket.class)
-	public void handleSyncPlayerData(GameProfile profile, boolean playing, PlayerScore score) {
-		AbstractClientPlayer player = this.client.getPlayer(profile);
+	public void handleSyncPlayerData(@NotNull GameProfile profile, boolean playing, @NotNull PlayerScore score) {
+		Player player = this.client.getPlayerList().getPlayer(profile);
 		if (player != null) {
 			player.setPlaying(playing);
 			player.getScore().sync(score);
@@ -164,12 +173,12 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(CancelRollDiceRequestPacket.class)
 	public void handleCancelRollDiceRequest() {
 		LOGGER.info("Roll dice request was canceled from the server");
-		this.client.getPlayer().setCanRollDice(false);
+		Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCanRollDice(false);
 	}
 	
 	@PacketListener(RolledDicePacket.class)
 	public void handleRolledDice(int count) {
-		LocalPlayer player = this.client.getPlayer();
+		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
 		if (Mth.isInBounds(count, 1, 6)) {
 			player.setCount(count);
 			player.setCanRollDice(false);
@@ -181,17 +190,18 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(CanRollDiceAgainPacket.class)
 	public void handleCanRollDiceAgain() {
-		this.client.getPlayer().setCanRollDice(true);
+		Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCanRollDice(true);
 	}
 	
 	@PacketListener(CurrentPlayerUpdatePacket.class)
-	public void handleCurrentPlayerUpdate(GameProfile profile) {
+	public void handleCurrentPlayerUpdate(@NotNull GameProfile profile) {
 		boolean flag = false;
-		if (this.client.getGameManager().getGame() != null) {
-			Game game = this.client.getGameManager().getGame();
-			for (AbstractClientPlayer player : this.client.getPlayers()) {
+		GameManager gameManager = this.client.getGameManager();
+		if (gameManager.getGameFor(profile) != null) {
+			Game game = Objects.requireNonNull(gameManager.getGameFor(profile));
+			for (Player player : this.client.getPlayerList().getPlayers()) {
 				if (player.getProfile().equals(profile)) {
-					game.setPlayer(game.getPlayerFor(player));
+					game.setPlayer(Objects.requireNonNull(game.getPlayerFor(player)));
 					player.setCurrent(true);
 					flag = true;
 					if (player instanceof LocalPlayer localPlayer) {
@@ -210,33 +220,30 @@ public class ClientPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(StartGamePacket.class)
-	public <T extends Game> void handleStartGame(int type, List<GamePlayerInfo> playerInfos) {
+	public void handleStartGame(int type, @NotNull List<GamePlayerInfo> playerInfos) {
 		GameType<?> gameType = Objects.requireNonNull(GameTypes.fromId(type));
-		if (this.client.getGameManager().getGame() == null) {
-			Game game = gameType.createGame(this.client, playerInfos);
-			game.start();
-			boolean flag = false;
-			for (Player player : Utils.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
-				player.setPlaying(true);
-				if (this.client.getPlayer().getProfile().equals(player.getProfile())) {
-					flag = true;
-				}
+		Game game = gameType.createGame(this.client, playerInfos);
+		game.start();
+		boolean flag = false;
+		for (Player player : Utils.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
+			player.setPlaying(true);
+			if (Objects.requireNonNull(this.client.getPlayerList().getPlayer()).getProfile().equals(player.getProfile())) {
+				flag = true;
 			}
-			if (flag) {
-				//gameType.openScreen(this.client, game); // TODO: add screen back
-				LOGGER.info("Start game {}", gameType.getInfoName());
-				this.client.getGameManager().setGame(game);
-				this.client.getGameManager().setLocalProfile(this.client.getPlayer().getProfile());
-			} else {
-				LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", gameType.getInfoName());
-				this.client.setScreen(new LobbyScreen());
-			}
+		}
+		if (flag) {
+			//gameType.openScreen(this.client, game); // TODO: add screen back
+			LOGGER.info("Start game {}", gameType.getInfoName());
+			this.client.getGameManager().addGame(game);
+		} else {
+			LOGGER.warn("Fail to start game {}, since the local player is not in the player list of the game", gameType.getInfoName());
+			this.client.setScreen(new LobbyScreen());
 		}
 	}
 	
 	@PacketListener(CanSelectGameFieldPacket.class)
 	public void handleCanSelectGameField() {
-		LocalPlayer player = this.client.getPlayer();
+		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
 		if (player.isCurrent()) {
 			player.setCanSelect(true);
 		}
@@ -244,7 +251,7 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(GameActionFailedPacket.class)
 	public void handleGameActionFailed() {
-		this.client.getPlayer().setCurrent(true);
+		Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCurrent(true);
 	}
 	
 	@PacketListener(CancelPlayAgainGameRequestPacket.class)
@@ -255,12 +262,13 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(ExitGamePacket.class)
 	public void handleExitGame() {
 		LOGGER.info("Exit the current game");
-		if (this.client.getPlayer().isPlaying()) {
-			this.client.getPlayer().setPlaying(false);
-			this.client.getPlayer().getScore().reset();
-			if (this.client.getGameManager().getGame() != null) {
-				this.client.getGameManager().setGame(null);
-				this.client.getGameManager().setLocalProfile(null);
+		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
+		if (player.isPlaying()) {
+			player.setPlaying(false);
+			player.getScore().reset();
+			GameManager gameManager = this.client.getGameManager();
+			if (gameManager.getGameFor(player.getProfile()) != null) {
+				gameManager.removeGame(Objects.requireNonNull(gameManager.getGameFor(player.getProfile())));
 			} else {
 				LOGGER.warn("Received a exit game packet, but there is no active game");
 			}
@@ -273,13 +281,14 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(StopGamePacket.class)
 	public void handleStopGame() {
 		LOGGER.info("Stopping the current game");
-		for (AbstractClientPlayer player : this.client.getPlayers()) {
+		for (Player player : this.client.getPlayerList().getPlayers()) {
 			player.setPlaying(false);
 			player.getScore().reset();
 		}
-		if (this.client.getGameManager().getGame() != null) {
-			this.client.getGameManager().setGame(null);
-			this.client.getGameManager().setLocalProfile(null);
+		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
+		GameManager gameManager = this.client.getGameManager();
+		if (gameManager.getGameFor(player.getProfile()) != null) {
+			gameManager.removeGame(Objects.requireNonNull(gameManager.getGameFor(player.getProfile())));
 		} else {
 			LOGGER.warn("Received a stop game packet, but there is no active game");
 		}
@@ -288,8 +297,8 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(ServerClosedPacket.class)
 	public void handleServerClosed() {
-		this.client.getServerHandler().close();
-		this.client.removePlayer();
+		this.client.getNetworkInstance().close();
+		this.client.getPlayerList().removePlayer(Objects.requireNonNull(this.client.getPlayerList().getPlayer()));
 		this.client.setScreen(new MenuScreen());
 	}
 	

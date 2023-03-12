@@ -1,12 +1,10 @@
 package net.luis.fx.screen;
 
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import net.luis.fx.ScreenScene;
-import net.luis.fx.Showable;
-import net.luis.utility.Tickable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -14,39 +12,53 @@ import org.apache.logging.log4j.Logger;
  *
  */
 
-public abstract class AbstractScreen implements Showable, Tickable {
+public abstract class AbstractScreen {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
+	private final String title;
+	private final int width;
+	private final int height;
+	private final boolean resizable;
 	
-	public final String title;
-	public final int width;
-	public final int height;
+	public AbstractScreen(@NotNull String title, int width, int height) {
+		this(title, width, height, true);
+	}
 	
-	protected AbstractScreen(String title, int width, int height) {
+	public AbstractScreen(@NotNull String title, int width, int height, boolean resizable) {
 		this.title = title;
 		this.width = width;
 		this.height = height;
+		this.resizable = resizable;
 	}
 	
 	public void init() {
 		
 	}
 	
-	@Override
-	public void tick() {
-		
+	public @NotNull String getTitle() {
+		return StringUtils.trimToEmpty(this.title);
 	}
 	
-	protected abstract Pane createPane();
-	
-	public final Scene show() {
-		Scene scene = new ScreenScene(this.createPane(), this.width, this.height, this);
-		this.onSceneShow(scene);
-		return scene;
+	public int getWidth() {
+		return this.width;
 	}
 	
-	protected void onSceneShow(Scene scene) {
+	public int getHeight() {
+		return this.height;
+	}
 	
+	public void refresh() {
+	
+	}
+	
+	protected abstract @NotNull Pane createPane();
+	
+	protected @NotNull ScreenScene createScene() {
+	    return new ScreenScene(this.createPane(), this.width, this.height, this);
+	}
+	
+	public final void show(@NotNull Stage stage) {
+		stage.setScene(this.createScene());
+		stage.setResizable(this.resizable);
 	}
 	
 }

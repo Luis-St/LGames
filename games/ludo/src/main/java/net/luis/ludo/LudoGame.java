@@ -6,14 +6,15 @@ import net.luis.game.application.ApplicationType;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerFactory;
-import net.luis.game.player.GamePlayerInfo;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerFactory;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.GameProfile;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
 import net.luis.game.type.GameTypes;
+import net.luis.game.win.GameResultLine;
 import net.luis.ludo.dice.LudoDiceHandler;
 import net.luis.ludo.map.LudoMap;
 import net.luis.ludo.win.LudoWinHandler;
@@ -22,10 +23,13 @@ import net.luis.network.packet.client.game.CanSelectGameFieldPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.client.game.dice.CanRollDiceAgainPacket;
-import net.luis.network.packet.listener.PacketListener;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
 import net.luis.utils.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -39,6 +43,8 @@ import java.util.Objects;
 
 public class LudoGame extends AbstractGame {
 	
+	private static final Logger LOGGER = LogManager.getLogger(LudoGame.class);
+	
 	private final LudoDiceHandler diceHandler = new LudoDiceHandler(this, 1, 6);
 	
 	public LudoGame(List<GamePlayerInfo> playerInfos, GamePlayerFactory playerFactory) {
@@ -46,12 +52,12 @@ public class LudoGame extends AbstractGame {
 	}
 	
 	@Override
-	public GameType<?> getType() {
+	public @NotNull GameType<?> getType() {
 		return GameTypes.LUDO;
 	}
 	
 	@Override
-	public void setPlayer(GamePlayer player) {
+	public void setPlayer(@NotNull GamePlayer player) {
 		if (ApplicationType.SERVER.isOn()) {
 			player.setRollCount(player.hasAllFiguresAt(GameField::isHome) ? 3 : 1);
 		}
@@ -98,7 +104,7 @@ public class LudoGame extends AbstractGame {
 											score.setScore(this.getWinHandler().getScoreFor(this, gamePlayer));
 											this.broadcastPlayers(new SyncPlayerDataPacket(gamePlayer.getPlayer().getProfile(), true, score));
 										}
-										this.broadcastPlayers(new GameResultPacket(GameResult.NO, null));
+										this.broadcastPlayers(new GameResultPacket(GameResult.NO, GameResultLine.EMPTY));
 									}
 								} else if (this.diceHandler.canRollAfterMove(player, currentField, nextField, count)) {
 									player.setRollCount(1);

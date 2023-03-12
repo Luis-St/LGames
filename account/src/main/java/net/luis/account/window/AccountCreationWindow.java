@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -37,17 +38,14 @@ import java.util.regex.Pattern;
 
 public class AccountCreationWindow extends AbstractWindow {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(AccountCreationWindow.class);
 	private static final Pattern PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
 	
-	private final AccountServer account;
-	
-	public AccountCreationWindow(AccountServer account, Stage stage) {
+	public AccountCreationWindow(@NotNull Stage stage) {
 		super(stage, 340.0, 365.0);
-		this.account = account;
 	}
 	
-	private GridPane main() {
+	private @NotNull GridPane main() {
 		GridPane pane = FxUtils.makeGrid(Pos.TOP_CENTER, 10.0, 20.0);
 		InputValidationPane<TextField> namePane = new InputValidationPane<>(TranslationKey.createAndGet("window.create_account.name"), new TextField(), (field) -> {
 			if (StringUtils.trimToEmpty(field.getText()).isEmpty()) {
@@ -133,7 +131,7 @@ public class AccountCreationWindow extends AbstractWindow {
 				LOGGER.warn("No birthday set");
 				datePane.validateInput();
 			} else {
-				Account account = this.account.getManager().createAccount(name, mail, password.hashCode(), firstName, lastName, Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()), AccountType.USER);
+				Account account = AccountServer.getInstance().getAccountAgent().createAccount(name, mail, password.hashCode(), firstName, lastName, Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()), AccountType.USER);
 				if (account != Account.UNKNOWN) {
 					this.close();
 				} else {
@@ -146,12 +144,12 @@ public class AccountCreationWindow extends AbstractWindow {
 		return pane;
 	}
 	
-	private boolean isValidPassword(String password) {
-		return (!PATTERN.matcher(password).matches() || password.length() <= 4) && !Constants.IDE;
+	private boolean isValidPassword(@NotNull String password) {
+		return (!PATTERN.matcher(password).matches() || password.length() <= 4) && !Constants.DEV_MODE;
 	}
 	
 	@Override
-	protected void onUpdateScene(Scene scene) {
+	protected void onUpdateScene(@NotNull Scene scene) {
 		scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/style.css")).toExternalForm());
 	}
 	
@@ -159,7 +157,7 @@ public class AccountCreationWindow extends AbstractWindow {
 	public void show() {
 		this.updateScene(this.main());
 		this.stage.setTitle(TranslationKey.createAndGet("account.window.create"));
-		Stage stage = this.account.getStage();
+		Stage stage = AccountServer.getInstance().getStage();
 		this.stage.setX(stage.getX() + stage.getWidth());
 		this.stage.setY(stage.getY());
 		this.stage.show();

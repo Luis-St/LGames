@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -13,9 +14,10 @@ import javafx.scene.layout.GridPane;
 
 public interface GridPaneWrapper {
 	
+	@NotNull
 	GridPane getGridPane();
 	
-	default void setAlignment(Pos value) {
+	default void setAlignment(@NotNull Pos value) {
 		this.getGridPane().setAlignment(value);
 	}
 	
@@ -27,7 +29,7 @@ public interface GridPaneWrapper {
 		this.getGridPane().setVgap(value);
 	}
 	
-	default void setPadding(Insets value) {
+	default void setPadding(@NotNull Insets value) {
 		this.getGridPane().setPadding(value);
 	}
 	
@@ -35,15 +37,15 @@ public interface GridPaneWrapper {
 		this.getGridPane().setGridLinesVisible(value);
 	}
 	
-	default void add(Node child, int columnIndex, int rowIndex) {
+	default void add(@NotNull Node child, int columnIndex, int rowIndex) {
 		this.getGridPane().add(child, columnIndex, rowIndex);
 	}
 	
-	default void addColumn(int columnIndex, Node... children) {
+	default void addColumn(int columnIndex, @NotNull Node... children) {
 		this.getGridPane().addColumn(columnIndex, children);
 	}
 	
-	default void addRow(int rowIndex, Node... children) {
+	default void addRow(int rowIndex, @NotNull Node... children) {
 		this.getGridPane().addRow(rowIndex, children);
 	}
 	

@@ -2,12 +2,13 @@ package net.luis.wins4.map.field;
 
 import com.google.common.collect.Lists;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.network.annotation.DecodingConstructor;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -86,7 +87,7 @@ public class Wins4FieldPos implements GameFieldPos {
 	}
 	
 	@Override
-	public int getPositionFor(GamePlayerType playerType) {
+	public int getPositionFor(@NotNull GamePlayerType playerType) {
 		return this.position;
 	}
 	
@@ -101,7 +102,7 @@ public class Wins4FieldPos implements GameFieldPos {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeInt(this.position);
 		buffer.writeInt(this.row);
 		buffer.writeInt(this.column);

@@ -2,11 +2,12 @@ package net.luis.wins4.player;
 
 import net.luis.game.Game;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.AbstractGamePlayer;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.AbstractGamePlayer;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.Player;
-import net.luis.game.player.figure.GameFigure;
-import net.luis.game.player.figure.GameFiguresFactory;
+import net.luis.game.player.game.figure.GameFigure;
+import net.luis.game.player.game.figure.GameFiguresFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class Wins4Player extends AbstractGamePlayer {
 	}*/
 	
 	@Override
-	public List<GameFieldPos> getWinPoses() {
+	public @NotNull List<GameFieldPos> getWinPoses() {
 		return null;
 	}
 	

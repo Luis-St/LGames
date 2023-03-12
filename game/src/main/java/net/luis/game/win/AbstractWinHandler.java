@@ -1,7 +1,8 @@
 package net.luis.game.win;
 
 import com.google.common.collect.Lists;
-import net.luis.game.player.GamePlayer;
+import net.luis.game.player.game.GamePlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public abstract class AbstractWinHandler implements WinHandler {
 	}
 	
 	@Override
-	public GamePlayer getWinningPlayer() {
+	public @NotNull GamePlayer getWinningPlayer() {
 		return this.finishedPlayers.get(0);
 	}
 	
@@ -32,12 +33,12 @@ public abstract class AbstractWinHandler implements WinHandler {
 	}
 	
 	@Override
-	public List<GamePlayer> getWinningPlayers() {
+	public @NotNull List<GamePlayer> getWinningPlayers() {
 		return this.finishedPlayers.subList(0, 1);
 	}
 	
 	@Override
-	public void onPlayerFinished(GamePlayer player) {
+	public void onPlayerFinished(@NotNull GamePlayer player) {
 		this.finishedPlayers.add(player);
 		if (this.canPlayerWin(player)) {
 			this.winningPlayers.add(player);
@@ -45,12 +46,12 @@ public abstract class AbstractWinHandler implements WinHandler {
 	}
 	
 	@Override
-	public List<GamePlayer> getFinishedPlayers() {
+	public @NotNull List<GamePlayer> getFinishedPlayers() {
 		return this.finishedPlayers;
 	}
 	
 	@Override
-	public List<GamePlayer> getWinOrder() {
+	public @NotNull List<GamePlayer> getWinOrder() {
 		return this.winningPlayers;
 	}
 	

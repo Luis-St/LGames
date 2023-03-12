@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -17,19 +18,19 @@ public class Box<T extends Node> extends VBox {
 	private final Pos pos;
 	private final Insets padding;
 	
-	public Box(T node) {
+	public Box(@NotNull T node) {
 		this(node, Pos.CENTER);
 	}
 	
-	public Box(T node, Pos pos) {
+	public Box(@NotNull T node, @NotNull Pos pos) {
 		this(node, pos, 0.0, 0.0, 0.0, 0.0);
 	}
 	
-	public Box(T node, Pos pos, double top, double right, double bottom, double left) {
+	public Box(@NotNull T node, @NotNull Pos pos, double top, double right, double bottom, double left) {
 		this(node, pos, new Insets(top, right, bottom, left));
 	}
 	
-	public Box(T node, Pos pos, Insets padding) {
+	public Box(@NotNull T node, @NotNull Pos pos, @NotNull Insets padding) {
 		this.node = node;
 		this.pos = pos;
 		this.padding = padding;
@@ -42,7 +43,7 @@ public class Box<T extends Node> extends VBox {
 		this.getChildren().add(this.node);
 	}
 	
-	public T getNode() {
+	public @NotNull T getNode() {
 		return this.node;
 	}
 	

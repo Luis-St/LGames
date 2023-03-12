@@ -7,15 +7,14 @@ import net.luis.Constants;
 import net.luis.fx.game.wrapper.ToggleButtonWrapper;
 import net.luis.game.GameResult;
 import net.luis.game.application.ApplicationType;
-import net.luis.game.application.GameApplication;
+import net.luis.game.application.FxApplication;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.AbstractGameField;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.map.field.GameFieldType;
-import net.luis.game.player.GamePlayerType;
 import net.luis.game.player.GameProfile;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.ttt.player.TTTPlayerType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -36,7 +35,7 @@ public class TTTField extends AbstractGameField implements ToggleButtonWrapper {
 	}
 	
 	@Override
-	public ToggleButton getToggleButton() {
+	public @NotNull ToggleButton getToggleButton() {
 		this.button.setUserData(this);
 		return this.button;
 	}
@@ -46,7 +45,7 @@ public class TTTField extends AbstractGameField implements ToggleButtonWrapper {
 		this.setToggleGroup(this.group);
 		this.setPrefSize(this.fieldSize, this.fieldSize);
 		this.setFocusTraversable(false);
-		if (!Constants.DEBUG) {
+		if (!Constants.DEBUG_MODE) {
 			this.setBackground(null);
 		}
 		this.updateFieldGraphic();
@@ -63,7 +62,7 @@ public class TTTField extends AbstractGameField implements ToggleButtonWrapper {
 	}
 	
 	@Override
-	public boolean isStartFor(GameFigure figure) {
+	public boolean isStartFor(@NotNull GameFigure figure) {
 		return false;
 	}
 	
@@ -83,7 +82,7 @@ public class TTTField extends AbstractGameField implements ToggleButtonWrapper {
 			if (this.isEmpty()) {
 				if (this.isShadowed()) {
 					if (this.getResult() == GameResult.NO) {
-						GameProfile profile = Objects.requireNonNull(GameApplication.getInstance()).getGameManager().getLocalProfile();
+						GameProfile profile = Objects.requireNonNull(FxApplication.getInstance()).getGameManager().getLocalProfile();
 						if (Objects.requireNonNull(this.getMap().getGame().getPlayerFor(profile)).getPlayerType() instanceof TTTPlayerType playerType) {
 							this.setGraphic(this.makeImage(playerType.getPath() + "_shadow.png", 0.95));
 						} else {

@@ -1,10 +1,11 @@
 package net.luis.ludo.player.figure;
 
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.figure.AbstractGameFigure;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.figure.AbstractGameFigure;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.ludo.map.field.LudoFieldPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -21,12 +22,12 @@ public class LudoFigure extends AbstractGameFigure {
 	}
 	
 	@Override
-	public GameFieldPos getHomePos() {
+	public @NotNull GameFieldPos getHomePos() {
 		return LudoFieldPos.of(this.getCount());
 	}
 	
 	@Override
-	public GameFieldPos getStartPos() {
+	public @NotNull GameFieldPos getStartPos() {
 		return LudoFieldPos.of(this.getPlayerType(), 0);
 	}
 	
@@ -36,7 +37,7 @@ public class LudoFigure extends AbstractGameFigure {
 	}
 	
 	@Override
-	public boolean canKick(GameFigure figure) {
+	public boolean canKick(@NotNull GameFigure figure) {
 		return !this.equals(figure) && this.getPlayerType() != figure.getPlayerType();
 	}
 	

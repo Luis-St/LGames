@@ -3,16 +3,13 @@ package net.luis.ttt.player;
 import com.google.common.collect.Lists;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.AbstractGamePlayer;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.AbstractGamePlayer;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.Player;
-import net.luis.game.player.figure.GameFigure;
-import net.luis.game.player.figure.GameFiguresFactory;
-import net.luis.ttt.player.figure.TTTFigure;
+import net.luis.game.player.game.figure.GameFiguresFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  *
@@ -36,7 +33,7 @@ public class TTTPlayer extends AbstractGamePlayer {
 	}*/
 	
 	@Override
-	public List<GameFieldPos> getWinPoses() {
+	public @NotNull List<GameFieldPos> getWinPoses() {
 		return Lists.newArrayList();
 	}
 }

@@ -3,10 +3,11 @@ package net.luis.server.network;
 import com.google.common.collect.Lists;
 import net.luis.game.Game;
 import net.luis.game.dice.DiceHandler;
-import net.luis.game.player.GamePlayer;
-import net.luis.game.player.GamePlayerInfo;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.GameProfile;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.Player;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.type.GameType;
 import net.luis.network.Connection;
 import net.luis.network.packet.PacketHandler;
@@ -18,8 +19,7 @@ import net.luis.network.packet.client.game.StartGamePacket;
 import net.luis.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.luis.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.luis.network.packet.client.game.dice.RolledDicePacket;
-import net.luis.network.packet.listener.PacketListener;
-import net.luis.network.packet.listener.PacketSubscriber;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.server.ClientJoinPacket;
 import net.luis.network.packet.server.ClientLeavePacket;
 import net.luis.network.packet.server.PlayGameRequestPacket;
@@ -33,6 +33,7 @@ import net.luis.utils.util.Utils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,33 +45,32 @@ import java.util.UUID;
  *
  */
 
-@PacketSubscriber("#getPacketHandler")
 public class ServerPacketHandler implements PacketHandler {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(ServerPacketHandler.class);
 	
 	private final Server server;
 	private Connection connection;
 	
-	public ServerPacketHandler(Server server) {
+	public ServerPacketHandler(@NotNull Server server) {
 		this.server = server;
 	}
 	
 	@PacketListener(ClientJoinPacket.class)
 	public void handleClientJoin(String name, UUID uuid) {
-		this.server.enterPlayer(this.connection, new GameProfile(name, uuid));
-		this.connection.send(new ClientJoinedPacket(Utils.mapList(this.server.getPlayerList().getPlayers(), ServerPlayer::getProfile)));
+		this.server.getPlayerList().addPlayer(new ServerPlayer(new GameProfile(name, uuid), this.connection));
+		this.connection.send(new ClientJoinedPacket(Utils.mapList(this.server.getPlayerList().getPlayers(), Player::getProfile)));
 	}
 	
 	@PacketListener(ClientLeavePacket.class)
-	public void handleClientLeave(String name, UUID uuid) {
-		this.server.leavePlayer(this.connection, this.server.getPlayerList().getPlayer(uuid));
+	public void handleClientLeave(@NotNull String name, @NotNull UUID uuid) {
+		this.server.getPlayerList().removePlayer(Objects.requireNonNull(this.server.getPlayerList().getPlayer(uuid)));
 	}
 	
 	@PacketListener(PlayGameRequestPacket.class)
-	public <T extends Game> void handlePlayGameRequest(GameType<T> gameType, List<GameProfile> profiles) {
+	public <T extends Game> void handlePlayGameRequest(@NotNull GameType<T> gameType, @NotNull List<GameProfile> profiles) {
 		MutableBoolean mutable = new MutableBoolean(false);
-		List<ServerPlayer> players = this.server.getPlayerList().getPlayers(profiles).stream().filter((player) -> {
+		List<Player> players = profiles.stream().map(this.server.getPlayerList()::getPlayer).filter(Objects::nonNull).filter((player) -> {
 			if (player.isPlaying()) {
 				mutable.setValue(true);
 				return false;
@@ -79,19 +79,17 @@ public class ServerPacketHandler implements PacketHandler {
 		}).toList();
 		if (players.size() == profiles.size()) {
 			if (mutable.isFalse()) {
-				if (this.server.getGameManager().getGame() == null) {
-					T game = gameType.createGame(this.server, /*players*/Lists.newArrayList()); // TODO: find solution
-					if (game != null) {
-						this.server.getGameManager().setGame(game);
-						game.start();
-						for (ServerPlayer player : players) {
-							player.setPlaying(true);
-							Objects.requireNonNull(player.getConnection()).send(new StartGamePacket(gameType.getId(), this.createPlayerInfos(game.getPlayers())));
-						}
-						Util.runDelayed("DelayedSetStartPlayer", 250, game::getStartPlayer);
+				T game = gameType.createGame(this.server, players);
+				if (game != null) {
+					this.server.getGameManager().addGame(game);
+					game.start();
+					for (Player player : players) {
+						player.setPlaying(true);
+						Objects.requireNonNull(player.getConnection()).send(new StartGamePacket(gameType.getId(), this.createPlayerInfos(game.getPlayers())));
 					}
+					game.nextPlayer(true);
 				} else {
-					LOGGER.warn("Fail to start game {}, since there is already a running game {}", gameType.getInfoName(), this.server.getGameManager().getGame().getType().getInfoName());
+					LOGGER.warn("Fail to start game {}, since the game was not created correctly", gameType.getName());
 					this.connection.send(new CancelPlayGameRequestPacket());
 				}
 			} else {
@@ -108,20 +106,20 @@ public class ServerPacketHandler implements PacketHandler {
 		}
 	}
 	
-	private List<GamePlayerInfo> createPlayerInfos(List<GamePlayer> players) {
+	private List<GamePlayerInfo> createPlayerInfos(@NotNull List<GamePlayer> players) {
 		List<GamePlayerInfo> playerInfos = Lists.newArrayList();
 		for (GamePlayer player : players) {
-			playerInfos.add(new GamePlayerInfo(player.getPlayer().getProfile(), player.getPlayerType(), Utils.mapList(player.getFigures(), GameFigure::getUUID)));
+			playerInfos.add(new GamePlayerInfo(player.getPlayer().getProfile(), player.getPlayerType(), Utils.mapList(player.getFigures(), GameFigure::getUniqueId)));
 		}
 		return playerInfos;
 	}
 	
 	@PacketListener(PlayAgainGameRequestPacket.class)
-	public void handlePlayAgainGameRequest(GameProfile profile) {
-		ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
+	public void handlePlayAgainGameRequest(@NotNull GameProfile profile) {
+		Player player = this.server.getPlayerList().getPlayer(profile);
 		if (player != null) {
-			if (this.server.isAdmin(player)) {
-				Game game = this.server.getGameManager().getGame();
+			if (player.isAdmin()) {
+				Game game = this.server.getGameManager().getGameFor(profile);
 				if (game != null) {
 					if (!game.nextMatch()) {
 						LOGGER.warn("Fail to start new match of game {}", game.getType().getInfoName());
@@ -143,8 +141,8 @@ public class ServerPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(RollDiceRequestPacket.class)
-	public void handleRollDiceRequest(GameProfile profile) {
-		Game game = this.server.getGameManager().getGame();
+	public void handleRollDiceRequest(@NotNull GameProfile profile) {
+		Game game = this.server.getGameManager().getGameFor(profile);
 		if (game != null) {
 			GamePlayer player = game.getPlayerFor(profile);
 			if (player != null) {
@@ -191,20 +189,20 @@ public class ServerPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(ExitGameRequestPacket.class)
-	public void handleExitGameRequest(GameProfile profile) {
-		Game game = this.server.getGameManager().getGame();
+	public void handleExitGameRequest(@NotNull GameProfile profile) {
+		Game game = this.server.getGameManager().getGameFor(profile);
 		if (game != null) {
-			if (!game.removePlayer(game.getPlayerFor(profile), true)) {
+			if (!game.removePlayer(Objects.requireNonNull(game.getPlayerFor(profile)), true)) {
 				LOGGER.warn("Fail to remove player {} from game {}, since the player is no playing the game", profile.getName(), game.getType().getInfoName());
 			}
 		} else {
-			for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
+			for (Player player : this.server.getPlayerList().getPlayers()) {
 				if (player.isPlaying()) {
 					player.setPlaying(false);
 					LOGGER.info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getProfile().getName());
 				}
 			}
-			ServerPlayer player = this.server.getPlayerList().getPlayer(profile);
+			Player player = this.server.getPlayerList().getPlayer(profile);
 			if (player != null) {
 				Objects.requireNonNull(player.getConnection()).send(new ExitGamePacket());
 			} else {

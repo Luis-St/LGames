@@ -3,6 +3,8 @@ package net.luis.fx.game.wrapper;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -12,6 +14,7 @@ import javafx.scene.layout.Background;
 
 public interface LabelWrapper {
 	
+	@NotNull
 	Label getLabel();
 	
 	default void setPrefSize(double prefWidth, double prefHeight) {
@@ -22,11 +25,11 @@ public interface LabelWrapper {
 		this.getLabel().setFocusTraversable(value);
 	}
 	
-	default void setBackground(Background value) {
+	default void setBackground(@Nullable Background value) {
 		this.getLabel().setBackground(value);
 	}
 	
-	default void setGraphic(Node value) {
+	default void setGraphic(@Nullable Node value) {
 		this.getLabel().setGraphic(value);
 	}
 	

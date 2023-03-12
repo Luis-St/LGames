@@ -1,6 +1,7 @@
 package net.luis.account.account;
 
 import net.luis.language.TranslationKey;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -14,20 +15,20 @@ public enum AccountType {
 	
 	private final String name;
 	
-	AccountType(String name) {
+	AccountType(@NotNull String name) {
 		this.name = name;
 	}
 	
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
-	public String getTranslation() {
+	public @NotNull String getTranslation() {
 		return TranslationKey.createAndGet("account.type." + this.name);
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.name;
 	}
 	

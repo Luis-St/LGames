@@ -3,11 +3,12 @@ package net.luis.ludo.player;
 import com.google.common.collect.Lists;
 import net.luis.game.Game;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.AbstractGamePlayer;
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.AbstractGamePlayer;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.Player;
-import net.luis.game.player.figure.GameFiguresFactory;
+import net.luis.game.player.game.figure.GameFiguresFactory;
 import net.luis.ludo.map.field.LudoFieldPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class LudoPlayer extends AbstractGamePlayer {
 	}*/
 	
 	@Override
-	public List<GameFieldPos> getWinPoses() {
+	public @NotNull List<GameFieldPos> getWinPoses() {
 		return Lists.newArrayList(LudoFieldPos.of(0), LudoFieldPos.of(1), LudoFieldPos.of(2), LudoFieldPos.of(3));
 	}
 	

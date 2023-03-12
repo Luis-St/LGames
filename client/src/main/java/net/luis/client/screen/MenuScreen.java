@@ -1,6 +1,7 @@
 package net.luis.client.screen;
 
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -11,6 +12,8 @@ import net.luis.client.window.LoginWindow;
 import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.language.TranslationKey;
+import net.luis.utility.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -18,7 +21,7 @@ import net.luis.language.TranslationKey;
  *
  */
 
-public class MenuScreen extends ClientScreen {
+public class MenuScreen extends ClientScreen implements Tickable {
 	
 	private Button loginButton;
 	private ButtonBox multiplayerButtonBox;
@@ -39,7 +42,7 @@ public class MenuScreen extends ClientScreen {
 	
 	@Override
 	public void tick() {
-		if (this.client.isLoggedIn()) {
+		if (this.client.getAccountManager().isLoggedIn()) {
 			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.profile"));
 		} else if (this.loginButton.getText().equals(TranslationKey.createAndGet("screen.menu.profile"))) {
 			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.login"));
@@ -51,18 +54,18 @@ public class MenuScreen extends ClientScreen {
 	}
 	
 	private void handleSettings() {
-		this.showScreen(new SettingsScreen(this));
+		/*this.showScreen(new SettingsScreen(this));*/
 	}
 	
 	private void handleLogin() {
-		if (this.client.getLoginWindow() == null) {
+		if (this.client.getAccountManager().getLoginWindow() == null) {
 			LoginWindow window = new LoginWindow(this.client, new Stage());
 			window.show();
 		}
 	}
 	
 	@Override
-	protected Pane createPane() {
+	protected @NotNull Pane createPane() {
 		BorderPane border = new BorderPane();
 		GridPane grid = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		grid.addColumn(0, this.multiplayerButtonBox, this.settingsButtonBox);

@@ -1,9 +1,9 @@
 package net.luis.game.map.field;
 
-import net.luis.game.player.GamePlayerType;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.network.buffer.Encodable;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -13,21 +13,19 @@ import org.apache.logging.log4j.Logger;
 
 public interface GameFieldPos extends Encodable {
 	
-	Logger LOGGER = LogManager.getLogger();
-	
 	int getPosition();
 	
 	default int getRow() {
-		LOGGER.warn("By default a field pos has no rows");
+		LogManager.getLogger(GameFieldPos.class).warn("By default a field pos has no rows");
 		return -1;
 	}
 	
 	default int getColumn() {
-		LOGGER.warn("By default a field pos has no columns");
+		LogManager.getLogger(GameFieldPos.class).warn("By default a field pos has no columns");
 		return -1;
 	}
 	
-	int getPositionFor(GamePlayerType playerType);
+	int getPositionFor(@NotNull GamePlayerType playerType);
 	
 	boolean isStart();
 	

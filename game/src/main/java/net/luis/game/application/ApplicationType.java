@@ -1,5 +1,7 @@
 package net.luis.game.application;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 /**
@@ -15,36 +17,44 @@ public enum ApplicationType {
 	private final String name;
 	private final String shortName;
 	
-	ApplicationType(String name, String shortName) {
+	ApplicationType(@NotNull String name, @NotNull String shortName) {
 		this.name = name;
 		this.shortName = shortName;
 	}
 	
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
-	public String getShortName() {
+	public @NotNull String getShortName() {
 		return this.shortName;
 	}
 	
+	public boolean isClient() {
+		return this == CLIENT;
+	}
+	
+	public boolean isServer() {
+		return this == SERVER || this == ACCOUNT;
+	}
+	
 	public boolean isOn() {
-		GameApplication application = GameApplication.getInstance();
+		FxApplication application = FxApplication.getInstance();
 		if (application == null) {
 			throw new NullPointerException("Cannot check application type because \"application\" is null");
 		}
-		return Objects.requireNonNull(application.getApplicationType()) == this;
+		return Objects.requireNonNull(application.getType()) == this;
 	}
 	
 	@Deprecated
-	public void executeIfOn(Runnable action) {
+	public void executeIfOn(@NotNull Runnable action) {
 		if (this.isOn()) {
 			action.run();
 		}
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.name;
 	}
 	

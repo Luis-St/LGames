@@ -4,6 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import net.luis.fx.screen.AbstractScreen;
 import net.luis.utility.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -11,22 +12,17 @@ import net.luis.utility.Tickable;
  *
  */
 
-public class ScreenScene extends Scene implements Tickable {
+public class ScreenScene extends Scene {
 	
 	private final AbstractScreen screen;
 	
-	public ScreenScene(Parent root, double width, double height, AbstractScreen screen) {
+	public ScreenScene(@NotNull Parent root, double width, double height, @NotNull AbstractScreen screen) {
 		super(root, width, height);
 		this.screen = screen;
 	}
 	
-	public AbstractScreen getScreen() {
+	public @NotNull AbstractScreen getScreen() {
 		return this.screen;
-	}
-	
-	@Override
-	public void tick() {
-		this.screen.tick();
 	}
 	
 }

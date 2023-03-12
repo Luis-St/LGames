@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -14,26 +15,24 @@ import org.apache.logging.log4j.Logger;
 
 public abstract class AbstractWindow {
 	
-	protected static final Logger LOGGER = LogManager.getLogger();
-	
 	protected final Stage stage;
 	private final double width;
 	private final double height;
 	
-	protected AbstractWindow(Stage stage, double width, double height) {
+	protected AbstractWindow(@NotNull Stage stage, double width, double height) {
 		this.stage = stage;
 		this.width = width;
 		this.height = height;
 		this.stage.setOnCloseRequest((event) -> this.exit());
 	}
 	
-	protected void updateScene(Pane pane) {
+	protected void updateScene(@NotNull Pane pane) {
 		Scene scene = new Scene(pane, this.width, this.height);
 		this.onUpdateScene(scene);
 		this.stage.setScene(scene);
 	}
 	
-	protected void onUpdateScene(Scene scene) {
+	protected void onUpdateScene(@NotNull Scene scene) {
 	
 	}
 	

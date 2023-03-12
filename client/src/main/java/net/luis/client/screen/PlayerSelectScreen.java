@@ -6,9 +6,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import net.luis.client.player.AbstractClientPlayer;
 import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
+import net.luis.game.player.Player;
 import net.luis.game.type.GameType;
 import net.luis.language.TranslationKey;
 import net.luis.network.packet.client.ClientPacket;
@@ -16,13 +16,16 @@ import net.luis.network.packet.client.PlayerAddPacket;
 import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
 import net.luis.network.packet.client.game.CancelPlayGameRequestPacket;
-import net.luis.network.packet.listener.PacketListener;
-import net.luis.network.packet.listener.PacketSubscriber;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.server.PlayGameRequestPacket;
 import net.luis.utility.Util;
 import net.luis.utils.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -30,8 +33,9 @@ import java.util.List;
  *
  */
 
-@PacketSubscriber("#getStage#getScene#getScreen")
 public class PlayerSelectScreen extends ClientScreen {
+	
+	private static final Logger LOGGER = LogManager.getLogger(PlayerSelectScreen.class);
 	
 	private final GameType<?> gameType;
 	private final ClientScreen backScreen;
@@ -39,7 +43,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	private ButtonBox backButtonBox;
 	private ButtonBox playButtonBox;
 	
-	public PlayerSelectScreen(GameType<?> gameType, ClientScreen backScreen) {
+	public PlayerSelectScreen(@NotNull GameType<?> gameType, @NotNull ClientScreen backScreen) {
 		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
 		this.gameType = gameType;
 		this.backScreen = backScreen;
@@ -49,7 +53,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	public void init() {
 		this.playerList = new ListView<>();
 		this.playerList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		for (AbstractClientPlayer player : this.client.getPlayers()) {
+		for (Player player : this.client.getPlayerList()) {
 			if (!player.isPlaying()) {
 				this.playerList.getItems().add(player.getProfile().getName());
 			} else {
@@ -65,7 +69,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	}
 	
 	private void handlePlay() {
-		if (this.client.getPlayer().isAdmin()) {
+		if (Objects.requireNonNull(this.client.getPlayerList().getPlayer()).isAdmin()) {
 			List<String> selected = this.playerList.getSelectionModel().getSelectedItems();
 			int selectCount = selected.size();
 			if (selectCount > this.gameType.getMaxPlayers()) {
@@ -73,8 +77,8 @@ public class PlayerSelectScreen extends ClientScreen {
 			} else if (this.gameType.getMinPlayers() > selectCount) {
 				LOGGER.info("Unable to play game {}, since too few players {} were selected", this.gameType.getInfoName(), selectCount);
 			} else {
-				List<AbstractClientPlayer> players = Lists.newArrayList();
-				for (AbstractClientPlayer player : this.client.getPlayers()) {
+				List<Player> players = Lists.newArrayList();
+				for (Player player : this.client.getPlayerList()) {
 					if (selected.contains(player.getProfile().getName())) {
 						players.add(player);
 					}
@@ -84,7 +88,7 @@ public class PlayerSelectScreen extends ClientScreen {
 					this.playerList.getSelectionModel().clearSelection();
 				} else {
 					LOGGER.debug("Send play game request to server");
-					this.client.getServerHandler().send(new PlayGameRequestPacket(this.gameType.getId(), Utils.mapList(players, AbstractClientPlayer::getProfile)));
+					this.client.getServerController().send(new PlayGameRequestPacket(this.gameType.getId(), Utils.mapList(players, Player::getProfile)));
 				}
 			}
 		} else {
@@ -94,7 +98,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	}
 	
 	@PacketListener
-	public void handlePacket(ClientPacket clientPacket) {
+	public void handlePacket(@NotNull ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
 		} else if (clientPacket instanceof CancelPlayGameRequestPacket) {
@@ -105,7 +109,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	
 	private void refreshPlayers() {
 		this.playerList.getItems().clear();
-		for (AbstractClientPlayer player : this.client.getPlayers()) {
+		for (Player player : this.client.getPlayerList()) {
 			if (!player.isPlaying()) {
 				this.playerList.getItems().add(player.getProfile().getName());
 			} else {
@@ -115,7 +119,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	}
 	
 	@Override
-	protected Pane createPane() {
+	protected @NotNull Pane createPane() {
 		GridPane outerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		GridPane innerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		innerPane.addRow(0, this.backButtonBox, this.playButtonBox);

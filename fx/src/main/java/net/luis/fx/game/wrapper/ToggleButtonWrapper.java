@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -15,13 +17,14 @@ import javafx.scene.layout.Background;
 
 public interface ToggleButtonWrapper {
 	
+	@NotNull
 	ToggleButton getToggleButton();
 	
-	default ToggleGroup getToggleGroup() {
+	default @NotNull ToggleGroup getToggleGroup() {
 		return this.getToggleButton().getToggleGroup();
 	}
 	
-	default void setToggleGroup(ToggleGroup group) {
+	default void setToggleGroup(@NotNull ToggleGroup group) {
 		this.getToggleButton().setToggleGroup(group);
 	}
 	
@@ -33,15 +36,15 @@ public interface ToggleButtonWrapper {
 		this.getToggleButton().setFocusTraversable(value);
 	}
 	
-	default void setBackground(Background value) {
+	default void setBackground(@Nullable Background value) {
 		this.getToggleButton().setBackground(value);
 	}
 	
-	default void setGraphic(Node value) {
+	default void setGraphic(@Nullable Node value) {
 		this.getToggleButton().setGraphic(value);
 	}
 	
-	default void setOnAction(EventHandler<ActionEvent> value) {
+	default void setOnAction(@NotNull EventHandler<ActionEvent> value) {
 		this.getToggleButton().setOnAction(value);
 	}
 	

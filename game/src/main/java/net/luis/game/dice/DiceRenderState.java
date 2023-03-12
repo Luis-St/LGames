@@ -2,7 +2,7 @@ package net.luis.game.dice;
 
 import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
-import net.luis.game.application.GameApplication;
+import net.luis.game.application.FxApplication;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -22,7 +22,7 @@ public enum DiceRenderState {
 	private final int count;
 	private final String path;
 	
-	DiceRenderState(String name, int count, String path) {
+	DiceRenderState(@NotNull String name, int count, @NotNull String path) {
 		this.name = name;
 		this.count = count;
 		this.path = path;
@@ -37,7 +37,7 @@ public enum DiceRenderState {
 		return ZERO;
 	}
 	
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
@@ -46,11 +46,11 @@ public enum DiceRenderState {
 	}
 	
 	public @NotNull ImageView getImage(double width, double height) {
-		return FxUtils.makeImageView(Objects.requireNonNull(GameApplication.getInstance()).getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
+		return FxUtils.makeImageView(FxApplication.getInstance().getResourceManager().resourceDirectory().resolve(this.path + ".png").toString(), width, height);
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.name;
 	}
 	

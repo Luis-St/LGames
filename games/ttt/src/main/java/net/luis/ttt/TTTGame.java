@@ -2,27 +2,28 @@ package net.luis.ttt;
 
 import net.luis.game.AbstractGame;
 import net.luis.game.GameResult;
-import net.luis.game.map.GameMapFactory;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.*;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerFactory;
+import net.luis.game.player.game.GamePlayerInfo;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
 import net.luis.game.type.GameTypes;
 import net.luis.game.win.GameResultLine;
-import net.luis.game.win.WinHandler;
 import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.GameActionFailedPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
-import net.luis.network.packet.listener.PacketListener;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
 import net.luis.ttt.map.TTTMap;
 import net.luis.ttt.win.TTTWinHandler;
 import net.luis.utils.util.Utils;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +42,7 @@ public class TTTGame extends AbstractGame {
 	}
 	
 	@Override
-	public GameType<?> getType() {
+	public @NotNull GameType<?> getType() {
 		return GameTypes.TIC_TAC_TOE;
 	}
 	

@@ -8,12 +8,10 @@ import net.luis.fx.game.wrapper.LabelWrapper;
 import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.AbstractGameField;
-import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.map.field.GameFieldType;
-import net.luis.game.player.GamePlayerType;
-import net.luis.game.player.figure.GameFigure;
+import net.luis.game.player.game.figure.GameFigure;
 import net.luis.wins4.player.Wins4PlayerType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -30,7 +28,7 @@ public class Wins4Field extends AbstractGameField implements LabelWrapper {
 	}
 	
 	@Override
-	public Label getLabel() {
+	public @NotNull Label getLabel() {
 		this.label.setUserData(this);
 		return this.label;
 	}
@@ -39,7 +37,7 @@ public class Wins4Field extends AbstractGameField implements LabelWrapper {
 	public void init() {
 		this.setPrefSize(this.fieldSize, this.fieldSize);
 		this.setFocusTraversable(false);
-		if (!Constants.DEBUG) {
+		if (!Constants.DEBUG_MODE) {
 			this.setBackground(null);
 		}
 		this.updateFieldGraphic();
@@ -56,7 +54,7 @@ public class Wins4Field extends AbstractGameField implements LabelWrapper {
 	}
 	
 	@Override
-	public boolean isStartFor(GameFigure figure) {
+	public boolean isStartFor(@NotNull GameFigure figure) {
 		return false;
 	}
 	

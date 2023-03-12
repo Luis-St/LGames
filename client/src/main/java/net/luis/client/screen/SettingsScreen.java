@@ -1,23 +1,12 @@
 package net.luis.client.screen;
 
-import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
-import net.luis.client.ClientSettings;
-import net.luis.fx.ButtonBox;
-import net.luis.fxutils.FxUtils;
-import net.luis.language.Language;
-import net.luis.language.TranslationKey;
-
 /**
  *
  * @author Luis-st
  *
  */
 
+/*
 public class SettingsScreen extends ClientScreen {
 	
 	private final ClientScreen backScreen;
@@ -60,3 +49,4 @@ public class SettingsScreen extends ClientScreen {
 	}
 	
 }
+*/
