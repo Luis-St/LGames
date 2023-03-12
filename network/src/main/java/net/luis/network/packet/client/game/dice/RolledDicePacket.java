@@ -2,7 +2,8 @@ package net.luis.network.packet.client.game.dice;
 
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
-import net.luis.network.packet.listener.PacketGetter;
+import net.luis.network.listener.PacketGetter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -18,12 +19,12 @@ public class RolledDicePacket implements ClientPacket {
 		this.count = count;
 	}
 	
-	public RolledDicePacket(FriendlyByteBuffer buffer) {
+	public RolledDicePacket(@NotNull FriendlyByteBuffer buffer) {
 		this.count = buffer.readInt();
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeInt(this.count);
 	}
 	

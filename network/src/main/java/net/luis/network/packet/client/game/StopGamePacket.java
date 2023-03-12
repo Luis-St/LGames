@@ -2,6 +2,7 @@ package net.luis.network.packet.client.game;
 
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -15,12 +16,12 @@ public class StopGamePacket implements ClientPacket {
 		
 	}
 	
-	public StopGamePacket(FriendlyByteBuffer buffer) {
+	public StopGamePacket(@NotNull FriendlyByteBuffer buffer) {
 		
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		
 	}
 	

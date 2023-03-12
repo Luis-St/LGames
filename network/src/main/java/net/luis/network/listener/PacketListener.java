@@ -1,6 +1,7 @@
-package net.luis.network.packet.listener;
+package net.luis.network.listener;
 
 import net.luis.network.packet.Packet;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.*;
 
@@ -15,6 +16,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PacketListener {
 	
+	@NotNull
 	Class<?> value() default Packet.class;
 	
 }

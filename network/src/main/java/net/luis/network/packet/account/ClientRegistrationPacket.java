@@ -1,7 +1,8 @@
 package net.luis.network.packet.account;
 
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.packet.listener.PacketGetter;
+import net.luis.network.listener.PacketGetter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +22,7 @@ public class ClientRegistrationPacket implements AccountPacket {
 	private final String lastName;
 	private final Date birthday;
 	
-	public ClientRegistrationPacket(String name, String mail, int passwordHash, String firstName, String lastName, Date birthday) {
+	public ClientRegistrationPacket(@NotNull String name, @NotNull String mail, int passwordHash, @NotNull String firstName, @NotNull String lastName, @NotNull Date birthday) {
 		this.name = name;
 		this.mail = mail;
 		this.passwordHash = passwordHash;
@@ -30,7 +31,7 @@ public class ClientRegistrationPacket implements AccountPacket {
 		this.birthday = birthday;
 	}
 	
-	public ClientRegistrationPacket(FriendlyByteBuffer buffer) {
+	public ClientRegistrationPacket(@NotNull FriendlyByteBuffer buffer) {
 		this.name = buffer.readString();
 		this.mail = buffer.readString();
 		this.passwordHash = buffer.readInt();
@@ -47,7 +48,7 @@ public class ClientRegistrationPacket implements AccountPacket {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeString(this.name);
 		buffer.writeString(this.mail);
 		buffer.writeInt(this.passwordHash);
@@ -63,12 +64,12 @@ public class ClientRegistrationPacket implements AccountPacket {
 	}
 	
 	@PacketGetter
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
 	@PacketGetter
-	public String getMail() {
+	public @NotNull String getMail() {
 		return this.mail;
 	}
 	
@@ -78,17 +79,17 @@ public class ClientRegistrationPacket implements AccountPacket {
 	}
 	
 	@PacketGetter
-	public String getFirstName() {
+	public @NotNull String getFirstName() {
 		return this.firstName;
 	}
 	
 	@PacketGetter
-	public String getLastName() {
+	public @NotNull String getLastName() {
 		return this.lastName;
 	}
 	
 	@PacketGetter
-	public Date getBirthday() {
+	public @NotNull Date getBirthday() {
 		return this.birthday;
 	}
 	

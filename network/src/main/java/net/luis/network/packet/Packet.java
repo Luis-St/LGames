@@ -3,7 +3,8 @@ package net.luis.network.packet;
 import javafx.application.Platform;
 import net.luis.network.Connection;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.packet.listener.PacketInvoker;
+import net.luis.network.listener.PacketInvoker;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -13,9 +14,9 @@ import net.luis.network.packet.listener.PacketInvoker;
 
 public interface Packet {
 	
-	void encode(FriendlyByteBuffer buffer);
+	void encode(@NotNull FriendlyByteBuffer buffer);
 	
-	default void handleLater(Connection connection) {
+	default void handleLater(@NotNull Connection connection) {
 		if (Platform.isFxApplicationThread()) {
 			PacketInvoker.invoke(connection, this);
 		} else {

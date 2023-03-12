@@ -1,7 +1,8 @@
 package net.luis.network.packet.account;
 
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.packet.listener.PacketGetter;
+import net.luis.network.listener.PacketGetter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -17,27 +18,27 @@ public class ClientExitPacket implements AccountPacket {
 	private final int id;
 	private final UUID uuid;
 	
-	public ClientExitPacket(String name, int id, UUID uuid) {
+	public ClientExitPacket(@NotNull String name, int id, @NotNull UUID uuid) {
 		this.name = name;
 		this.id = id;
 		this.uuid = uuid;
 	}
 	
-	public ClientExitPacket(FriendlyByteBuffer buffer) {
+	public ClientExitPacket(@NotNull FriendlyByteBuffer buffer) {
 		this.name = buffer.readString();
 		this.id = buffer.readInt();
 		this.uuid = buffer.readUUID();
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeString(this.name);
 		buffer.writeInt(this.id);
 		buffer.writeUUID(this.uuid);
 	}
 	
 	@PacketGetter
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
@@ -47,7 +48,7 @@ public class ClientExitPacket implements AccountPacket {
 	}
 	
 	@PacketGetter
-	public UUID getUUID() {
+	public @NotNull UUID getUUID() {
 		return this.uuid;
 	}
 	

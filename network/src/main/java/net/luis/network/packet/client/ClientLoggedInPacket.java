@@ -2,7 +2,8 @@ package net.luis.network.packet.client;
 
 import net.luis.network.buffer.EncodableEnum;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.packet.listener.PacketGetter;
+import net.luis.network.listener.PacketGetter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class ClientLoggedInPacket implements ClientPacket {
 	private final String mail;
 	private final UUID uuid;
 	
-	public ClientLoggedInPacket(Enum<?> loginType, String name, int id, String mail, UUID uuid) {
+	public ClientLoggedInPacket(@NotNull Enum<?> loginType, @NotNull String name, int id, @NotNull String mail, @NotNull UUID uuid) {
 		this.loginType = new EncodableEnum(loginType);
 		this.name = name;
 		this.id = id;
@@ -28,7 +29,7 @@ public class ClientLoggedInPacket implements ClientPacket {
 		this.uuid = uuid;
 	}
 	
-	public ClientLoggedInPacket(FriendlyByteBuffer buffer) {
+	public ClientLoggedInPacket(@NotNull FriendlyByteBuffer buffer) {
 		this.loginType = buffer.read(EncodableEnum.class);
 		this.name = buffer.readString();
 		this.id = buffer.readInt();
@@ -37,7 +38,7 @@ public class ClientLoggedInPacket implements ClientPacket {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.write(this.loginType);
 		buffer.writeString(this.name);
 		buffer.writeInt(this.id);
@@ -46,12 +47,12 @@ public class ClientLoggedInPacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public Enum<?> getLoginType() {
+	public @NotNull Enum<?> getLoginType() {
 		return this.loginType.get();
 	}
 	
 	@PacketGetter
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
@@ -61,12 +62,12 @@ public class ClientLoggedInPacket implements ClientPacket {
 	}
 	
 	@PacketGetter
-	public String getMail() {
+	public @NotNull String getMail() {
 		return this.mail;
 	}
 	
 	@PacketGetter
-	public UUID getUUID() {
+	public @NotNull UUID getUUID() {
 		return this.uuid;
 	}
 	

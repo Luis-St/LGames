@@ -4,8 +4,9 @@ import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.EncodableObject;
 import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.packet.client.ClientPacket;
-import net.luis.network.packet.listener.PacketGetter;
+import net.luis.network.listener.PacketGetter;
 import net.luis.utils.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -19,21 +20,21 @@ public class UpdateGameMapPacket implements ClientPacket {
 	
 	private final List<EncodableObject> fieldInfos;
 	
-	public UpdateGameMapPacket(List<Encodable> fieldInfos) {
+	public UpdateGameMapPacket(@NotNull List<? extends Encodable> fieldInfos) {
 		this.fieldInfos = Utils.mapList(fieldInfos, EncodableObject::new);
 	}
 	
-	public UpdateGameMapPacket(FriendlyByteBuffer buffer) {
+	public UpdateGameMapPacket(@NotNull FriendlyByteBuffer buffer) {
 		this.fieldInfos = buffer.readList(() -> buffer.read(EncodableObject.class));
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeList(this.fieldInfos, buffer::write);
 	}
 	
 	@PacketGetter
-	public List<Encodable> getFieldInfos() {
+	public @NotNull List<? extends Encodable> getFieldInfos() {
 		return Utils.mapList(this.fieldInfos, EncodableObject::get);
 	}
 	

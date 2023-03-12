@@ -1,5 +1,7 @@
 package net.luis.network.exception;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serial;
 
 /**
@@ -17,11 +19,11 @@ public class InvalidPacketException extends RuntimeException {
 		super();
 	}
 	
-	public InvalidPacketException(String message) {
+	public InvalidPacketException(@NotNull String message) {
 		super(message);
 	}
 	
-	public InvalidPacketException(String message, Throwable cause) {
+	public InvalidPacketException(@NotNull String message, @NotNull Throwable cause) {
 		super(message, cause);
 	}
 	

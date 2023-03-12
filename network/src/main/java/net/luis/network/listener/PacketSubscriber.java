@@ -1,4 +1,6 @@
-package net.luis.network.packet.listener;
+package net.luis.network.listener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.*;
 
@@ -13,6 +15,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PacketSubscriber {
 	
+	@NotNull
 	String value() default "";
 	
 }

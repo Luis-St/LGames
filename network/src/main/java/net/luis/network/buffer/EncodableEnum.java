@@ -1,7 +1,8 @@
 package net.luis.network.buffer;
 
 import net.luis.network.annotation.DecodingConstructor;
-import net.luis.utils.util.ReflectionHelper;
+import net.luis.utils.util.reflection.ReflectionHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -16,10 +17,12 @@ public class EncodableEnum implements Encodable {
 	
 	private final Enum<?> object;
 	
-	public EncodableEnum(Enum<?> object) {this.object = Objects.requireNonNull(object);}
+	public EncodableEnum(@NotNull Enum<?> object) {
+		this.object = Objects.requireNonNull(object);
+	}
 	
 	@DecodingConstructor
-	private EncodableEnum(FriendlyByteBuffer buffer) {
+	private EncodableEnum(@NotNull FriendlyByteBuffer buffer) {
 		ReflectionHelper.enableExceptionLogging();
 		Class<?> clazz = ReflectionHelper.getClassForName(buffer.readString());
 		ReflectionHelper.disableExceptionLogging();
@@ -29,26 +32,24 @@ public class EncodableEnum implements Encodable {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeString(this.object.getClass().getName());
 		buffer.writeInt(this.object.ordinal());
 	}
 	
-	public Enum<?> get() {
+	public @NotNull Enum<?> get() {
 		return this.object;
 	}
 	
-	@Nullable
 	@SuppressWarnings("unchecked")
-	public <T> T getAs(Class<T> clazz) {
+	public <T> @Nullable T getAs(@NotNull Class<T> clazz) {
 		if (clazz.isInstance(this.object)) {
 			return (T) this.object;
 		}
 		return null;
 	}
 	
-	@Nullable
-	public <T> T getAsOrThrow(Class<T> clazz) {
+	public <T> @NotNull  T getAsOrThrow(@NotNull Class<T> clazz) {
 		T object = this.getAs(clazz);
 		if (object != null) {
 			return object;

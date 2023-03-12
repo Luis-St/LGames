@@ -7,6 +7,7 @@ import net.luis.network.buffer.FriendlyByteBuffer;
 import net.luis.network.exception.SkipPacketException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -18,14 +19,14 @@ import java.io.IOException;
 
 public class PacketEncoder extends MessageToByteEncoder<Packet> {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(PacketEncoder.class);
 	
 	@Override
-	protected void encode(ChannelHandlerContext context, Packet packet, ByteBuf output) throws Exception {
+	protected void encode(@NotNull ChannelHandlerContext context, @NotNull Packet packet, @NotNull ByteBuf output) throws Exception {
 		int id = Packets.getId(packet.getClass());
 		if (id == -1) {
 			LOGGER.error("Can not encode packet {}", packet.getClass().getSimpleName());
-			throw new IOException("Can not encode packet " + packet.getClass().getSimpleName() + ", since it is not registered");
+			throw new IOException("Can not encode packet " + packet.getClass().getSimpleName() + " because it is not registered");
 		} else {
 			FriendlyByteBuffer buffer = new FriendlyByteBuffer(output);
 			buffer.writeInt(id);
@@ -50,8 +51,8 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 	}
 	
 	@Override
-	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
-		LOGGER.warn("Caught an exception while encode a packet");
+	public void exceptionCaught(@NotNull ChannelHandlerContext context, @NotNull Throwable cause) {
+		LOGGER.error("Caught an exception while encoding a packet");
 	}
 	
 }

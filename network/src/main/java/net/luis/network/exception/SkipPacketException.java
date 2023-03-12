@@ -1,6 +1,7 @@
 package net.luis.network.exception;
 
 import io.netty.handler.codec.EncoderException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serial;
 
@@ -19,15 +20,15 @@ public class SkipPacketException extends EncoderException {
 		
 	}
 	
-	public SkipPacketException(String message) {
+	public SkipPacketException(@NotNull String message) {
 		super(message);
 	}
 	
-	public SkipPacketException(Throwable cause) {
+	public SkipPacketException(@NotNull Throwable cause) {
 		super(cause);
 	}
 	
-	public SkipPacketException(String message, Throwable cause) {
+	public SkipPacketException(@NotNull String message, @NotNull Throwable cause) {
 		super(message, cause);
 	}
 	

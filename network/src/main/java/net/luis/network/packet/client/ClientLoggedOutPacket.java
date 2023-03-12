@@ -1,7 +1,8 @@
 package net.luis.network.packet.client;
 
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.packet.listener.PacketGetter;
+import net.luis.network.listener.PacketGetter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -17,12 +18,12 @@ public class ClientLoggedOutPacket implements ClientPacket {
 		this.successful = successful;
 	}
 	
-	public ClientLoggedOutPacket(FriendlyByteBuffer buffer) {
+	public ClientLoggedOutPacket(@NotNull FriendlyByteBuffer buffer) {
 		this.successful = buffer.readBoolean();
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeBoolean(this.successful);
 	}
 	

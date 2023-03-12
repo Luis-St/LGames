@@ -1,13 +1,14 @@
-package net.luis.network.packet.listener;
+package net.luis.network.listener;
 
 import com.google.common.collect.Lists;
 import net.luis.network.Connection;
 import net.luis.network.packet.Packet;
-import net.luis.utils.util.ClassPathInspector;
-import net.luis.utils.util.ReflectionHelper;
+import net.luis.utils.util.reflection.ClassPathUtils;
+import net.luis.utils.util.reflection.ReflectionHelper;
 import net.luis.utils.util.SimpleEntry;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
@@ -30,18 +31,18 @@ class PacketInvokHelper {
 	
 	private static final Class<?> APPLICATION_TYPE_CLASS = Objects.requireNonNull(ReflectionHelper.getClassForName("net.luis.game.application.ApplicationType"));
 	
-	static List<Class<?>> getSubscribers(Object type) {
+	static @NotNull List<Class<?>> getSubscribers(@NotNull Object type) {
 		assert APPLICATION_TYPE_CLASS.isInstance(type);
-		return ClassPathInspector.getClasses("net.luis").stream().filter((clazz) -> {
+		return ClassPathUtils.getClasses("net.luis").stream().filter((clazz) -> {
 			return clazz.isAnnotationPresent(PacketSubscriber.class);
 		}).filter((clazz) -> {
-			Object object = ReflectionHelper.invoke(ReflectionHelper.getMethod(APPLICATION_TYPE_CLASS, "getShortName"), type);
+			Object object = ReflectionHelper.invoke(Objects.requireNonNull(ReflectionHelper.getMethod(APPLICATION_TYPE_CLASS, "getShortName")), type);
 			assert object instanceof String;
 			return clazz.getPackageName().replace("net.luis.", "").toLowerCase().startsWith(((String) object).toLowerCase());
 		}).collect(Collectors.toList());
 	}
 	
-	static List<Method> getListeners(Class<?> clazz, Packet packet) {
+	static @NotNull List<Method> getListeners(@NotNull Class<?> clazz, Packet packet) {
 		return Lists.newArrayList(clazz.getDeclaredMethods()).stream().filter((method) -> {
 			return method.isAnnotationPresent(PacketListener.class);
 		}).filter((method) -> {
@@ -49,13 +50,13 @@ class PacketInvokHelper {
 		}).collect(Collectors.toList());
 	}
 	
-	static String[] splitInstanceGetters(String getter) {
+	static @NotNull String[] splitInstanceGetters(@NotNull String getter) {
 		List<String> excludeFirst = Lists.newArrayList("", "Client", "Server", "AccountServer");
 		String[] getters = getter.split("#");
 		return excludeFirst.contains(getters[0]) ? ArrayUtils.remove(getters, 0) : getters;
 	}
 	
-	static Object getInstanceObject(Object application, Class<?> clazz, PacketSubscriber subscriber) {
+	static @Nullable Object getInstanceObject(@NotNull Object application, @NotNull Class<?> clazz, @NotNull PacketSubscriber subscriber) {
 		if (subscriber.value().trim().isEmpty()) {
 			return null;
 		}
@@ -91,7 +92,7 @@ class PacketInvokHelper {
 		return instanceObject.getClass() == clazz ? instanceObject : null;
 	}
 	
-	private static Field getConnectionField(Class<?> clazz) {
+	private static @Nullable Field getConnectionField(@NotNull Class<?> clazz) {
 		if (ReflectionHelper.hasField(clazz, "connection")) {
 			Field field = ReflectionHelper.getField(clazz, "connection");
 			assert field != null;
@@ -103,14 +104,14 @@ class PacketInvokHelper {
 		return null;
 	}
 	
-	static void setConnectionInstance(Connection connection, Class<?> clazz, Object instanceObject) {
+	static void setConnectionInstance(@Nullable Connection connection, @NotNull Class<?> clazz, @Nullable Object instanceObject) {
 		Field field = getConnectionField(clazz);
 		if (field != null) {
 			ReflectionHelper.set(field, instanceObject, connection);
 		}
 	}
 	
-	private static GetterInfo[] getObjectGetters(Packet packet) {
+	private static @NotNull GetterInfo[] getObjectGetters(@NotNull Packet packet) {
 		return Lists.newArrayList(packet.getClass().getDeclaredMethods()).stream().filter((method) -> {
 			return method.isAnnotationPresent(PacketGetter.class);
 		}).map((method) -> {
@@ -140,7 +141,7 @@ class PacketInvokHelper {
 		}).toArray(GetterInfo[]::new);
 	}
 	
-	private static void checkNullValues(Method method, List<Entry<GetterInfo, Object>> objects, List<Object> values) {
+	private static void checkNullValues(@NotNull Method method, @NotNull List<Entry<GetterInfo, Object>> objects, @NotNull List<Object> values) {
 		Parameter[] parameters = method.getParameters();
 		if (parameters.length != values.size()) {
 			throw createException(method, values.toArray());
@@ -157,7 +158,7 @@ class PacketInvokHelper {
 		}
 	}
 	
-	private static Object[] sortBySignature(Object application, Method method, List<Entry<GetterInfo, Object>> objects, List<Class<?>> objectInfo) {
+	private static @NotNull Object[] sortBySignature(@Nullable Object application, @NotNull Method method, @NotNull List<Entry<GetterInfo, Object>> objects, @NotNull List<Class<?>> objectInfo) {
 		List<Object> values = Lists.newArrayList();
 		if (application != null) {
 			values.add(application);
@@ -185,7 +186,7 @@ class PacketInvokHelper {
 		return values.toArray();
 	}
 	
-	private static List<Class<?>> generateObjectInfo(List<Entry<GetterInfo, Object>> objects) {
+	private static @NotNull List<Class<?>> generateObjectInfo(@NotNull List<Entry<GetterInfo, Object>> objects) {
 		List<Class<?>> objectClasses = Lists.newArrayList();
 		for (Entry<GetterInfo, Object> entry : objects) {
 			objectClasses.add(entry.getValue().getClass());
@@ -193,7 +194,7 @@ class PacketInvokHelper {
 		return objectClasses;
 	}
 	
-	static Object[] getPacketObjects(Object application, Packet packet, Method method) {
+	static @NotNull Object[] getPacketObjects(@Nullable Object application, @NotNull Packet packet, @NotNull Method method) {
 		List<Entry<GetterInfo, Object>> objects = Lists.newArrayList();
 		for (GetterInfo getterInfo : getObjectGetters(packet)) {
 			objects.add(new SimpleEntry<>(getterInfo, ReflectionHelper.invoke(packet.getClass(), getterInfo.getterName(), packet)));
@@ -201,7 +202,7 @@ class PacketInvokHelper {
 		return sortBySignature(application, method, objects, generateObjectInfo(objects));
 	}
 	
-	static boolean validateSignature(Method method, Object... objects) {
+	static boolean validateSignature(@NotNull Method method, @NotNull Object... objects) {
 		if (method.getParameterCount() != objects.length) {
 			return false;
 		} else if (method.getParameterCount() == 0) {
@@ -217,14 +218,14 @@ class PacketInvokHelper {
 		return true;
 	}
 	
-	static RuntimeException createException(Method method, Object... objects) {
+	static RuntimeException createException(@NotNull Method method, @NotNull Object... objects) {
 		String name = method.getDeclaringClass().getSimpleName() + "#" + method.getName();
 		String expectedParameters = Arrays.stream(method.getParameterTypes()).map(Class::getName).toList().toString();
 		String obtainedParameters = Arrays.stream(objects).filter(Objects::nonNull).map(Object::getClass).map(Class::getName).toList().toString();
 		return new RuntimeException("Invalid method signature of method " + name + ", expected parameter " + expectedParameters + " but " + obtainedParameters + " was passed");
 	}
 	
-	private record GetterInfo(String packetName, String parameterName, String getterName, boolean nullable) {
+	private record GetterInfo(@NotNull String packetName, @NotNull String parameterName, @NotNull String getterName, @NotNull boolean nullable) {
 		
 	}
 	

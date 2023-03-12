@@ -1,5 +1,7 @@
 package net.luis.network.buffer;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  *
  * @author Luis-st
@@ -8,10 +10,10 @@ package net.luis.network.buffer;
 
 public interface Encodable {
 	
-	default <T extends Encodable> T cast(Class<T> clazz) {
+	default <T extends Encodable> @NotNull T cast(@NotNull Class<T> clazz) {
 		return clazz.cast(this);
 	}
 	
-	void encode(FriendlyByteBuffer buffer);
+	void encode(@NotNull FriendlyByteBuffer buffer);
 	
 }

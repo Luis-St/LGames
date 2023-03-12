@@ -2,7 +2,8 @@ package net.luis.network.packet.account;
 
 import net.luis.network.buffer.EncodableEnum;
 import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.network.packet.listener.PacketGetter;
+import net.luis.network.listener.PacketGetter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -16,32 +17,32 @@ public class ClientLoginPacket implements AccountPacket {
 	private final String name;
 	private final int passwordHash;
 	
-	public ClientLoginPacket(Enum<?> loginType, String name, int passwordHash) {
+	public ClientLoginPacket(@NotNull Enum<?> loginType, @NotNull String name, int passwordHash) {
 		this.loginType = new EncodableEnum(loginType);
 		this.name = name;
 		this.passwordHash = passwordHash;
 	}
 	
-	public ClientLoginPacket(FriendlyByteBuffer buffer) {
+	public ClientLoginPacket(@NotNull FriendlyByteBuffer buffer) {
 		this.loginType = buffer.read(EncodableEnum.class);
 		this.name = buffer.readString();
 		this.passwordHash = buffer.readInt();
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.write(this.loginType);
 		buffer.writeString(this.name);
 		buffer.writeInt(this.passwordHash);
 	}
 	
 	@PacketGetter
-	public Enum<?> getLoginType() {
+	public @NotNull Enum<?> getLoginType() {
 		return this.loginType.get();
 	}
 	
 	@PacketGetter
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	

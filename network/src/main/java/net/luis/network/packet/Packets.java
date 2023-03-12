@@ -19,10 +19,11 @@ import net.luis.network.packet.server.game.ExitGameRequestPacket;
 import net.luis.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
-import net.luis.utils.util.ReflectionHelper;
 import net.luis.utils.util.Utils;
+import net.luis.utils.util.reflection.ReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
@@ -37,7 +38,7 @@ import java.util.Map.Entry;
 
 public class Packets {
 	
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(Packets.class);
 	private static final Map<Integer, Class<? extends Packet>> PACKETS = Utils.make(Maps.newHashMap(), (map) -> {
 		int i = 0;
 		map.put(i++, ClientRegistrationPacket.class);
@@ -74,28 +75,26 @@ public class Packets {
 		map.put(i, ServerClosedPacket.class);
 	});
 	
-	@Nullable
-	public static Class<? extends Packet> byId(int id) {
+	public static @Nullable Class<? extends Packet> byId(int id) {
 		Class<? extends Packet> clazz = PACKETS.get(id);
 		if (clazz != null) {
 			return clazz;
 		}
-		LOGGER.warn("Fail to get packet for id {}", id);
+		LOGGER.error("Failed to get packet for id {}", id);
 		return null;
 	}
 	
-	public static int getId(Class<? extends Packet> clazz) {
+	public static int getId(@NotNull Class<? extends Packet> clazz) {
 		for (Entry<Integer, Class<? extends Packet>> entry : PACKETS.entrySet()) {
 			if (entry.getValue() == clazz) {
 				return entry.getKey();
 			}
 		}
-		LOGGER.warn("Fail to get packet id for packet of type {}", clazz.getSimpleName());
+		LOGGER.error("Failed to get packet id for packet of type {}", clazz.getSimpleName());
 		return -1;
 	}
 	
-	@Nullable
-	public static Packet getPacket(int id, FriendlyByteBuffer buffer) {
+	public static @Nullable Packet getPacket(int id, @NotNull FriendlyByteBuffer buffer) {
 		Class<? extends Packet> clazz = byId(id);
 		if (clazz != null) {
 			try {

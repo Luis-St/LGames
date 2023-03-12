@@ -1,6 +1,7 @@
 package net.luis.network.packet.client;
 
 import net.luis.network.buffer.FriendlyByteBuffer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -14,12 +15,12 @@ public class ServerClosedPacket implements ClientPacket {
 		
 	}
 	
-	public ServerClosedPacket(FriendlyByteBuffer buffer) {
+	public ServerClosedPacket(@NotNull FriendlyByteBuffer buffer) {
 		
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuffer buffer) {
+	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		
 	}
 	
