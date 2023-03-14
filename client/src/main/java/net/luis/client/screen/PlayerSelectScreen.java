@@ -2,21 +2,21 @@ package net.luis.client.screen;
 
 import com.google.common.collect.Lists;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.player.Player;
 import net.luis.game.type.GameType;
 import net.luis.language.TranslationKey;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.PlayerAddPacket;
 import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
 import net.luis.network.packet.client.game.CancelPlayGameRequestPacket;
-import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.server.PlayGameRequestPacket;
 import net.luis.utility.Util;
 import net.luis.utils.util.Utils;
@@ -40,8 +40,8 @@ public class PlayerSelectScreen extends ClientScreen {
 	private final GameType<?> gameType;
 	private final ClientScreen backScreen;
 	private ListView<String> playerList;
-	private ButtonBox backButtonBox;
-	private ButtonBox playButtonBox;
+	private Button backButton;
+	private Button playButton;
 	
 	public PlayerSelectScreen(@NotNull GameType<?> gameType, @NotNull ClientScreen backScreen) {
 		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
@@ -60,8 +60,8 @@ public class PlayerSelectScreen extends ClientScreen {
 				LOGGER.debug("Ignore player {}, since the player is already playing a game", player.getProfile().getName());
 			}
 		}
-		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
-		this.playButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.player_select.play"), this::handlePlay);
+		this.backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), this::handleBack);
+		this.playButton= FxUtils.makeButton(TranslationKey.createAndGet("screen.player_select.play"), this::handlePlay);
 	}
 	
 	private void handleBack() {
@@ -88,7 +88,7 @@ public class PlayerSelectScreen extends ClientScreen {
 					this.playerList.getSelectionModel().clearSelection();
 				} else {
 					LOGGER.debug("Send play game request to server");
-					this.client.getServerController().send(new PlayGameRequestPacket(this.gameType.getId(), Utils.mapList(players, Player::getProfile)));
+					this.broadcast(new PlayGameRequestPacket(this.gameType.getId(), Utils.mapList(players, Player::getProfile)));
 				}
 			}
 		} else {
@@ -122,7 +122,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	protected @NotNull Pane createPane() {
 		GridPane outerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		GridPane innerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
-		innerPane.addRow(0, this.backButtonBox, this.playButtonBox);
+		innerPane.addRow(0, FxUtils.makeDefaultVBox(this.backButton), FxUtils.makeDefaultVBox(this.playButton));
 		outerPane.addColumn(0, this.playerList, innerPane);
 		return outerPane;
 	}

@@ -24,4 +24,9 @@ public class LocalPlayer extends Player {
 		return true;
 	}
 	
+	@Override
+	public @NotNull Client getApplication() {
+		return (Client) super.getApplication();
+	}
+	
 }

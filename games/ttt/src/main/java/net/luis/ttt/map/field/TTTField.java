@@ -5,16 +5,18 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import net.luis.Constants;
 import net.luis.fx.game.wrapper.ToggleButtonWrapper;
+import net.luis.game.Game;
 import net.luis.game.GameResult;
 import net.luis.game.application.ApplicationType;
-import net.luis.game.application.FxApplication;
-import net.luis.game.map.GameMap;
 import net.luis.game.map.field.AbstractGameField;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.GameProfile;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.game.figure.GameFigure;
 import net.luis.ttt.player.TTTPlayerType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -26,11 +28,13 @@ import java.util.Objects;
 
 public class TTTField extends AbstractGameField implements ToggleButtonWrapper {
 	
+	private static final Logger LOGGER = LogManager.getLogger(TTTField.class);
+	
 	private final ToggleButton button = new ToggleButton();
 	private final ToggleGroup group;
 	
-	public TTTField(GameMap map, ToggleGroup group, GameFieldPos fieldPos) {
-		super(map, TTTFieldType.DEFAULT, TTTPlayerType.NO, fieldPos, 150.0);
+	public TTTField(Game game, ToggleGroup group, GameFieldPos fieldPos) {
+		super(game, TTTFieldType.DEFAULT, TTTPlayerType.NO, fieldPos, 150.0);
 		this.group = group;
 	}
 	
@@ -82,12 +86,7 @@ public class TTTField extends AbstractGameField implements ToggleButtonWrapper {
 			if (this.isEmpty()) {
 				if (this.isShadowed()) {
 					if (this.getResult() == GameResult.NO) {
-						GameProfile profile = Objects.requireNonNull(FxApplication.getInstance()).getGameManager().getLocalProfile();
-						if (Objects.requireNonNull(this.getMap().getGame().getPlayerFor(profile)).getPlayerType() instanceof TTTPlayerType playerType) {
-							this.setGraphic(this.makeImage(playerType.getPath() + "_shadow.png", 0.95));
-						} else {
-							throw new ClassCastException();
-						}
+						// this.setGraphic(Objects.requireNonNull(this.getGame().getPlayerFor(profile)).getPlayerType().getImage("_shadow", this.fieldSize * 0.95, this.fieldSize * 0.95)); // TODO: fix
 					} else {
 						this.setShadowed(false);
 						this.updateFieldGraphic();
@@ -105,19 +104,12 @@ public class TTTField extends AbstractGameField implements ToggleButtonWrapper {
 				}
 			}
 		}
-
+		
 	}
 	
-	private ImageView getFigureTexture() {
-		if (this.getFigure().getPlayerType() instanceof TTTPlayerType playerType) {
-			return switch (this.getResult()) {
-				case WIN -> this.makeImage(playerType.getPath() + "_win.png", 0.95);
-				case LOSE -> this.makeImage(playerType.getPath() + "_lose.png", 0.95);
-				case DRAW -> this.makeImage(playerType.getPath() + "_draw.png", 0.95);
-				default -> this.makeImage(playerType.getPath() + ".png", 0.95);
-			};
-		}
-		throw new ClassCastException();
+	private @Nullable ImageView getFigureTexture() {
+		GamePlayerType playerType = Objects.requireNonNull(this.getFigure()).getPlayerType();
+		return playerType.getImage("_" + this.getResult().getName(), this.fieldSize * 0.95, this.fieldSize * 0.95);
 	}
 	
 }

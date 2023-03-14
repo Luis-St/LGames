@@ -2,10 +2,10 @@ package net.luis.game.map.field;
 
 import javafx.scene.image.ImageView;
 import net.luis.fxutils.FxUtils;
+import net.luis.game.Game;
 import net.luis.game.GameResult;
 import net.luis.game.application.ApplicationType;
 import net.luis.game.application.FxApplication;
-import net.luis.game.map.GameMap;
 import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.game.figure.GameFigure;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public abstract class AbstractGameField implements GameField {
 	
 	protected final double fieldSize;
-	private final GameMap map;
+	private final Game game;
 	private final GameFieldType fieldType;
 	private final GamePlayerType colorType;
 	private final GameFieldPos fieldPos;
@@ -30,8 +30,8 @@ public abstract class AbstractGameField implements GameField {
 	private GameResult result = GameResult.NO;
 	private boolean shadowed = false;
 	
-	protected AbstractGameField(@NotNull GameMap map, @NotNull GameFieldType fieldType, @NotNull GamePlayerType colorType, @NotNull GameFieldPos fieldPos, double fieldSize) {
-		this.map = map;
+	protected AbstractGameField(@NotNull Game game, @NotNull GameFieldType fieldType, @NotNull GamePlayerType colorType, @NotNull GameFieldPos fieldPos, double fieldSize) {
+		this.game = game;
 		this.fieldType = fieldType;
 		this.colorType = colorType;
 		this.fieldPos = fieldPos;
@@ -45,8 +45,8 @@ public abstract class AbstractGameField implements GameField {
 	}
 	
 	@Override
-	public @NotNull GameMap getMap() {
-		return this.map;
+	public @NotNull Game getGame() {
+		return this.game;
 	}
 	
 	@Override
@@ -102,11 +102,11 @@ public abstract class AbstractGameField implements GameField {
 	
 	}
 	
-	protected ImageView makeImage(@NotNull String path) {
+	protected @Nullable ImageView makeImage(@NotNull String path) {
 		return this.makeImage(path, 1.0);
 	}
 	
-	protected ImageView makeImage(@NotNull String path, double scale) {
+	protected @Nullable ImageView makeImage(@NotNull String path, double scale) {
 		return FxUtils.makeImageView(FxApplication.getInstance().getResourceManager().resourceDirectory().resolve(path).toString(), this.fieldSize * scale, this.fieldSize * scale);
 	}
 	
@@ -117,7 +117,6 @@ public abstract class AbstractGameField implements GameField {
 		
 		if (Double.compare(that.fieldSize, this.fieldSize) != 0) return false;
 		if (this.shadowed != that.shadowed) return false;
-		if (!this.map.equals(that.map)) return false;
 		if (!this.fieldType.equals(that.fieldType)) return false;
 		if (!this.colorType.equals(that.colorType)) return false;
 		if (!this.fieldPos.equals(that.fieldPos)) return false;
@@ -127,6 +126,6 @@ public abstract class AbstractGameField implements GameField {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.map, this.fieldType, this.colorType, this.fieldPos, this.fieldSize, this.figure, this.result, this.shadowed);
+		return Objects.hash(this.fieldType, this.colorType, this.fieldPos, this.fieldSize, this.figure, this.result, this.shadowed);
 	}
 }

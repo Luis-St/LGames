@@ -1,14 +1,13 @@
 package net.luis.ludo.map.field;
 
-import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import net.luis.Constants;
-import net.luis.fx.Box;
 import net.luis.fx.game.wrapper.ToggleButtonWrapper;
-import net.luis.game.map.GameMap;
+import net.luis.game.Game;
 import net.luis.game.map.field.AbstractGameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
@@ -19,6 +18,7 @@ import net.luis.ludo.player.LudoPlayerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -33,8 +33,8 @@ public class LudoField extends AbstractGameField implements ToggleButtonWrapper 
 	private final ToggleButton button = new ToggleButton();
 	private final ToggleGroup group;
 	
-	public LudoField(GameMap map, ToggleGroup group, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos, double fieldSize) {
-		super(map, fieldType, colorType, fieldPos, fieldSize);
+	public LudoField(Game game, ToggleGroup group, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos, double fieldSize) {
+		super(game, fieldType, colorType, fieldPos, fieldSize);
 		this.group = group;
 	}
 	
@@ -76,7 +76,7 @@ public class LudoField extends AbstractGameField implements ToggleButtonWrapper 
 	}
 	
 	@Override
-	public ImageView getFieldBackground() {
+	public @Nullable ImageView getFieldBackground() {
 		if (this.getFieldType() == LudoFieldType.DEFAULT && this.getColorType() == LudoPlayerType.NO) {
 			return this.makeImage("textures/ludo/field/field.png");
 		} else if (this.getColorType() != LudoPlayerType.NO) {
@@ -97,18 +97,18 @@ public class LudoField extends AbstractGameField implements ToggleButtonWrapper 
 	
 	@Override
 	public void updateFieldGraphic() {
-		Box<Node> fieldBackground = new Box<>(this.getFieldBackground());
+		VBox fieldBackground = new VBox(this.getFieldBackground());
 		if (this.isEmpty()) {
 			StackPane pane = new StackPane(fieldBackground);
 			if (this.isShadowed()) {
-				pane.getChildren().add(new Box<>(this.makeImage("textures/ludo/figure/figure_shadow.png", 0.95)));
+				pane.getChildren().add(new VBox(this.makeImage("textures/ludo/figure/figure_shadow.png", 0.95)));
 			}
 			this.setGraphic(pane);
 		} else {
 			assert this.getFigure() != null;
-			StackPane pane = new StackPane(fieldBackground, new Box<>(this.getFigure().getPlayerType().getImage(this.fieldSize * 0.95, this.fieldSize * 0.95)));
+			StackPane pane = new StackPane(fieldBackground, new VBox(this.getFigure().getPlayerType().getImage(this.fieldSize * 0.95, this.fieldSize * 0.95)));
 			if (this.isShadowed()) {
-				pane.getChildren().add(new Box<>(this.makeImage("textures/ludo/figure/figure_shadow.png", 0.95)));
+				pane.getChildren().add(new VBox(this.makeImage("textures/ludo/figure/figure_shadow.png", 0.95)));
 			}
 			this.setGraphic(pane);
 		}

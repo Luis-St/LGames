@@ -61,7 +61,6 @@ public class ServerPlayerList extends AbstractPlayerList {
 				throw new IllegalStateException("Multiple admins not allowed on the server");
 			} else {
 				this.setAdminUUID(player.getProfile().getUniqueId());
-				player.setAdmin(true);
 				Util.runDelayed("PacketSendDelay", 250, () -> {
 					this.broadcastAll(new SyncPermissionPacket(player.getProfile()));
 				});

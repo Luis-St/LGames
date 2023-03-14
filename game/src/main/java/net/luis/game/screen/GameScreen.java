@@ -3,7 +3,11 @@ package net.luis.game.screen;
 import net.luis.fx.screen.AbstractScreen;
 import net.luis.game.Game;
 import net.luis.game.application.GameApplication;
+import net.luis.game.player.Player;
+import net.luis.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  *
@@ -27,6 +31,14 @@ public abstract class GameScreen extends AbstractScreen {
 	
 	public @NotNull Game getGame() {
 		return this.game;
+	}
+	
+	public @NotNull Player getPlayer() {
+		return Objects.requireNonNull(this.game.getPlayer()).getPlayer();
+	}
+	
+	public void broadcastPlayer(@NotNull Packet packet) {
+		this.game.broadcastPlayer(packet, Objects.requireNonNull(this.game.getPlayer()));
 	}
 	
 	public @NotNull GameApplication getApplication() {

@@ -1,6 +1,7 @@
 package net.luis.client.screen;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -8,12 +9,10 @@ import javafx.stage.Stage;
 import net.luis.Constants;
 import net.luis.client.account.ClientAccount;
 import net.luis.client.window.LoginWindow;
-import net.luis.fx.ButtonBox;
 import net.luis.fx.ScreenScene;
 import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.FxUtils;
 import net.luis.fxutils.fx.InputValidationPane;
-import net.luis.game.network.NetworkController;
 import net.luis.language.TranslationKey;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.server.ClientJoinPacket;
@@ -38,9 +37,9 @@ public class MultiplayerScreen extends ClientScreen {
 	private final ClientScreen backScreen;
 	private InputValidationPane<TextField> hostPane;
 	private InputValidationPane<TextField> portPane;
-	private ButtonBox connectButtonBox;
-	private ButtonBox connectLocalButtonBox;
-	private ButtonBox backButtonBox;
+	private Button connectButton;
+	private Button connectLocalButton;
+	private Button backButton;
 	
 	public MultiplayerScreen(@NotNull ClientScreen backScreen) {
 		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
@@ -65,9 +64,9 @@ public class MultiplayerScreen extends ClientScreen {
 			}
 		});
 		CssUtils.addStyleClass(this.portPane.getInputNode(), "input-validation");
-		this.connectButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.multiplayer.connect"), this::handleConnect);
-		this.connectLocalButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.multiplayer.connect_local"), this::handleConnectLocal);
-		this.backButtonBox = new ButtonBox(TranslationKey.createAndGet("window.login.back"), this::handleBack);
+		this.connectButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.multiplayer.connect"), this::handleConnect);
+		this.connectLocalButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.multiplayer.connect_local"), this::handleConnectLocal);
+		this.backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), this::handleBack);
 	}
 	
 	private boolean canConnect() {
@@ -113,11 +112,10 @@ public class MultiplayerScreen extends ClientScreen {
 	}
 	
 	private void connectAndSend(@NotNull String host, int port, @NotNull Packet packet) {
-		NetworkController networkController = this.client.getServerController();
 		try {
-			networkController.getInstance().open(host, port);
+			this.client.getNetworkInstance().open(host, port);
 			Util.runDelayed("DelayedPacketSender", 250, () -> {
-				networkController.send(packet);
+				networkController.send(packet);  // TODO: add way to get connection for sending packets
 			});
 		} catch (Exception e) {
 			LOGGER.warn("Fail to connect to virtual game collection server", e);
@@ -133,9 +131,9 @@ public class MultiplayerScreen extends ClientScreen {
 		GridPane outerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		GridPane innerPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
 		if (Constants.DEV_MODE) {
-			innerPane.addColumn(0, this.connectButtonBox, this.connectLocalButtonBox, this.backButtonBox);
+			innerPane.addColumn(0, FxUtils.makeDefaultVBox(this.connectButton), FxUtils.makeDefaultVBox(this.connectLocalButton), FxUtils.makeDefaultVBox(this.backButton));
 		} else {
-			innerPane.addColumn(0, this.connectButtonBox, this.backButtonBox);
+			innerPane.addColumn(0, FxUtils.makeDefaultVBox(this.connectButton), FxUtils.makeDefaultVBox(this.backButton));
 		}
 		outerPane.addColumn(0, this.hostPane, this.portPane, innerPane);
 		return outerPane;

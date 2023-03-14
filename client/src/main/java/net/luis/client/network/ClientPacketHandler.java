@@ -25,7 +25,6 @@ import net.luis.network.packet.client.game.*;
 import net.luis.network.packet.client.game.dice.CanRollDiceAgainPacket;
 import net.luis.network.packet.client.game.dice.CancelRollDiceRequestPacket;
 import net.luis.network.packet.client.game.dice.RolledDicePacket;
-import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -146,15 +145,15 @@ public class ClientPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(SyncPermissionPacket.class)
-	public void handleSyncPermission(@NotNull GameProfile profile) {
-		for (Player player : this.client.getPlayerList().getPlayers()) {
-			if (player.getProfile().equals(profile)) {
-				player.setAdmin(true);
-				LOGGER.debug("Player {} is now a admin", player.getProfile().getName());
-			} else {
-				player.setAdmin(false);
-			}
-		}
+	public void handleSyncPermission(@NotNull GameProfile profile) { // TODO: remove and merge with SyncPlayerDataPacket
+//		for (Player player : this.client.getPlayerList().getPlayers()) {
+//			if (player.getProfile().equals(profile)) {
+//				player.setAdmin(true);
+//				LOGGER.debug("Player {} is now a admin", player.getProfile().getName());
+//			} else {
+//				player.setAdmin(false);
+//			}
+//		}
 		LOGGER.info("Sync admins");
 	}
 	
@@ -162,7 +161,6 @@ public class ClientPacketHandler implements PacketHandler {
 	public void handleSyncPlayerData(@NotNull GameProfile profile, boolean playing, @NotNull PlayerScore score) {
 		Player player = this.client.getPlayerList().getPlayer(profile);
 		if (player != null) {
-			player.setPlaying(playing);
 			player.getScore().sync(score);
 			LOGGER.info("Synchronize data from server of player {}", profile.getName());
 		} else {
@@ -171,26 +169,28 @@ public class ClientPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(CancelRollDiceRequestPacket.class)
-	public void handleCancelRollDiceRequest() {
+	public void handleCancelRollDiceRequest() { // TODO: sync required data
 		LOGGER.info("Roll dice request was canceled from the server");
-		Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCanRollDice(false);
+		//Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCanRollDice(false);
 	}
 	
 	@PacketListener(RolledDicePacket.class)
-	public void handleRolledDice(int count) {
-		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
-		if (Mth.isInBounds(count, 1, 6)) {
-			player.setCount(count);
-			player.setCanRollDice(false);
-		} else {
-			player.setCount(-1);
-			player.setCanRollDice(false);
-		}
+	public void handleRolledDice(int count) { // TODO: sync required data
+//		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
+//		if (Mth.isInBounds(count, 1, 6)) {
+//			player.setCount(count);
+//			player.setCanRollDice(false);
+//		} else {
+//			player.setCount(-1);
+//			player.setCanRollDice(false);
+//		}
+		LOGGER.info("Rolled dice with count {}", count);
 	}
 	
 	@PacketListener(CanRollDiceAgainPacket.class)
-	public void handleCanRollDiceAgain() {
-		Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCanRollDice(true);
+	public void handleCanRollDiceAgain() { // TODO: sync required data
+		LOGGER.info("Can roll dice again");
+		//Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCanRollDice(true);
 	}
 	
 	@PacketListener(CurrentPlayerUpdatePacket.class)
@@ -202,13 +202,7 @@ public class ClientPacketHandler implements PacketHandler {
 			for (Player player : this.client.getPlayerList().getPlayers()) {
 				if (player.getProfile().equals(profile)) {
 					game.setPlayer(Objects.requireNonNull(game.getPlayerFor(player)));
-					player.setCurrent(true);
 					flag = true;
-					if (player instanceof LocalPlayer localPlayer) {
-						localPlayer.setCanRollDice(true);
-					}
-				} else {
-					player.setCurrent(false);
 				}
 			}
 			if (!flag) {
@@ -222,17 +216,16 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(StartGamePacket.class)
 	public void handleStartGame(int type, @NotNull List<GamePlayerInfo> playerInfos) {
 		GameType<?> gameType = Objects.requireNonNull(GameTypes.fromId(type));
-		Game game = gameType.createGame(this.client, playerInfos);
+		Game game = gameType.createGame(playerInfos); // TODO: modify and add client and server side usage
 		game.start();
 		boolean flag = false;
 		for (Player player : Utils.mapList(game.getPlayers(), GamePlayer::getPlayer)) {
-			player.setPlaying(true);
 			if (Objects.requireNonNull(this.client.getPlayerList().getPlayer()).getProfile().equals(player.getProfile())) {
 				flag = true;
 			}
 		}
 		if (flag) {
-			//gameType.openScreen(this.client, game); // TODO: add screen back
+			this.client.setScreen(game.getScreen());
 			LOGGER.info("Start game {}", gameType.getInfoName());
 			this.client.getGameManager().addGame(game);
 		} else {
@@ -250,8 +243,9 @@ public class ClientPacketHandler implements PacketHandler {
 	}
 	
 	@PacketListener(GameActionFailedPacket.class)
-	public void handleGameActionFailed() {
-		Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCurrent(true);
+	public void handleGameActionFailed() { // TODO: sync required data
+		// Objects.requireNonNull(this.client.getPlayerList().getPlayer()).setCurrent(true);
+		LOGGER.info("The game action failed");
 	}
 	
 	@PacketListener(CancelPlayAgainGameRequestPacket.class)
@@ -264,7 +258,6 @@ public class ClientPacketHandler implements PacketHandler {
 		LOGGER.info("Exit the current game");
 		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
 		if (player.isPlaying()) {
-			player.setPlaying(false);
 			player.getScore().reset();
 			GameManager gameManager = this.client.getGameManager();
 			if (gameManager.getGameFor(player.getProfile()) != null) {
@@ -282,7 +275,6 @@ public class ClientPacketHandler implements PacketHandler {
 	public void handleStopGame() {
 		LOGGER.info("Stopping the current game");
 		for (Player player : this.client.getPlayerList().getPlayers()) {
-			player.setPlaying(false);
 			player.getScore().reset();
 		}
 		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());

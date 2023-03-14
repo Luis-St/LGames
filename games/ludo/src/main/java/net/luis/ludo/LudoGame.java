@@ -6,10 +6,9 @@ import net.luis.game.application.ApplicationType;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
-import net.luis.game.player.game.GamePlayer;
-import net.luis.game.player.game.GamePlayerFactory;
-import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.GameProfile;
+import net.luis.game.player.Player;
+import net.luis.game.player.game.GamePlayer;
 import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
@@ -17,13 +16,16 @@ import net.luis.game.type.GameTypes;
 import net.luis.game.win.GameResultLine;
 import net.luis.ludo.dice.LudoDiceHandler;
 import net.luis.ludo.map.LudoMap;
+import net.luis.ludo.player.LudoPlayer;
+import net.luis.ludo.player.LudoPlayerType;
+import net.luis.ludo.screen.LudoScreen;
 import net.luis.ludo.win.LudoWinHandler;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.CanSelectGameFieldPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.packet.client.game.dice.CanRollDiceAgainPacket;
-import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
 import net.luis.utils.util.Utils;
@@ -47,8 +49,8 @@ public class LudoGame extends AbstractGame {
 	
 	private final LudoDiceHandler diceHandler = new LudoDiceHandler(this, 1, 6);
 	
-	public LudoGame(List<GamePlayerInfo> playerInfos, GamePlayerFactory playerFactory) {
-		super(LudoMap::new, playerInfos, playerFactory, new LudoWinHandler());
+	public LudoGame(List<Player> players, int figureCount) {
+		super(LudoMap::new, LudoPlayer::new, players, LudoPlayerType.values(), figureCount, LudoScreen::new, new LudoWinHandler());
 	}
 	
 	@Override
@@ -69,9 +71,8 @@ public class LudoGame extends AbstractGame {
 		return true;
 	}
 	
-	@Nullable
 	@Override
-	public LudoDiceHandler getDiceHandler() {
+	public @Nullable LudoDiceHandler getDiceHandler() {
 		return ApplicationType.SERVER.isOn() ? this.diceHandler : null;
 	}
 	
@@ -113,11 +114,11 @@ public class LudoGame extends AbstractGame {
 									this.nextPlayer(false);
 								}
 							} else {
-								LOGGER.warn("Fail to move figure {} of player {} to field {}", figure.getCount(), player.getName(), nextField.getFieldPos().getPosition());
+								LOGGER.warn("Fail to move figure {} of player {} to field {}", figure.getIndex(), player.getName(), nextField.getFieldPos().getPosition());
 								this.broadcastPlayer(new CanSelectGameFieldPacket(), player);
 							}
 						} else {
-							LOGGER.warn("Fail to move figure {} of player {}, since there is no next field for the figure", figure.getCount(), player.getName());
+							LOGGER.warn("Fail to move figure {} of player {}, since there is no next field for the figure", figure.getIndex(), player.getName());
 							this.broadcastPlayer(new CanSelectGameFieldPacket(), player);
 						}
 					} else {

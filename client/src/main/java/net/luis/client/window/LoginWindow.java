@@ -13,7 +13,6 @@ import net.luis.Constants;
 import net.luis.account.account.LoginType;
 import net.luis.client.Client;
 import net.luis.client.account.ClientAccount;
-import net.luis.fx.Box;
 import net.luis.fx.window.AbstractWindow;
 import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.EventHandlers;
@@ -65,7 +64,7 @@ public class LoginWindow extends AbstractWindow {
 		Button registrationButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.register"), () -> this.updateScene(this.registration1()));
 		Button loginButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.login"), () -> this.updateScene(this.loginSelect()));
 		Button closeButton = FxUtils.makeButton(TranslationKey.createAndGet("account.window.close"), this::close);
-		pane.addColumn(0, new Box<>(registrationButton), new Box<>(loginButton), new Box<>(closeButton));
+		pane.addColumn(0, FxUtils.makeDefaultVBox(registrationButton), FxUtils.makeDefaultVBox(loginButton), FxUtils.makeDefaultVBox(closeButton));
 		return pane;
 	}
 	
@@ -207,7 +206,7 @@ public class LoginWindow extends AbstractWindow {
 		Button userButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.user"), () -> this.updateScene(this.loginUser()));
 		Button guestButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.guest"), () -> this.updateScene(this.loginGuest()));
 		Button backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), () -> this.updateScene(this.client.getAccountManager().isLoggedIn() ? this.profile() : this.main()));
-		pane.addColumn(0, new Box<>(userButton), new Box<>(guestButton), new Box<>(backButton));
+		pane.addColumn(0, FxUtils.makeDefaultVBox(userButton), FxUtils.makeDefaultVBox(guestButton), FxUtils.makeDefaultVBox(backButton));
 		return pane;
 	}
 	
@@ -307,7 +306,7 @@ public class LoginWindow extends AbstractWindow {
 	protected void exit() {
 		this.client.getAccountManager().setLoginWindow(null);
 		if (!this.client.getAccountManager().isLoggedIn()) {
-			this.client.getAccountController().getInstance().close();
+			this.connection.close(); // TODO: send logout packet
 		}
 	}
 	

@@ -74,9 +74,9 @@ public class LudoMap extends AbstractGameMap implements GridPaneWrapper {
 		this.setGridLinesVisible(Constants.DEBUG_MODE);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			Player player = Objects.requireNonNull(this.getGame().getPlayer()).getPlayer();
-			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6)) {
+			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getDiceCount(), 1, 6)) {
 				if (newValue instanceof ToggleButton button && button.getUserData() instanceof LudoField field) {
-					if (!field.canSelect() || Objects.requireNonNull(field.getFigure()).getPlayerType() != this.getGame().getPlayerType(this.getGame().getPlayerFor(player))) {
+					if (!field.canSelect() || Objects.requireNonNull(field.getFigure()).getPlayerType() != this.getGame().getPlayerType(player)) {
 						this.group.selectToggle(null);
 					}
 				} else {
@@ -176,13 +176,13 @@ public class LudoMap extends AbstractGameMap implements GridPaneWrapper {
 	}
 	
 	private void addField(LudoFieldType fieldType, LudoPlayerType colorType, LudoFieldPos fieldPos, int column, int row) {
-		LudoField field = new LudoField(this, this.group, fieldType, colorType, fieldPos, 67.0);
+		LudoField field = new LudoField(this.getGame(), this.group, fieldType, colorType, fieldPos, 67.0);
 		field.setOnAction((event) -> {
 			Player player = Objects.requireNonNull(this.getGame().getPlayer()).getPlayer();
-			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getCount(), 1, 6) && field.canSelect()) {
+			if (player.isCurrent() && player.canSelect() && Mth.isInBounds(player.getDiceCount(), 1, 6) && field.canSelect()) {
 				GameFigure figure = field.getFigure();
-				if (figure != null && figure.getPlayerType() == this.getGame().getPlayerType(this.getGame().getPlayerFor(player))) {
-					GameField nextField = this.getNextField(figure, player.getCount());
+				if (figure != null && figure.getPlayerType() == this.getGame().getPlayerType(player)) {
+					GameField nextField = this.getNextField(figure, player.getDiceCount());
 					if (nextField != null) {
 						nextField.setShadowed(true);
 					}
@@ -254,10 +254,10 @@ public class LudoMap extends AbstractGameMap implements GridPaneWrapper {
 					}
 				}
 			}
-			LOGGER.warn("Fail to get next field for figure {} of player {}, since the count must be larger than 0 but it is {}", figure.getCount(), figure.getPlayer().getName(), count);
+			LOGGER.warn("Fail to get next field for figure {} of player {}, since the count must be larger than 0 but it is {}", figure.getIndex(), figure.getPlayer().getName(), count);
 			return currentField;
 		}
-		LOGGER.warn("Fail to get next field for figure {} of player {}, since the current field is null", figure.getCount(), figure.getPlayer().getName());
+		LOGGER.warn("Fail to get next field for figure {} of player {}, since the current field is null", figure.getIndex(), figure.getPlayer().getName());
 		return null;
 	}
 	
@@ -313,16 +313,16 @@ public class LudoMap extends AbstractGameMap implements GridPaneWrapper {
 						field.setFigure(figure);
 						return true;
 					} else {
-						LOGGER.warn("Fail to move figure {} of player {} to it's home field {}", opponentFigure.getCount(), opponentName, opponentFigure.getHomePos().getPosition());
-						LOGGER.warn("Can not move figure {} of player {} to field {}, since there was an error while moving the figure on the field home", figure.getCount(), playerName, field.getFieldPos().getPosition());
+						LOGGER.warn("Fail to move figure {} of player {} to it's home field {}", opponentFigure.getIndex(), opponentName, opponentFigure.getHomePos().getPosition());
+						LOGGER.warn("Can not move figure {} of player {} to field {}, since there was an error while moving the figure on the field home", figure.getIndex(), playerName, field.getFieldPos().getPosition());
 						return false;
 					}
 				} else {
-					LOGGER.warn("Can not move figure {} of player {} to field {}, since the figure on the field is not kickable by the figure of the player", figure.getCount(), playerName, field.getFieldPos().getPosition());
+					LOGGER.warn("Can not move figure {} of player {} to field {}, since the figure on the field is not kickable by the figure of the player", figure.getIndex(), playerName, field.getFieldPos().getPosition());
 					return false;
 				}
 			} else {
-				LOGGER.warn("Can not move figure {} of player {} to field {}, since the figure on the field is not kickable", figure.getCount(), playerName, field.getFieldPos().getPosition());
+				LOGGER.warn("Can not move figure {} of player {} to field {}, since the figure on the field is not kickable", figure.getIndex(), playerName, field.getFieldPos().getPosition());
 				return false;
 			}
 		}
@@ -364,7 +364,7 @@ public class LudoMap extends AbstractGameMap implements GridPaneWrapper {
 						if (uuid.equals(serverUUID)) {
 							field.setFigure(figure);
 						} else {
-							LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
+							LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getIndex(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
 						}
 					} else if (profile.equals(GameProfile.EMPTY)) {
 						field.setFigure(null);

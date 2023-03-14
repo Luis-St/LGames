@@ -30,6 +30,8 @@ import net.luis.network.packet.client.game.UpdateGameMapPacket;
 import net.luis.network.listener.PacketListener;
 import net.luis.ttt.map.field.TTTField;
 import net.luis.ttt.map.field.TTTFieldPos;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +47,8 @@ import java.util.UUID;
 
 
 public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
+	
+	private static final Logger LOGGER = LogManager.getLogger(TTTMap.class);
 	
 	private final ToggleGroup group = new ToggleGroup();
 	private final GridPane gridPane = new GridPane();
@@ -95,7 +99,7 @@ public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
 	}
 	
 	private void addField(TTTFieldPos fieldPos, int column, int row) {
-		TTTField field = new TTTField(this, this.group, fieldPos);
+		TTTField field = new TTTField(this.getGame(), this.group, fieldPos);
 		field.setOnAction((event) -> {
 			if (!Objects.requireNonNull(this.getGame().getPlayer()).getPlayer().isCurrent()) {
 				if (field.isEmpty() && field.getResult() == GameResult.NO) {
@@ -194,7 +198,7 @@ public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
 						if (uuid.equals(serverUUID)) {
 							field.setFigure(figure);
 						} else {
-							LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
+							LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getIndex(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
 						}
 					} else if (profile.equals(GameProfile.EMPTY)) {
 						field.setFigure(null);

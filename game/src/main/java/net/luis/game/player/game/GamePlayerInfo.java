@@ -23,13 +23,13 @@ public class GamePlayerInfo implements Encodable {
 	
 	private final GameProfile profile;
 	private final EncodableEnum playerType;
-	private final List<UUID> uuids;
+	private final List<UUID> uniqueIds;
 	
 	@SuppressWarnings("unchecked")
-	public GamePlayerInfo(@NotNull GameProfile profile, @NotNull GamePlayerType playerType, @NotNull List<UUID> uuids) {
+	public GamePlayerInfo(@NotNull GameProfile profile, @NotNull GamePlayerType playerType, @NotNull List<UUID> uniqueIds) {
 		this.profile = profile;
 		this.playerType = new EncodableEnum((Enum<? extends GamePlayerType>) playerType);
-		this.uuids = uuids;
+		this.uniqueIds = uniqueIds;
 	}
 	
 	@DecodingConstructor
@@ -37,7 +37,7 @@ public class GamePlayerInfo implements Encodable {
 		GameProfile profile = buffer.read(GameProfile.class);
 		this.profile = GameProfile.EMPTY.equals(profile) ? GameProfile.EMPTY : profile;
 		this.playerType = buffer.read(EncodableEnum.class);
-		this.uuids = buffer.readList(buffer::readUUID);
+		this.uniqueIds = buffer.readList(buffer::readUUID);
 	}
 	
 	public @NotNull GameProfile getProfile() {
@@ -48,15 +48,15 @@ public class GamePlayerInfo implements Encodable {
 		return this.playerType.getAsOrThrow(GamePlayerType.class);
 	}
 	
-	public @NotNull List<UUID> getUUIDs() {
-		return this.uuids;
+	public @NotNull List<UUID> getUniqueIds() {
+		return this.uniqueIds;
 	}
 	
 	@Override
 	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.write(this.profile);
 		buffer.write(this.playerType);
-		buffer.writeList(this.uuids, buffer::writeUUID);
+		buffer.writeList(this.uniqueIds, buffer::writeUUID);
 	}
 	
 	@Override
@@ -66,12 +66,12 @@ public class GamePlayerInfo implements Encodable {
 		
 		if (!this.profile.equals(that.profile)) return false;
 		if (!this.playerType.equals(that.playerType)) return false;
-		return this.uuids.equals(that.uuids);
+		return this.uniqueIds.equals(that.uniqueIds);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.profile, this.playerType, this.uuids);
+		return Objects.hash(this.profile, this.playerType, this.uniqueIds);
 	}
 	
 	@Override

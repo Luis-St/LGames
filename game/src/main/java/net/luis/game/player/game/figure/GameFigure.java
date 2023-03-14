@@ -25,7 +25,7 @@ public interface GameFigure {
 		return this.getPlayer().getPlayerType();
 	}
 	
-	int getCount();
+	int getIndex();
 	
 	@NotNull UUID getUniqueId();
 	

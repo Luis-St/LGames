@@ -4,6 +4,7 @@ import net.luis.game.Game;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
+import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.player.game.figure.GameFigure;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +31,10 @@ public interface GamePlayer {
 	
 	@NotNull Player getPlayer();
 	
+	default @NotNull GameProfile getProfile() {
+		return this.getPlayer().getProfile();
+	}
+	
 	default @NotNull String getName() {
 		return this.getPlayer().getName();
 	}
@@ -44,7 +49,7 @@ public interface GamePlayer {
 	
 	default @Nullable GameFigure getFigure(int count) {
 		for (GameFigure figure : this.getFigures()) {
-			if (figure.getCount() == count) {
+			if (figure.getIndex() == count) {
 				return figure;
 			}
 		}

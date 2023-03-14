@@ -1,11 +1,10 @@
 package net.luis.game.fx;
 
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import net.luis.Constants;
-import net.luis.fx.Box;
 import net.luis.fxutils.EventHandlers;
+import net.luis.fxutils.FxUtils;
 import net.luis.game.dice.DiceRenderState;
 
 /**
@@ -37,7 +36,7 @@ public class DiceButton extends Button {
 	
 	private void updateState() {
 		ImageView image = DiceRenderState.fromCount(this.count).getImage(this.prefSize * 0.9, this.prefSize * 0.9);
-		this.setGraphic(new Box<>(image, Pos.CENTER));
+		this.setGraphic(FxUtils.makeDefaultVBox(image));
 	}
 	
 	public int getCount() {

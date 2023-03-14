@@ -11,6 +11,7 @@ import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.player.game.GamePlayer;
 import net.luis.game.player.game.GamePlayerType;
+import net.luis.game.screen.GameScreen;
 import net.luis.game.type.GameType;
 import net.luis.game.win.WinHandler;
 import net.luis.network.packet.Packet;
@@ -61,6 +62,8 @@ public interface Game {
 	
 	@NotNull List<GamePlayer> getPlayers();
 	
+	@NotNull GameScreen getScreen();
+	
 	default @NotNull List<GamePlayer> getEnemies(@NotNull GamePlayer gamePlayer) {
 		List<GamePlayer> enemies = Lists.newArrayList();
 		for (GamePlayer player : this.getPlayers()) {
@@ -74,10 +77,6 @@ public interface Game {
 		return enemies;
 	}
 	
-	default @Nullable GamePlayer getPlayerFor(@NotNull Player player) {
-		return this.getPlayerFor(player.getProfile());
-	}
-	
 	default @Nullable GamePlayer getPlayerFor(@NotNull GameProfile profile) {
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.getPlayer().getProfile().equals(profile)) {
@@ -87,6 +86,10 @@ public interface Game {
 		return null;
 	}
 	
+	default @Nullable GamePlayer getPlayerFor(@NotNull Player player) {
+		return this.getPlayerFor(player.getProfile());
+	}
+	
 	default @Nullable GamePlayerType getPlayerType(@NotNull GamePlayer player) {
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.equals(player)) {
@@ -94,6 +97,10 @@ public interface Game {
 			}
 		}
 		return null;
+	}
+	
+	default @Nullable GamePlayerType getPlayerType(@NotNull Player player) {
+		return this.getPlayerType(Objects.requireNonNull(this.getPlayerFor(player)));
 	}
 	
 	@Nullable GamePlayer getPlayer();
@@ -144,8 +151,7 @@ public interface Game {
 				if (sendExit) {
 					Objects.requireNonNull(player.getConnection()).send(new ExitGamePacket());
 				}
-				player.setPlaying(false);
-				LogManager.getLogger(Game.class).info("Remove player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
+				LogManager.getLogger(Game.class).info("Removed player {} from game {}", player.getName(), this.getType().getName().toLowerCase());
 				if (Objects.equals(this.getPlayer(), gamePlayer)) {
 					this.nextPlayer(false);
 				}
@@ -157,10 +163,6 @@ public interface Game {
 				return true;
 			} else {
 				LogManager.getLogger(Game.class).warn("Fail to remove player {}, since the player does not playing game {}", gamePlayer.getName(), this.getType().getInfoName());
-				if (gamePlayer.getPlayer().isPlaying()) {
-					gamePlayer.getPlayer().setPlaying(false);
-					LogManager.getLogger(Game.class).info("Correcting the playing value of player {} to false, since it was not correctly reset", gamePlayer.getName());
-				}
 			}
 		}
 		return false;
@@ -199,7 +201,6 @@ public interface Game {
 		LogManager.getLogger(Game.class).info("Stopping the current game {}", this.getType().getInfoName());
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			Player player = gamePlayer.getPlayer();
-			player.setPlaying(false);
 			player.getScore().reset();
 			if (ApplicationType.SERVER.isOn()) {
 				this.broadcastPlayer(new StopGamePacket(), gamePlayer);
@@ -209,13 +210,6 @@ public interface Game {
 		this.getPlayers().clear();
 		if (ApplicationType.SERVER.isOn()) {
 			this.getApplication().getGameManager().removeGame(this);
-		}
-		for (Player player : this.getApplication().getPlayerList()) {
-			if (player.isPlaying()) {
-				player.setPlaying(false);
-				player.getScore().reset();
-				LogManager.getLogger(Game.class).info("Correcting the playing value of player {} to false, since it was not correctly reset", player.getName());
-			}
 		}
 		LogManager.getLogger(Game.class).info("Game {} was successfully stopped", this.getType().getInfoName());
 	}

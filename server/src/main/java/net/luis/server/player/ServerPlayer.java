@@ -26,6 +26,16 @@ public class ServerPlayer extends Player {
 		return false;
 	}
 	
+	@Override
+	public @NotNull Server getApplication() {
+		return (Server) super.getApplication();
+	}
+	
+	@Override
+	public boolean isAdmin() {
+		return this.getApplication().getPlayerList().getAdmin() == this;
+	}
+	
 	public @NotNull TreeItem<String> display() {
 		TreeItem<String> treeItem = new TreeItem<>(TranslationKey.createAndGet("server.window.player", this.getProfile().getName()));
 		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_name", this.getProfile().getName())));
@@ -35,12 +45,6 @@ public class ServerPlayer extends Player {
 		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_admin", this.isAdmin() ? trueTranslation : falseTranslation)));
 		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_playing", this.isPlaying() ? trueTranslation : falseTranslation)));
 		return treeItem;
-	}
-	
-	@Override
-	public void setPlaying(boolean playing) {
-		super.setPlaying(playing);
-		this.getApplication().getScreen().refresh();
 	}
 	
 }

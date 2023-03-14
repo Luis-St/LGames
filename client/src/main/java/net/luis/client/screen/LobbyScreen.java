@@ -1,24 +1,20 @@
 package net.luis.client.screen;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.CustomMenuItem;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import net.luis.client.player.LocalPlayer;
-import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.player.Player;
 import net.luis.game.type.GameTypes;
 import net.luis.language.TranslationKey;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.PlayerAddPacket;
 import net.luis.network.packet.client.PlayerRemovePacket;
 import net.luis.network.packet.client.SyncPermissionPacket;
-import net.luis.network.listener.PacketListener;
 import net.luis.utility.Util;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,9 +30,9 @@ public class LobbyScreen extends ClientScreen {
 	
 	private Menu playerMenu;
 	private Menu gameMenu;
-	private ButtonBox tttButtonBox;
-	private ButtonBox ludoButtonBox;
-	private ButtonBox wins4ButtonBox;
+	private Button tttButton;
+	private Button ludoButton;
+	private Button wins4Button;
 	
 	public LobbyScreen() {
 		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
@@ -56,12 +52,12 @@ public class LobbyScreen extends ClientScreen {
 			this.showScreen(new MenuScreen());
 		}));
 		this.gameMenu.getItems().add(leaveItem);
-		this.tttButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.ttt"), this::handleTTT);
-		this.tttButtonBox.getNode().setDisable(!this.isAdmin());
-		this.ludoButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.ludo"), this::handleLudo);
-		this.ludoButtonBox.getNode().setDisable(!this.isAdmin());
-		this.wins4ButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.lobby.4wins"), this::handleWins4);
-		this.wins4ButtonBox.getNode().setDisable(!this.isAdmin());
+		this.tttButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.lobby.ttt"), this::handleTTT);
+		this.tttButton.setDisable(!this.isAdmin());
+		this.ludoButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.lobby.ludo"), this::handleLudo);
+		this.ludoButton.setDisable(!this.isAdmin());
+		this.wins4Button = FxUtils.makeButton(TranslationKey.createAndGet("screen.lobby.4wins"), this::handleWins4);
+		this.wins4Button.setDisable(!this.isAdmin());
 	}
 	
 	private void handleTTT() {
@@ -86,9 +82,9 @@ public class LobbyScreen extends ClientScreen {
 	public void handlePacket(@NotNull ClientPacket clientPacket) {
 		if (clientPacket instanceof PlayerAddPacket || clientPacket instanceof PlayerRemovePacket || clientPacket instanceof SyncPermissionPacket) {
 			Util.runDelayed("RefreshPlayers", 250, this::refreshPlayers);
-			this.tttButtonBox.getNode().setDisable(!this.isAdmin());
-			this.ludoButtonBox.getNode().setDisable(!this.isAdmin());
-			this.wins4ButtonBox.getNode().setDisable(!this.isAdmin());
+			this.tttButton.setDisable(!this.isAdmin());
+			this.ludoButton.setDisable(!this.isAdmin());
+			this.wins4Button.setDisable(!this.isAdmin());
 		}
 	}
 	
@@ -114,7 +110,7 @@ public class LobbyScreen extends ClientScreen {
 	@Override
 	protected @NotNull Pane createPane() {
 		GridPane gridPane = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
-		gridPane.addRow(0, this.tttButtonBox, this.ludoButtonBox, this.wins4ButtonBox);
+		gridPane.addRow(0, FxUtils.makeDefaultVBox(this.tttButton), FxUtils.makeDefaultVBox(this.ludoButton), FxUtils.makeDefaultVBox(this.wins4Button));
 		this.refreshPlayers();
 		return new VBox(new MenuBar(this.playerMenu, this.gameMenu), gridPane);
 	}

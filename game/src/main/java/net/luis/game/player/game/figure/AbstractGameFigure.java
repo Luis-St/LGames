@@ -16,13 +16,13 @@ import java.util.UUID;
 public abstract class AbstractGameFigure implements GameFigure {
 	
 	private final GamePlayer player;
-	private final int count;
-	private final UUID uuid;
+	private final int index;
+	private final UUID uniqueId;
 	
-	protected AbstractGameFigure(@NotNull GamePlayer player, int count, @NotNull UUID uuid) {
+	protected AbstractGameFigure(@NotNull GamePlayer player, int index, @NotNull UUID uniqueId) {
 		this.player = player;
-		this.count = count;
-		this.uuid = uuid;
+		this.index = index;
+		this.uniqueId = uniqueId;
 	}
 	
 	@Override
@@ -31,13 +31,13 @@ public abstract class AbstractGameFigure implements GameFigure {
 	}
 	
 	@Override
-	public int getCount() {
-		return this.count;
+	public int getIndex() {
+		return this.index;
 	}
 	
 	@Override
 	public @NotNull UUID getUniqueId() {
-		return this.uuid;
+		return this.uniqueId;
 	}
 	
 	@Override
@@ -45,13 +45,13 @@ public abstract class AbstractGameFigure implements GameFigure {
 		if (this == o) return true;
 		if (!(o instanceof AbstractGameFigure that)) return false;
 		
-		if (this.count != that.count) return false;
+		if (this.index != that.index) return false;
 		if (!this.player.equals(that.player)) return false;
-		return this.uuid.equals(that.uuid);
+		return this.uniqueId.equals(that.uniqueId);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.player, this.count, this.uuid);
+		return Objects.hash(this.player, this.index, this.uniqueId);
 	}
 }

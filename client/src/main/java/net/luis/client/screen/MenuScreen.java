@@ -1,7 +1,6 @@
 package net.luis.client.screen;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -9,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.luis.client.window.LoginWindow;
-import net.luis.fx.ButtonBox;
 import net.luis.fxutils.FxUtils;
 import net.luis.language.TranslationKey;
 import net.luis.utility.Tickable;
@@ -24,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
 public class MenuScreen extends ClientScreen implements Tickable {
 	
 	private Button loginButton;
-	private ButtonBox multiplayerButtonBox;
-	private ButtonBox settingsButtonBox;
+	private Button multiplayerButton;
+	private Button settingsButton;
 	private VBox centerBox;
 	
 	public MenuScreen() {
@@ -35,8 +33,8 @@ public class MenuScreen extends ClientScreen implements Tickable {
 	@Override
 	public void init() {
 		this.loginButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.menu.login"), this::handleLogin);
-		this.multiplayerButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.multiplayer"), this::handleMultiplayer);
-		this.settingsButtonBox = new ButtonBox(TranslationKey.createAndGet("screen.menu.settings"), this::handleSettings);
+		this.multiplayerButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.menu.multiplayer"), this::handleMultiplayer);
+		this.settingsButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.menu.settings"), this::handleSettings);
 		this.centerBox = FxUtils.makeVBox(Pos.CENTER, 0.0);
 	}
 	
@@ -68,7 +66,7 @@ public class MenuScreen extends ClientScreen implements Tickable {
 	protected @NotNull Pane createPane() {
 		BorderPane border = new BorderPane();
 		GridPane grid = FxUtils.makeGrid(Pos.CENTER, 10.0, 20.0);
-		grid.addColumn(0, this.multiplayerButtonBox, this.settingsButtonBox);
+		grid.addColumn(0, FxUtils.makeDefaultVBox(this.multiplayerButton), FxUtils.makeDefaultVBox(this.settingsButton));
 		this.centerBox.getChildren().add(grid);
 		BorderPane.setAlignment(this.loginButton, Pos.CENTER_RIGHT);
 		border.setTop(FxUtils.makeVBox(Pos.CENTER_RIGHT, 20.0, this.loginButton));

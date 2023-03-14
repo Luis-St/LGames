@@ -7,6 +7,7 @@ import net.luis.game.application.FxApplication;
 import net.luis.game.player.game.GamePlayerType;
 import net.luis.language.TranslationKey;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -50,11 +51,11 @@ public enum Wins4PlayerType implements GamePlayerType {
 	}
 	
 	@Override
-	public ImageView getImage(double width, double height) {
+	public @Nullable ImageView getImage(@NotNull String suffix, double width, double height) {
 		if (this.path == null) {
 			return null;
 		}
-		return FxUtils.makeImageView(Objects.requireNonNull(FxApplication.getInstance()).getResourceDirectory().resolve(this.path + ".png").toString(), width, height);
+		return FxUtils.makeImageView(Objects.requireNonNull(FxApplication.getInstance()).getResourceManager().resourceDirectory().resolve(this.path + suffix + ".png").toString(), width, height);
 	}
 	
 	@Override

@@ -1,10 +1,11 @@
 package net.luis.game.map.field;
 
 import javafx.scene.image.ImageView;
+import net.luis.game.Game;
 import net.luis.game.GameResult;
 import net.luis.game.map.GameMap;
-import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.GameProfile;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.game.figure.GameFigure;
 import net.luis.utils.util.Utils;
 import org.jetbrains.annotations.NotNull;
@@ -20,17 +21,17 @@ public interface GameField {
 	
 	void init();
 	
-	@NotNull
-	GameMap getMap();
+	@NotNull Game getGame();
 	
-	@NotNull
-	GameFieldType getFieldType();
+	default @NotNull GameMap getMap() {
+		return this.getGame().getMap();
+	}
 	
-	@NotNull
-	GamePlayerType getColorType();
+	@NotNull GameFieldType getFieldType();
 	
-	@NotNull
-	GameFieldPos getFieldPos();
+	@NotNull GamePlayerType getColorType();
+	
+	@NotNull GameFieldPos getFieldPos();
 	
 	boolean isHome();
 	
@@ -44,8 +45,7 @@ public interface GameField {
 		return this.isHome() || this.isStart() || this.isWin();
 	}
 	
-	@Nullable
-	GameFigure getFigure();
+	@Nullable GameFigure getFigure();
 	
 	void setFigure(@Nullable GameFigure figure);
 	
@@ -58,8 +58,7 @@ public interface GameField {
 		this.setFigure(null);
 	}
 	
-	@NotNull
-	GameResult getResult();
+	@NotNull GameResult getResult();
 	
 	void setResult(@NotNull GameResult result);
 	
@@ -88,7 +87,7 @@ public interface GameField {
 		}
 		GameFigure figure = this.getFigure();
 		assert figure != null;
-		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getCount(), figure.getUniqueId());
+		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getIndex(), figure.getUniqueId());
 	}
 	
 }

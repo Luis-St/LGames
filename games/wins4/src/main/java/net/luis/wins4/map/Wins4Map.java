@@ -29,6 +29,8 @@ import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import net.luis.wins4.map.field.Wins4Field;
 import net.luis.wins4.map.field.Wins4FieldPos;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +45,8 @@ import java.util.UUID;
  */
 
 public class Wins4Map extends AbstractGameMap implements StackPaneWrapper {
+	
+	private static final Logger LOGGER = LogManager.getLogger(Wins4Map.class);
 	
 	private final ToggleGroup group = new ToggleGroup();
 	private final StackPane stackPane = new StackPane();
@@ -79,7 +83,7 @@ public class Wins4Map extends AbstractGameMap implements StackPaneWrapper {
 	}
 	
 	private void addField(Wins4FieldPos fieldPos) {
-		Wins4Field field = new Wins4Field(this, fieldPos);
+		Wins4Field field = new Wins4Field(this.getGame(), fieldPos);
 		this.fieldPane.add(field.getLabel(), fieldPos.getColumn(), fieldPos.getRow());
 		this.addField(field);
 		this.group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -187,7 +191,7 @@ public class Wins4Map extends AbstractGameMap implements StackPaneWrapper {
 						if (uuid.equals(serverUUID)) {
 							field.setFigure(figure);
 						} else {
-							LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getCount(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
+							LOGGER.warn("Fail to place figure {} of player {} at field {}, since the figure uuid {} does not match with the server on {}", figure.getIndex(), profile.getName(), fieldPos.getPosition(), uuid, serverUUID);
 						}
 					} else if (profile.equals(GameProfile.EMPTY)) {
 						field.setFigure(null);

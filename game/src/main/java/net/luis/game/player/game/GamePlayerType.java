@@ -19,6 +19,10 @@ public interface GamePlayerType {
 	
 	@NotNull List<? extends GamePlayerType> getOpponents();
 	
-	@Nullable ImageView getImage(double width, double height);
+	default @Nullable ImageView getImage(double width, double height) {
+		return this.getImage("", width, height);
+	}
+	
+	@Nullable ImageView getImage(@NotNull String suffix, double width, double height);
 	
 }

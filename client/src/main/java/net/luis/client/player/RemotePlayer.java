@@ -25,6 +25,11 @@ public class RemotePlayer extends Player {
 	}
 	
 	@Override
+	public @NotNull Client getApplication() {
+		return (Client) super.getApplication();
+	}
+	
+	@Override
 	public @NotNull Connection getConnection() {
 		throw new IllegalStateException("RemotePlayer does not have a connection");
 	}

@@ -17,13 +17,13 @@ import java.util.UUID;
 
 public class LudoFigure extends AbstractGameFigure {
 	
-	public LudoFigure(GamePlayer player, int count, UUID uuid) {
-		super(player, count, uuid);
+	public LudoFigure(GamePlayer player, int count, UUID uniqueId) {
+		super(player, count, uniqueId);
 	}
 	
 	@Override
 	public @NotNull GameFieldPos getHomePos() {
-		return LudoFieldPos.of(this.getCount());
+		return LudoFieldPos.of(this.getIndex());
 	}
 	
 	@Override

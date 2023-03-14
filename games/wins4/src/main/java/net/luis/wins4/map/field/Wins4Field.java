@@ -5,8 +5,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import net.luis.Constants;
 import net.luis.fx.game.wrapper.LabelWrapper;
+import net.luis.game.Game;
 import net.luis.game.GameResult;
-import net.luis.game.map.GameMap;
 import net.luis.game.map.field.AbstractGameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.game.figure.GameFigure;
@@ -23,8 +23,8 @@ public class Wins4Field extends AbstractGameField implements LabelWrapper {
 	
 	private final Label label = new Label();
 	
-	public Wins4Field(GameMap map, GameFieldPos fieldPos) {
-		super(map, Wins4FieldType.DEFAULT, Wins4PlayerType.NO, fieldPos, 120.0);
+	public Wins4Field(Game game, GameFieldPos fieldPos) {
+		super(game, Wins4FieldType.DEFAULT, Wins4PlayerType.NO, fieldPos, 120.0);
 	}
 	
 	@Override

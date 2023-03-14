@@ -4,25 +4,29 @@ import net.luis.game.AbstractGame;
 import net.luis.game.GameResult;
 import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.game.player.*;
+import net.luis.game.player.GameProfile;
+import net.luis.game.player.Player;
 import net.luis.game.player.game.GamePlayer;
-import net.luis.game.player.game.GamePlayerFactory;
-import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
 import net.luis.game.type.GameTypes;
 import net.luis.game.win.GameResultLine;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.client.SyncPlayerDataPacket;
 import net.luis.network.packet.client.game.GameActionFailedPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
-import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
 import net.luis.ttt.map.TTTMap;
+import net.luis.ttt.player.TTTPlayer;
+import net.luis.ttt.player.TTTPlayerType;
+import net.luis.ttt.screen.TTTScreen;
 import net.luis.ttt.win.TTTWinHandler;
 import net.luis.utils.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -37,8 +41,10 @@ import java.util.function.Consumer;
 
 public class TTTGame extends AbstractGame {
 	
-	public TTTGame(List<GamePlayerInfo> playerInfos, GamePlayerFactory playerFactory) {
-		super(TTTMap::new, playerInfos, playerFactory, new TTTWinHandler());
+	private static final Logger LOGGER = LogManager.getLogger(TTTGame.class);
+	
+	public TTTGame(List<Player> players, int figureCount) {
+		super(TTTMap::new, TTTPlayer::new, players, TTTPlayerType.values(), figureCount, TTTScreen::new, new TTTWinHandler());
 	}
 	
 	@Override

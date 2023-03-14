@@ -1,11 +1,9 @@
 package net.luis.game.type;
 
 import net.luis.game.Game;
-import net.luis.game.GameFactory;
-import net.luis.game.application.FxApplication;
-import net.luis.game.player.game.GamePlayer;
-import net.luis.game.player.game.GamePlayerInfo;
+import net.luis.game.player.Player;
 import net.luis.utils.math.Mth;
+import net.luis.utils.util.reflection.ReflectionHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,14 +22,16 @@ public class GameType<T extends Game> {
 	private final String name;
 	private final int minPlayers;
 	private final int maxPlayers;
-	private final GameFactory<T> gameFactory;
+	private final int figureCount;
+	private final String clazz;
 	
-	public GameType(int id, @NotNull String name, int minPlayers, int maxPlayers, @NotNull GameFactory<T> gameFactory) {
+	public GameType(int id, @NotNull String name, int minPlayers, int maxPlayers, int figureCount, @NotNull String clazz) {
 		this.id = id;
 		this.name = name;
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
-		this.gameFactory = gameFactory;
+		this.figureCount = figureCount;
+		this.clazz = clazz;
 	}
 	
 	public int getId() {
@@ -58,17 +58,14 @@ public class GameType<T extends Game> {
 		return Mth.isInBounds(players, this.minPlayers, this.maxPlayers);
 	}
 	
-	public boolean hasEnoughPlayers(@NotNull List<GamePlayer> players) {
-		return this.hasEnoughPlayers(players.size());
-	}
-	
 	public @NotNull String getBounds() {
 		return this.minPlayers + " - " + this.maxPlayers;
 	}
 	
-	public T createGame(@NotNull FxApplication application, @NotNull List<GamePlayerInfo> playerInfos) {
-		if (this.hasEnoughPlayers(playerInfos.size())) {
-			return this.gameFactory.createGame(application, playerInfos);
+	@SuppressWarnings("unchecked")
+	public T createGame(@NotNull List<Player> players) {
+		if (this.hasEnoughPlayers(players.size())) {
+			return (T) ReflectionHelper.newInstance(Objects.requireNonNull(ReflectionHelper.getClassForName(this.clazz)), players, this.figureCount);
 		}
 		return null;
 	}
