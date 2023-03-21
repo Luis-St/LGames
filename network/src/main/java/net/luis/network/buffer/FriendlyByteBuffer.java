@@ -94,7 +94,7 @@ public class FriendlyByteBuffer {
 	}
 	
 	public double readDouble() {
-		return this.buffer.readShort();
+		return this.buffer.readDouble();
 	}
 	
 	public void writeBoolean(boolean value) {

@@ -7,8 +7,8 @@ import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
 import net.luis.game.player.GameProfile;
-import net.luis.game.player.Player;
 import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
@@ -17,7 +17,6 @@ import net.luis.game.win.GameResultLine;
 import net.luis.ludo.dice.LudoDiceHandler;
 import net.luis.ludo.map.LudoMap;
 import net.luis.ludo.player.LudoPlayer;
-import net.luis.ludo.player.LudoPlayerType;
 import net.luis.ludo.screen.LudoScreen;
 import net.luis.ludo.win.LudoWinHandler;
 import net.luis.network.listener.PacketListener;
@@ -49,8 +48,8 @@ public class LudoGame extends AbstractGame {
 	
 	private final LudoDiceHandler diceHandler = new LudoDiceHandler(this, 1, 6);
 	
-	public LudoGame(List<Player> players, int figureCount) {
-		super(LudoMap::new, LudoPlayer::new, players, LudoPlayerType.values(), figureCount, LudoScreen::new, new LudoWinHandler());
+	public LudoGame(@NotNull List<GamePlayerInfo> playerInfos) {
+		super(LudoMap::new, LudoPlayer::new, playerInfos, LudoScreen::new, new LudoWinHandler());
 	}
 	
 	@Override

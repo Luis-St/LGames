@@ -64,8 +64,8 @@ tasks.register("runClient", JavaExec) {
 	getMainClass().set("net.luis.run.Main")
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--client", "--gameDir", file("run/client"), "--resourceDir", file("assets"), "--accountHost", "localhost", "--accountPort", "8081")
-	args("--instantLoading", "true", "--safeLoading", "false", "--cachePasswordLocal", "true")
+	args("--launchTarget", "client", "--debugMode", "true", "--devMode", "true", "--gameDir", file("run/client/"), "--resourceDir", file("assets"), "--language", "de_de", "--accountHost", "localhost", "--accountPort", "8081")
+	args("--cachePasswordLocal", "true")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 
@@ -74,7 +74,7 @@ tasks.register("runServer", JavaExec) {
 	getMainClass().set("net.luis.run.Main")
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--server", "--gameDir", file("run/server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8080", "--language", "en_us")
+	args("--launchTarget", "server", "--debugMode", "true", "--devMode", "true", "--gameDir", file("run/server/"), "--resourceDir", file("assets"), "--language", "en_us", "--host", "localhost", "--port", "8080")
 	args("--admin", "00000000-0000-014b-0000-00000000017d")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
@@ -84,7 +84,7 @@ tasks.register("runAccount", JavaExec) {
 	getMainClass().set("net.luis.run.Main")
 	classpath = sourceSets.main.runtimeClasspath
 	enableAssertions = true
-	args("--debugMode", "false", "--ide", "--account", "--gameDir", file("run/account_server"), "--resourceDir", file("assets"), "--host", "localhost", "--port", "8081", "--language", "en_us")
+	args("--launchTarget", "account", "--debugMode", "true", "--devMode", "true", "--gameDir", file("run/account/"), "--resourceDir", file("assets"), "--language", "en_us", "--host", "localhost", "--port", "8081")
 	jvmArgs("--module-path", classpath.asPath, "--add-modules", "javafx.controls")
 }
 

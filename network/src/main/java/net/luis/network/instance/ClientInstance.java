@@ -3,8 +3,6 @@ package net.luis.network.instance;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
@@ -43,12 +41,12 @@ public class ClientInstance implements NetworkInstance {
 	}
 	
 	@Override
-	public void open(@NotNull String host, int port) {
+	public @NotNull Channel open(@NotNull String host, int port) {
 		Class<? extends Channel> channelClass = NATIVE ? EpollSocketChannel.class : NioSocketChannel.class;
 		try {
-			Channel channel = new Bootstrap().group(this.buildGroup()).channel(channelClass).handler(new SimpleChannelInitializer(factory)).connect(host, port).syncUninterruptibly().channel();
-			ChannelFuture channelFuture = channel.writeAndFlush(this.handshake.get());
-			channelFuture.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+			Channel channel = new Bootstrap().group(this.buildGroup()).channel(channelClass).handler(new SimpleChannelInitializer(this.factory)).connect(host, port).syncUninterruptibly().channel();
+			Connection.send(channel, this.handshake.get());
+			return channel;
 		} catch (Exception e) {
 			throw new RuntimeException("Fail to start client connection", e);
 		}

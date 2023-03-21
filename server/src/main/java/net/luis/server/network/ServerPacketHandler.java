@@ -1,13 +1,16 @@
 package net.luis.server.network;
 
+import com.google.common.collect.Lists;
 import net.luis.game.Game;
 import net.luis.game.dice.DiceHandler;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.player.game.GamePlayer;
 import net.luis.game.player.game.GamePlayerInfo;
-import net.luis.game.player.game.figure.GameFigure;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.type.GameType;
+import net.luis.game.type.GameTypes;
+import net.luis.ludo.player.LudoPlayerType;
 import net.luis.network.Connection;
 import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.PacketHandler;
@@ -27,7 +30,9 @@ import net.luis.network.packet.server.game.PlayAgainGameRequestPacket;
 import net.luis.network.packet.server.game.dice.RollDiceRequestPacket;
 import net.luis.server.Server;
 import net.luis.server.player.ServerPlayer;
+import net.luis.ttt.player.TTTPlayerType;
 import net.luis.utils.util.Utils;
+import net.luis.wins4.player.Wins4PlayerType;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,12 +82,13 @@ public class ServerPacketHandler implements PacketHandler {
 		}).toList();
 		if (players.size() == profiles.size()) {
 			if (mutable.isFalse()) {
-				Game game = gameType.createGame(players);
+				List<GamePlayerInfo> playerInfos = this.createPlayerInfos(players, this.getPlayerTypes(gameType), gameType.getFigureCount());
+				Game game = gameType.createGame(playerInfos);
 				if (game != null) {
 					this.server.getGameManager().addGame(game);
 					game.start();
 					for (Player player : players) {
-						Objects.requireNonNull(player.getConnection()).send(new StartGamePacket(gameType.getId(), this.createPlayerInfos(game)));
+						Objects.requireNonNull(player.getConnection()).send(new StartGamePacket(gameType.getId(), playerInfos));
 					}
 					game.nextPlayer(true);
 				} else {
@@ -103,8 +109,27 @@ public class ServerPacketHandler implements PacketHandler {
 		}
 	}
 	
-	private List<GamePlayerInfo> createPlayerInfos(@NotNull Game game) {
-		return game.getPlayers().stream().map((player) -> new GamePlayerInfo(player.getProfile(), player.getPlayerType(), Utils.mapList(player.getFigures(), GameFigure::getUniqueId))).toList();
+	private List<GamePlayerType> getPlayerTypes(@NotNull GameType<?> gameType) {
+		if (gameType == GameTypes.LUDO) {
+			return Lists.newArrayList(LudoPlayerType.values());
+		} else if (gameType == GameTypes.TIC_TAC_TOE) {
+			return Lists.newArrayList(TTTPlayerType.values());
+		} else if (gameType == GameTypes.WINS_4) {
+			return Lists.newArrayList(Wins4PlayerType.values());
+		}
+		throw new IllegalArgumentException("Unknown game type " + gameType.getInfoName());
+	}
+	
+	private List<GamePlayerInfo> createPlayerInfos(@NotNull List<Player> players, List<GamePlayerType> playerTypes, int figureCount) {
+		List<GamePlayerInfo> playerInfos = Lists.newArrayList();
+		for (Player player : players) {
+			playerInfos.add(new GamePlayerInfo(player.getProfile(), playerTypes.get(players.indexOf(player)), Utils.make(Lists.newArrayList(), (list) -> {
+				for (int i = 0; i < figureCount; i++) {
+					list.add(UUID.randomUUID());
+				}
+			})));
+		}
+		return playerInfos;
 	}
 	
 	@PacketListener(PlayAgainGameRequestPacket.class)

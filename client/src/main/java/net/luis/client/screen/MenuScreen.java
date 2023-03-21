@@ -40,7 +40,7 @@ public class MenuScreen extends ClientScreen implements Tickable {
 	
 	@Override
 	public void tick() {
-		if (this.client.getAccountManager().isLoggedIn()) {
+		if (this.client.get().getAccountManager().isLoggedIn()) {
 			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.profile"));
 		} else if (this.loginButton.getText().equals(TranslationKey.createAndGet("screen.menu.profile"))) {
 			this.loginButton.setText(TranslationKey.createAndGet("screen.menu.login"));
@@ -56,8 +56,8 @@ public class MenuScreen extends ClientScreen implements Tickable {
 	}
 	
 	private void handleLogin() {
-		if (this.client.getAccountManager().getLoginWindow() == null) {
-			LoginWindow window = new LoginWindow(this.client, new Stage());
+		if (this.client.get().getAccountManager().getLoginWindow() == null) {
+			LoginWindow window = new LoginWindow(this.client.get(), new Stage());
 			window.show();
 		}
 	}

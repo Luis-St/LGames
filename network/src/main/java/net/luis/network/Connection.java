@@ -86,6 +86,11 @@ public class Connection extends SimpleChannelInboundHandler<Packet> {
 		}
 	}
 	
+	public static void send(@NotNull Channel channel, @NotNull Packet packet) {
+		ChannelFuture channelFuture = channel.writeAndFlush(packet);
+		channelFuture.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+	}
+	
 	public void close() {
 		this.channel.close();
 	}

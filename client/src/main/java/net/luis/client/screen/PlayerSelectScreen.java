@@ -53,7 +53,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	public void init() {
 		this.playerList = new ListView<>();
 		this.playerList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		for (Player player : this.client.getPlayerList()) {
+		for (Player player : this.client.get().getPlayerList()) {
 			if (!player.isPlaying()) {
 				this.playerList.getItems().add(player.getProfile().getName());
 			} else {
@@ -69,7 +69,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	}
 	
 	private void handlePlay() {
-		if (Objects.requireNonNull(this.client.getPlayerList().getPlayer()).isAdmin()) {
+		if (Objects.requireNonNull(this.client.get().getPlayerList().getPlayer()).isAdmin()) {
 			List<String> selected = this.playerList.getSelectionModel().getSelectedItems();
 			int selectCount = selected.size();
 			if (selectCount > this.gameType.getMaxPlayers()) {
@@ -78,7 +78,7 @@ public class PlayerSelectScreen extends ClientScreen {
 				LOGGER.info("Unable to play game {}, since too few players {} were selected", this.gameType.getInfoName(), selectCount);
 			} else {
 				List<Player> players = Lists.newArrayList();
-				for (Player player : this.client.getPlayerList()) {
+				for (Player player : this.client.get().getPlayerList()) {
 					if (selected.contains(player.getProfile().getName())) {
 						players.add(player);
 					}
@@ -87,8 +87,8 @@ public class PlayerSelectScreen extends ClientScreen {
 					LOGGER.warn("The player count does not match with the count of the selected players");
 					this.playerList.getSelectionModel().clearSelection();
 				} else {
-					LOGGER.debug("Send play game request to server");
-					this.broadcast(new PlayGameRequestPacket(this.gameType.getId(), Utils.mapList(players, Player::getProfile)));
+					LOGGER.info("Send play game request to server");
+					this.client.get().getPlayerList().getPlayer().getConnection().send(new PlayGameRequestPacket(this.gameType.getId(), Utils.mapList(players, Player::getProfile)));
 				}
 			}
 		} else {
@@ -109,7 +109,7 @@ public class PlayerSelectScreen extends ClientScreen {
 	
 	private void refreshPlayers() {
 		this.playerList.getItems().clear();
-		for (Player player : this.client.getPlayerList()) {
+		for (Player player : this.client.get().getPlayerList()) {
 			if (!player.isPlaying()) {
 				this.playerList.getItems().add(player.getProfile().getName());
 			} else {

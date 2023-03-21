@@ -7,8 +7,6 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.luis.Constants;
 import net.luis.game.resources.ResourceManager;
-import net.luis.language.Language;
-import net.luis.language.LanguageConverter;
 import net.luis.language.LanguageProvider;
 import net.luis.language.Languages;
 import net.luis.utility.Tickable;
@@ -25,6 +23,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -59,7 +58,7 @@ public class InternalApplication extends javafx.application.Application {
 		OptionSpec<Boolean> devMode = parser.accepts("devMode").withRequiredArg().ofType(Boolean.class).defaultsTo(false);
 		OptionSpec<File> gameDir = parser.accepts("gameDir").withRequiredArg().ofType(File.class).defaultsTo(new File(System.getProperty("user.home")).toPath().resolve("Desktop/run").toFile());
 		OptionSpec<File> resourceDir = parser.accepts("resourceDir").withRequiredArg().ofType(File.class);
-		OptionSpec<Language> language = parser.accepts("language").withRequiredArg().ofType(Language.class).withValuesConvertedBy(new LanguageConverter()).defaultsTo(Languages.EN_US);
+		OptionSpec<String> language = parser.accepts("language").withRequiredArg().ofType(String.class).defaultsTo(Languages.EN_US.name());
 		OptionSet set = parser.parse(args);
 		if (!set.has(launchTarget)) {
 			throw new IllegalArgumentException("Missing launch target");
@@ -89,7 +88,7 @@ public class InternalApplication extends javafx.application.Application {
 				LOGGER.debug("Created resource directory");
 			}
 			LanguageProvider.INSTANCE.load(resourceDirectory);
-			LanguageProvider.INSTANCE.setCurrentLanguage(set.valueOf(language));
+			LanguageProvider.INSTANCE.setCurrentLanguage(Objects.requireNonNull(Languages.fromFileName(set.valueOf(language))));
 			try {
 				ApplicationType type = target.getAnnotation(Application.class).value();
 				FxApplication application = this.createApplication(target, type, new ResourceManager(gameDirectory, resourceDirectory), stage);
@@ -122,9 +121,9 @@ public class InternalApplication extends javafx.application.Application {
 	}
 	
 	private @NotNull FxApplication createApplication(@NotNull Class<?> target, @NotNull ApplicationType type, @NotNull ResourceManager resourceManager, @NotNull Stage stage) {
-		ReflectionHelper.enableExceptionLogging();
+		ReflectionHelper.enableExceptionThrowing();
 		FxApplication application = (FxApplication) ReflectionHelper.newInstance(target, type, resourceManager, stage);
-		ReflectionHelper.disableExceptionLogging();
+		ReflectionHelper.disableExceptionThrowing();
 		if (application != null) {
 			return application;
 		}

@@ -4,6 +4,8 @@ import net.luis.client.Client;
 import net.luis.fx.screen.AbstractScreen;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Supplier;
+
 /**
  *
  * @author Luis-st
@@ -12,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class ClientScreen extends AbstractScreen {
 	
-	protected final Client client = Client.getInstance();
+	protected final Supplier<Client> client = Client::getInstance;
 	
 	protected ClientScreen(@NotNull String title, int width, int height) {
 		super(title, width, height);
@@ -27,10 +29,10 @@ public abstract class ClientScreen extends AbstractScreen {
 	}
 	
 	protected void showScreen(@NotNull ClientScreen screen) {
-		this.client.setScreen(screen);
+		this.client.get().setScreen(screen);
 	}
 	
 	protected void reapplyScreen() {
-		this.client.setScreen(this);
+		this.client.get().setScreen(this);
 	}
 }

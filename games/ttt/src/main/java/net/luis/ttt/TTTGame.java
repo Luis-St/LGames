@@ -7,6 +7,7 @@ import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
@@ -21,7 +22,6 @@ import net.luis.network.packet.server.ServerPacket;
 import net.luis.network.packet.server.game.SelectGameFieldPacket;
 import net.luis.ttt.map.TTTMap;
 import net.luis.ttt.player.TTTPlayer;
-import net.luis.ttt.player.TTTPlayerType;
 import net.luis.ttt.screen.TTTScreen;
 import net.luis.ttt.win.TTTWinHandler;
 import net.luis.utils.util.Utils;
@@ -43,8 +43,8 @@ public class TTTGame extends AbstractGame {
 	
 	private static final Logger LOGGER = LogManager.getLogger(TTTGame.class);
 	
-	public TTTGame(List<Player> players, int figureCount) {
-		super(TTTMap::new, TTTPlayer::new, players, TTTPlayerType.values(), figureCount, TTTScreen::new, new TTTWinHandler());
+	public TTTGame(@NotNull List<GamePlayerInfo> playerInfos) {
+		super(TTTMap::new, TTTPlayer::new, playerInfos, TTTScreen::new, new TTTWinHandler());
 	}
 	
 	@Override

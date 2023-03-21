@@ -1,7 +1,7 @@
 package net.luis.game.type;
 
 import net.luis.game.Game;
-import net.luis.game.player.Player;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.reflection.ReflectionHelper;
 import org.jetbrains.annotations.NotNull;
@@ -62,10 +62,14 @@ public class GameType<T extends Game> {
 		return this.minPlayers + " - " + this.maxPlayers;
 	}
 	
+	public int getFigureCount() {
+		return this.figureCount;
+	}
+	
 	@SuppressWarnings("unchecked")
-	public T createGame(@NotNull List<Player> players) {
-		if (this.hasEnoughPlayers(players.size())) {
-			return (T) ReflectionHelper.newInstance(Objects.requireNonNull(ReflectionHelper.getClassForName(this.clazz)), players, this.figureCount);
+	public T createGame(@NotNull List<GamePlayerInfo> playerInfos) {
+		if (this.hasEnoughPlayers(playerInfos.size())) {
+			return (T) ReflectionHelper.newInstance(Objects.requireNonNull(ReflectionHelper.getClassForName(this.clazz)), playerInfos);
 		}
 		return null;
 	}
@@ -78,12 +82,13 @@ public class GameType<T extends Game> {
 		if (this.id != gameType.id) return false;
 		if (this.minPlayers != gameType.minPlayers) return false;
 		if (this.maxPlayers != gameType.maxPlayers) return false;
+		if (this.figureCount != gameType.figureCount) return false;
 		return this.name.equals(gameType.name);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.id, this.name, this.minPlayers, this.maxPlayers);
+		return Objects.hash(this.id, this.name, this.minPlayers, this.maxPlayers, this.figureCount);
 	}
 	
 	@Override

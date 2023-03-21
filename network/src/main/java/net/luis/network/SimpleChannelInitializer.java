@@ -29,7 +29,6 @@ public class SimpleChannelInitializer extends ChannelInitializer<Channel> {
 		this.factory = factory;
 	}
 	
-	
 	@Override
 	protected void initChannel(@NotNull Channel channel) {
 		ChannelPipeline pipeline = channel.pipeline();

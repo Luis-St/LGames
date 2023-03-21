@@ -7,6 +7,7 @@ import net.luis.game.map.field.GameField;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.player.game.GamePlayer;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.game.type.GameType;
@@ -25,7 +26,6 @@ import net.luis.wins4.map.Wins4Map;
 import net.luis.wins4.map.field.Wins4FieldPos;
 import net.luis.wins4.map.field.Wins4FieldType;
 import net.luis.wins4.player.Wins4Player;
-import net.luis.wins4.player.Wins4PlayerType;
 import net.luis.wins4.screen.Wins4Screen;
 import net.luis.wins4.win.Wins4WinHandler;
 import org.apache.logging.log4j.LogManager;
@@ -47,8 +47,8 @@ public class Wins4Game extends AbstractGame {
 	
 	private static final Logger LOGGER = LogManager.getLogger(Wins4Game.class);
 	
-	protected Wins4Game(List<Player> players, int figureCount) {
-		super(Wins4Map::new, Wins4Player::new, players, Wins4PlayerType.values(), figureCount, Wins4Screen::new, new Wins4WinHandler());
+	public Wins4Game(@NotNull List<GamePlayerInfo> playerInfos) {
+		super(Wins4Map::new, Wins4Player::new, playerInfos, Wins4Screen::new, new Wins4WinHandler());
 	}
 	
 	@Override

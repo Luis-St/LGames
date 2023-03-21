@@ -22,6 +22,7 @@ import net.luis.fxutils.fx.InputPane;
 import net.luis.fxutils.fx.InputValidationPane;
 import net.luis.language.TranslationKey;
 import net.luis.network.SecondaryConnection;
+import net.luis.network.packet.HandshakePacket;
 import net.luis.network.packet.account.ClientLoginPacket;
 import net.luis.network.packet.account.ClientLogoutPacket;
 import net.luis.network.packet.account.ClientRegistrationPacket;
@@ -55,7 +56,7 @@ public class LoginWindow extends AbstractWindow {
 		super(stage, 350, 225.0);
 		this.client = client;
 		this.client.getAccountManager().setLoginWindow(this);
-		this.connection = new SecondaryConnection();
+		this.connection = new SecondaryConnection(HandshakePacket::new);
 		this.connection.open(this.client.getAccountHost(), this.client.getAccountPort());
 	}
 	

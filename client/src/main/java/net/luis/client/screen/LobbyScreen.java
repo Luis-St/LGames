@@ -39,7 +39,7 @@ public class LobbyScreen extends ClientScreen {
 	}
 	
 	private boolean isAdmin() {
-		return Objects.requireNonNull(this.client.getPlayerList().getPlayer()).isAdmin();
+		return Objects.requireNonNull(this.client.get().getPlayerList().getPlayer()).isAdmin();
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class LobbyScreen extends ClientScreen {
 		this.gameMenu = new Menu(TranslationKey.createAndGet("screen.lobby.game"));
 		CustomMenuItem leaveItem = new CustomMenuItem();
 		leaveItem.setContent(FxUtils.makeButton(TranslationKey.createAndGet("screen.lobby.leave"), () -> {
-			this.client.getPlayerList().removePlayer();
+			this.client.get().getPlayerList().removePlayer();
 			this.showScreen(new MenuScreen());
 		}));
 		this.gameMenu.getItems().add(leaveItem);
@@ -90,7 +90,7 @@ public class LobbyScreen extends ClientScreen {
 	
 	private void refreshPlayers() {
 		this.playerMenu.getItems().clear();
-		for (Player player : this.client.getPlayerList()) {
+		for (Player player : this.client.get().getPlayerList()) {
 			if (player instanceof LocalPlayer) {
 				if (player.isAdmin()) {
 					this.playerMenu.getItems().add(new MenuItem(TranslationKey.createAndGet("screen.game.local_player_admin", player.getProfile().getName())));

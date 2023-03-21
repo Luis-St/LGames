@@ -216,7 +216,7 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(StartGamePacket.class)
 	public void handleStartGame(int type, @NotNull List<GamePlayerInfo> playerInfos) {
 		GameType<?> gameType = Objects.requireNonNull(GameTypes.fromId(type));
-		Game game = gameType.createGame(playerInfos); // TODO: modify and add client and server side usage
+		Game game = gameType.createGame(playerInfos);
 		game.start();
 		boolean flag = false;
 		for (Player player : Utils.mapList(game.getPlayers(), GamePlayer::getPlayer)) {

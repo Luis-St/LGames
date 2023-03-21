@@ -14,9 +14,9 @@ import net.luis.fxutils.CssUtils;
 import net.luis.fxutils.FxUtils;
 import net.luis.fxutils.fx.InputValidationPane;
 import net.luis.language.TranslationKey;
+import net.luis.network.Connection;
 import net.luis.network.packet.Packet;
 import net.luis.network.packet.server.ClientJoinPacket;
-import net.luis.utility.Util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,11 +70,11 @@ public class MultiplayerScreen extends ClientScreen {
 	}
 	
 	private boolean canConnect() {
-		if (this.client.getAccountManager().isLoggedIn()) {
+		if (this.client.get().getAccountManager().isLoggedIn()) {
 			return true;
 		} else {
-			if (this.client.getAccountManager().getLoginWindow() == null) {
-				LoginWindow window = new LoginWindow(this.client, new Stage());
+			if (this.client.get().getAccountManager().getLoginWindow() == null) {
+				LoginWindow window = new LoginWindow(this.client.get(), new Stage());
 				window.show();
 			}
 			return false;
@@ -94,7 +94,7 @@ public class MultiplayerScreen extends ClientScreen {
 			} else if (port.isEmpty()) {
 				this.portPane.validateInput();
 			} else {
-				ClientAccount account = Objects.requireNonNull(this.client.getAccountManager().getAccount());
+				ClientAccount account = Objects.requireNonNull(this.client.get().getAccountManager().getAccount());
 				this.connectAndSend(host, Integer.parseInt(port), new ClientJoinPacket(account.name(), account.uuid()));
 			}
 		}
@@ -106,17 +106,14 @@ public class MultiplayerScreen extends ClientScreen {
 			this.hostPane.validateInput();
 			this.portPane.getInputNode().setText("8080");
 			this.portPane.validateInput();
-			ClientAccount account = Objects.requireNonNull(this.client.getAccountManager().getAccount());
+			ClientAccount account = Objects.requireNonNull(this.client.get().getAccountManager().getAccount());
 			this.connectAndSend("127.0.0.1", 8080, new ClientJoinPacket(account.name(), account.uuid()));
 		}
 	}
 	
 	private void connectAndSend(@NotNull String host, int port, @NotNull Packet packet) {
 		try {
-			this.client.getNetworkInstance().open(host, port);
-			Util.runDelayed("DelayedPacketSender", 250, () -> {
-				networkController.send(packet);  // TODO: add way to get connection for sending packets
-			});
+			Connection.send(this.client.get().getNetworkInstance().open(host, port), packet);
 		} catch (Exception e) {
 			LOGGER.warn("Fail to connect to virtual game collection server", e);
 		}

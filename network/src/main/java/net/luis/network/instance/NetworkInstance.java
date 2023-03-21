@@ -1,8 +1,7 @@
 package net.luis.network.instance;
 
+import io.netty.channel.Channel;
 import io.netty.channel.epoll.Epoll;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,7 +14,7 @@ public interface NetworkInstance {
 	
 	boolean NATIVE = Epoll.isAvailable();
 	
-	void open(@NotNull String host, int port);
+	@NotNull Channel open(@NotNull String host, int port);
 	
 	boolean isOpen();
 	

@@ -3,12 +3,13 @@ package net.luis.game;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.luis.game.application.ApplicationType;
+import net.luis.game.application.GameApplication;
 import net.luis.game.map.GameMap;
 import net.luis.game.map.GameMapFactory;
-import net.luis.game.player.Player;
+import net.luis.game.player.GameProfile;
 import net.luis.game.player.game.GamePlayer;
 import net.luis.game.player.game.GamePlayerFactory;
-import net.luis.game.player.game.GamePlayerType;
+import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.screen.GameScreen;
 import net.luis.game.screen.GameScreenFactory;
 import net.luis.game.win.WinHandler;
@@ -40,27 +41,24 @@ public abstract class AbstractGame implements Game {
 	private final WinHandler winHandler;
 	private GamePlayer player;
 	
-	protected AbstractGame(@NotNull GameMapFactory mapFactory, @NotNull GamePlayerFactory playerFactory, @NotNull List<Player> players, @NotNull GamePlayerType[] playerTypes, int figureCount, GameScreenFactory screenFactory,
+	protected AbstractGame(@NotNull GameMapFactory mapFactory, @NotNull GamePlayerFactory playerFactory, @NotNull List<GamePlayerInfo> playerInfos, GameScreenFactory screenFactory,
 						   @Nullable WinHandler winHandler) {
 		this.map = mapFactory.create(this);
-		this.players = createPlayers(this, playerFactory, players, playerTypes, figureCount);
+		this.players = createPlayers(this.getApplication(), this, playerFactory, playerInfos);
 		this.screen = screenFactory.create(this);
 		this.winHandler = ApplicationType.SERVER.isOn() ? Objects.requireNonNull(winHandler) : null;
 	}
 	
-	private static List<GamePlayer> createPlayers(@NotNull Game game, @NotNull GamePlayerFactory playerFactory, @NotNull List<Player> players, @NotNull GamePlayerType[] playerTypes, int figureCount) {
-		if (!game.getType().hasEnoughPlayers(players.size())) {
-			LOGGER.error("Fail to create game players list with size {}, since a player list with size in bounds {} was expected", players.size(), game.getType().getBounds());
-			throw new IllegalStateException("Fail to create game players list with size " + players.size() + ", since a player list with size in bounds " + game.getType().getBounds() + " was expected");
+	private static List<GamePlayer> createPlayers(@NotNull GameApplication application, @NotNull Game game, @NotNull GamePlayerFactory playerFactory, @NotNull List<GamePlayerInfo> playerInfos) {
+		if (!game.getType().hasEnoughPlayers(playerInfos.size())) {
+			LOGGER.error("Fail to create game players list with size {}, since a player list with size in bounds {} was expected", playerInfos.size(), game.getType().getBounds());
+			throw new IllegalStateException("Fail to create game players list with size " + playerInfos.size() + ", since a player list with size in bounds " + game.getType().getBounds() + " was expected");
 		}
-		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Utils.mapList(players, Player::getName));
+		LOGGER.info("Start game {} with players {}", game.getType().getInfoName(), Utils.mapList(playerInfos, GamePlayerInfo::getProfile, GameProfile::getName));
 		List<GamePlayer> gamePlayers = Lists.newArrayList();
-		for (int i = 0; i < players.size(); i++) {
-			List<UUID> figureIds = Lists.newArrayList();
-			for (int j = 0; j < figureCount; j++) {
-				figureIds.add(UUID.randomUUID());
-			}
-			gamePlayers.add(playerFactory.create(game, players.get(i), playerTypes[i], figureIds));
+		
+		for (GamePlayerInfo playerInfo : playerInfos) {
+			gamePlayers.add(playerFactory.create(game, Objects.requireNonNull(application.getPlayerList().getPlayer(playerInfo.getProfile())), playerInfo.getPlayerType(), playerInfo.getUniqueIds()));
 		}
 		return gamePlayers;
 	}
