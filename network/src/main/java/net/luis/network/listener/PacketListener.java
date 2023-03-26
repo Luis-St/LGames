@@ -16,7 +16,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PacketListener {
 	
-	@NotNull
-	Class<?> value() default Packet.class;
+	@NotNull Class<?> value() default Packet.class;
 	
 }

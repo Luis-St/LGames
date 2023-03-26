@@ -15,10 +15,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PacketGetter {
 	
-	@NotNull
-	String getterPrefix() default "";
+	@NotNull String getterPrefix() default "";
 	
-	@NotNull
-	String parameterName() default "";
+	@NotNull String parameterName() default "";
 	
 }
