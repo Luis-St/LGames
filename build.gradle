@@ -112,7 +112,7 @@ jar {
 	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 	manifest {
 		attributes([
-				"Main-Class"   : "net.luis.Main"
+				"Main-Class"   : "net.luis.run.Main"
 		])
 	}
 	from {
