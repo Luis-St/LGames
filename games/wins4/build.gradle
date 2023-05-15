@@ -22,7 +22,6 @@ dependencies {
 	// Modules
 	implementation project(":fx")
 	implementation project(":game")
-	implementation project(":network")
 	implementation project(":utility")
 	// Local
 	implementation "org.controlsfx:ControlsFX:${ControlsFX}" // Fx

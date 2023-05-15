@@ -21,7 +21,6 @@ javafx {
 dependencies {
 	// Modules
 	implementation project(":fx")
-	implementation project(":network")
 	implementation project(":utility")
 	// Local
 	implementation "org.controlsfx:ControlsFX:${ControlsFX}" // Fx

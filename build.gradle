@@ -26,7 +26,6 @@ dependencies {
 	implementation project(":fx")
 	implementation project(":game")
 	implementation project(":ludo")
-	implementation project(":network")
 	implementation project(":server")
 	implementation project(":ttt")
 	implementation project(":wins4")

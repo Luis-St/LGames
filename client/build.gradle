@@ -26,7 +26,6 @@ dependencies {
 	implementation project(":ludo")
 	implementation project(":ttt")
 	implementation project(":wins4")
-	implementation project(":network")
 	implementation project(":server")
 	implementation project(":utility")
 	// Local

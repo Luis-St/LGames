@@ -25,7 +25,6 @@ dependencies {
 	implementation project(":ludo")
 	implementation project(":ttt")
 	implementation project(":wins4")
-	implementation project(":network")
 	implementation project(":utility")
 	// Local
 	implementation "org.controlsfx:ControlsFX:${ControlsFX}" // Fx
