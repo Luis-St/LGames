@@ -17,8 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface ToggleButtonWrapper {
 	
-	@NotNull
-	ToggleButton getToggleButton();
+	@NotNull ToggleButton getToggleButton();
 	
 	default @NotNull ToggleGroup getToggleGroup() {
 		return this.getToggleButton().getToggleGroup();
@@ -51,5 +50,4 @@ public interface ToggleButtonWrapper {
 	default void setSelected(boolean value) {
 		this.getToggleButton().setSelected(value);
 	}
-	
 }

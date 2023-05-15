@@ -23,17 +23,11 @@ public abstract class FxApplication implements Runnable, DataHandler {
 	
 	private static final Logger LOGGER = LogManager.getLogger(FxApplication.class);
 	private static FxApplication instance;
-	
-	public static FxApplication getInstance() {
-		return instance;
-	}
-	
 	private final ApplicationType type;
 	private final ResourceManager resourceManager;
 	private final Stage stage;
 	private final AbstractScreen mainScreen;
 	private final boolean dynamic;
-	
 	public FxApplication(ApplicationType type, ResourceManager resourceManager, Stage stage, AbstractScreen mainScreen, boolean dynamic) {
 		this.type = type;
 		this.resourceManager = resourceManager;
@@ -41,6 +35,10 @@ public abstract class FxApplication implements Runnable, DataHandler {
 		this.mainScreen = mainScreen;
 		this.dynamic = dynamic;
 		instance = this;
+	}
+	
+	public static FxApplication getInstance() {
+		return instance;
 	}
 	
 	@Override
@@ -97,5 +95,4 @@ public abstract class FxApplication implements Runnable, DataHandler {
 	
 	@Override
 	public abstract void save() throws IOException;
-	
 }

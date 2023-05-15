@@ -3,8 +3,6 @@ package net.luis.fx.window;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -44,5 +42,4 @@ public abstract class AbstractWindow {
 		this.exit();
 		this.stage.close();
 	}
-	
 }

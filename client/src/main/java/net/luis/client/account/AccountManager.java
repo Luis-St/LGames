@@ -68,5 +68,4 @@ public class AccountManager {
 			LOGGER.info("The password is not cached local because it is disabled");
 		}
 	}
-	
 }

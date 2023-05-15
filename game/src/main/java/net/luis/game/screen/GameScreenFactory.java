@@ -1,7 +1,6 @@
 package net.luis.game.screen;
 
 import net.luis.game.Game;
-import net.luis.game.screen.GameScreen;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,5 +13,4 @@ import org.jetbrains.annotations.NotNull;
 public interface GameScreenFactory {
 	
 	@NotNull GameScreen create(@NotNull Game game);
-	
 }

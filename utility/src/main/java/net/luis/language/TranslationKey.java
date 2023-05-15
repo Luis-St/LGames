@@ -66,6 +66,4 @@ public record TranslationKey(@NotNull String key) {
 	public @NotNull String toString() {
 		return this.key;
 	}
-	
-	
 }

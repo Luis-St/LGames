@@ -34,5 +34,4 @@ public class GameTypes {
 		}
 		return null;
 	}
-	
 }

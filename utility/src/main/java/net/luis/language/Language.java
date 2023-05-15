@@ -1,8 +1,6 @@
 package net.luis.language;
 
-import net.luis.utils.util.ToString;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -19,8 +17,9 @@ public record Language(@NotNull String name, @NotNull String fileName) {
 		return resourceDirectory.resolve("lang/" + this.fileName + ".json");
 	}
 	
+	//region Object overrides
 	@Override
-	public boolean equals(@Nullable Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof Language language)) return false;
 		
@@ -34,8 +33,8 @@ public record Language(@NotNull String name, @NotNull String fileName) {
 	}
 	
 	@Override
-	public @NotNull String toString() {
-		return ToString.toString(this, "fileName");
+	public String toString() {
+		return "Language{name='" + this.name + '\'' + ", fileName='" + this.fileName + '\'' + "}";
 	}
-	
+	//endregion
 }

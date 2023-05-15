@@ -24,7 +24,7 @@ public abstract class AbstractGamePlayer implements GamePlayer {
 	private final List<GameFigure> figures;
 	private int rollCount = 0;
 	
-	protected AbstractGamePlayer(Game game, Player player, GamePlayerType playerType, GameFiguresFactory figuresFactory) {
+	protected AbstractGamePlayer(Game game, Player player, GamePlayerType playerType, @NotNull GameFiguresFactory figuresFactory) {
 		this.game = game;
 		this.player = player;
 		this.playerType = playerType;
@@ -61,18 +61,22 @@ public abstract class AbstractGamePlayer implements GamePlayer {
 		this.rollCount = ApplicationType.SERVER.isOn() ? rollCount : 0;
 	}
 	
+	//region Object overrides
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof AbstractGamePlayer that)) return false;
 		
+		if (this.rollCount != that.rollCount) return false;
+		if (!this.game.equals(that.game)) return false;
 		if (!this.player.equals(that.player)) return false;
 		if (!this.playerType.equals(that.playerType)) return false;
-		return this.rollCount == that.rollCount;
+		return this.figures.equals(that.figures);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.player, this.playerType, this.rollCount);
+		return Objects.hash(this.game, this.player, this.playerType, this.figures, this.rollCount);
 	}
+	//endregion
 }

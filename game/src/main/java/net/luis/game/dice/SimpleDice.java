@@ -2,11 +2,9 @@ package net.luis.game.dice;
 
 import net.luis.utils.exception.InvalidValueException;
 import net.luis.utils.math.Mth;
-import net.luis.utils.util.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Random;
@@ -84,23 +82,25 @@ public class SimpleDice implements Dice {
 		return count;
 	}
 	
+	//region Object overrides
 	@Override
-	public boolean equals(@Nullable Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof SimpleDice that)) return false;
 		
 		if (this.min != that.min) return false;
-		return this.max == that.max;
+		if (this.max != that.max) return false;
+		return this.rng.equals(that.rng);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.min, this.max);
+		return Objects.hash(this.min, this.max, this.rng);
 	}
 	
 	@Override
-	public @NotNull String toString() {
-		return ToString.toString(this, "rng");
+	public String toString() {
+		return "SimpleDice{min=" + this.min + ", max=" + this.max + "}";
 	}
-	
+	//endregion
 }

@@ -15,5 +15,4 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Application {
 	
 	@NotNull ApplicationType value();
-	
 }

@@ -28,5 +28,4 @@ public class LocalPlayer extends Player {
 	public @NotNull Client getApplication() {
 		return (Client) super.getApplication();
 	}
-	
 }

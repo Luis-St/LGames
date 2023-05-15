@@ -5,6 +5,7 @@ import net.luis.account.account.Account;
 import net.luis.account.account.AccountType;
 import net.luis.account.account.LoginType;
 import net.luis.network.Connection;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.PacketHandler;
 import net.luis.network.packet.account.ClientExitPacket;
 import net.luis.network.packet.account.ClientLoginPacket;
@@ -12,7 +13,6 @@ import net.luis.network.packet.account.ClientLogoutPacket;
 import net.luis.network.packet.account.ClientRegistrationPacket;
 import net.luis.network.packet.client.ClientLoggedInPacket;
 import net.luis.network.packet.client.ClientLoggedOutPacket;
-import net.luis.network.listener.PacketListener;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,5 +69,4 @@ public class AccountPacketHandler implements PacketHandler {
 		LOGGER.info("Client disconnected with address {}", address);
 		this.connection.close();
 	}
-	
 }

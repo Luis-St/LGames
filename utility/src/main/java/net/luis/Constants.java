@@ -13,5 +13,4 @@ public class Constants {
 	public static String LAUNCH_TYPE = "unknown";
 	public static boolean DEBUG_MODE = false;
 	public static boolean DEV_MODE = false;
-	
 }

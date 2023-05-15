@@ -15,8 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface StackPaneWrapper {
 	
-	@NotNull
-	StackPane getStackPane();
+	@NotNull StackPane getStackPane();
 	
 	default void setAlignment(@NotNull Pos value) {
 		this.getStackPane().setAlignment(value);
@@ -29,5 +28,4 @@ public interface StackPaneWrapper {
 	default @NotNull ObservableList<Node> getChildren() {
 		return this.getStackPane().getChildren();
 	}
-	
 }

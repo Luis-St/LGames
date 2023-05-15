@@ -52,6 +52,7 @@ public class ServerPlayerList extends AbstractPlayerList {
 		Server.getInstance().getScreen().refresh();
 	}
 	
+	//region Adding players
 	@Override
 	public void addPlayer(@NotNull Player player) {
 		super.addPlayer(player);
@@ -73,7 +74,9 @@ public class ServerPlayerList extends AbstractPlayerList {
 		}
 		this.refresh();
 	}
+	//endregion
 	
+	//region Removing players
 	@Override
 	public void removePlayer(@NotNull Player player) {
 		super.removePlayer(player);
@@ -92,6 +95,7 @@ public class ServerPlayerList extends AbstractPlayerList {
 		this.players.clear();
 		this.refresh();
 	}
+	//endregion
 	
 	public @Nullable Player getAdmin() {
 		if (Utils.isEmpty(this.getAdminUUID())) {
@@ -100,7 +104,8 @@ public class ServerPlayerList extends AbstractPlayerList {
 		return this.getPlayer(this.getAdminUUID());
 	}
 	
-	public void broadcast(Player player, Packet packet) {
+	//region Broadcast to players
+	public void broadcast(@NotNull Player player, Packet packet) {
 		Connection connection = player.getConnection();
 		if (connection.isConnected()) {
 			connection.send(packet);
@@ -130,5 +135,5 @@ public class ServerPlayerList extends AbstractPlayerList {
 			}
 		}
 	}
-	
+	//endregion
 }

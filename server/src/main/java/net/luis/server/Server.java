@@ -34,15 +34,15 @@ public class Server extends FxApplication implements GameApplication {
 	private String host;
 	private int port;
 	
+	public Server(ApplicationType type, ResourceManager resourceManager, Stage stage) {
+		super(type, resourceManager, stage, new MainScreen(), false);
+	}
+	
 	public static @NotNull Server getInstance() {
 		if (FxApplication.getInstance() instanceof Server server) {
 			return server;
 		}
 		throw new NullPointerException("The server instance is not yet available because the server has not yet been initialized");
-	}
-	
-	public Server(ApplicationType type, ResourceManager resourceManager, Stage stage) {
-		super(type, resourceManager, stage, new MainScreen(), false);
 	}
 	
 	@Override
@@ -104,5 +104,4 @@ public class Server extends FxApplication implements GameApplication {
 	public void save() {
 	
 	}
-	
 }

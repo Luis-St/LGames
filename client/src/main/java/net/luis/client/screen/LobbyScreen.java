@@ -114,5 +114,4 @@ public class LobbyScreen extends ClientScreen {
 		this.refreshPlayers();
 		return new VBox(new MenuBar(this.playerMenu, this.gameMenu), gridPane);
 	}
-	
 }

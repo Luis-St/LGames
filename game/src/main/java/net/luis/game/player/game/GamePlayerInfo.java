@@ -78,5 +78,4 @@ public class GamePlayerInfo implements Encodable {
 	public @NotNull String toString() {
 		return ToString.toString(this);
 	}
-	
 }

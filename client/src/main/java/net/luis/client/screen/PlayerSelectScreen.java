@@ -61,7 +61,7 @@ public class PlayerSelectScreen extends ClientScreen {
 			}
 		}
 		this.backButton = FxUtils.makeButton(TranslationKey.createAndGet("window.login.back"), this::handleBack);
-		this.playButton= FxUtils.makeButton(TranslationKey.createAndGet("screen.player_select.play"), this::handlePlay);
+		this.playButton = FxUtils.makeButton(TranslationKey.createAndGet("screen.player_select.play"), this::handlePlay);
 	}
 	
 	private void handleBack() {
@@ -126,5 +126,4 @@ public class PlayerSelectScreen extends ClientScreen {
 		outerPane.addColumn(0, this.playerList, innerPane);
 		return outerPane;
 	}
-	
 }

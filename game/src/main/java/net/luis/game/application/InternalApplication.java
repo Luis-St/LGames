@@ -12,8 +12,8 @@ import net.luis.language.Languages;
 import net.luis.utility.Tickable;
 import net.luis.utility.Util;
 import net.luis.utils.util.DefaultExceptionHandler;
-import net.luis.utils.util.reflection.ClassPathUtils;
-import net.luis.utils.util.reflection.ReflectionHelper;
+import net.luis.utils.util.unsafe.classpath.ClassPathUtils;
+import net.luis.utils.util.unsafe.reflection.ReflectionHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -148,5 +148,4 @@ public class InternalApplication extends javafx.application.Application {
 			this.ticker.stop();
 		}
 	}
-	
 }

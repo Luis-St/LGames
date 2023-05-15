@@ -16,5 +16,4 @@ import java.util.List;
 public interface GameFactory<T extends Game> {
 	
 	@NotNull T createGame(@NotNull GameApplication application, @NotNull List<GamePlayerInfo> playerInfos);
-	
 }

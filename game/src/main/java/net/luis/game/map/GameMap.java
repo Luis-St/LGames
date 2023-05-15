@@ -95,5 +95,4 @@ public interface GameMap {
 	default void reset() {
 		this.getFields().forEach(GameField::clear);
 	}
-	
 }

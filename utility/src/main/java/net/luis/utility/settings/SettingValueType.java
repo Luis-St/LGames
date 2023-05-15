@@ -11,8 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @Deprecated
 public interface SettingValueType<T> {
 	
-	@NotNull
-	T getValue(String string);
+	@NotNull T getValue(String string);
 	
 	String toString(T value);
 	

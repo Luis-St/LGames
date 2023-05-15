@@ -14,8 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface GridPaneWrapper {
 	
-	@NotNull
-	GridPane getGridPane();
+	@NotNull GridPane getGridPane();
 	
 	default void setAlignment(@NotNull Pos value) {
 		this.getGridPane().setAlignment(value);
@@ -48,5 +47,4 @@ public interface GridPaneWrapper {
 	default void addRow(int rowIndex, @NotNull Node... children) {
 		this.getGridPane().addRow(rowIndex, children);
 	}
-	
 }

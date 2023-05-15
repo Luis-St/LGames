@@ -142,5 +142,4 @@ public class MultiplayerScreen extends ClientScreen {
 		scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/style.css")).toExternalForm());
 		return scene;
 	}
-	
 }

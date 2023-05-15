@@ -10,5 +10,4 @@ package net.luis.utility;
 public interface Tickable {
 	
 	void tick();
-	
 }

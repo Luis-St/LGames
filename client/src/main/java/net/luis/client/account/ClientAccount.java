@@ -1,8 +1,6 @@
 package net.luis.client.account;
 
-import net.luis.utils.util.ToString;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -15,8 +13,9 @@ import java.util.UUID;
 
 public record ClientAccount(@NotNull String name, int id, @NotNull String mail, @NotNull UUID uuid, boolean guest) {
 	
+	//region Object overrides
 	@Override
-	public boolean equals(@Nullable Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof ClientAccount that)) return false;
 		
@@ -33,7 +32,8 @@ public record ClientAccount(@NotNull String name, int id, @NotNull String mail, 
 	}
 	
 	@Override
-	public @NotNull String toString() {
-		return ToString.toString(this);
+	public String toString() {
+		return "ClientAccount{name='" + this.name + '\'' + ", id=" + this.id + ", mail='" + this.mail + '\'' + ", uuid=" + this.uuid + ", guest=" + this.guest + "}";
 	}
+	//endregion
 }

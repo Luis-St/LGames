@@ -6,8 +6,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import net.luis.Constants;
 import net.luis.game.Game;
-import net.luis.game.player.game.GamePlayer;
 import net.luis.game.player.Player;
+import net.luis.game.player.game.GamePlayer;
 import net.luis.language.TranslationKey;
 import net.luis.utils.util.SimpleEntry;
 import org.jetbrains.annotations.NotNull;
@@ -70,20 +70,17 @@ public class PlayerScorePane extends GridPane {
 			public int getValue(@NotNull Player player) {
 				return player.getScore().getWins();
 			}
-		},
-		LOSE("lose") {
+		}, LOSE("lose") {
 			@Override
 			public int getValue(@NotNull Player player) {
 				return player.getScore().getLoses();
 			}
-		},
-		DRAW("draw") {
+		}, DRAW("draw") {
 			@Override
 			public int getValue(@NotNull Player player) {
 				return player.getScore().getDraws();
 			}
-		},
-		SCORE("score") {
+		}, SCORE("score") {
 			@Override
 			public int getValue(@NotNull Player player) {
 				return player.getScore().getScore();
@@ -106,7 +103,5 @@ public class PlayerScorePane extends GridPane {
 		public @NotNull String toString() {
 			return this.name;
 		}
-		
 	}
-	
 }

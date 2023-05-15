@@ -3,7 +3,7 @@ package net.luis.game.type;
 import net.luis.game.Game;
 import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.utils.math.Mth;
-import net.luis.utils.util.reflection.ReflectionHelper;
+import net.luis.utils.util.unsafe.reflection.ReflectionHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,6 +74,7 @@ public class GameType<T extends Game> {
 		return null;
 	}
 	
+	//region Object overrides
 	@Override
 	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
@@ -95,5 +96,5 @@ public class GameType<T extends Game> {
 	public @NotNull String toString() {
 		return this.getInfoName();
 	}
-	
+	//endregion
 }

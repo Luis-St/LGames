@@ -57,5 +57,4 @@ public enum ApplicationType {
 	public @NotNull String toString() {
 		return this.name;
 	}
-	
 }

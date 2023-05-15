@@ -46,5 +46,4 @@ public interface WinHandler {
 	int getScoreFor(@NotNull Game game, @NotNull GamePlayer player);
 	
 	void reset();
-	
 }

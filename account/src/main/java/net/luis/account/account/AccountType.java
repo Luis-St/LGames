@@ -31,5 +31,4 @@ public enum AccountType {
 	public @NotNull String toString() {
 		return this.name;
 	}
-	
 }

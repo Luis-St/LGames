@@ -6,7 +6,6 @@ import net.luis.game.application.FxApplication;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.players.AbstractPlayerList;
-import net.luis.network.Connection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +33,7 @@ public class ClientPlayerList extends AbstractPlayerList {
 		return this.player;
 	}
 	
+	//region Adding players
 	@Override
 	public void addPlayer(@NotNull Player player) {
 		super.addPlayer(player);
@@ -47,7 +47,9 @@ public class ClientPlayerList extends AbstractPlayerList {
 		this.players.put(profile, new RemotePlayer(profile));
 		LOGGER.info("Added remote player {}", profile.getName());
 	}
+	//endregion
 	
+	//region Removing players
 	@Override
 	public void removePlayer(@NotNull Player player) {
 		super.removePlayer(player);
@@ -65,5 +67,5 @@ public class ClientPlayerList extends AbstractPlayerList {
 		this.players.remove(profile);
 		LOGGER.info("Removed remote player {}", profile.getName());
 	}
-	
+	//endregion
 }

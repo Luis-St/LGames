@@ -87,5 +87,4 @@ public class PlayerInfoPane extends GridPane {
 			this.scorePane.update();
 		});
 	}
-	
 }

@@ -41,8 +41,7 @@ public abstract class AbstractGame implements Game {
 	private final WinHandler winHandler;
 	private GamePlayer player;
 	
-	protected AbstractGame(@NotNull GameMapFactory mapFactory, @NotNull GamePlayerFactory playerFactory, @NotNull List<GamePlayerInfo> playerInfos, GameScreenFactory screenFactory,
-						   @Nullable WinHandler winHandler) {
+	protected AbstractGame(@NotNull GameMapFactory mapFactory, @NotNull GamePlayerFactory playerFactory, @NotNull List<GamePlayerInfo> playerInfos, GameScreenFactory screenFactory, @Nullable WinHandler winHandler) {
 		this.map = mapFactory.create(this);
 		this.players = createPlayers(this.getApplication(), this, playerFactory, playerInfos);
 		this.screen = screenFactory.create(this);
@@ -102,7 +101,6 @@ public abstract class AbstractGame implements Game {
 		}
 	}
 	
-	@Nullable
 	@Override
 	public WinHandler getWinHandler() {
 		return this.winHandler;

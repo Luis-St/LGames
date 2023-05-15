@@ -110,6 +110,7 @@ public abstract class AbstractGameField implements GameField {
 		return FxUtils.makeImageView(FxApplication.getInstance().getResourceManager().resourceDirectory().resolve(path).toString(), this.fieldSize * scale, this.fieldSize * scale);
 	}
 	
+	//region Object overrides
 	@Override
 	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
@@ -128,4 +129,5 @@ public abstract class AbstractGameField implements GameField {
 	public int hashCode() {
 		return Objects.hash(this.fieldType, this.colorType, this.fieldPos, this.fieldSize, this.figure, this.result, this.shadowed);
 	}
+	//endregion
 }

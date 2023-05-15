@@ -46,5 +46,4 @@ public class ServerPlayer extends Player {
 		treeItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("server.window.player_playing", this.isPlaying() ? trueTranslation : falseTranslation)));
 		return treeItem;
 	}
-	
 }

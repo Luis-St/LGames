@@ -5,8 +5,6 @@ import net.luis.fxutils.FxUtils;
 import net.luis.game.application.FxApplication;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 /**
  *
  * @author Luis-st
@@ -15,8 +13,8 @@ import java.util.Objects;
 
 public enum DiceRenderState {
 	
-	ZERO("zero", 0, "textures/dice/dice"), ONE("one", 1, "textures/dice/dice_1"), TWO("two", 2, "textures/dice/dice_2"), THREE("three", 3, "textures/dice/dice_3"), FOUR("four", 4, "textures/dice/dice_4"), FIVE("five", 5, "textures/dice/dice_5"),
-	SIX("six", 6, "textures/dice/dice_6");
+	ZERO("zero", 0, "textures/dice/dice"), ONE("one", 1, "textures/dice/dice_1"), TWO("two", 2, "textures/dice/dice_2"), THREE("three", 3, "textures/dice/dice_3"), FOUR("four", 4, "textures/dice/dice_4"),
+	FIVE("five", 5, "textures/dice/dice_5"), SIX("six", 6, "textures/dice/dice_6");
 	
 	private final String name;
 	private final int count;
@@ -53,5 +51,4 @@ public enum DiceRenderState {
 	public @NotNull String toString() {
 		return this.name;
 	}
-	
 }

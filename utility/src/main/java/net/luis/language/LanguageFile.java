@@ -59,6 +59,7 @@ public class LanguageFile {
 		this.language = language;
 	}
 	
+	//region Object overrides
 	@Override
 	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
@@ -72,4 +73,5 @@ public class LanguageFile {
 	public int hashCode() {
 		return Objects.hash(this.translations, this.language);
 	}
+	//endregion
 }

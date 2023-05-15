@@ -107,5 +107,4 @@ public class AccountServer extends FxApplication {
 		Tag.save(path, this.getAccountAgent().serialize());
 		this.getAccountAgent().close();
 	}
-	
 }

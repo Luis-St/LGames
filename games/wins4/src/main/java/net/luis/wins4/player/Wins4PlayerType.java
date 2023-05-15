@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public enum Wins4PlayerType implements GamePlayerType {
 	
-	YELLOW("yellow",new TranslationKey("screen.win4.yellow_player"), "textures/wins4/figure/figure_yellow"), RED("red", new TranslationKey("screen.win4.red_player"), "textures/wins4/figure/figure_red"),
+	YELLOW("yellow", new TranslationKey("screen.win4.yellow_player"), "textures/wins4/figure/figure_yellow"), RED("red", new TranslationKey("screen.win4.red_player"), "textures/wins4/figure/figure_red"),
 	NO("no", new TranslationKey("screen.tic_tac_toe.no_player"), null);
 	
 	private final String name;

@@ -1,7 +1,7 @@
 package net.luis.game.map.field;
 
-import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.player.GameProfile;
+import net.luis.game.player.game.GamePlayerType;
 import net.luis.network.annotation.DecodingConstructor;
 import net.luis.network.buffer.Encodable;
 import net.luis.network.buffer.EncodableEnum;
@@ -105,5 +105,4 @@ public class GameFieldInfo implements Encodable {
 	public @NotNull String toString() {
 		return ToString.toString(this);
 	}
-	
 }

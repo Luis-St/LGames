@@ -9,7 +9,6 @@ import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -24,9 +23,8 @@ import java.util.UUID;
 public abstract class AbstractPlayerList implements PlayerList {
 	
 	private static final Logger LOGGER = LogManager.getLogger(AbstractPlayerList.class);
-	
-	private final FxApplication application;
 	protected final Map<GameProfile, Player> players = Maps.newHashMap();
+	private final FxApplication application;
 	
 	public AbstractPlayerList(FxApplication application) {
 		this.application = application;
@@ -58,7 +56,7 @@ public abstract class AbstractPlayerList implements PlayerList {
 	}
 	
 	@Override
-	public @Nullable Player getPlayer(@NotNull UUID uuid) {
+	public Player getPlayer(@NotNull UUID uuid) {
 		if (Utils.EMPTY_UUID.equals(uuid)) {
 			return null;
 		}
@@ -69,5 +67,4 @@ public abstract class AbstractPlayerList implements PlayerList {
 		}
 		return null;
 	}
-	
 }

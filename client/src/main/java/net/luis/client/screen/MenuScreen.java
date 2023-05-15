@@ -74,5 +74,4 @@ public class MenuScreen extends ClientScreen implements Tickable {
 		border.setCenter(this.centerBox);
 		return border;
 	}
-	
 }

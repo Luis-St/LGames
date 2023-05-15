@@ -38,15 +38,15 @@ public class Client extends FxApplication implements GameApplication {
 	private String accountHost;
 	private int accountPort;
 	
+	public Client(ApplicationType type, ResourceManager resourceManager, Stage stage) {
+		super(type, resourceManager, stage, new MenuScreen(), true);
+	}
+	
 	public static @NotNull Client getInstance() {
 		if (FxApplication.getInstance() instanceof Client client) {
 			return client;
 		}
 		throw new NullPointerException("The client instance is not yet available because the client has not yet been initialized");
-	}
-	
-	public Client(ApplicationType type, ResourceManager resourceManager, Stage stage) {
-		super(type, resourceManager, stage, new MenuScreen(), true);
 	}
 	
 	@Override
@@ -118,5 +118,4 @@ public class Client extends FxApplication implements GameApplication {
 	public void save() {
 	
 	}
-	
 }

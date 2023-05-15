@@ -24,5 +24,4 @@ public interface GamePlayerType {
 	}
 	
 	@Nullable ImageView getImage(@NotNull String suffix, double width, double height);
-	
 }

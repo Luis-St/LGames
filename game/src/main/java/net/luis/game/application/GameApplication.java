@@ -28,5 +28,4 @@ public interface GameApplication {
 	@NotNull AbstractScreen getScreen();
 	
 	void setScreen(@NotNull AbstractScreen screen);
-	
 }

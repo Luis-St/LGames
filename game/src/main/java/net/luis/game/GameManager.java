@@ -47,5 +47,4 @@ public class GameManager {
 	public void removeGame(@NotNull Game game) {
 		this.removeGame(game.getUniqueId());
 	}
-	
 }

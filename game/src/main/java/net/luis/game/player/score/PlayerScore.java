@@ -1,15 +1,12 @@
 package net.luis.game.player.score;
 
 import net.luis.game.player.GameProfile;
-import net.luis.network.annotation.DecodingConstructor;
-import net.luis.network.buffer.Encodable;
-import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.utils.util.ToString;
+import net.luis.netcore.buffer.Encodable;
+import net.luis.netcore.buffer.FriendlyByteBuffer;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -145,8 +142,9 @@ public class PlayerScore implements Encodable {
 		buffer.writeInt(this.score.getValue());
 	}
 	
+	//region Object overrides
 	@Override
-	public boolean equals(@Nullable Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof PlayerScore that)) return false;
 		
@@ -163,8 +161,8 @@ public class PlayerScore implements Encodable {
 	}
 	
 	@Override
-	public @NotNull String toString() {
-		return ToString.toString(this);
+	public String toString() {
+		return "PlayerScore{profile=" + this.profile + ", win=" + this.win + ", lose=" + this.lose + ", draw=" + this.draw + ", score=" + this.score + "}";
 	}
-	
+	//endregion
 }

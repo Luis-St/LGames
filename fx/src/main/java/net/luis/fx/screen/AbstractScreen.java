@@ -53,12 +53,11 @@ public abstract class AbstractScreen {
 	protected abstract @NotNull Pane createPane();
 	
 	protected @NotNull ScreenScene createScene() {
-	    return new ScreenScene(this.createPane(), this.width, this.height, this);
+		return new ScreenScene(this.createPane(), this.width, this.height, this);
 	}
 	
 	public final void show(@NotNull Stage stage) {
 		stage.setScene(this.createScene());
 		stage.setResizable(this.resizable);
 	}
-	
 }

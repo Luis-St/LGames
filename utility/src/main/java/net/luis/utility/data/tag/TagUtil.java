@@ -21,5 +21,4 @@ public class TagUtil {
 	public static @NotNull TranslationKey readTranslationKey(@NotNull CompoundTag tag) {
 		return new TranslationKey(tag.getString("key"));
 	}
-	
 }

@@ -128,7 +128,9 @@ public class LudoFieldPos implements GameFieldPos {
 			return true;
 		} else if (this.green == 20 && this.yellow == 10 && this.blue == 0 && this.red == 30) {
 			return true;
-		} else return this.green == 30 && this.yellow == 20 && this.blue == 10 && this.red == 0;
+		} else {
+			return this.green == 30 && this.yellow == 20 && this.blue == 10 && this.red == 0;
+		}
 	}
 	
 	@Override

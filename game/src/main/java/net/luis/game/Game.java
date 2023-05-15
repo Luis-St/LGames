@@ -14,16 +14,11 @@ import net.luis.game.player.game.GamePlayerType;
 import net.luis.game.screen.GameScreen;
 import net.luis.game.type.GameType;
 import net.luis.game.win.WinHandler;
-import net.luis.network.packet.Packet;
-import net.luis.network.packet.client.SyncPlayerDataPacket;
-import net.luis.network.packet.client.game.ExitGamePacket;
-import net.luis.network.packet.client.game.StopGamePacket;
-import net.luis.network.packet.client.game.UpdateGameMapPacket;
+import net.luis.netcore.packet.Packet;
 import net.luis.utils.math.Mth;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -77,7 +72,7 @@ public interface Game {
 		return enemies;
 	}
 	
-	default @Nullable GamePlayer getPlayerFor(@NotNull GameProfile profile) {
+	default GamePlayer getPlayerFor(@NotNull GameProfile profile) {
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.getPlayer().getProfile().equals(profile)) {
 				return gamePlayer;
@@ -86,11 +81,11 @@ public interface Game {
 		return null;
 	}
 	
-	default @Nullable GamePlayer getPlayerFor(@NotNull Player player) {
+	default GamePlayer getPlayerFor(@NotNull Player player) {
 		return this.getPlayerFor(player.getProfile());
 	}
 	
-	default @Nullable GamePlayerType getPlayerType(@NotNull GamePlayer player) {
+	default GamePlayerType getPlayerType(@NotNull GamePlayer player) {
 		for (GamePlayer gamePlayer : this.getPlayers()) {
 			if (gamePlayer.equals(player)) {
 				return gamePlayer.getPlayerType();
@@ -99,15 +94,15 @@ public interface Game {
 		return null;
 	}
 	
-	default @Nullable GamePlayerType getPlayerType(@NotNull Player player) {
+	default GamePlayerType getPlayerType(@NotNull Player player) {
 		return this.getPlayerType(Objects.requireNonNull(this.getPlayerFor(player)));
 	}
 	
-	@Nullable GamePlayer getPlayer();
+	GamePlayer getPlayer();
 	
 	void setPlayer(@NotNull GamePlayer player);
 	
-	default @Nullable GamePlayer getStartPlayer() {
+	default GamePlayer getStartPlayer() {
 		this.nextPlayer(true);
 		return ApplicationType.SERVER.isOn() ? this.getPlayer() : null;
 	}
@@ -115,7 +110,7 @@ public interface Game {
 	default void nextPlayer(boolean random) {
 		if (ApplicationType.SERVER.isOn()) {
 			List<? extends GamePlayer> players = Lists.newArrayList(this.getPlayers());
-			players.removeIf(Objects.requireNonNull(this.getWinHandler()).getWinOrder()::contains);
+			players.removeIf(this.getWinHandler().getWinOrder()::contains);
 			if (!players.isEmpty()) {
 				if (random) {
 					this.setPlayer(players.get(new Random().nextInt(players.size())));
@@ -172,11 +167,11 @@ public interface Game {
 		return false;
 	}
 	
-	default @Nullable DiceHandler getDiceHandler() {
+	default DiceHandler getDiceHandler() {
 		return null;
 	}
 	
-	default @Nullable WinHandler getWinHandler() {
+	default WinHandler getWinHandler() {
 		return null;
 	}
 	
@@ -193,7 +188,8 @@ public interface Game {
 			LogManager.getLogger(Game.class).info("Start a new match of game {} with players {}", this.getType().getInfoName(), Utils.mapList(this.getPlayers(), GamePlayer::getName));
 			return true;
 		}
-		LogManager.getLogger(Game.class).warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.getPlayers().size(), this.getType().getMinPlayers(), this.getType().getMaxPlayers());
+		LogManager.getLogger(Game.class).warn("Fail to start a new match of game {}, since the player count {} is not in bound {} - {} ", this.getType().getName().toLowerCase(), this.getPlayers().size(), this.getType().getMinPlayers(),
+				this.getType().getMaxPlayers());
 		return false;
 	}
 	

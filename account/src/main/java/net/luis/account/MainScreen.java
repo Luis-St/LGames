@@ -16,13 +16,10 @@ import net.luis.account.window.AccountCreationWindow;
 import net.luis.fx.screen.AbstractScreen;
 import net.luis.fxutils.FxUtils;
 import net.luis.fxutils.PropertyListeners;
-import net.luis.game.application.FxApplication;
 import net.luis.language.TranslationKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Supplier;
 
 /**
  *

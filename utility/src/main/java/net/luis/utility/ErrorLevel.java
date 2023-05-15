@@ -33,5 +33,4 @@ public enum ErrorLevel {
 	public @NotNull String toString() {
 		return this.name;
 	}
-	
 }

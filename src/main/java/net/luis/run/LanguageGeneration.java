@@ -24,7 +24,7 @@ import java.util.function.Function;
  */
 
 public class LanguageGeneration {
-
+	
 	public static void main(String[] args) {
 		List<Translation> english = Utils.make(Lists.newArrayList(), (list) -> {
 			//region English Translations
@@ -233,5 +233,4 @@ public class LanguageGeneration {
 		Optional<JsonElement> optional = function.apply(languageFile).result();
 		optional.ifPresent(jsonElement -> JsonHelper.save(new GsonBuilder().setPrettyPrinting().create(), jsonElement, new File(System.getProperty("user.home")).toPath().resolve("Desktop/" + language.fileName() + ".json")));
 	}
-	
 }

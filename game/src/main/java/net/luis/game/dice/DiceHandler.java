@@ -50,5 +50,4 @@ public interface DiceHandler {
 	@NotNull List<PlayerDiceInfo> getCountHistory();
 	
 	void reset();
-	
 }

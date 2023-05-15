@@ -25,5 +25,4 @@ public class IndexToggleButton extends ToggleButton {
 	public int getIndex() {
 		return this.index;
 	}
-	
 }

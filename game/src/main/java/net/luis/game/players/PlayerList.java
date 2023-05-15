@@ -4,7 +4,6 @@ import net.luis.game.application.FxApplication;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -36,9 +35,9 @@ public interface PlayerList extends Iterable<Player> {
 		this.getPlayers().forEach(this::removePlayer);
 	}
 	
-	@Nullable Player getPlayer(@NotNull UUID uuid);
+	Player getPlayer(@NotNull UUID uuid);
 	
-	default @Nullable Player getPlayer(@NotNull GameProfile profile) {
+	default Player getPlayer(@NotNull GameProfile profile) {
 		return this.getPlayer(profile.getUniqueId());
 	}
 	
@@ -46,5 +45,4 @@ public interface PlayerList extends Iterable<Player> {
 	default List<GameProfile> getProfiles() {
 		return this.getPlayers().stream().map(Player::getProfile).collect(Collectors.toList());
 	}
-	
 }

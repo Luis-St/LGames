@@ -2,14 +2,13 @@ package net.luis.account.account;
 
 import javafx.scene.control.TreeItem;
 import net.luis.language.TranslationKey;
-import net.luis.network.annotation.DecodingConstructor;
-import net.luis.network.buffer.Encodable;
-import net.luis.network.buffer.FriendlyByteBuffer;
+import net.luis.netcore.buffer.Decodable;
+import net.luis.netcore.buffer.Encodable;
+import net.luis.netcore.buffer.FriendlyByteBuffer;
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +27,7 @@ import java.util.UUID;
  */
 
 @Deserializable
-public class Account implements Encodable, Serializable {
+public class Account implements Serializable, Encodable, Decodable {
 	
 	public static final Account UNKNOWN = new Account("Unknown", "unknown".hashCode(), 0, Utils.EMPTY_UUID, "", "Unknown", "Unknown", new Date(), AccountType.UNKNOWN);
 	public static final Account TEST_1 = new Account("Test 1", "1".hashCode(), 1, UUID.fromString("11111111-1111-1111-1111-111111111111"), "", "Test", "1", new Date(), AccountType.TEST);
@@ -59,8 +58,8 @@ public class Account implements Encodable, Serializable {
 		this.type = type;
 	}
 	
-	@DecodingConstructor
-	private Account(@NotNull FriendlyByteBuffer buffer) {
+	//region IO
+	public Account(@NotNull FriendlyByteBuffer buffer) {
 		this.name = buffer.readString();
 		this.passwordHash = buffer.readInt();
 		this.id = buffer.readInt();
@@ -98,7 +97,9 @@ public class Account implements Encodable, Serializable {
 		}
 		this.type = AccountType.values()[tag.getInt("Type")];
 	}
+	//endregion
 	
+	//region Getters
 	public @NotNull String getName() {
 		return this.name;
 	}
@@ -138,6 +139,7 @@ public class Account implements Encodable, Serializable {
 	public boolean isTaken() {
 		return this.taken;
 	}
+	//endregion
 	
 	public void setTaken(boolean taken) {
 		this.taken = taken;
@@ -178,6 +180,7 @@ public class Account implements Encodable, Serializable {
 		return "0".repeat(4 - id.length()) + id;
 	}
 	
+	//region IO
 	@Override
 	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeString(this.name);
@@ -219,9 +222,11 @@ public class Account implements Encodable, Serializable {
 		tag.putInt("Type", this.type.ordinal());
 		return tag;
 	}
+	//endregion
 	
+	//region Object overrides
 	@Override
-	public boolean equals(@NotNull Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof Account account)) return false;
 		
@@ -243,12 +248,13 @@ public class Account implements Encodable, Serializable {
 	}
 	
 	@Override
-	public @NotNull String toString() {
-		return ToString.toString(this);
+	public String toString() {
+		return "Account{name='" + this.name + '\'' + ", passwordHash=" + this.passwordHash + ", id=" + this.id + ", uuid=" + this.uuid + ", mail='" + this.mail + '\'' + ", firstName='" + this.firstName + '\'' + ", lastName='" +
+				this.lastName + '\'' + ", birthday=" + this.birthday + "}";
 	}
+	//endregion
 	
-	public @NotNull String toShortString() {
+	public String toShortString() {
 		return this.name + "#" + this.id;
 	}
-	
 }

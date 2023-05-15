@@ -31,6 +31,4 @@ public record Translation(@NotNull String key, @NotNull String value) {
 	public @NotNull String toString() {
 		return this.key + ":" + this.value;
 	}
-	
-	
 }

@@ -47,5 +47,4 @@ public class DiceButton extends Button {
 		this.count = count;
 		this.updateState();
 	}
-	
 }

@@ -102,5 +102,4 @@ public interface GamePlayer {
 	int getRollCount();
 	
 	void setRollCount(int rollCount);
-	
 }

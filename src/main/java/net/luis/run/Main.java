@@ -22,5 +22,4 @@ public class Main {
 		LOGGER.info("Run with Arguments: {}", Arrays.asList(args).toString().replace("[", "").replace("]", ""));
 		InternalApplication.launch(InternalApplication.class, args);
 	}
-	
 }

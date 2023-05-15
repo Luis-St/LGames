@@ -119,5 +119,4 @@ public class LanguageProvider {
 	public @NotNull String getTranslation(@NotNull TranslationKey key) {
 		return this.getTranslation(this.currentLanguage, key);
 	}
-	
 }

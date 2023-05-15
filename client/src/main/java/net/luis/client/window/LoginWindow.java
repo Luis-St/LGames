@@ -310,5 +310,4 @@ public class LoginWindow extends AbstractWindow {
 			this.connection.close(); // TODO: send logout packet
 		}
 	}
-	
 }

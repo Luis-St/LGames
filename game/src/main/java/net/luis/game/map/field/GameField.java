@@ -89,5 +89,4 @@ public interface GameField {
 		assert figure != null;
 		return new GameFieldInfo(this.getFieldType(), this.getColorType(), this.getFieldPos(), figure.getPlayer().getPlayer().getProfile(), figure.getIndex(), figure.getUniqueId());
 	}
-	
 }

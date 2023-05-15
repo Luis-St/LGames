@@ -17,5 +17,4 @@ import java.util.UUID;
 public interface GamePlayerFactory {
 	
 	@NotNull GamePlayer create(@NotNull Game game, @NotNull Player player, @NotNull GamePlayerType playerType, @NotNull List<UUID> uniqueIds);
-	
 }

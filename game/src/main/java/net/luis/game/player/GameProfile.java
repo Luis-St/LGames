@@ -1,16 +1,14 @@
 package net.luis.game.player;
 
-import net.luis.network.annotation.DecodingConstructor;
-import net.luis.network.buffer.Encodable;
-import net.luis.network.buffer.FriendlyByteBuffer;
+import net.luis.netcore.buffer.Decodable;
+import net.luis.netcore.buffer.Encodable;
+import net.luis.netcore.buffer.FriendlyByteBuffer;
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;
 import net.luis.utils.data.tag.tags.CompoundTag;
-import net.luis.utils.util.ToString;
 import net.luis.utils.util.Utils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -22,7 +20,7 @@ import java.util.UUID;
  */
 
 @Deserializable
-public class GameProfile implements Encodable, Serializable {
+public class GameProfile implements Serializable, Encodable, Decodable {
 	
 	public static final GameProfile EMPTY = new GameProfile("empty", Utils.EMPTY_UUID);
 	
@@ -34,8 +32,8 @@ public class GameProfile implements Encodable, Serializable {
 		this.uuid = uuid;
 	}
 	
-	@DecodingConstructor
-	private GameProfile(@NotNull FriendlyByteBuffer buffer) {
+	//region IO
+	public GameProfile(@NotNull FriendlyByteBuffer buffer) {
 		this.name = buffer.readString();
 		this.uuid = buffer.readUUID();
 	}
@@ -44,6 +42,7 @@ public class GameProfile implements Encodable, Serializable {
 		this.name = tag.getString("Name");
 		this.uuid = TagUtils.readUUID(tag.getCompound("UUID"));
 	}
+	//endregion
 	
 	public @NotNull String getName() {
 		return this.name;
@@ -53,6 +52,7 @@ public class GameProfile implements Encodable, Serializable {
 		return this.uuid;
 	}
 	
+	//region IO
 	@Override
 	public void encode(@NotNull FriendlyByteBuffer buffer) {
 		buffer.writeString(this.getName());
@@ -66,9 +66,11 @@ public class GameProfile implements Encodable, Serializable {
 		tag.putCompound("UUID", TagUtils.writeUUID(this.uuid));
 		return tag;
 	}
+	//endregion
 	
+	//region Object overrides
 	@Override
-	public boolean equals(@Nullable Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof GameProfile that)) return false;
 		
@@ -82,8 +84,8 @@ public class GameProfile implements Encodable, Serializable {
 	}
 	
 	@Override
-	public @NotNull String toString() {
-		return ToString.toString(this);
+	public String toString() {
+		return "GameProfile{name='" + this.name + '\'' + ", uuid=" + this.uuid + "}";
 	}
-	
+	//endregion
 }

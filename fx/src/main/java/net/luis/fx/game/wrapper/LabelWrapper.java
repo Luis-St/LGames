@@ -14,8 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LabelWrapper {
 	
-	@NotNull
-	Label getLabel();
+	@NotNull Label getLabel();
 	
 	default void setPrefSize(double prefWidth, double prefHeight) {
 		this.getLabel().setPrefSize(prefWidth, prefHeight);
@@ -32,5 +31,4 @@ public interface LabelWrapper {
 	default void setGraphic(@Nullable Node value) {
 		this.getLabel().setGraphic(value);
 	}
-	
 }

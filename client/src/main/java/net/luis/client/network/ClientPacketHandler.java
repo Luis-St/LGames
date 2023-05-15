@@ -146,14 +146,14 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(SyncPermissionPacket.class)
 	public void handleSyncPermission(@NotNull GameProfile profile) { // TODO: remove and merge with SyncPlayerDataPacket
-//		for (Player player : this.client.getPlayerList().getPlayers()) {
-//			if (player.getProfile().equals(profile)) {
-//				player.setAdmin(true);
-//				LOGGER.debug("Player {} is now a admin", player.getProfile().getName());
-//			} else {
-//				player.setAdmin(false);
-//			}
-//		}
+		//		for (Player player : this.client.getPlayerList().getPlayers()) {
+		//			if (player.getProfile().equals(profile)) {
+		//				player.setAdmin(true);
+		//				LOGGER.debug("Player {} is now a admin", player.getProfile().getName());
+		//			} else {
+		//				player.setAdmin(false);
+		//			}
+		//		}
 		LOGGER.info("Sync admins");
 	}
 	
@@ -176,14 +176,14 @@ public class ClientPacketHandler implements PacketHandler {
 	
 	@PacketListener(RolledDicePacket.class)
 	public void handleRolledDice(int count) { // TODO: sync required data
-//		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
-//		if (Mth.isInBounds(count, 1, 6)) {
-//			player.setCount(count);
-//			player.setCanRollDice(false);
-//		} else {
-//			player.setCount(-1);
-//			player.setCanRollDice(false);
-//		}
+		//		LocalPlayer player = Objects.requireNonNull(this.client.getPlayerList().getPlayer());
+		//		if (Mth.isInBounds(count, 1, 6)) {
+		//			player.setCount(count);
+		//			player.setCanRollDice(false);
+		//		} else {
+		//			player.setCount(-1);
+		//			player.setCanRollDice(false);
+		//		}
 		LOGGER.info("Rolled dice with count {}", count);
 	}
 	
@@ -293,5 +293,4 @@ public class ClientPacketHandler implements PacketHandler {
 		this.client.getPlayerList().removePlayer(Objects.requireNonNull(this.client.getPlayerList().getPlayer()));
 		this.client.setScreen(new MenuScreen());
 	}
-	
 }

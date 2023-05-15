@@ -41,7 +41,8 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 		this.accounts = Lists.newArrayList();
 	}
 	
-	private AccountAgent(@NotNull CompoundTag tag) {
+	//region IO
+	public AccountAgent(@NotNull CompoundTag tag) {
 		if (!tag.contains("Accounts", Tag.COMPOUND_TAG)) {
 			throw new IllegalArgumentException("Unable to deserialize AccountManager, since the tag does not contain the key 'Accounts'");
 		}
@@ -66,6 +67,17 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 		}
 		this.accounts = accounts;
 	}
+	//endregion
+	
+	private static @NotNull UUID generateUUID(int nameHash, int passwordHash) {
+		if (Constants.DEV_MODE) {
+			Optional<Account> optional = TEST_ACCOUNTS.stream().filter(account -> account.getName().hashCode() == nameHash && account.getPasswordHash() == passwordHash).findAny();
+			if (optional.isPresent()) {
+				return optional.get().getUUID();
+			}
+		}
+		return new UUID(nameHash, passwordHash);
+	}
 	
 	public @NotNull List<Account> getAccounts() {
 		return this.accounts;
@@ -76,23 +88,11 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 		return this.accounts.iterator();
 	}
 	
-	private static @NotNull UUID generateUUID(int nameHash, int passwordHash) {
-		if (Constants.DEV_MODE) {
-			for (Account account : TEST_ACCOUNTS) {
-				if (account.getName().hashCode() == nameHash && account.getPasswordHash() == passwordHash) {
-					return account.getUUID();
-				}
-			}
-		}
-		return new UUID(nameHash, passwordHash);
-	}
-	
 	private @Nullable Account findAccount(@NotNull UUID uuid) {
 		if (Constants.DEV_MODE && Constants.DEBUG_MODE) {
-			for (Account account : TEST_ACCOUNTS) {
-				if (account.getUUID().equals(uuid)) {
-					return account;
-				}
+			Optional<Account> optional = TEST_ACCOUNTS.stream().filter(account -> account.getUUID().equals(uuid)).findAny();
+			if (optional.isPresent()) {
+				return optional.get();
 			}
 		}
 		for (Account account : this.accounts) {
@@ -180,6 +180,11 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 		return false;
 	}
 	
+	public void close() {
+		this.accounts.clear();
+	}
+	
+	//region IO
 	@Override
 	public @NotNull CompoundTag serialize() {
 		List<Account> accounts = Lists.newArrayList(this.accounts);
@@ -194,9 +199,5 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 		LOGGER.info("Saved {} accounts successfully", accountsTag.size());
 		return tag;
 	}
-	
-	public void close() {
-		this.accounts.clear();
-	}
-	
+	//endregion
 }

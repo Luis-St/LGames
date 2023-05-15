@@ -51,5 +51,4 @@ public interface GameFigure {
 	default boolean canKick(@NotNull GameFigure figure) {
 		return false;
 	}
-	
 }

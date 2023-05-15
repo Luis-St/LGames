@@ -15,5 +15,4 @@ public interface DataHandler {
 	void load(@NotNull String[] args) throws Exception;
 	
 	void save() throws IOException;
-	
 }

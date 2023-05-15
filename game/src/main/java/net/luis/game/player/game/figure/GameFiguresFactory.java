@@ -15,5 +15,4 @@ import java.util.List;
 public interface GameFiguresFactory {
 	
 	@NotNull List<GameFigure> create(@NotNull GamePlayer player);
-	
 }

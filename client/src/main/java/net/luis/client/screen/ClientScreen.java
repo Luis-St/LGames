@@ -24,10 +24,6 @@ public abstract class ClientScreen extends AbstractScreen {
 		super(title, width, height, resizable);
 	}
 	
-	public void init() {
-	
-	}
-	
 	protected void showScreen(@NotNull ClientScreen screen) {
 		this.client.get().setScreen(screen);
 	}

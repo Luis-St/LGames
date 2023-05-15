@@ -60,5 +60,4 @@ public abstract class AbstractWinHandler implements WinHandler {
 		this.finishedPlayers.clear();
 		this.winningPlayers.clear();
 	}
-	
 }

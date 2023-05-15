@@ -26,5 +26,4 @@ public enum LoginType {
 	public @NotNull String toString() {
 		return this.name;
 	}
-	
 }

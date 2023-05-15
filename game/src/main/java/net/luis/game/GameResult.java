@@ -26,5 +26,4 @@ public enum GameResult {
 	public @NotNull String toString() {
 		return this.name;
 	}
-	
 }

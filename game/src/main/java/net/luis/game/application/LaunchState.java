@@ -26,5 +26,4 @@ public enum LaunchState {
 	public @NotNull String toString() {
 		return this.name;
 	}
-	
 }

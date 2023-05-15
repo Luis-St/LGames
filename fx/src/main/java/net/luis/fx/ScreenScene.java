@@ -3,7 +3,6 @@ package net.luis.fx;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import net.luis.fx.screen.AbstractScreen;
-import net.luis.utility.Tickable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,5 +23,4 @@ public class ScreenScene extends Scene {
 	public @NotNull AbstractScreen getScreen() {
 		return this.screen;
 	}
-	
 }

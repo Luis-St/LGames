@@ -13,5 +13,4 @@ public interface Dice {
 	int rollExclude(int value);
 	
 	int rollPreferred(int value, int rolls);
-	
 }

@@ -167,6 +167,4 @@ public class AccountCreationWindow extends AbstractWindow {
 	protected void exit() {
 	
 	}
-	
-	
 }

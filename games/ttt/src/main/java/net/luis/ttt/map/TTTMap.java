@@ -19,15 +19,15 @@ import net.luis.game.map.field.GameField;
 import net.luis.game.map.field.GameFieldInfo;
 import net.luis.game.map.field.GameFieldPos;
 import net.luis.game.map.field.GameFieldType;
+import net.luis.game.player.GameProfile;
 import net.luis.game.player.game.GamePlayer;
 import net.luis.game.player.game.GamePlayerType;
-import net.luis.game.player.GameProfile;
 import net.luis.game.player.game.figure.GameFigure;
 import net.luis.game.win.GameResultLine;
+import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.client.ClientPacket;
 import net.luis.network.packet.client.game.GameResultPacket;
 import net.luis.network.packet.client.game.UpdateGameMapPacket;
-import net.luis.network.listener.PacketListener;
 import net.luis.ttt.map.field.TTTField;
 import net.luis.ttt.map.field.TTTFieldPos;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +46,7 @@ import java.util.UUID;
  */
 
 
-public class TTTMap extends AbstractGameMap implements GridPaneWrapper{
+public class TTTMap extends AbstractGameMap implements GridPaneWrapper {
 	
 	private static final Logger LOGGER = LogManager.getLogger(TTTMap.class);
 	

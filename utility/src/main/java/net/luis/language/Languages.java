@@ -2,7 +2,6 @@ package net.luis.language;
 
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class Languages {
 		return language;
 	}
 	
-	public static @Nullable Language fromName(@NotNull String name) {
+	public static Language fromName(@NotNull String name) {
 		for (Language language : LANGUAGES) {
 			if (language.name().equals(name)) {
 				return language;
@@ -32,7 +31,7 @@ public class Languages {
 		return null;
 	}
 	
-	public static @Nullable Language fromFileName(@NotNull String fileName) {
+	public static Language fromFileName(@NotNull String fileName) {
 		for (Language language : LANGUAGES) {
 			if (language.fileName().equals(fileName)) {
 				return language;
@@ -40,5 +39,4 @@ public class Languages {
 		}
 		return null;
 	}
-	
 }

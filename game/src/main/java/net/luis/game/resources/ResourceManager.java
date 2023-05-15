@@ -1,8 +1,6 @@
 package net.luis.game.resources;
 
-import net.luis.utils.util.ToString;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -15,8 +13,9 @@ import java.util.Objects;
 
 public record ResourceManager(@NotNull Path gameDirectory, @NotNull Path resourceDirectory) {
 	
+	//region Object overrides
 	@Override
-	public boolean equals(@Nullable Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof ResourceManager that)) return false;
 		
@@ -30,7 +29,8 @@ public record ResourceManager(@NotNull Path gameDirectory, @NotNull Path resourc
 	}
 	
 	@Override
-	public @NotNull String toString() {
-		return ToString.toString(this);
+	public String toString() {
+		return "ResourceManager{gameDirectory=" + this.gameDirectory + ", resourceDirectory=" + this.resourceDirectory + "}";
 	}
+	//endregion
 }

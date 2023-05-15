@@ -51,5 +51,4 @@ public class FxTest extends Application {
 		stage.setScene(new Scene(pane, 250.0, 250.0));
 		stage.show();
 	}
-	
 }

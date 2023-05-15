@@ -1,7 +1,7 @@
 package net.luis.game.map.field;
 
 import net.luis.game.player.game.GamePlayerType;
-import net.luis.network.buffer.Encodable;
+import net.luis.netcore.buffer.Encodable;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,5 +30,4 @@ public interface GameFieldPos extends Encodable {
 	boolean isStart();
 	
 	boolean isOutOfMap();
-	
 }

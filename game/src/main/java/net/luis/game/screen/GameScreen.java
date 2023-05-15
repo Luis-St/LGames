@@ -44,5 +44,4 @@ public abstract class GameScreen extends AbstractScreen {
 	public @NotNull GameApplication getApplication() {
 		return this.game.getApplication();
 	}
-	
 }

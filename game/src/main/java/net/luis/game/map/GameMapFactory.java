@@ -13,5 +13,4 @@ import org.jetbrains.annotations.NotNull;
 public interface GameMapFactory {
 	
 	@NotNull GameMap create(@NotNull Game game);
-	
 }
