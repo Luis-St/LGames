@@ -1,11 +1,8 @@
 package net.luis.game.player.game;
 
 import net.luis.game.player.GameProfile;
-import net.luis.network.annotation.DecodingConstructor;
-import net.luis.network.buffer.Encodable;
-import net.luis.network.buffer.EncodableEnum;
-import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.utils.util.ToString;
+import net.luis.netcore.buffer.Encodable;
+import net.luis.netcore.buffer.FriendlyByteBuffer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +29,6 @@ public class GamePlayerInfo implements Encodable {
 		this.uniqueIds = uniqueIds;
 	}
 	
-	@DecodingConstructor
 	public GamePlayerInfo(@NotNull FriendlyByteBuffer buffer) {
 		GameProfile profile = buffer.read(GameProfile.class);
 		this.profile = GameProfile.EMPTY.equals(profile) ? GameProfile.EMPTY : profile;

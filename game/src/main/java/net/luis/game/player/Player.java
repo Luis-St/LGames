@@ -4,8 +4,6 @@ import net.luis.game.Game;
 import net.luis.game.application.GameApplication;
 import net.luis.game.player.game.GamePlayer;
 import net.luis.game.player.score.PlayerScore;
-import net.luis.network.Connection;
-import net.luis.utils.util.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

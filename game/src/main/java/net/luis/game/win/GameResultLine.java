@@ -2,10 +2,8 @@ package net.luis.game.win;
 
 import com.google.common.collect.Lists;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.network.annotation.DecodingConstructor;
-import net.luis.network.buffer.Encodable;
-import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.utils.util.ToString;
+import net.luis.netcore.buffer.Encodable;
+import net.luis.netcore.buffer.FriendlyByteBuffer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,8 +30,7 @@ public class GameResultLine implements Encodable {
 		this.fieldPositions = fieldPositions;
 	}
 	
-	@DecodingConstructor
-	private GameResultLine(@NotNull FriendlyByteBuffer buffer) {
+	public GameResultLine(@NotNull FriendlyByteBuffer buffer) {
 		this.fieldPositions = buffer.readList(buffer::readInterface);
 	}
 	

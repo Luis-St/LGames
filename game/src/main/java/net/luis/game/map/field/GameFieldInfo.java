@@ -2,11 +2,8 @@ package net.luis.game.map.field;
 
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.game.GamePlayerType;
-import net.luis.network.annotation.DecodingConstructor;
-import net.luis.network.buffer.Encodable;
-import net.luis.network.buffer.EncodableEnum;
-import net.luis.network.buffer.FriendlyByteBuffer;
-import net.luis.utils.util.ToString;
+import net.luis.netcore.buffer.Encodable;
+import net.luis.netcore.buffer.FriendlyByteBuffer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +35,6 @@ public class GameFieldInfo implements Encodable {
 		this.figureUUID = figureUUID;
 	}
 	
-	@DecodingConstructor
 	public GameFieldInfo(@NotNull FriendlyByteBuffer buffer) {
 		this.fieldType = buffer.read(EncodableEnum.class);
 		this.playerType = buffer.read(EncodableEnum.class);

@@ -5,7 +5,6 @@ import javafx.stage.Stage;
 import net.luis.fx.ScreenScene;
 import net.luis.fx.screen.AbstractScreen;
 import net.luis.game.resources.ResourceManager;
-import net.luis.network.instance.NetworkInstance;
 import net.luis.utility.data.DataHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

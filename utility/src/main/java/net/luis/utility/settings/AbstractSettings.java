@@ -1,22 +1,7 @@
 package net.luis.utility.settings;
 
-import net.luis.utils.data.serialization.Serializable;
-import net.luis.utils.data.tag.Tag;
-import net.luis.utils.data.tag.TagUtils;
-import net.luis.utils.data.tag.tags.CompoundTag;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-
-/**
- *
- * @author Luis-st
- *
- */
-
-@Deprecated
+/*@Deprecated
 public abstract class AbstractSettings implements Serializable {
 	
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractSettings.class);
@@ -59,4 +44,4 @@ public abstract class AbstractSettings implements Serializable {
 		return tag;
 	}
 	
-}
+}*/

@@ -1,21 +1,7 @@
 package net.luis.utility.settings;
 
-import com.google.common.collect.Maps;
-import net.luis.language.Language;
-import net.luis.language.Languages;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
-/**
- *
- * @author Luis-st
- *
- */
-
-@Deprecated
+/*@Deprecated
 public class SettingValueTypes {
 	
 	private static final Map<Integer, SettingValueType<?>> INT_TO_TYPE = Maps.newHashMap();
@@ -108,4 +94,4 @@ public class SettingValueTypes {
 		return valueType;
 	}
 	
-}
+}*/

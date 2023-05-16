@@ -1,30 +1,6 @@
 package net.luis.utility.settings;
 
-import com.google.common.collect.Lists;
-import net.luis.language.Languages;
-import net.luis.language.TranslationKey;
-import net.luis.utility.data.tag.TagUtil;
-import net.luis.utils.data.serialization.Serializable;
-import net.luis.utils.data.tag.Tag;
-import net.luis.utils.data.tag.TagUtils;
-import net.luis.utils.data.tag.tags.CompoundTag;
-import net.luis.utils.data.tag.tags.StringTag;
-import net.luis.utils.exception.InvalidValueException;
-import net.luis.utils.util.ToString;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.function.BiConsumer;
-
-/**
- *
- * @author Luis-st
- *
- */
-
-@Deprecated
+/*@Deprecated
 public class Setting<T> implements Serializable {
 	
 	private static final Logger LOGGER = LogManager.getLogger(Setting.class);
@@ -153,4 +129,4 @@ public class Setting<T> implements Serializable {
 	public String toString() {
 		return ToString.toString(this, "listeners");
 	}
-}
+}*/
