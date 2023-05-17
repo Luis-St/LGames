@@ -46,13 +46,6 @@ public enum ApplicationType {
 		return Objects.requireNonNull(application.getType()) == this;
 	}
 	
-	@Deprecated
-	public void executeIfOn(@NotNull Runnable action) {
-		if (this.isOn()) {
-			action.run();
-		}
-	}
-	
 	@Override
 	public @NotNull String toString() {
 		return this.name;

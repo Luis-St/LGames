@@ -36,11 +36,11 @@ public abstract class Player {
 		return this.application;
 	}
 	
-	public @Nullable Game getGame() {
+	public Game getGame() {
 		return this.getApplication().getGameManager().getGameFor(this.getProfile());
 	}
 	
-	public @Nullable GamePlayer getPlayer() {
+	public GamePlayer getPlayer() {
 		if (this.getGame() == null) {
 			return null;
 		}
@@ -118,7 +118,7 @@ public abstract class Player {
 	}
 	
 	@Override
-	public @NotNull String toString() {
+	public String toString() {
 		return ToString.toString(this, "application", "connection");
 	}
 }

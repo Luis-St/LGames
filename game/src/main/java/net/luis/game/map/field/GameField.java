@@ -45,7 +45,7 @@ public interface GameField {
 		return this.isHome() || this.isStart() || this.isWin();
 	}
 	
-	@Nullable GameFigure getFigure();
+	GameFigure getFigure();
 	
 	void setFigure(@Nullable GameFigure figure);
 	
@@ -75,7 +75,7 @@ public interface GameField {
 		this.setShadowed(false);
 	}
 	
-	default @Nullable ImageView getFieldBackground() {
+	default ImageView getFieldBackground() {
 		return null;
 	}
 	

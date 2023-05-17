@@ -11,6 +11,8 @@ import net.luis.client.window.LoginWindow;
 import net.luis.fxutils.FxUtils;
 import net.luis.language.TranslationKey;
 import net.luis.utility.Tickable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class MenuScreen extends ClientScreen implements Tickable {
+	
+	private static final Logger LOGGER = LogManager.getLogger(MenuScreen.class);
 	
 	private Button loginButton;
 	private Button multiplayerButton;
@@ -52,7 +56,7 @@ public class MenuScreen extends ClientScreen implements Tickable {
 	}
 	
 	private void handleSettings() {
-		/*this.showScreen(new SettingsScreen(this));*/
+		LOGGER.info("Open settings screen");
 	}
 	
 	private void handleLogin() {

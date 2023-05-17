@@ -31,7 +31,6 @@ import java.util.UUID;
  *
  */
 
-// TODO add PacketSubscriber back
 public interface Game {
 	
 	default void init() {
@@ -227,5 +226,4 @@ public interface Game {
 			}
 		}
 	}
-	
 }

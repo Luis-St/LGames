@@ -41,8 +41,7 @@ public interface PlayerList extends Iterable<Player> {
 		return this.getPlayer(profile.getUniqueId());
 	}
 	
-	@NotNull
-	default List<GameProfile> getProfiles() {
+	default @NotNull List<GameProfile> getProfiles() {
 		return this.getPlayers().stream().map(Player::getProfile).collect(Collectors.toList());
 	}
 }

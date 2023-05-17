@@ -102,11 +102,11 @@ public abstract class AbstractGameField implements GameField {
 	
 	}
 	
-	protected @Nullable ImageView makeImage(@NotNull String path) {
+	protected ImageView makeImage(@NotNull String path) {
 		return this.makeImage(path, 1.0);
 	}
 	
-	protected @Nullable ImageView makeImage(@NotNull String path, double scale) {
+	protected ImageView makeImage(@NotNull String path, double scale) {
 		return FxUtils.makeImageView(FxApplication.getInstance().getResourceManager().resourceDirectory().resolve(path).toString(), this.fieldSize * scale, this.fieldSize * scale);
 	}
 	

@@ -26,7 +26,7 @@ public class GameTypes {
 		return gameType;
 	}
 	
-	public static @Nullable GameType<?> fromId(int id) {
+	public static GameType<?> fromId(int id) {
 		for (GameType<?> gameType : GAME_TYPES) {
 			if (gameType.getId() == id) {
 				return gameType;

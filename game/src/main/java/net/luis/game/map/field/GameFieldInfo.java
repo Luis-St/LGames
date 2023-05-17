@@ -80,7 +80,7 @@ public class GameFieldInfo implements Encodable {
 	}
 	
 	@Override
-	public boolean equals(@Nullable Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof GameFieldInfo that)) return false;
 		
@@ -98,7 +98,7 @@ public class GameFieldInfo implements Encodable {
 	}
 	
 	@Override
-	public @NotNull String toString() {
+	public String toString() {
 		return ToString.toString(this);
 	}
 }

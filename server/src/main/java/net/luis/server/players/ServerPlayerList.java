@@ -97,7 +97,7 @@ public class ServerPlayerList extends AbstractPlayerList {
 	}
 	//endregion
 	
-	public @Nullable Player getAdmin() {
+	public Player getAdmin() {
 		if (Utils.isEmpty(this.getAdminUUID())) {
 			return null;
 		}

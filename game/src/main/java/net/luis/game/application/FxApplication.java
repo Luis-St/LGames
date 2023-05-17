@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import net.luis.fx.ScreenScene;
 import net.luis.fx.screen.AbstractScreen;
 import net.luis.game.resources.ResourceManager;
+import net.luis.netcore.network.NetworkInstance;
 import net.luis.utility.data.DataHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +28,7 @@ public abstract class FxApplication implements Runnable, DataHandler {
 	private final Stage stage;
 	private final AbstractScreen mainScreen;
 	private final boolean dynamic;
+	
 	public FxApplication(ApplicationType type, ResourceManager resourceManager, Stage stage, AbstractScreen mainScreen, boolean dynamic) {
 		this.type = type;
 		this.resourceManager = resourceManager;

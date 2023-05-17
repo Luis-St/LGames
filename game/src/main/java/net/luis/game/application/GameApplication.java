@@ -4,7 +4,7 @@ import net.luis.fx.screen.AbstractScreen;
 import net.luis.game.GameManager;
 import net.luis.game.players.PlayerList;
 import net.luis.game.resources.ResourceManager;
-import net.luis.network.instance.NetworkInstance;
+import net.luis.netcore.network.NetworkInstance;
 import org.jetbrains.annotations.NotNull;
 
 /**

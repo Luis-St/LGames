@@ -9,8 +9,8 @@ import net.luis.game.application.Application;
 import net.luis.game.application.ApplicationType;
 import net.luis.game.application.FxApplication;
 import net.luis.game.resources.ResourceManager;
-import net.luis.network.instance.NetworkInstance;
-import net.luis.network.instance.ServerInstance;
+import net.luis.netcore.network.NetworkInstance;
+import net.luis.netcore.network.ServerInstance;
 import net.luis.utils.data.serialization.SerializationUtils;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
@@ -34,7 +34,9 @@ public class AccountServer extends FxApplication {
 	
 	private static final Logger LOGGER = LogManager.getLogger(AccountServer.class);
 	
-	private final NetworkInstance networkInstance = new ServerInstance();
+	private final LazyLoad<NetworkInstance> networkInstance = new LazyLoad<>(() -> {
+		return new ServerInstance(this.host, this.port);
+	});
 	private final Supplier<AccountAgent> accountAgent = new LazyLoad<>(() -> {
 		Path path = this.getResourceManager().gameDirectory().resolve("accounts.acc");
 		LOGGER.info("Loading accounts from file {}", path);
@@ -82,7 +84,7 @@ public class AccountServer extends FxApplication {
 	
 	@Override
 	public void run() {
-		this.networkInstance.open(this.host, this.port);
+		this.networkInstance.get().open();
 		LOGGER.info("Launch account server on host {} with port {}", this.host, this.port);
 	}
 	
@@ -93,7 +95,7 @@ public class AccountServer extends FxApplication {
 	
 	@Override
 	public @NotNull NetworkInstance getNetworkInstance() {
-		return this.networkInstance;
+		return this.networkInstance.get();
 	}
 	
 	public @NotNull AccountAgent getAccountAgent() {

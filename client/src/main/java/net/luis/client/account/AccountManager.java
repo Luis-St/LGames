@@ -4,7 +4,6 @@ import net.luis.client.window.LoginWindow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -23,7 +22,7 @@ public class AccountManager {
 	private boolean cachePasswordLocal;
 	private String password;
 	
-	public @Nullable LoginWindow getLoginWindow() {
+	public LoginWindow getLoginWindow() {
 		return this.loginWindow;
 	}
 	
@@ -31,7 +30,7 @@ public class AccountManager {
 		this.loginWindow = loginWindow;
 	}
 	
-	public @Nullable ClientAccount getAccount() {
+	public ClientAccount getAccount() {
 		return this.account;
 	}
 	
@@ -56,7 +55,7 @@ public class AccountManager {
 		return this.cachePasswordLocal;
 	}
 	
-	public @Nullable String getPassword() {
+	public String getPassword() {
 		return this.password;
 	}
 	

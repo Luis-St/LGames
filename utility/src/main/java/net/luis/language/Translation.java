@@ -13,6 +13,7 @@ import java.util.Objects;
 
 public record Translation(@NotNull String key, @NotNull String value) {
 	
+	//region Object overrides
 	@Override
 	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
@@ -31,4 +32,5 @@ public record Translation(@NotNull String key, @NotNull String value) {
 	public @NotNull String toString() {
 		return this.key + ":" + this.value;
 	}
+	//endregion
 }

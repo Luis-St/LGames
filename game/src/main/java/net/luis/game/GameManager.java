@@ -23,11 +23,11 @@ public class GameManager {
 		this.games.put(game.getUniqueId(), game);
 	}
 	
-	public @Nullable Game getGame(@NotNull UUID uuid) {
+	public Game getGame(@NotNull UUID uuid) {
 		return this.games.get(uuid);
 	}
 	
-	public @Nullable Game getGameFor(@NotNull GameProfile profile) {
+	public Game getGameFor(@NotNull GameProfile profile) {
 		for (Game game : this.games.values()) {
 			if (game.getPlayerFor(profile) != null) {
 				return game;
@@ -36,7 +36,7 @@ public class GameManager {
 		return null;
 	}
 	
-	public @Nullable Game getGameFor(@NotNull GamePlayer player) {
+	public Game getGameFor(@NotNull GamePlayer player) {
 		return this.getGameFor(player.getPlayer().getProfile());
 	}
 	

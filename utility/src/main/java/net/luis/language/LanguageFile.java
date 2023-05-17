@@ -51,7 +51,7 @@ public class LanguageFile {
 		return this.translations.isEmpty();
 	}
 	
-	public @Nullable Language getLanguage() {
+	public Language getLanguage() {
 		return this.language;
 	}
 	

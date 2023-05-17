@@ -13,9 +13,7 @@ import net.luis.game.application.ApplicationType;
 import net.luis.game.application.FxApplication;
 import net.luis.game.application.GameApplication;
 import net.luis.game.resources.ResourceManager;
-import net.luis.network.instance.ClientInstance;
-import net.luis.network.instance.NetworkInstance;
-import net.luis.network.packet.HandshakePacket;
+import net.luis.netcore.network.NetworkInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +29,6 @@ public class Client extends FxApplication implements GameApplication {
 	
 	private static final Logger LOGGER = LogManager.getLogger(Client.class);
 	
-	private final NetworkInstance networkInstance = new ClientInstance(HandshakePacket::new);
 	private final AccountManager accountManager = new AccountManager();
 	private final ClientPlayerList playerList = new ClientPlayerList(this);
 	private final GameManager gameManager = new GameManager();

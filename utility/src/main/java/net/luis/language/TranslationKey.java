@@ -49,6 +49,7 @@ public record TranslationKey(@NotNull String key) {
 		return translation;
 	}
 	
+	//region Object overrides
 	@Override
 	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
@@ -66,4 +67,5 @@ public record TranslationKey(@NotNull String key) {
 	public @NotNull String toString() {
 		return this.key;
 	}
+	//endregion
 }

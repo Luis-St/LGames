@@ -86,7 +86,6 @@ public class LanguageProvider {
 		return this.loadLanguageFiles.stream().map(LanguageFile::getLanguage).toList().contains(language);
 	}
 	
-	@Nullable
 	public LanguageFile getFileForLanguage(@NotNull Language language) {
 		for (LanguageFile languageFile : this.loadLanguageFiles) {
 			if (language.equals(languageFile.getLanguage())) {

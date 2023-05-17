@@ -88,7 +88,7 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 		return this.accounts.iterator();
 	}
 	
-	private @Nullable Account findAccount(@NotNull UUID uuid) {
+	private Account findAccount(@NotNull UUID uuid) {
 		if (Constants.DEV_MODE && Constants.DEBUG_MODE) {
 			Optional<Account> optional = TEST_ACCOUNTS.stream().filter(account -> account.getUUID().equals(uuid)).findAny();
 			if (optional.isPresent()) {

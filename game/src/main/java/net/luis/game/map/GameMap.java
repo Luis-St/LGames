@@ -44,7 +44,7 @@ public interface GameMap {
 		return this.getFields().stream().filter(predicate).collect(ImmutableList.toImmutableList());
 	}
 	
-	default @Nullable GameField getField(@NotNull GameFigure figure) {
+	default GameField getField(@NotNull GameFigure figure) {
 		for (GameField field : this.getFields()) {
 			if (!field.isEmpty() && Objects.equals(field.getFigure(), figure)) {
 				return field;
@@ -53,9 +53,9 @@ public interface GameMap {
 		return null;
 	}
 	
-	@Nullable GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, @NotNull GameFieldPos fieldPos);
+	GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, @NotNull GameFieldPos fieldPos);
 	
-	@Nullable GameField getNextField(@NotNull GameFigure figure, int count);
+	GameField getNextField(@NotNull GameFigure figure, int count);
 	
 	@NotNull List<GameField> getHomeFields(@NotNull GamePlayerType playerType);
 	
@@ -72,7 +72,7 @@ public interface GameMap {
 		return false;
 	}
 	
-	default @Nullable GameFigure getFigure(@NotNull GamePlayer player, int figure) {
+	default GameFigure getFigure(@NotNull GamePlayer player, int figure) {
 		return player.getFigure(figure);
 	}
 	
@@ -88,7 +88,7 @@ public interface GameMap {
 		return false;
 	}
 	
-	default @Nullable GameField getSelectedField() {
+	default GameField getSelectedField() {
 		return null;
 	}
 	
