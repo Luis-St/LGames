@@ -29,6 +29,7 @@ dependencies {
 	// Local
 	implementation "org.controlsfx:ControlsFX:${ControlsFX}" // Fx
 	implementation "net.luis:LUtils:${LUtils}" // Utility
+	implementation "net.luis:LNetCore:${LNetCore}" // Network
 	implementation "net.luis:FxUtils:${FxUtils}" // Fx Utility
 	// Google
 	implementation "com.google.guava:guava:${GoogleGuava}" // Utility
