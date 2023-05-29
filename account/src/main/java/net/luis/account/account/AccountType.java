@@ -15,7 +15,7 @@ public enum AccountType {
 	
 	private final String name;
 	
-	AccountType(@NotNull String name) {
+	AccountType(String name) {
 		this.name = name;
 	}
 	

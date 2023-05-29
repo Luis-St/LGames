@@ -16,7 +16,7 @@ public enum ErrorLevel {
 	private final String name;
 	private final Color color;
 	
-	ErrorLevel(@NotNull String name, @NotNull Color color) {
+	ErrorLevel(String name, Color color) {
 		this.name = name;
 		this.color = color;
 	}

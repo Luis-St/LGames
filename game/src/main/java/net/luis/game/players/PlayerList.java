@@ -5,9 +5,7 @@ import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,18 +25,18 @@ public interface PlayerList extends Iterable<Player> {
 		return this.getPlayers().iterator();
 	}
 	
-	void addPlayer(@NotNull Player player);
+	void addPlayer(Player player);
 	
-	void removePlayer(@NotNull Player player);
+	void removePlayer(Player player);
 	
 	default void removeAllPlayers() {
 		this.getPlayers().forEach(this::removePlayer);
 	}
 	
-	Player getPlayer(@NotNull UUID uuid);
+	Player getPlayer(UUID uuid);
 	
-	default Player getPlayer(@NotNull GameProfile profile) {
-		return this.getPlayer(profile.getUniqueId());
+	default Player getPlayer(GameProfile profile) {
+		return this.getPlayer(Objects.requireNonNull(profile, "Game profile must not be null").getUniqueId());
 	}
 	
 	default @NotNull List<GameProfile> getProfiles() {

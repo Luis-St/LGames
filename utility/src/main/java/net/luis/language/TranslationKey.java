@@ -15,23 +15,27 @@ import java.util.Objects;
  *
  */
 
-public record TranslationKey(@NotNull String key) {
+public record TranslationKey(String key) {
 	
 	private static final Logger LOGGER = LogManager.getLogger(TranslationKey.class);
 	
-	public static @NotNull String createAndGet(@NotNull String key, @NotNull Object... objects) {
+	public TranslationKey {
+		Objects.requireNonNull(key, "Translation key must not be null");
+	}
+	
+	public static @NotNull String createAndGet(String key, Object... objects) {
 		return new TranslationKey(key).getValue(objects);
 	}
 	
-	public static @NotNull String createAndGet(@NotNull Language language, @NotNull String key, @NotNull Object... objects) {
+	public static @NotNull String createAndGet(Language language,  String key, Object... objects) {
 		return new TranslationKey(key).getValue(language, objects);
 	}
 	
-	public @NotNull String getValue(@NotNull Object... objects) {
+	public @NotNull String getValue(Object... objects) {
 		return this.getValue(LanguageProvider.INSTANCE.getCurrentLanguage(), objects);
 	}
 	
-	public @NotNull String getValue(@NotNull Language language, @NotNull Object... objects) {
+	public @NotNull String getValue(Language language, Object... objects) {
 		List<Object> objectList = Lists.newArrayList(objects);
 		String translation = LanguageProvider.INSTANCE.getTranslation(language, this);
 		for (int i = 0; i < objectList.size(); i++) {

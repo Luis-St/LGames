@@ -4,7 +4,6 @@ import net.luis.client.Client;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.player.score.PlayerScore;
-import net.luis.network.Connection;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class RemotePlayer extends Player {
 	
-	public RemotePlayer(@NotNull GameProfile profile) {
-		super(Client.getInstance(), profile, null, new PlayerScore(profile));
+	public RemotePlayer(GameProfile profile) {
+		super(Client.getInstance(), profile, new PlayerScore(profile));
 	}
 	
 	@Override
@@ -27,10 +26,5 @@ public class RemotePlayer extends Player {
 	@Override
 	public @NotNull Client getApplication() {
 		return (Client) super.getApplication();
-	}
-	
-	@Override
-	public @NotNull Connection getConnection() {
-		throw new IllegalStateException("RemotePlayer does not have a connection");
 	}
 }

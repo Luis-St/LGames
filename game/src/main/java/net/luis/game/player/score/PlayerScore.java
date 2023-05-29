@@ -1,8 +1,10 @@
 package net.luis.game.player.score;
 
 import net.luis.game.player.GameProfile;
-import net.luis.netcore.buffer.Encodable;
+
 import net.luis.netcore.buffer.FriendlyByteBuffer;
+import net.luis.netcore.buffer.decode.Decodable;
+import net.luis.netcore.buffer.encode.Encodable;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +18,7 @@ import java.util.Objects;
  *
  */
 
-public class PlayerScore implements Encodable {
+public class PlayerScore implements Encodable, Decodable {
 	
 	private static final Logger LOGGER = LogManager.getLogger(PlayerScore.class);
 	
@@ -26,12 +28,12 @@ public class PlayerScore implements Encodable {
 	private final MutableInt draw;
 	private final MutableInt score;
 	
-	public PlayerScore(@NotNull GameProfile profile) {
+	public PlayerScore(GameProfile profile) {
 		this(profile, 0, 0, 0, 0);
 	}
 	
-	public PlayerScore(@NotNull GameProfile profile, int win, int lose, int draw, int score) {
-		this.profile = profile;
+	public PlayerScore(GameProfile profile, int win, int lose, int draw, int score) {
+		this.profile = Objects.requireNonNull(profile, "Game profile must not be null");
 		this.win = new MutableInt(win);
 		this.lose = new MutableInt(lose);
 		this.draw = new MutableInt(draw);
@@ -46,7 +48,8 @@ public class PlayerScore implements Encodable {
 		this.score = new MutableInt(buffer.readInt());
 	}
 	
-	public void sync(@NotNull PlayerScore score) {
+	public void sync(PlayerScore score) {
+		Objects.requireNonNull(score, "Player score must not be null");
 		if (this.profile.equals(score.profile)) {
 			this.win.setValue(score.getWins());
 			this.lose.setValue(score.getLoses());
@@ -61,6 +64,7 @@ public class PlayerScore implements Encodable {
 		return this.profile;
 	}
 	
+	//region Win modifiers
 	public int getWins() {
 		return this.win.getValue();
 	}
@@ -76,7 +80,9 @@ public class PlayerScore implements Encodable {
 	public void resetWins() {
 		this.setWins(0);
 	}
+	//endregion
 	
+	//region Lose modifiers
 	public int getLoses() {
 		return this.lose.getValue();
 	}
@@ -92,7 +98,9 @@ public class PlayerScore implements Encodable {
 	public void resetLoses() {
 		this.setLoses(0);
 	}
+	//endregion
 	
+	//region Draw modifiers
 	public int getDraws() {
 		return this.draw.getValue();
 	}
@@ -108,7 +116,9 @@ public class PlayerScore implements Encodable {
 	public void resetDraws() {
 		this.setDraws(0);
 	}
+	//endregion
 	
+	//region Score modifiers
 	public int getScore() {
 		return this.score.getValue();
 	}
@@ -124,6 +134,7 @@ public class PlayerScore implements Encodable {
 	public void resetScore() {
 		this.setScore(0);
 	}
+	//endregion
 	
 	public void reset() {
 		this.resetWins();

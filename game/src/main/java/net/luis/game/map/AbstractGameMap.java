@@ -7,6 +7,7 @@ import net.luis.game.map.field.GameField;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -19,8 +20,8 @@ public abstract class AbstractGameMap implements GameMap {
 	private final Game game;
 	private final List<GameField> fields;
 	
-	protected AbstractGameMap(@NotNull Game game) {
-		this.game = game;
+	protected AbstractGameMap(Game game) {
+		this.game = Objects.requireNonNull(game, "Game must not be null");
 		this.fields = Lists.newArrayList();
 		this.init();
 		this.addFields();
@@ -36,7 +37,7 @@ public abstract class AbstractGameMap implements GameMap {
 		return ImmutableList.copyOf(this.fields);
 	}
 	
-	protected void addField(@NotNull GameField field) {
-		this.fields.add(field);
+	protected void addField(GameField field) {
+		this.fields.add(Objects.requireNonNull(field, "Field must not be null"));
 	}
 }

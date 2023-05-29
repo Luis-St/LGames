@@ -33,11 +33,11 @@ public interface GameFigure {
 	
 	@NotNull GameFieldPos getStartPos();
 	
-	default boolean canMove(@NotNull GameMap map, int count) {
+	default boolean canMove(GameMap map, int count) {
 		return this.canMove(map, map.getField(this), map.getNextField(this, count));
 	}
 	
-	default boolean canMove(@NotNull GameMap map, @Nullable GameField currentField, @Nullable GameField nextField) {
+	default boolean canMove(GameMap map, @Nullable GameField currentField, @Nullable GameField nextField) {
 		if (nextField != null) {
 			return nextField.isEmpty() || (Objects.requireNonNull(nextField.getFigure()).isKickable() && this.canKick(nextField.getFigure()));
 		}
@@ -48,7 +48,7 @@ public interface GameFigure {
 		return false;
 	}
 	
-	default boolean canKick(@NotNull GameFigure figure) {
+	default boolean canKick(GameFigure figure) {
 		return false;
 	}
 }

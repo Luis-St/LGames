@@ -11,7 +11,12 @@ import java.util.Objects;
  *
  */
 
-public record Language(@NotNull String name, @NotNull String fileName) {
+public record Language(String name, String fileName) {
+	
+	public Language {
+		Objects.requireNonNull(name, "Name must not be null");
+		Objects.requireNonNull(fileName, "File name must not be null");
+	}
 	
 	public @NotNull Path getPath(@NotNull Path resourceDirectory) {
 		return resourceDirectory.resolve("lang/" + this.fileName + ".json");

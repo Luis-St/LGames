@@ -37,7 +37,7 @@ public interface GameField {
 	
 	boolean isStart();
 	
-	boolean isStartFor(@NotNull GameFigure figure);
+	boolean isStartFor(GameFigure figure);
 	
 	boolean isWin();
 	
@@ -60,7 +60,7 @@ public interface GameField {
 	
 	@NotNull GameResult getResult();
 	
-	void setResult(@NotNull GameResult result);
+	void setResult(GameResult result);
 	
 	default boolean canSelect() {
 		return !this.isEmpty();

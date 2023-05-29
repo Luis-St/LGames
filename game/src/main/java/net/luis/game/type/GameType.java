@@ -25,13 +25,13 @@ public class GameType<T extends Game> {
 	private final int figureCount;
 	private final String clazz;
 	
-	public GameType(int id, @NotNull String name, int minPlayers, int maxPlayers, int figureCount, @NotNull String clazz) {
+	public GameType(int id, String name, int minPlayers, int maxPlayers, int figureCount, String clazz) {
 		this.id = id;
-		this.name = name;
+		this.name = Objects.requireNonNull(name, "Name must not be null");
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
 		this.figureCount = figureCount;
-		this.clazz = clazz;
+		this.clazz = Objects.requireNonNull(clazz, "Class must not be null");
 	}
 	
 	public int getId() {
@@ -67,7 +67,8 @@ public class GameType<T extends Game> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public T createGame(@NotNull List<GamePlayerInfo> playerInfos) {
+	public T createGame(List<GamePlayerInfo> playerInfos) {
+		Objects.requireNonNull(playerInfos, "Player infos must not be null");
 		if (this.hasEnoughPlayers(playerInfos.size())) {
 			return (T) ReflectionHelper.newInstance(Objects.requireNonNull(ReflectionHelper.getClassForName(this.clazz)), playerInfos);
 		}

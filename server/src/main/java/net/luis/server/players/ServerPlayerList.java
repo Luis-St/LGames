@@ -5,12 +5,7 @@ import net.luis.game.application.FxApplication;
 import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.players.AbstractPlayerList;
-import net.luis.network.Connection;
-import net.luis.network.packet.Packet;
-import net.luis.network.packet.client.PlayerAddPacket;
-import net.luis.network.packet.client.PlayerRemovePacket;
-import net.luis.network.packet.client.ServerClosedPacket;
-import net.luis.network.packet.client.SyncPermissionPacket;
+import net.luis.netcore.packet.Packet;
 import net.luis.server.Server;
 import net.luis.utility.Util;
 import net.luis.utils.util.Utils;
@@ -36,7 +31,7 @@ public class ServerPlayerList extends AbstractPlayerList {
 	
 	private final MutableObject<UUID> admin = new MutableObject<>(Utils.EMPTY_UUID);
 	
-	public ServerPlayerList(@NotNull FxApplication application) {
+	public ServerPlayerList(FxApplication application) {
 		super(application);
 	}
 	
@@ -44,7 +39,7 @@ public class ServerPlayerList extends AbstractPlayerList {
 		return this.admin.getValue();
 	}
 	
-	public void setAdminUUID(@NotNull UUID admin) {
+	public void setAdminUUID(UUID admin) {
 		this.admin.setValue(Objects.requireNonNull(admin));
 	}
 	
@@ -54,7 +49,7 @@ public class ServerPlayerList extends AbstractPlayerList {
 	
 	//region Adding players
 	@Override
-	public void addPlayer(@NotNull Player player) {
+	public void addPlayer(Player player) {
 		super.addPlayer(player);
 		this.broadcastAllExclude(new PlayerAddPacket(player.getProfile()), player);
 		if (this.getAdminUUID().equals(player.getProfile().getUniqueId())) {
@@ -78,7 +73,7 @@ public class ServerPlayerList extends AbstractPlayerList {
 	
 	//region Removing players
 	@Override
-	public void removePlayer(@NotNull Player player) {
+	public void removePlayer(Player player) {
 		super.removePlayer(player);
 		this.broadcastAll(new PlayerRemovePacket(player.getProfile()));
 		if (this.getAdminUUID().equals(player.getProfile().getUniqueId())) {
@@ -105,7 +100,7 @@ public class ServerPlayerList extends AbstractPlayerList {
 	}
 	
 	//region Broadcast to players
-	public void broadcast(@NotNull Player player, Packet packet) {
+	public void broadcast(Player player, Packet packet) {
 		Connection connection = player.getConnection();
 		if (connection.isConnected()) {
 			connection.send(packet);
@@ -116,21 +111,22 @@ public class ServerPlayerList extends AbstractPlayerList {
 		}
 	}
 	
-	public void broadcastAll(@NotNull Packet packet) {
+	public void broadcastAll(Packet packet) {
 		for (Player player : this.getPlayers()) {
 			this.broadcast(player, packet);
 		}
 	}
 	
-	public void broadcastAll(@NotNull List<Player> players, @NotNull Packet packet) {
-		for (Player player : players) {
+	public void broadcastAll(List<Player> players, Packet packet) {
+		for (Player player : Objects.requireNonNull(players, "Players must not be null")) {
 			this.broadcast(player, packet);
 		}
 	}
 	
-	public void broadcastAllExclude(@NotNull Packet packet, @NotNull Player... players) {
+	public void broadcastAllExclude(Packet packet, Player... players) {
+		List<Player> excluded = Lists.newArrayList(players);
 		for (Player player : this.getPlayers()) {
-			if (!Lists.newArrayList(players).contains(player)) {
+			if (!excluded.contains(player)) {
 				this.broadcast(player, packet);
 			}
 		}

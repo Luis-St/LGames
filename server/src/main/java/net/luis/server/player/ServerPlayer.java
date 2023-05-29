@@ -5,7 +5,6 @@ import net.luis.game.player.GameProfile;
 import net.luis.game.player.Player;
 import net.luis.game.player.score.PlayerScore;
 import net.luis.language.TranslationKey;
-import net.luis.network.Connection;
 import net.luis.server.Server;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ServerPlayer extends Player {
 	
-	public ServerPlayer(@NotNull GameProfile profile, @NotNull Connection connection) {
-		super(Server.getInstance(), profile, connection, new PlayerScore(profile));
+	public ServerPlayer(GameProfile profile) {
+		super(Server.getInstance(), profile, new PlayerScore(profile));
 	}
 	
 	@Override

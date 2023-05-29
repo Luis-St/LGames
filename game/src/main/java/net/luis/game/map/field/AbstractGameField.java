@@ -30,11 +30,11 @@ public abstract class AbstractGameField implements GameField {
 	private GameResult result = GameResult.NO;
 	private boolean shadowed = false;
 	
-	protected AbstractGameField(@NotNull Game game, @NotNull GameFieldType fieldType, @NotNull GamePlayerType colorType, @NotNull GameFieldPos fieldPos, double fieldSize) {
-		this.game = game;
-		this.fieldType = fieldType;
-		this.colorType = colorType;
-		this.fieldPos = fieldPos;
+	protected AbstractGameField(Game game, GameFieldType fieldType, GamePlayerType colorType, GameFieldPos fieldPos, double fieldSize) {
+		this.game = Objects.requireNonNull(game, "Game must not be null");
+		this.fieldType = Objects.requireNonNull(fieldType, "Field type must not be null");
+		this.colorType = Objects.requireNonNull(colorType, "Color type must not be null");
+		this.fieldPos = Objects.requireNonNull(fieldPos, "Field position must not be null");
 		this.fieldSize = fieldSize;
 		this.init();
 	}
@@ -81,8 +81,8 @@ public abstract class AbstractGameField implements GameField {
 	}
 	
 	@Override
-	public void setResult(@NotNull GameResult result) {
-		this.result = result;
+	public void setResult(GameResult result) {
+		this.result = Objects.requireNonNull(result, "Game result must not be null");
 		this.updateFieldGraphic();
 	}
 	
@@ -102,11 +102,11 @@ public abstract class AbstractGameField implements GameField {
 	
 	}
 	
-	protected ImageView makeImage(@NotNull String path) {
+	protected ImageView makeImage(String path) {
 		return this.makeImage(path, 1.0);
 	}
 	
-	protected ImageView makeImage(@NotNull String path, double scale) {
+	protected ImageView makeImage(String path, double scale) {
 		return FxUtils.makeImageView(FxApplication.getInstance().getResourceManager().resourceDirectory().resolve(path).toString(), this.fieldSize * scale, this.fieldSize * scale);
 	}
 	

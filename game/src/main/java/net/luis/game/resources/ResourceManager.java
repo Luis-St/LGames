@@ -11,7 +11,12 @@ import java.util.Objects;
  *
  */
 
-public record ResourceManager(@NotNull Path gameDirectory, @NotNull Path resourceDirectory) {
+public record ResourceManager(Path gameDirectory, Path resourceDirectory) {
+	
+	public ResourceManager {
+		Objects.requireNonNull(gameDirectory, "Game directory must not be null");
+		Objects.requireNonNull(resourceDirectory, "Resource directory must not be null");
+	}
 	
 	//region Object overrides
 	@Override

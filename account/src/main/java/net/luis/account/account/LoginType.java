@@ -14,7 +14,7 @@ public enum LoginType {
 	
 	private final String name;
 	
-	LoginType(@NotNull String name) {
+	LoginType(String name) {
 		this.name = name;
 	}
 	

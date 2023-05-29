@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  *
@@ -24,7 +25,7 @@ public class JsonHelper {
 	
 	private static final Logger LOGGER = LogManager.getLogger(JsonHelper.class);
 	
-	public static JsonElement load(@NotNull Path path) {
+	public static JsonElement load(Path path) {
 		try {
 			if (!Files.exists(path)) {
 				LOGGER.warn("Unable to load file {}, since it does not exists", path);
@@ -40,9 +41,9 @@ public class JsonHelper {
 		}
 	}
 	
-	public static void save(@NotNull Gson gson, @NotNull JsonElement jsonElement, @NotNull Path path) {
+	public static void save(Gson gson, JsonElement jsonElement, Path path) {
 		try {
-			String element = gson.toJson(jsonElement);
+			String element = Objects.requireNonNull(gson, "Gson must not be null").toJson(jsonElement);
 			if (!Files.exists(path)) {
 				Files.createDirectories(path.getParent());
 				Files.createFile(path);

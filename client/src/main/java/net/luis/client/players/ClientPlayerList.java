@@ -25,17 +25,17 @@ public class ClientPlayerList extends AbstractPlayerList {
 	
 	private LocalPlayer player;
 	
-	public ClientPlayerList(@NotNull FxApplication application) {
+	public ClientPlayerList(FxApplication application) {
 		super(application);
 	}
 	
-	public @Nullable LocalPlayer getPlayer() {
+	public LocalPlayer getPlayer() {
 		return this.player;
 	}
 	
 	//region Adding players
 	@Override
-	public void addPlayer(@NotNull Player player) {
+	public void addPlayer(Player player) {
 		super.addPlayer(player);
 		if (player instanceof LocalPlayer localPlayer) {
 			this.player = localPlayer;
@@ -43,7 +43,7 @@ public class ClientPlayerList extends AbstractPlayerList {
 		}
 	}
 	
-	public void addRemotePlayer(@NotNull GameProfile profile) {
+	public void addRemotePlayer(GameProfile profile) {
 		this.players.put(profile, new RemotePlayer(profile));
 		LOGGER.info("Added remote player {}", profile.getName());
 	}
@@ -51,7 +51,7 @@ public class ClientPlayerList extends AbstractPlayerList {
 	
 	//region Removing players
 	@Override
-	public void removePlayer(@NotNull Player player) {
+	public void removePlayer(Player player) {
 		super.removePlayer(player);
 		if (player instanceof LocalPlayer localPlayer) {
 			this.player = null;
@@ -63,7 +63,7 @@ public class ClientPlayerList extends AbstractPlayerList {
 		this.removePlayer(Objects.requireNonNull(this.player));
 	}
 	
-	public void removeRemotePlayer(@NotNull GameProfile profile) {
+	public void removeRemotePlayer(GameProfile profile) {
 		this.players.remove(profile);
 		LOGGER.info("Removed remote player {}", profile.getName());
 	}

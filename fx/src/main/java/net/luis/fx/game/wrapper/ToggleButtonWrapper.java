@@ -23,7 +23,7 @@ public interface ToggleButtonWrapper {
 		return this.getToggleButton().getToggleGroup();
 	}
 	
-	default void setToggleGroup(@NotNull ToggleGroup group) {
+	default void setToggleGroup(ToggleGroup group) {
 		this.getToggleButton().setToggleGroup(group);
 	}
 	
@@ -43,7 +43,7 @@ public interface ToggleButtonWrapper {
 		this.getToggleButton().setGraphic(value);
 	}
 	
-	default void setOnAction(@NotNull EventHandler<ActionEvent> value) {
+	default void setOnAction(EventHandler<ActionEvent> value) {
 		this.getToggleButton().setOnAction(value);
 	}
 	

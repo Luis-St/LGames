@@ -2,8 +2,9 @@ package net.luis.game.win;
 
 import com.google.common.collect.Lists;
 import net.luis.game.map.field.GameFieldPos;
-import net.luis.netcore.buffer.Encodable;
 import net.luis.netcore.buffer.FriendlyByteBuffer;
+import net.luis.netcore.buffer.decode.Decodable;
+import net.luis.netcore.buffer.encode.Encodable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,18 +17,18 @@ import java.util.Objects;
  *
  */
 
-public class GameResultLine implements Encodable {
+public class GameResultLine implements Encodable, Decodable {
 	
 	public static final GameResultLine EMPTY = new GameResultLine(Lists.newArrayList());
 	
 	private final List<GameFieldPos> fieldPositions;
 	
-	public GameResultLine(@NotNull GameFieldPos... fieldPositions) {
+	public GameResultLine(GameFieldPos... fieldPositions) {
 		this(Lists.newArrayList(fieldPositions));
 	}
 	
-	public GameResultLine(@NotNull List<GameFieldPos> fieldPositions) {
-		this.fieldPositions = fieldPositions;
+	public GameResultLine(List<GameFieldPos> fieldPositions) {
+		this.fieldPositions = Objects.requireNonNull(fieldPositions, "Field positions must not be null");
 	}
 	
 	public GameResultLine(@NotNull FriendlyByteBuffer buffer) {
@@ -51,6 +52,7 @@ public class GameResultLine implements Encodable {
 		buffer.writeList(this.fieldPositions, buffer::writeInterface);
 	}
 	
+	//region Object overrides
 	@Override
 	public boolean equals(@Nullable Object o) {
 		if (this == o) return true;
@@ -65,8 +67,8 @@ public class GameResultLine implements Encodable {
 	}
 	
 	@Override
-	public @NotNull String toString() {
-		return ToString.toString(this);
+	public String toString() {
+		return "GameResultLine{" + "fieldPositions=" + this.fieldPositions + '}';
 	}
-	
+	//endregion
 }

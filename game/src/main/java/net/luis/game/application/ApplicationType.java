@@ -17,7 +17,7 @@ public enum ApplicationType {
 	private final String name;
 	private final String shortName;
 	
-	ApplicationType(@NotNull String name, @NotNull String shortName) {
+	ApplicationType(String name, String shortName) {
 		this.name = name;
 		this.shortName = shortName;
 	}

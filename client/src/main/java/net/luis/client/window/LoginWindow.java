@@ -77,7 +77,7 @@ public class LoginWindow extends AbstractWindow {
 		namePane.getInputNode().setText(account.name());
 		pane.add(namePane, 0, 0);
 		Button logoutButton = FxUtils.makeButton(TranslationKey.createAndGet("window.logout.logout"), () -> {
-			this.connection.send(new ClientLogoutPacket(account.name(), account.id(), account.uuid()));
+			this.connection.send(new ClientLogoutPacket(account.name(), account.id(), account.uniqueId()));
 		});
 		logoutButton.setAlignment(Pos.CENTER);
 		if (!account.guest() && this.client.getAccountManager().isPasswordCachedLocal()) {

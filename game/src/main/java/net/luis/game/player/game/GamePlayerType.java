@@ -23,5 +23,5 @@ public interface GamePlayerType {
 		return this.getImage("", width, height);
 	}
 	
-	ImageView getImage(@NotNull String suffix, double width, double height);
+	ImageView getImage(String suffix, double width, double height);
 }

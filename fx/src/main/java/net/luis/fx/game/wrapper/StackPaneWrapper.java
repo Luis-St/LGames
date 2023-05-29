@@ -17,11 +17,11 @@ public interface StackPaneWrapper {
 	
 	@NotNull StackPane getStackPane();
 	
-	default void setAlignment(@NotNull Pos value) {
+	default void setAlignment(Pos value) {
 		this.getStackPane().setAlignment(value);
 	}
 	
-	default void setPadding(@NotNull Insets value) {
+	default void setPadding(Insets value) {
 		this.getStackPane().setPadding(value);
 	}
 	

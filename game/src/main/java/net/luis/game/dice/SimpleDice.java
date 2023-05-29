@@ -27,10 +27,10 @@ public class SimpleDice implements Dice {
 		this(min, max, new Random());
 	}
 	
-	public SimpleDice(int min, int max, @NotNull Random rng) {
+	public SimpleDice(int min, int max, Random rng) {
 		this.min = min;
 		this.max = max;
-		this.rng = rng;
+		this.rng = Objects.requireNonNull(rng, "Random must not be null");
 	}
 	
 	@Override

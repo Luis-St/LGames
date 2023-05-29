@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  *
@@ -27,9 +28,9 @@ public class PlayerScorePane extends GridPane {
 	private final PlayerScorePane.Type scoreType;
 	private final List<Entry<GamePlayer, Text>> playerScoreInfos;
 	
-	public PlayerScorePane(@NotNull Game game, @NotNull PlayerScorePane.Type scoreType) {
-		this.game = game;
-		this.scoreType = scoreType;
+	public PlayerScorePane(Game game, @NotNull PlayerScorePane.Type scoreType) {
+		this.game = Objects.requireNonNull(game, "Game must not be null");
+		this.scoreType = Objects.requireNonNull(scoreType, "Score type must not be null");
 		this.playerScoreInfos = Lists.newArrayList();
 		this.init();
 	}
@@ -67,29 +68,29 @@ public class PlayerScorePane extends GridPane {
 		
 		WIN("win") {
 			@Override
-			public int getValue(@NotNull Player player) {
+			public int getValue(Player player) {
 				return player.getScore().getWins();
 			}
 		}, LOSE("lose") {
 			@Override
-			public int getValue(@NotNull Player player) {
+			public int getValue(Player player) {
 				return player.getScore().getLoses();
 			}
 		}, DRAW("draw") {
 			@Override
-			public int getValue(@NotNull Player player) {
+			public int getValue(Player player) {
 				return player.getScore().getDraws();
 			}
 		}, SCORE("score") {
 			@Override
-			public int getValue(@NotNull Player player) {
+			public int getValue(Player player) {
 				return player.getScore().getScore();
 			}
 		};
 		
 		private final String name;
 		
-		Type(@NotNull String name) {
+		Type(String name) {
 			this.name = name;
 		}
 		
@@ -97,7 +98,7 @@ public class PlayerScorePane extends GridPane {
 			return this.name;
 		}
 		
-		public abstract int getValue(@NotNull Player player);
+		public abstract int getValue(Player player);
 		
 		@Override
 		public @NotNull String toString() {

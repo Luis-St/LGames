@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  *
@@ -19,15 +20,13 @@ public abstract class Player {
 	
 	private final GameApplication application;
 	private final GameProfile profile;
-	private final Connection connection;
 	private final PlayerScore score;
 	private boolean canSelect = false;
 	
-	public Player(@NotNull GameApplication application, @NotNull GameProfile profile, @Nullable Connection connection, @NotNull PlayerScore score) {
-		this.application = application;
-		this.profile = profile;
-		this.connection = connection;
-		this.score = score;
+	public Player(GameApplication application, GameProfile profile, PlayerScore score) {
+		this.application = Objects.requireNonNull(application, "Game application must not be null");
+		this.profile = Objects.requireNonNull(profile, "Game profile must not be null");
+		this.score = Objects.requireNonNull(score, "Player score must not be null");
 	}
 	
 	public abstract boolean isClient();
@@ -41,10 +40,7 @@ public abstract class Player {
 	}
 	
 	public GamePlayer getPlayer() {
-		if (this.getGame() == null) {
-			return null;
-		}
-		return this.getGame().getPlayerFor(this);
+		return this.getGame() == null ? null : this.getGame().getPlayerFor(this);
 	}
 	
 	public @NotNull GameProfile getProfile() {
@@ -55,8 +51,8 @@ public abstract class Player {
 		return this.getProfile().getName();
 	}
 	
-	public @NotNull Connection getConnection() {
-		return Objects.requireNonNull(this.connection);
+	public @NotNull UUID getUniqueId() {
+		return this.getProfile().getUniqueId();
 	}
 	
 	public @NotNull PlayerScore getScore() {
@@ -72,10 +68,7 @@ public abstract class Player {
 	}
 	
 	public boolean isCurrent() {
-		if (this.getGame() == null) {
-			return false;
-		}
-		return Objects.equals(this.getGame().getPlayer(), this.getPlayer());
+		return this.getGame() != null && Objects.equals(this.getGame().getPlayer(), this.getPlayer());
 	}
 	
 	public boolean canSelect() {
@@ -100,6 +93,7 @@ public abstract class Player {
 		return Objects.requireNonNull(this.getGame().getDiceHandler()).getLastCount(Objects.requireNonNull(this.getPlayer()));
 	}
 	
+	//region Object overrides
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -108,17 +102,17 @@ public abstract class Player {
 		if (this.canSelect != player.canSelect) return false;
 		if (!this.application.equals(player.application)) return false;
 		if (!this.profile.equals(player.profile)) return false;
-		if (!Objects.equals(this.connection, player.connection)) return false;
 		return this.score.equals(player.score);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.application, this.profile, this.connection, this.score, this.canSelect);
+		return Objects.hash(this.application, this.profile, this.score, this.canSelect);
 	}
 	
 	@Override
 	public String toString() {
-		return ToString.toString(this, "application", "connection");
+		return this.getClass().getSimpleName() + this.profile.getName();
 	}
+	//endregion
 }

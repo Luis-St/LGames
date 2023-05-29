@@ -10,8 +10,8 @@ import net.luis.game.application.ApplicationType;
 import net.luis.game.application.FxApplication;
 import net.luis.game.application.GameApplication;
 import net.luis.game.resources.ResourceManager;
-import net.luis.netcore.network.NetworkInstance;
-import net.luis.netcore.network.ServerInstance;
+import net.luis.netcore.instance.NetworkInstance;
+import net.luis.netcore.instance.ServerInstance;
 import net.luis.server.network.ServerPacketHandler;
 import net.luis.server.players.ServerPlayerList;
 import net.luis.utils.util.LazyInstantiation;
@@ -31,8 +31,9 @@ public class Server extends FxApplication implements GameApplication {
 	
 	private static final Logger LOGGER = LogManager.getLogger(Server.class);
 	
-	private final LazyLoad<NetworkInstance> networkInstance = new LazyLoad<>(() -> {
-		return new ServerInstance(this.host, this.port);
+	private final NetworkInstance networkInstance = new ServerInstance((registry, settings) -> {
+		registry.registerListener(new ServerPacketHandler());
+		settings.setEventsAllowed(false);
 	});
 	private final ServerPlayerList playerList = new ServerPlayerList(this);
 	private final GameManager gameManager = new GameManager();
@@ -73,7 +74,7 @@ public class Server extends FxApplication implements GameApplication {
 	
 	@Override
 	public void run() {
-		this.networkInstance.get().open();
+		this.networkInstance.open(this.host, this.port);
 		LOGGER.info("Launch dedicated virtual game collection server on host {} with port {}", this.host, this.port);
 	}
 	
@@ -84,7 +85,7 @@ public class Server extends FxApplication implements GameApplication {
 	
 	@Override
 	public @NotNull NetworkInstance getNetworkInstance() {
-		return this.networkInstance.get();
+		return this.networkInstance;
 	}
 	
 	@Override

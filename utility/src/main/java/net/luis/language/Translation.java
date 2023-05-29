@@ -11,7 +11,12 @@ import java.util.Objects;
  *
  */
 
-public record Translation(@NotNull String key, @NotNull String value) {
+public record Translation(String key, String value) {
+	
+	public Translation {
+		Objects.requireNonNull(key, "Key must not be null");
+		Objects.requireNonNull(value, "Value must not be null");
+	}
 	
 	//region Object overrides
 	@Override

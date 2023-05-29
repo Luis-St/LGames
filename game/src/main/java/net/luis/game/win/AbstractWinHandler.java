@@ -38,7 +38,7 @@ public abstract class AbstractWinHandler implements WinHandler {
 	}
 	
 	@Override
-	public void onPlayerFinished(@NotNull GamePlayer player) {
+	public void onPlayerFinished(GamePlayer player) {
 		this.finishedPlayers.add(player);
 		if (this.canPlayerWin(player)) {
 			this.winningPlayers.add(player);

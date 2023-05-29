@@ -12,5 +12,5 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface GameScreenFactory {
 	
-	@NotNull GameScreen create(@NotNull Game game);
+	@NotNull GameScreen create(Game game);
 }

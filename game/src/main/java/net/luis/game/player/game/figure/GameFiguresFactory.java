@@ -14,5 +14,5 @@ import java.util.List;
 @FunctionalInterface
 public interface GameFiguresFactory {
 	
-	@NotNull List<GameFigure> create(@NotNull GamePlayer player);
+	@NotNull List<GameFigure> create(GamePlayer player);
 }

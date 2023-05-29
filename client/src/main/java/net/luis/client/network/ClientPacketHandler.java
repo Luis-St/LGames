@@ -110,7 +110,7 @@ public class ClientPacketHandler implements PacketHandler {
 	public void handleClientJoined(@NotNull List<GameProfile> profiles) {
 		ClientPlayerList playerList = this.client.getPlayerList();
 		for (GameProfile profile : profiles) {
-			if (Objects.requireNonNull(this.accountManager.getAccount()).uuid().equals(profile.getUniqueId())) {
+			if (Objects.requireNonNull(this.accountManager.getAccount()).uniqueId().equals(profile.getUniqueId())) {
 				playerList.addPlayer(new LocalPlayer(profile, this.connection));
 			} else {
 				playerList.addRemotePlayer(profile);
@@ -122,7 +122,7 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(PlayerAddPacket.class)
 	public void handlePlayerAdd(@NotNull GameProfile profile) {
 		ClientPlayerList playerList = this.client.getPlayerList();
-		if (Objects.requireNonNull(this.accountManager.getAccount()).uuid().equals(profile.getUniqueId())) {
+		if (Objects.requireNonNull(this.accountManager.getAccount()).uniqueId().equals(profile.getUniqueId())) {
 			if (playerList.getPlayer() == null) {
 				LOGGER.warn("The local player is not set, that was not supposed to be");
 				playerList.addPlayer(new LocalPlayer(profile, this.connection));
@@ -137,7 +137,7 @@ public class ClientPacketHandler implements PacketHandler {
 	@PacketListener(PlayerRemovePacket.class)
 	public void handlePlayerRemove(@NotNull GameProfile profile) {
 		ClientPlayerList playerList = this.client.getPlayerList();
-		if (Objects.requireNonNull(this.accountManager.getAccount()).uuid().equals(profile.getUniqueId())) {
+		if (Objects.requireNonNull(this.accountManager.getAccount()).uniqueId().equals(profile.getUniqueId())) {
 			playerList.removePlayer(Objects.requireNonNull(playerList.getPlayer(profile)));
 		} else {
 			playerList.removePlayer(Objects.requireNonNull(playerList.getPlayer(profile)));

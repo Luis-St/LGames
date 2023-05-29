@@ -14,7 +14,6 @@ import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -69,11 +68,11 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 	}
 	//endregion
 	
-	private static @NotNull UUID generateUUID(int nameHash, int passwordHash) {
+	private static @NotNull UUID generateUniqueId(int nameHash, int passwordHash) {
 		if (Constants.DEV_MODE) {
 			Optional<Account> optional = TEST_ACCOUNTS.stream().filter(account -> account.getName().hashCode() == nameHash && account.getPasswordHash() == passwordHash).findAny();
 			if (optional.isPresent()) {
-				return optional.get().getUUID();
+				return optional.get().getUniqueId();
 			}
 		}
 		return new UUID(nameHash, passwordHash);
@@ -88,15 +87,15 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 		return this.accounts.iterator();
 	}
 	
-	private Account findAccount(@NotNull UUID uuid) {
+	private Account findAccount(@NotNull UUID uniqueId) {
 		if (Constants.DEV_MODE && Constants.DEBUG_MODE) {
-			Optional<Account> optional = TEST_ACCOUNTS.stream().filter(account -> account.getUUID().equals(uuid)).findAny();
+			Optional<Account> optional = TEST_ACCOUNTS.stream().filter(account -> account.getUniqueId().equals(uniqueId)).findAny();
 			if (optional.isPresent()) {
 				return optional.get();
 			}
 		}
 		for (Account account : this.accounts) {
-			if (account.getUUID().equals(uuid)) {
+			if (account.getUniqueId().equals(uniqueId)) {
 				return account;
 			}
 		}
@@ -108,8 +107,8 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 	}
 	
 	public @NotNull Account createAccount(@NotNull String name, @NotNull String mail, int passwordHash, @NotNull String firstName, @NotNull String lastName, @NotNull Date birthday, @NotNull AccountType type) {
-		Account account = new Account(name, passwordHash, Mth.randomInclusiveInt(new Random(), 1, 9999), generateUUID(name.hashCode(), passwordHash), mail, firstName, lastName, birthday, type);
-		if (this.findAccount(generateUUID(name.hashCode(), passwordHash)) == null) {
+		Account account = new Account(name, passwordHash, Mth.randomInclusiveInt(new Random(), 1, 9999), generateUniqueId(name.hashCode(), passwordHash), mail, firstName, lastName, birthday, type);
+		if (this.findAccount(generateUniqueId(name.hashCode(), passwordHash)) == null) {
 			LOGGER.info("Account {} was created successfully", account.toShortString());
 			this.accounts.add(account);
 			this.refresh();
@@ -127,7 +126,7 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 	}
 	
 	public @NotNull Account accountLogin(@NotNull String name, int passwordHash) {
-		Account account = this.findAccount(generateUUID(name.hashCode(), passwordHash));
+		Account account = this.findAccount(generateUniqueId(name.hashCode(), passwordHash));
 		if (account != null) {
 			if (account.isTaken()) {
 				LOGGER.warn("Unable to login because the account {} is already being used by another player", account.toShortString());
@@ -146,8 +145,8 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 		return Account.UNKNOWN;
 	}
 	
-	public boolean accountLogout(@NotNull String name, int id, @NotNull UUID uuid) {
-		Account account = this.findAccount(uuid);
+	public boolean accountLogout(@NotNull String name, int id, @NotNull UUID uniqueId) {
+		Account account = this.findAccount(uniqueId);
 		if (account != null) {
 			if (!account.isTaken()) {
 				LOGGER.warn("Failed to log out because the account {} is not being used by a player", account.toShortString());
@@ -167,7 +166,7 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 	}
 	
 	public boolean removeAccount(int nameHash, int passwordHash) {
-		Account account = this.findAccount(generateUUID(nameHash, passwordHash));
+		Account account = this.findAccount(generateUniqueId(nameHash, passwordHash));
 		if (account != null) {
 			if (!account.isTaken()) {
 				LOGGER.info("Account {} has been successfully removed", account.toShortString());
@@ -176,7 +175,7 @@ public class AccountAgent implements Serializable, Iterable<Account> {
 			LOGGER.warn("Unable to remove account {} because the account is currently being used by a player", account.toShortString());
 			return false;
 		}
-		LOGGER.error("Could not remove account with uuid {} because it does not exist", generateUUID(nameHash, passwordHash));
+		LOGGER.error("Could not remove account with uuid {} because it does not exist", generateUniqueId(nameHash, passwordHash));
 		return false;
 	}
 	

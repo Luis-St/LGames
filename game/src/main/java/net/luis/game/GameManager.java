@@ -6,8 +6,7 @@ import net.luis.game.player.game.GamePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  *
@@ -19,32 +18,28 @@ public class GameManager {
 	
 	private final Map<UUID, Game> games = Maps.newHashMap();
 	
-	public void addGame(@NotNull Game game) {
+	public void addGame(Game game) {
+		Objects.requireNonNull(game, "Game must not be null");
 		this.games.put(game.getUniqueId(), game);
 	}
 	
-	public Game getGame(@NotNull UUID uuid) {
-		return this.games.get(uuid);
+	public Game getGame(UUID uniqueId) {
+		return this.games.get(uniqueId);
 	}
 	
-	public Game getGameFor(@NotNull GameProfile profile) {
-		for (Game game : this.games.values()) {
-			if (game.getPlayerFor(profile) != null) {
-				return game;
-			}
-		}
-		return null;
+	public Game getGameFor(GameProfile profile) {
+		return this.games.values().stream().filter(game -> game.getPlayerFor(profile) != null).findFirst().orElse(null);
 	}
 	
-	public Game getGameFor(@NotNull GamePlayer player) {
-		return this.getGameFor(player.getPlayer().getProfile());
+	public Game getGameFor(GamePlayer player) {
+		return this.getGameFor(Objects.requireNonNull(player, "Player must not be null").getProfile());
 	}
 	
-	public void removeGame(@NotNull UUID uuid) {
-		this.games.remove(uuid);
+	public void removeGame(UUID uniqueId) {
+		this.games.remove(uniqueId);
 	}
 	
-	public void removeGame(@NotNull Game game) {
-		this.removeGame(game.getUniqueId());
+	public void removeGame(Game game) {
+		this.removeGame(Objects.requireNonNull(game, "Game must not be null").getUniqueId());
 	}
 }

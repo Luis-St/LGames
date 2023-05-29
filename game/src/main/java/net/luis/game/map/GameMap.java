@@ -28,7 +28,7 @@ public interface GameMap {
 	
 	}
 	
-	default void init(@NotNull List<GamePlayer> players) {
+	default void init(List<GamePlayer> players) {
 		if (ApplicationType.CLIENT.isOn()) {
 			this.getFields().forEach(GameField::clear);
 		}
@@ -44,39 +44,29 @@ public interface GameMap {
 		return this.getFields().stream().filter(predicate).collect(ImmutableList.toImmutableList());
 	}
 	
-	default GameField getField(@NotNull GameFigure figure) {
-		for (GameField field : this.getFields()) {
-			if (!field.isEmpty() && Objects.equals(field.getFigure(), figure)) {
-				return field;
-			}
-		}
-		return null;
+	default GameField getField(GameFigure figure) {
+		return this.getFields().stream().filter(field -> !field.isEmpty() && Objects.equals(field.getFigure(), figure)).findFirst().orElse(null);
 	}
 	
-	GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, @NotNull GameFieldPos fieldPos);
+	GameField getField(@Nullable GameFieldType fieldType, @Nullable GamePlayerType playerType, GameFieldPos fieldPos);
 	
-	GameField getNextField(@NotNull GameFigure figure, int count);
+	GameField getNextField(GameFigure figure, int count);
 	
-	@NotNull List<GameField> getHomeFields(@NotNull GamePlayerType playerType);
+	@NotNull List<GameField> getHomeFields(GamePlayerType playerType);
 	
-	@NotNull List<GameField> getStartFields(@NotNull GamePlayerType playerType);
+	@NotNull List<GameField> getStartFields(GamePlayerType playerType);
 	
-	@NotNull List<GameField> getWinFields(@NotNull GamePlayerType playerType);
+	@NotNull List<GameField> getWinFields(GamePlayerType playerType);
 	
 	default boolean hasEmptyField() {
-		for (GameField field : this.getFields()) {
-			if (field.isEmpty()) {
-				return true;
-			}
-		}
-		return false;
+		return this.getFields().stream().anyMatch(GameField::isEmpty);
 	}
 	
-	default GameFigure getFigure(@NotNull GamePlayer player, int figure) {
-		return player.getFigure(figure);
+	default GameFigure getFigure(GamePlayer player, int figure) {
+		return Objects.requireNonNull(player, "Game player must not be null").getFigure(figure);
 	}
 	
-	default boolean moveFigure(@NotNull GameFigure figure, int count) {
+	default boolean moveFigure(GameFigure figure, int count) {
 		GameField field = this.getNextField(figure, count);
 		if (field != null) {
 			return this.moveFigureTo(figure, field);
@@ -84,7 +74,7 @@ public interface GameMap {
 		return false;
 	}
 	
-	default boolean moveFigureTo(@NotNull GameFigure figure, @NotNull GameField field) {
+	default boolean moveFigureTo(GameFigure figure, GameField field) {
 		return false;
 	}
 	

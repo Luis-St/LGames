@@ -41,7 +41,7 @@ public class AccountCreationWindow extends AbstractWindow {
 	private static final Logger LOGGER = LogManager.getLogger(AccountCreationWindow.class);
 	private static final Pattern PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
 	
-	public AccountCreationWindow(@NotNull Stage stage) {
+	public AccountCreationWindow(Stage stage) {
 		super(stage, 340.0, 365.0);
 	}
 	
@@ -135,6 +135,7 @@ public class AccountCreationWindow extends AbstractWindow {
 				if (account != Account.UNKNOWN) {
 					this.close();
 				} else {
+					LOGGER.warn("Failed to create account");
 					namePane.getInputNode().setText("");
 					passwordPane.getValue().getInputNode().setText("");
 					confirmPasswordPane.getInputNode().setText("");
@@ -144,12 +145,13 @@ public class AccountCreationWindow extends AbstractWindow {
 		return pane;
 	}
 	
-	private boolean isValidPassword(@NotNull String password) {
+	private boolean isValidPassword(String password) {
 		return (!PATTERN.matcher(password).matches() || password.length() <= 4) && !Constants.DEV_MODE;
 	}
 	
 	@Override
-	protected void onUpdateScene(@NotNull Scene scene) {
+	protected void onUpdateScene(Scene scene) {
+		Objects.requireNonNull(scene, "Scene must not be null");
 		scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/style.css")).toExternalForm());
 	}
 	

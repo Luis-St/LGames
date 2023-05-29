@@ -41,9 +41,9 @@ public class MultiplayerScreen extends ClientScreen {
 	private Button connectLocalButton;
 	private Button backButton;
 	
-	public MultiplayerScreen(@NotNull ClientScreen backScreen) {
+	public MultiplayerScreen(ClientScreen backScreen) {
 		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
-		this.backScreen = backScreen;
+		this.backScreen = Objects.requireNonNull(backScreen, "Back screen must not be null");
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class MultiplayerScreen extends ClientScreen {
 				this.portPane.validateInput();
 			} else {
 				ClientAccount account = Objects.requireNonNull(this.client.get().getAccountManager().getAccount());
-				this.connectAndSend(host, Integer.parseInt(port), new ClientJoinPacket(account.name(), account.uuid()));
+				this.connectAndSend(host, Integer.parseInt(port), new ClientJoinPacket(account.name(), account.uniqueId()));
 			}
 		}
 	}
@@ -107,7 +107,7 @@ public class MultiplayerScreen extends ClientScreen {
 			this.portPane.getInputNode().setText("8080");
 			this.portPane.validateInput();
 			ClientAccount account = Objects.requireNonNull(this.client.get().getAccountManager().getAccount());
-			this.connectAndSend("127.0.0.1", 8080, new ClientJoinPacket(account.name(), account.uuid()));
+			this.connectAndSend("127.0.0.1", 8080, new ClientJoinPacket(account.name(), account.uniqueId()));
 		}
 	}
 	

@@ -7,6 +7,8 @@ import net.luis.fxutils.EventHandlers;
 import net.luis.fxutils.FxUtils;
 import net.luis.game.dice.DiceRenderState;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -21,7 +23,7 @@ public class DiceButton extends Button {
 	
 	public DiceButton(double prefSize, Runnable action) {
 		this.prefSize = prefSize;
-		this.action = action;
+		this.action = Objects.requireNonNull(action, "Action must not be null");
 		this.init();
 	}
 	

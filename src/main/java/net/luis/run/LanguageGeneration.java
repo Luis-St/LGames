@@ -58,7 +58,7 @@ public class LanguageGeneration {
 			list.add(new Translation("account.window.birthday", "Birthday: %1%"));
 			list.add(new Translation("account.window.system_data", "System data"));
 			list.add(new Translation("account.window.id", "Id: %1%"));
-			list.add(new Translation("account.window.uuid", "Universally unique id: %1%"));
+			list.add(new Translation("account.window.uniqueId", "Universally unique id: %1%"));
 			list.add(new Translation("account.window.type", "Account type: %1%"));
 			list.add(new Translation("account.type.user", "User"));
 			list.add(new Translation("account.type.guest", "Guest"));
@@ -156,7 +156,7 @@ public class LanguageGeneration {
 			list.add(new Translation("account.window.birthday", "Geburtstag: %1%"));
 			list.add(new Translation("account.window.system_data", "Systemdaten"));
 			list.add(new Translation("account.window.id", "Id: %1%"));
-			list.add(new Translation("account.window.uuid", "Universell eindeutige id: %1%"));
+			list.add(new Translation("account.window.uniqueId", "Universell eindeutige id: %1%"));
 			list.add(new Translation("account.window.type", "Konto typ: %1%"));
 			list.add(new Translation("account.type.user", "Benutzer"));
 			list.add(new Translation("account.type.guest", "Gast"));

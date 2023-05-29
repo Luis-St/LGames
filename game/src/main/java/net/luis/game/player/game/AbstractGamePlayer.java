@@ -24,11 +24,11 @@ public abstract class AbstractGamePlayer implements GamePlayer {
 	private final List<GameFigure> figures;
 	private int rollCount = 0;
 	
-	protected AbstractGamePlayer(Game game, Player player, GamePlayerType playerType, @NotNull GameFiguresFactory figuresFactory) {
-		this.game = game;
-		this.player = player;
-		this.playerType = playerType;
-		this.figures = figuresFactory.create(this);
+	protected AbstractGamePlayer(Game game, Player player, GamePlayerType playerType, GameFiguresFactory figuresFactory) {
+		this.game = Objects.requireNonNull(game, "Game must not be null");
+		this.player = Objects.requireNonNull(player, "Player must not be null");
+		this.playerType = Objects.requireNonNull(playerType, "Player type must not be null");
+		this.figures = Objects.requireNonNull(figuresFactory, "Figures factory must not be null").create(this);
 	}
 	
 	@Override

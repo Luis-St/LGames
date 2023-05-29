@@ -43,10 +43,10 @@ public class PlayerSelectScreen extends ClientScreen {
 	private Button backButton;
 	private Button playButton;
 	
-	public PlayerSelectScreen(@NotNull GameType<?> gameType, @NotNull ClientScreen backScreen) {
+	public PlayerSelectScreen(GameType<?> gameType, ClientScreen backScreen) {
 		super(TranslationKey.createAndGet("client.constans.name"), 600, 600);
-		this.gameType = gameType;
-		this.backScreen = backScreen;
+		this.gameType = Objects.requireNonNull(gameType, "Game type must not be null");
+		this.backScreen = Objects.requireNonNull(backScreen, "Back screen must not be null");
 	}
 	
 	@Override

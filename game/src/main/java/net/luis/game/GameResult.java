@@ -14,7 +14,7 @@ public enum GameResult {
 	
 	private final String name;
 	
-	GameResult(@NotNull String name) {
+	GameResult(String name) {
 		this.name = name;
 	}
 	

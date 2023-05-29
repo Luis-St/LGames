@@ -18,10 +18,10 @@ public abstract class AbstractGameFigure implements GameFigure {
 	private final int index;
 	private final UUID uniqueId;
 	
-	protected AbstractGameFigure(@NotNull GamePlayer player, int index, @NotNull UUID uniqueId) {
-		this.player = player;
+	protected AbstractGameFigure(GamePlayer player, int index, UUID uniqueId) {
+		this.player = Objects.requireNonNull(player, "Game player must not be null");
 		this.index = index;
-		this.uniqueId = uniqueId;
+		this.uniqueId = Objects.requireNonNull(uniqueId, "Unique id must not be null");
 	}
 	
 	@Override

@@ -4,7 +4,7 @@ import net.luis.fx.screen.AbstractScreen;
 import net.luis.game.GameManager;
 import net.luis.game.players.PlayerList;
 import net.luis.game.resources.ResourceManager;
-import net.luis.netcore.network.NetworkInstance;
+import net.luis.netcore.instance.NetworkInstance;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,5 +27,5 @@ public interface GameApplication {
 	
 	@NotNull AbstractScreen getScreen();
 	
-	void setScreen(@NotNull AbstractScreen screen);
+	void setScreen(AbstractScreen screen);
 }

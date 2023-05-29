@@ -13,7 +13,6 @@ import net.luis.game.player.game.GamePlayerInfo;
 import net.luis.game.screen.GameScreen;
 import net.luis.game.screen.GameScreenFactory;
 import net.luis.game.win.WinHandler;
-import net.luis.network.packet.client.game.CurrentPlayerUpdatePacket;
 import net.luis.utils.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,14 +40,16 @@ public abstract class AbstractGame implements Game {
 	private final WinHandler winHandler;
 	private GamePlayer player;
 	
-	protected AbstractGame(@NotNull GameMapFactory mapFactory, @NotNull GamePlayerFactory playerFactory, @NotNull List<GamePlayerInfo> playerInfos, GameScreenFactory screenFactory, @Nullable WinHandler winHandler) {
-		this.map = mapFactory.create(this);
+	protected AbstractGame(GameMapFactory mapFactory, GamePlayerFactory playerFactory, List<GamePlayerInfo> playerInfos, GameScreenFactory screenFactory, @Nullable WinHandler winHandler) {
+		this.map = Objects.requireNonNull(mapFactory, "Map factory must not be null").create(this);
 		this.players = createPlayers(this.getApplication(), this, playerFactory, playerInfos);
-		this.screen = screenFactory.create(this);
+		this.screen = Objects.requireNonNull(screenFactory, "Screen factory must not be null").create(this);
 		this.winHandler = ApplicationType.SERVER.isOn() ? Objects.requireNonNull(winHandler) : null;
 	}
 	
-	private static List<GamePlayer> createPlayers(@NotNull GameApplication application, @NotNull Game game, @NotNull GamePlayerFactory playerFactory, @NotNull List<GamePlayerInfo> playerInfos) {
+	private static @NotNull List<GamePlayer> createPlayers(GameApplication application, Game game, GamePlayerFactory playerFactory, List<GamePlayerInfo> playerInfos) {
+		Objects.requireNonNull(game, "Game must not be null");
+		Objects.requireNonNull(playerInfos, "Player infos must not be null");
 		if (!game.getType().hasEnoughPlayers(playerInfos.size())) {
 			LOGGER.error("Fail to create game players list with size {}, since a player list with size in bounds {} was expected", playerInfos.size(), game.getType().getBounds());
 			throw new IllegalStateException("Fail to create game players list with size " + playerInfos.size() + ", since a player list with size in bounds " + game.getType().getBounds() + " was expected");
@@ -93,9 +94,9 @@ public abstract class AbstractGame implements Game {
 	}
 	
 	@Override
-	public void setPlayer(@NotNull GamePlayer player) {
-		LOGGER.info("Update current player from {} to {}", Utils.runIfNotNull(this.getPlayer(), GamePlayer::getName), Utils.runIfNotNull(player, GamePlayer::getName));
-		this.player = player;
+	public void setPlayer(GamePlayer player) {
+		LOGGER.info("Update current player from {} to {}", Utils.mapIfNotNull(this.getPlayer(), GamePlayer::getName), Utils.mapIfNotNull(player, GamePlayer::getName));
+		this.player = Objects.requireNonNull(player, "Game player must not be null");
 		if (ApplicationType.SERVER.isOn() && this.getPlayer() != null) {
 			this.broadcastPlayers(new CurrentPlayerUpdatePacket(this.getPlayer().getPlayer().getProfile()));
 		}

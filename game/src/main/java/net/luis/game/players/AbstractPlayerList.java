@@ -10,9 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  *
@@ -27,7 +25,7 @@ public abstract class AbstractPlayerList implements PlayerList {
 	private final FxApplication application;
 	
 	public AbstractPlayerList(FxApplication application) {
-		this.application = application;
+		this.application = Objects.requireNonNull(application, "Application must not be null");
 	}
 	
 	@Override
@@ -41,7 +39,8 @@ public abstract class AbstractPlayerList implements PlayerList {
 	}
 	
 	@Override
-	public void addPlayer(@NotNull Player player) {
+	public void addPlayer(Player player) {
+		Objects.requireNonNull(player, "Player must not be null");
 		if (this.getPlayer(player.getProfile()) != null) {
 			throw new IllegalArgumentException("Player " + player.getName() + " already exists in the player list");
 		}
@@ -50,18 +49,20 @@ public abstract class AbstractPlayerList implements PlayerList {
 	}
 	
 	@Override
-	public void removePlayer(@NotNull Player player) {
+	public void removePlayer(Player player) {
+		Objects.requireNonNull(player, "Player must not be null");
 		this.players.remove(player.getProfile());
 		LOGGER.info("Removed player {}", player.getName());
 	}
 	
 	@Override
-	public Player getPlayer(@NotNull UUID uuid) {
-		if (Utils.EMPTY_UUID.equals(uuid)) {
+	public Player getPlayer(UUID uniqueId) {
+		Objects.requireNonNull(uniqueId, "Unique id must not be null");
+		if (Utils.EMPTY_UUID.equals(uniqueId)) {
 			return null;
 		}
 		for (Player player : this.getPlayers()) {
-			if (player.getProfile().getUniqueId().equals(uuid)) {
+			if (player.getProfile().getUniqueId().equals(uniqueId)) {
 				return player;
 			}
 		}

@@ -5,6 +5,8 @@ import javafx.scene.Scene;
 import net.luis.fx.screen.AbstractScreen;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-st
@@ -15,9 +17,9 @@ public class ScreenScene extends Scene {
 	
 	private final AbstractScreen screen;
 	
-	public ScreenScene(@NotNull Parent root, double width, double height, @NotNull AbstractScreen screen) {
+	public ScreenScene(Parent root, double width, double height, AbstractScreen screen) {
 		super(root, width, height);
-		this.screen = screen;
+		this.screen = Objects.requireNonNull(screen, "Screen must not be null");
 	}
 	
 	public @NotNull AbstractScreen getScreen() {

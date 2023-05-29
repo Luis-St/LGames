@@ -58,7 +58,7 @@ public interface Game {
 	
 	@NotNull GameScreen getScreen();
 	
-	default @NotNull List<GamePlayer> getEnemies(@NotNull GamePlayer gamePlayer) {
+	default @NotNull List<GamePlayer> getEnemies(GamePlayer gamePlayer) {
 		List<GamePlayer> enemies = Lists.newArrayList();
 		for (GamePlayer player : this.getPlayers()) {
 			if (!player.equals(gamePlayer)) {
@@ -71,26 +71,16 @@ public interface Game {
 		return enemies;
 	}
 	
-	default GamePlayer getPlayerFor(@NotNull GameProfile profile) {
-		for (GamePlayer gamePlayer : this.getPlayers()) {
-			if (gamePlayer.getPlayer().getProfile().equals(profile)) {
-				return gamePlayer;
-			}
-		}
-		return null;
+	default GamePlayer getPlayerFor(GameProfile profile) {
+		return this.getPlayers().stream().filter(gamePlayer -> gamePlayer.getProfile().equals(profile)).findFirst().orElse(null);
 	}
 	
 	default GamePlayer getPlayerFor(@NotNull Player player) {
 		return this.getPlayerFor(player.getProfile());
 	}
 	
-	default GamePlayerType getPlayerType(@NotNull GamePlayer player) {
-		for (GamePlayer gamePlayer : this.getPlayers()) {
-			if (gamePlayer.equals(player)) {
-				return gamePlayer.getPlayerType();
-			}
-		}
-		return null;
+	default GamePlayerType getPlayerType(GamePlayer player) {
+		return this.getPlayers().stream().filter(gamePlayer -> gamePlayer.equals(player)).findFirst().map(GamePlayer::getPlayerType).orElse(null);
 	}
 	
 	default GamePlayerType getPlayerType(@NotNull Player player) {
@@ -99,7 +89,7 @@ public interface Game {
 	
 	GamePlayer getPlayer();
 	
-	void setPlayer(@NotNull GamePlayer player);
+	void setPlayer(GamePlayer player);
 	
 	default GamePlayer getStartPlayer() {
 		this.nextPlayer(true);
@@ -138,7 +128,7 @@ public interface Game {
 		}
 	}
 	
-	default boolean removePlayer(@NotNull GamePlayer gamePlayer, boolean sendExit) {
+	default boolean removePlayer(GamePlayer gamePlayer, boolean sendExit) {
 		if (ApplicationType.SERVER.isOn()) {
 			if (this.getPlayers().remove(gamePlayer)) {
 				Player player = gamePlayer.getPlayer();
@@ -209,17 +199,17 @@ public interface Game {
 		LogManager.getLogger(Game.class).info("Game {} was successfully stopped", this.getType().getInfoName());
 	}
 	
-	default void broadcastPlayer(@NotNull Packet packet, @NotNull GamePlayer gamePlayer) {
+	default void broadcastPlayer(Packet packet, GamePlayer gamePlayer) {
 		gamePlayer.getPlayer().getConnection().send(packet);
 	}
 	
-	default void broadcastPlayers(@NotNull Packet packet) {
+	default void broadcastPlayers(Packet packet) {
 		for (GamePlayer player : this.getPlayers()) {
 			this.broadcastPlayer(packet, player);
 		}
 	}
 	
-	default void broadcastPlayersExclude(@NotNull Packet packet, @NotNull GamePlayer... gamePlayers) {
+	default void broadcastPlayersExclude(Packet packet, GamePlayer... gamePlayers) {
 		for (GamePlayer player : this.getPlayers()) {
 			if (!Lists.newArrayList(gamePlayers).contains(player)) {
 				this.broadcastPlayer(packet, player);

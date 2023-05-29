@@ -4,7 +4,7 @@ import net.luis.fx.screen.AbstractScreen;
 import net.luis.game.Game;
 import net.luis.game.application.GameApplication;
 import net.luis.game.player.Player;
-import net.luis.network.packet.Packet;
+import net.luis.netcore.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -19,14 +19,14 @@ public abstract class GameScreen extends AbstractScreen {
 	
 	private final Game game;
 	
-	protected GameScreen(@NotNull Game game, @NotNull String title, int width, int height) {
+	protected GameScreen(Game game, String title, int width, int height) {
 		super(title, width, height, true);
-		this.game = game;
+		this.game = Objects.requireNonNull(game, "Game must not be null");
 	}
 	
-	protected GameScreen(@NotNull Game game, @NotNull String title, int width, int height, boolean resizable) {
+	protected GameScreen(Game game, String title, int width, int height, boolean resizable) {
 		super(title, width, height, resizable);
-		this.game = game;
+		this.game = Objects.requireNonNull(game, "Game must not be null");
 	}
 	
 	public @NotNull Game getGame() {
@@ -34,11 +34,11 @@ public abstract class GameScreen extends AbstractScreen {
 	}
 	
 	public @NotNull Player getPlayer() {
-		return Objects.requireNonNull(this.game.getPlayer()).getPlayer();
+		return this.game.getPlayer().getPlayer();
 	}
 	
-	public void broadcastPlayer(@NotNull Packet packet) {
-		this.game.broadcastPlayer(packet, Objects.requireNonNull(this.game.getPlayer()));
+	public void broadcastPlayer(Packet packet) {
+		this.game.broadcastPlayer(packet, this.game.getPlayer());
 	}
 	
 	public @NotNull GameApplication getApplication() {

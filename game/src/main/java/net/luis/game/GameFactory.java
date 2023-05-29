@@ -15,5 +15,5 @@ import java.util.List;
 @FunctionalInterface
 public interface GameFactory<T extends Game> {
 	
-	@NotNull T createGame(@NotNull GameApplication application, @NotNull List<GamePlayerInfo> playerInfos);
+	@NotNull T createGame(GameApplication application, List<GamePlayerInfo> playerInfos);
 }

@@ -3,7 +3,8 @@ package net.luis.fx.window;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  *
@@ -17,20 +18,20 @@ public abstract class AbstractWindow {
 	private final double width;
 	private final double height;
 	
-	protected AbstractWindow(@NotNull Stage stage, double width, double height) {
-		this.stage = stage;
+	protected AbstractWindow(Stage stage, double width, double height) {
+		this.stage = Objects.requireNonNull(stage, "Stage must not be null");
 		this.width = width;
 		this.height = height;
 		this.stage.setOnCloseRequest((event) -> this.exit());
 	}
 	
-	protected void updateScene(@NotNull Pane pane) {
-		Scene scene = new Scene(pane, this.width, this.height);
+	protected void updateScene(Pane pane) {
+		Scene scene = new Scene(Objects.requireNonNull(pane, "Pane must not be null"), this.width, this.height);
 		this.onUpdateScene(scene);
 		this.stage.setScene(scene);
 	}
 	
-	protected void onUpdateScene(@NotNull Scene scene) {
+	protected void onUpdateScene(Scene scene) {
 	
 	}
 	

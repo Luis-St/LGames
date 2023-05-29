@@ -11,7 +11,13 @@ import java.util.UUID;
  *
  */
 
-public record ClientAccount(@NotNull String name, int id, @NotNull String mail, @NotNull UUID uuid, boolean guest) {
+public record ClientAccount(String name, int id, String mail, UUID uniqueId, boolean guest) {
+	
+	public ClientAccount {
+		Objects.requireNonNull(name, "Name must not be null");
+		Objects.requireNonNull(mail, "Mail must not be null");
+		Objects.requireNonNull(uniqueId, "Unique id must not be null");
+	}
 	
 	//region Object overrides
 	@Override
@@ -23,17 +29,21 @@ public record ClientAccount(@NotNull String name, int id, @NotNull String mail, 
 		if (this.guest != that.guest) return false;
 		if (!this.name.equals(that.name)) return false;
 		if (!this.mail.equals(that.mail)) return false;
-		return this.uuid.equals(that.uuid);
+		return this.uniqueId.equals(that.uniqueId);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.name, this.id, this.mail, this.uuid, this.guest);
+		return Objects.hash(this.name, this.id, this.mail, this.uniqueId, this.guest);
 	}
 	
 	@Override
-	public String toString() {
-		return "ClientAccount{name='" + this.name + '\'' + ", id=" + this.id + ", mail='" + this.mail + '\'' + ", uuid=" + this.uuid + ", guest=" + this.guest + "}";
+	public @NotNull String toString() {
+		return "ClientAccount{name='" + this.name + '\'' + ", id=" + this.id + ", mail='" + this.mail + '\'' + ", uniqueId=" + this.uniqueId + ", guest=" + this.guest + "}";
 	}
 	//endregion
+	
+	public @NotNull String toShortString() {
+		return this.name + "#" + this.id;
+	}
 }

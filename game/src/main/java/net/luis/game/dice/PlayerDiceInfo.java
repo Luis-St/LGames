@@ -11,7 +11,11 @@ import java.util.Objects;
  *
  */
 
-public record PlayerDiceInfo(@NotNull GamePlayer player, int count) {
+public record PlayerDiceInfo(GamePlayer player, int count) {
+	
+	public PlayerDiceInfo {
+		Objects.requireNonNull(player, "Game player must not be null");
+	}
 	
 	//region Object overrides
 	@Override

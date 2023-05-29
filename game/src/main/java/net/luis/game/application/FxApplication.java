@@ -5,13 +5,14 @@ import javafx.stage.Stage;
 import net.luis.fx.ScreenScene;
 import net.luis.fx.screen.AbstractScreen;
 import net.luis.game.resources.ResourceManager;
-import net.luis.netcore.network.NetworkInstance;
+import net.luis.netcore.instance.NetworkInstance;
 import net.luis.utility.data.DataHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  *
@@ -43,7 +44,7 @@ public abstract class FxApplication implements Runnable, DataHandler {
 	}
 	
 	@Override
-	public abstract void load(@NotNull String[] args) throws Exception;
+	public abstract void load(String[] args) throws Exception;
 	
 	@Override
 	public abstract void run();
@@ -74,7 +75,8 @@ public abstract class FxApplication implements Runnable, DataHandler {
 		}
 	}
 	
-	public void setScreen(@NotNull AbstractScreen screen) {
+	public void setScreen(AbstractScreen screen) {
+		Objects.requireNonNull(screen, "Screen must not be null");
 		if (this.dynamic) {
 			screen.init();
 			Stage stage = this.stage;

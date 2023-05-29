@@ -12,5 +12,5 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface GameMapFactory {
 	
-	@NotNull GameMap create(@NotNull Game game);
+	@NotNull GameMap create(Game game);
 }

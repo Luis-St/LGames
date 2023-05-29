@@ -14,7 +14,7 @@ public enum LaunchState {
 	
 	private final String name;
 	
-	LaunchState(@NotNull String name) {
+	LaunchState(String name) {
 		this.name = name;
 	}
 	

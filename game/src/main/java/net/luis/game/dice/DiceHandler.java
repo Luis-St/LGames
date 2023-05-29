@@ -25,27 +25,27 @@ public interface DiceHandler {
 	
 	@NotNull Dice getDice();
 	
-	boolean canRoll(@NotNull GamePlayer player);
+	boolean canRoll(GamePlayer player);
 	
-	int roll(@NotNull GamePlayer player);
+	int roll(GamePlayer player);
 	
-	int rollExclude(@NotNull GamePlayer player, int value);
+	int rollExclude(GamePlayer player, int value);
 	
-	int rollPreferred(@NotNull GamePlayer player, int value, int rolls);
+	int rollPreferred(GamePlayer player, int value, int rolls);
 	
-	boolean canRollAgain(@NotNull GamePlayer player, int count);
+	boolean canRollAgain(GamePlayer player, int count);
 	
-	boolean canPerformGameAction(@NotNull GamePlayer player, int count);
+	boolean canPerformGameAction(GamePlayer player, int count);
 	
-	void performGameAction(@NotNull GamePlayer player, int count);
+	void performGameAction(GamePlayer player, int count);
 	
-	boolean canRollAfterMove(@NotNull GamePlayer player, @NotNull GameField oldField, @NotNull GameField newField, int count);
+	boolean canRollAfterMove(GamePlayer player, GameField oldField, GameField newField, int count);
 	
-	default boolean hasPlayerRolledDice(@NotNull GamePlayer player) {
+	default boolean hasPlayerRolledDice(GamePlayer player) {
 		return Utils.mapList(this.getCountHistory(), PlayerDiceInfo::player).contains(player) && Mth.isInBounds(this.getLastCount(player), this.getMin(), this.getMax());
 	}
 	
-	int getLastCount(@NotNull GamePlayer player);
+	int getLastCount(GamePlayer player);
 	
 	@NotNull List<PlayerDiceInfo> getCountHistory();
 	

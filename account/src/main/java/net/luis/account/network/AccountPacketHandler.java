@@ -42,7 +42,7 @@ public class AccountPacketHandler implements PacketHandler {
 	@PacketListener(ClientRegistrationPacket.class)
 	public void handleClientRegistration(@NotNull String name, @NotNull String mail, int passwordHash, @NotNull String firstName, @NotNull String lastName, @NotNull Date birthday) {
 		Account account = this.account.getAccountAgent().createAndLogin(name, mail, passwordHash, firstName, lastName, birthday, AccountType.USER);
-		this.connection.send(new ClientLoggedInPacket(LoginType.REGISTRATION, account.getName(), account.getId(), account.getMail(), account.getUUID()));
+		this.connection.send(new ClientLoggedInPacket(LoginType.REGISTRATION, account.getName(), account.getId(), account.getMail(), account.getUniqueId()));
 	}
 	
 	@PacketListener(ClientLoginPacket.class)
@@ -52,7 +52,7 @@ public class AccountPacketHandler implements PacketHandler {
 			case GUEST_LOGIN -> this.account.getAccountAgent().createAccount(name, "", new Random().nextInt(), name, "Guest", new Date(), AccountType.GUEST);
 			default -> Account.UNKNOWN;
 		};
-		this.connection.send(new ClientLoggedInPacket(account == Account.UNKNOWN ? LoginType.UNKNOWN : loginType, account.getName(), account.getId(), account.getMail(), account.getUUID()));
+		this.connection.send(new ClientLoggedInPacket(account == Account.UNKNOWN ? LoginType.UNKNOWN : loginType, account.getName(), account.getId(), account.getMail(), account.getUniqueId()));
 	}
 	
 	@PacketListener(ClientLogoutPacket.class)

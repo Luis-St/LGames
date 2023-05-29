@@ -26,16 +26,16 @@ public class LanguageFile {
 	private final List<Translation> translations;
 	private Language language;
 	
-	public LanguageFile(@NotNull List<Translation> translations) {
-		this.translations = translations;
+	public LanguageFile(List<Translation> translations) {
+		this(translations, null);
 	}
 	
-	public LanguageFile(@NotNull List<Translation> translations, Language language) {
-		this.translations = translations;
-		this.language = language;
+	public LanguageFile(List<Translation> translations, @Nullable Language language) {
+		this.translations = Objects.requireNonNull(translations, "Translations must not be null");
+		this.setLanguage(language);
 	}
 	
-	private LanguageFile(@NotNull Map<String, String> languageTranslations) {
+	private LanguageFile(Map<String, String> languageTranslations) {
 		this.translations = Utils.mapToList(languageTranslations, Translation::new);
 	}
 	

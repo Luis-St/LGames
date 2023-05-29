@@ -1,8 +1,10 @@
 package net.luis.game.map.field;
 
 import net.luis.game.player.game.GamePlayerType;
-import net.luis.netcore.buffer.Encodable;
+import net.luis.netcore.buffer.decode.Decodable;
+import net.luis.netcore.buffer.encode.Encodable;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -11,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
-public interface GameFieldPos extends Encodable {
+public interface GameFieldPos extends Encodable, Decodable {
 	
 	int getPosition();
 	
@@ -25,7 +27,7 @@ public interface GameFieldPos extends Encodable {
 		return -1;
 	}
 	
-	int getPositionFor(@NotNull GamePlayerType playerType);
+	int getPositionFor(GamePlayerType playerType);
 	
 	boolean isStart();
 	

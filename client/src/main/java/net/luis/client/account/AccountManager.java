@@ -3,7 +3,7 @@ package net.luis.client.account;
 import net.luis.client.window.LoginWindow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -34,7 +34,7 @@ public class AccountManager {
 		return this.account;
 	}
 	
-	public void login(@NotNull String name, int id, @NotNull String mail, @NotNull UUID uuid, boolean guest) {
+	public void login(String name, int id, String mail, UUID uuid, boolean guest) {
 		LOGGER.info("Login with account: {}#{}", name, id);
 		this.account = new ClientAccount(name, id, mail, uuid, guest);
 	}

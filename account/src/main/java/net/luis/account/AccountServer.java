@@ -1,16 +1,13 @@
 package net.luis.account;
 
 import javafx.stage.Stage;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
+import joptsimple.*;
 import net.luis.account.account.AccountAgent;
-import net.luis.game.application.Application;
-import net.luis.game.application.ApplicationType;
-import net.luis.game.application.FxApplication;
+import net.luis.account.network.AccountPacketHandler;
+import net.luis.game.application.*;
 import net.luis.game.resources.ResourceManager;
-import net.luis.netcore.network.NetworkInstance;
-import net.luis.netcore.network.ServerInstance;
+import net.luis.netcore.instance.NetworkInstance;
+import net.luis.netcore.instance.ServerInstance;
 import net.luis.utils.data.serialization.SerializationUtils;
 import net.luis.utils.data.tag.Tag;
 import net.luis.utils.data.tag.tags.CompoundTag;
@@ -34,8 +31,9 @@ public class AccountServer extends FxApplication {
 	
 	private static final Logger LOGGER = LogManager.getLogger(AccountServer.class);
 	
-	private final LazyLoad<NetworkInstance> networkInstance = new LazyLoad<>(() -> {
-		return new ServerInstance(this.host, this.port);
+	private final NetworkInstance networkInstance = new ServerInstance((registry, settings) -> {
+		registry.registerListener(new AccountPacketHandler());
+		settings.setEventsAllowed(false);
 	});
 	private final Supplier<AccountAgent> accountAgent = new LazyLoad<>(() -> {
 		Path path = this.getResourceManager().gameDirectory().resolve("accounts.acc");
@@ -84,7 +82,7 @@ public class AccountServer extends FxApplication {
 	
 	@Override
 	public void run() {
-		this.networkInstance.get().open();
+		this.networkInstance.open(this.host, this.port);
 		LOGGER.info("Launch account server on host {} with port {}", this.host, this.port);
 	}
 	
@@ -95,7 +93,7 @@ public class AccountServer extends FxApplication {
 	
 	@Override
 	public @NotNull NetworkInstance getNetworkInstance() {
-		return this.networkInstance.get();
+		return this.networkInstance;
 	}
 	
 	public @NotNull AccountAgent getAccountAgent() {

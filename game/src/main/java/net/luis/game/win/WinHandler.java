@@ -25,25 +25,25 @@ public interface WinHandler {
 	
 	@NotNull List<GamePlayer> getWinningPlayers();
 	
-	boolean hasPlayerFinished(@NotNull GamePlayer player);
+	boolean hasPlayerFinished(GamePlayer player);
 	
-	boolean isDraw(@NotNull GameMap map);
+	boolean isDraw(GameMap map);
 	
-	default boolean canPlayerWin(@NotNull GamePlayer player) {
+	default boolean canPlayerWin(GamePlayer player) {
 		return true;
 	}
 	
-	default @NotNull GameResultLine getResultLine(@NotNull GameMap map) {
+	default @NotNull GameResultLine getResultLine(GameMap map) {
 		return GameResultLine.EMPTY;
 	}
 	
-	void onPlayerFinished(@NotNull GamePlayer player);
+	void onPlayerFinished(GamePlayer player);
 	
 	@NotNull List<GamePlayer> getFinishedPlayers();
 	
 	@NotNull List<GamePlayer> getWinOrder();
 	
-	int getScoreFor(@NotNull Game game, @NotNull GamePlayer player);
+	int getScoreFor(Game game, GamePlayer player);
 	
 	void reset();
 }

@@ -28,8 +28,8 @@ public class PlayerInfoPane extends GridPane {
 	private final Text currentPlayerInfo;
 	private final PlayerScorePane scorePane;
 	
-	public PlayerInfoPane(@NotNull Game game, double separatorLength, @NotNull PlayerScorePane.Type scoreType) {
-		this.game = game;
+	public PlayerInfoPane(Game game, double separatorLength, PlayerScorePane.Type scoreType) {
+		this.game = Objects.requireNonNull(game, "Game must not be null");
 		this.separatorLength = separatorLength;
 		this.currentPlayerInfo = new Text(TranslationKey.createAndGet("screen.tic_tac_toe.no_current_player"));
 		this.scorePane = new PlayerScorePane(this.game, scoreType);
@@ -56,7 +56,8 @@ public class PlayerInfoPane extends GridPane {
 		return separator;
 	}
 	
-	private @NotNull String getName(@NotNull GamePlayer player) {
+	private @NotNull String getName(GamePlayer player) {
+		Objects.requireNonNull(player, "Game player must not be null");
 		return player.getPlayer().getProfile().getName();
 	}
 	

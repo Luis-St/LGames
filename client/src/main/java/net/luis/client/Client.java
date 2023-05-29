@@ -4,7 +4,9 @@ import javafx.stage.Stage;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.luis.account.network.AccountPacketHandler;
 import net.luis.client.account.AccountManager;
+import net.luis.client.network.ClientPacketHandler;
 import net.luis.client.players.ClientPlayerList;
 import net.luis.client.screen.MenuScreen;
 import net.luis.game.GameManager;
@@ -13,7 +15,8 @@ import net.luis.game.application.ApplicationType;
 import net.luis.game.application.FxApplication;
 import net.luis.game.application.GameApplication;
 import net.luis.game.resources.ResourceManager;
-import net.luis.netcore.network.NetworkInstance;
+import net.luis.netcore.instance.ClientInstance;
+import net.luis.netcore.instance.NetworkInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +32,10 @@ public class Client extends FxApplication implements GameApplication {
 	
 	private static final Logger LOGGER = LogManager.getLogger(Client.class);
 	
+	private final NetworkInstance networkInstance = new ClientInstance((registry, settings) -> {
+		registry.registerListener(new ClientPacketHandler());
+		settings.setEventsAllowed(false);
+	});
 	private final AccountManager accountManager = new AccountManager();
 	private final ClientPlayerList playerList = new ClientPlayerList(this);
 	private final GameManager gameManager = new GameManager();

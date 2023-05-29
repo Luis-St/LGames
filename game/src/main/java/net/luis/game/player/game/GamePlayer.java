@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -47,54 +48,31 @@ public interface GamePlayer {
 		return this.getFigures().size();
 	}
 	
-	default @Nullable GameFigure getFigure(int count) {
-		for (GameFigure figure : this.getFigures()) {
-			if (figure.getIndex() == count) {
-				return figure;
-			}
-		}
-		LogManager.getLogger(GamePlayer.class).warn("Fail to get figure for count {} from player {}", count, this.getPlayer().getProfile().getName());
-		return null;
+	default GameFigure getFigure(int count) {
+		return this.getFigures().stream().filter(figure -> figure.getIndex() == count).findFirst().orElseGet(() -> {
+			LogManager.getLogger(GamePlayer.class).warn("Fail to get figure for count {} from player {}", count, this.getPlayer().getProfile().getName());
+			return null;
+		});
 	}
 	
-	default @Nullable GameFigure getFigure(@NotNull BiPredicate<GameMap, GameFigure> predicate) {
-		for (GameFigure figure : this.getFigures()) {
-			if (predicate.test(this.getMap(), figure)) {
-				return figure;
-			}
-		}
-		return null;
+	default GameFigure getFigure(BiPredicate<GameMap, GameFigure> predicate) {
+		return this.getFigures().stream().filter(figure -> predicate.test(this.getMap(), figure)).findFirst().orElse(null);
 	}
 	
-	default boolean hasFigureAt(@NotNull Predicate<GameField> predicate) {
-		for (GameFigure figure : this.getFigures()) {
-			if (predicate.test(this.getMap().getField(figure))) {
-				return true;
-			}
-		}
-		return false;
+	default boolean hasFigureAt(Predicate<GameField> predicate) {
+		return this.getFigures().stream().anyMatch(figure -> predicate.test(this.getMap().getField(figure)));
 	}
 	
-	default boolean hasAllFiguresAt(@NotNull Predicate<GameField> predicate) {
-		for (GameFigure figure : this.getFigures()) {
-			if (!predicate.test(this.getMap().getField(figure))) {
-				return false;
-			}
-		}
-		return true;
+	default boolean hasAllFiguresAt(Predicate<GameField> predicate) {
+		return this.getFigures().stream().allMatch(figure -> predicate.test(this.getMap().getField(figure)));
 	}
 	
-	default boolean canMoveFigure(@NotNull GameFigure figure, int count) {
-		return figure.canMove(this.getMap(), count);
+	default boolean canMoveFigure(GameFigure figure, int count) {
+		return Objects.requireNonNull(figure, "Game figure must not be null").canMove(this.getMap(), count);
 	}
 	
 	default boolean canMoveAnyFigure(int count) {
-		for (GameFigure figure : this.getFigures()) {
-			if (this.canMoveFigure(figure, count)) {
-				return true;
-			}
-		}
-		return false;
+		return this.getFigures().stream().anyMatch(figure -> this.canMoveFigure(figure, count));
 	}
 	
 	@NotNull List<GameFieldPos> getWinPoses();

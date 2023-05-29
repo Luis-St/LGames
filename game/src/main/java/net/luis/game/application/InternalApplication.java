@@ -39,17 +39,17 @@ public class InternalApplication extends javafx.application.Application {
 	private Timeline ticker;
 	
 	@Override
-	public void start(@NotNull Stage stage) throws Exception {
+	public void start(Stage stage) throws Exception {
 		this.start(stage, this.getParameters().getRaw().toArray(String[]::new));
 	}
 	
-	private void initThread(@NotNull String name) {
+	private void initThread(String name) {
 		Thread currentThread = Thread.currentThread();
-		currentThread.setName(name.toLowerCase());
+		currentThread.setName(Objects.requireNonNull(name, "Thread name must not be null").toLowerCase());
 		currentThread.setUncaughtExceptionHandler(new DefaultExceptionHandler());
 	}
 	
-	private void start(@NotNull Stage stage, @NotNull String[] args) throws Exception {
+	private void start(Stage stage, String[] args) throws Exception {
 		this.initThread("internal");
 		OptionParser parser = new OptionParser();
 		parser.allowsUnrecognizedOptions();
@@ -110,7 +110,7 @@ public class InternalApplication extends javafx.application.Application {
 		}
 	}
 	
-	private @NotNull Class<?> getLaunchTarget(@NotNull String target) {
+	private @NotNull Class<?> getLaunchTarget(String target) {
 		List<Class<?>> targets = ClassPathUtils.getAnnotatedClasses(Application.class);
 		for (Class<?> clazz : targets) {
 			if (clazz.getAnnotation(Application.class).value().getShortName().equalsIgnoreCase(target)) {
@@ -120,7 +120,7 @@ public class InternalApplication extends javafx.application.Application {
 		throw new IllegalArgumentException("Could not find launch target: " + target);
 	}
 	
-	private @NotNull FxApplication createApplication(@NotNull Class<?> target, @NotNull ApplicationType type, @NotNull ResourceManager resourceManager, @NotNull Stage stage) {
+	private @NotNull FxApplication createApplication(Class<?> target, ApplicationType type, ResourceManager resourceManager, Stage stage) {
 		ReflectionHelper.enableExceptionThrowing();
 		FxApplication application = (FxApplication) ReflectionHelper.newInstance(target, type, resourceManager, stage);
 		ReflectionHelper.disableExceptionThrowing();
@@ -130,7 +130,8 @@ public class InternalApplication extends javafx.application.Application {
 		throw new RuntimeException("Failed to create application");
 	}
 	
-	private void startTickable(@NotNull FxApplication application, @NotNull ApplicationType type, @NotNull Tickable tickable) {
+	private void startTickable(FxApplication application, ApplicationType type, Tickable tickable) {
+		Objects.requireNonNull(type, "Application type must not be null");
 		this.ticker = Util.createTicker(StringUtils.capitalize(type.getShortName()) + "Ticker", () -> {
 			tickable.tick();
 			if (application.getScreen() instanceof Tickable screenTickable) {

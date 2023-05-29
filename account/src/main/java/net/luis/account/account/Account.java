@@ -2,9 +2,9 @@ package net.luis.account.account;
 
 import javafx.scene.control.TreeItem;
 import net.luis.language.TranslationKey;
-import net.luis.netcore.buffer.Decodable;
-import net.luis.netcore.buffer.Encodable;
 import net.luis.netcore.buffer.FriendlyByteBuffer;
+import net.luis.netcore.buffer.decode.Decodable;
+import net.luis.netcore.buffer.encode.Encodable;
 import net.luis.utils.data.serialization.Deserializable;
 import net.luis.utils.data.serialization.Serializable;
 import net.luis.utils.data.tag.TagUtils;
@@ -38,7 +38,7 @@ public class Account implements Serializable, Encodable, Decodable {
 	private final String name;
 	private final int passwordHash;
 	private final int id;
-	private final UUID uuid;
+	private final UUID uniqueId;
 	private final String mail;
 	private final String firstName;
 	private final String lastName;
@@ -46,16 +46,16 @@ public class Account implements Serializable, Encodable, Decodable {
 	private final AccountType type;
 	private boolean taken;
 	
-	Account(@NotNull String name, int passwordHash, int id, @NotNull UUID uuid, @NotNull String mail, @NotNull String firstName, @NotNull String lastName, @NotNull Date birthday, @NotNull AccountType type) {
-		this.name = name;
+	Account(String name, int passwordHash, int id, UUID uniqueId, String mail, String firstName, String lastName, Date birthday, AccountType type) {
+		this.name = Objects.requireNonNull(name, "Name must not be null");
 		this.passwordHash = passwordHash;
 		this.id = id;
-		this.uuid = uuid;
-		this.mail = mail;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.birthday = birthday;
-		this.type = type;
+		this.uniqueId = Objects.requireNonNull(uniqueId, "Unique id must not be null");
+		this.mail = Objects.requireNonNull(mail, "Mail must not be null");
+		this.firstName = Objects.requireNonNull(firstName, "First name must not be null");
+		this.lastName = Objects.requireNonNull(lastName, "Last name must not be null");
+		this.birthday = Objects.requireNonNull(birthday, "Birthday must not be null");
+		this.type = Objects.requireNonNull(type, "Account type must not be null");
 	}
 	
 	//region IO
@@ -63,7 +63,7 @@ public class Account implements Serializable, Encodable, Decodable {
 		this.name = buffer.readString();
 		this.passwordHash = buffer.readInt();
 		this.id = buffer.readInt();
-		this.uuid = buffer.readUUID();
+		this.uniqueId = buffer.readUniqueId();
 		this.mail = buffer.readString();
 		this.firstName = buffer.readString();
 		this.lastName = buffer.readString();
@@ -82,7 +82,7 @@ public class Account implements Serializable, Encodable, Decodable {
 		this.name = tag.getString("Name");
 		this.passwordHash = tag.getInt("PasswordHash");
 		this.id = tag.getInt("Id");
-		this.uuid = TagUtils.readUUID(tag.getCompound("UUID"));
+		this.uniqueId = TagUtils.readUUID(tag.getCompound("UniqueId"));
 		this.mail = tag.getString("Mail");
 		this.firstName = tag.getString("FirstName");
 		this.lastName = tag.getString("LastName");
@@ -112,8 +112,8 @@ public class Account implements Serializable, Encodable, Decodable {
 		return this.id;
 	}
 	
-	public @NotNull UUID getUUID() {
-		return this.uuid;
+	public @NotNull UUID getUniqueId() {
+		return this.uniqueId;
 	}
 	
 	public @NotNull String getMail() {
@@ -136,6 +136,10 @@ public class Account implements Serializable, Encodable, Decodable {
 		return this.type;
 	}
 	
+	public boolean isSingleSession() {
+		return this.getType() == AccountType.GUEST || this.getType() == AccountType.TEST || this.getType() == AccountType.UNKNOWN;
+	}
+	
 	public boolean isTaken() {
 		return this.taken;
 	}
@@ -143,10 +147,6 @@ public class Account implements Serializable, Encodable, Decodable {
 	
 	public void setTaken(boolean taken) {
 		this.taken = taken;
-	}
-	
-	public boolean isSingleSession() {
-		return this.getType() == AccountType.GUEST || this.getType() == AccountType.TEST || this.getType() == AccountType.UNKNOWN;
 	}
 	
 	public @NotNull TreeItem<String> display() {
@@ -165,7 +165,7 @@ public class Account implements Serializable, Encodable, Decodable {
 		userDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.birthday", FORMAT.format(this.birthday))));
 		TreeItem<String> systemDataItem = new TreeItem<>(TranslationKey.createAndGet("account.window.system_data"));
 		systemDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.id", this.getDisplayId())));
-		systemDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.uuid", this.uuid)));
+		systemDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.uuid", this.uniqueId)));
 		systemDataItem.getChildren().add(new TreeItem<>(TranslationKey.createAndGet("account.window.type", this.type.getTranslation())));
 		rootItem.getChildren().add(userDataItem);
 		rootItem.getChildren().add(systemDataItem);
@@ -186,7 +186,7 @@ public class Account implements Serializable, Encodable, Decodable {
 		buffer.writeString(this.name);
 		buffer.writeInt(this.passwordHash);
 		buffer.writeInt(this.id);
-		buffer.writeUUID(this.uuid);
+		buffer.writeUniqueId(this.uniqueId);
 		buffer.writeString(this.mail);
 		buffer.writeString(this.firstName);
 		buffer.writeString(this.lastName);
@@ -206,7 +206,7 @@ public class Account implements Serializable, Encodable, Decodable {
 		tag.putString("Name", this.name);
 		tag.putInt("PasswordHash", this.passwordHash);
 		tag.putInt("Id", this.id);
-		tag.put("UUID", TagUtils.writeUUID(this.uuid));
+		tag.put("UniqueId", TagUtils.writeUUID(this.uniqueId));
 		tag.putString("Mail", this.mail);
 		tag.putString("FirstName", this.firstName);
 		tag.putString("LastName", this.lastName);
@@ -234,7 +234,7 @@ public class Account implements Serializable, Encodable, Decodable {
 		if (this.id != account.id) return false;
 		if (this.taken != account.taken) return false;
 		if (!this.name.equals(account.name)) return false;
-		if (!this.uuid.equals(account.uuid)) return false;
+		if (!this.uniqueId.equals(account.uniqueId)) return false;
 		if (!this.mail.equals(account.mail)) return false;
 		if (!this.firstName.equals(account.firstName)) return false;
 		if (!this.lastName.equals(account.lastName)) return false;
@@ -244,17 +244,17 @@ public class Account implements Serializable, Encodable, Decodable {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.name, this.passwordHash, this.id, this.uuid, this.mail, this.firstName, this.lastName, this.birthday, this.type, this.taken);
+		return Objects.hash(this.name, this.passwordHash, this.id, this.uniqueId, this.mail, this.firstName, this.lastName, this.birthday, this.type, this.taken);
 	}
 	
 	@Override
-	public String toString() {
-		return "Account{name='" + this.name + '\'' + ", passwordHash=" + this.passwordHash + ", id=" + this.id + ", uuid=" + this.uuid + ", mail='" + this.mail + '\'' + ", firstName='" + this.firstName + '\'' + ", lastName='" +
+	public @NotNull String toString() {
+		return "Account{name='" + this.name + '\'' + ", passwordHash=" + this.passwordHash + ", id=" + this.id + ", uniqueId=" + this.uniqueId + ", mail='" + this.mail + '\'' + ", firstName='" + this.firstName + '\'' + ", lastName='" +
 				this.lastName + '\'' + ", birthday=" + this.birthday + "}";
 	}
 	//endregion
 	
-	public String toShortString() {
+	public @NotNull String toShortString() {
 		return this.name + "#" + this.id;
 	}
 }
