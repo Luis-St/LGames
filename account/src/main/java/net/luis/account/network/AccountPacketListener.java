@@ -4,6 +4,8 @@ import net.luis.account.AccountServer;
 import net.luis.account.account.Account;
 import net.luis.account.account.AccountType;
 import net.luis.account.account.LoginType;
+import net.luis.netcore.connection.ConnectionRegistry;
+import net.luis.netcore.packet.listener.PacketListener;
 import net.luis.network.Connection;
 import net.luis.network.listener.PacketListener;
 import net.luis.network.packet.PacketHandler;
@@ -28,16 +30,23 @@ import java.util.UUID;
  *
  */
 
-public class AccountPacketHandler implements PacketHandler {
+public class AccountPacketListener implements PacketListener {
 	
-	private static final Logger LOGGER = LogManager.getLogger(AccountPacketHandler.class);
+	private static final Logger LOGGER = LogManager.getLogger(AccountPacketListener.class);
 	
 	private final AccountServer account;
-	private Connection connection;
 	
-	public AccountPacketHandler(@NotNull AccountServer account) {
+	public AccountPacketListener(@NotNull AccountServer account) {
 		this.account = account;
 	}
+	
+	@Override
+	public void initialize(ConnectionRegistry registry) {
+	
+	}
+	
+	
+	
 	
 	@PacketListener(ClientRegistrationPacket.class)
 	public void handleClientRegistration(@NotNull String name, @NotNull String mail, int passwordHash, @NotNull String firstName, @NotNull String lastName, @NotNull Date birthday) {

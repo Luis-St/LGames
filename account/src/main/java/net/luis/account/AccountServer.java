@@ -3,7 +3,7 @@ package net.luis.account;
 import javafx.stage.Stage;
 import joptsimple.*;
 import net.luis.account.account.AccountAgent;
-import net.luis.account.network.AccountPacketHandler;
+import net.luis.account.network.AccountPacketListener;
 import net.luis.game.application.*;
 import net.luis.game.resources.ResourceManager;
 import net.luis.netcore.instance.NetworkInstance;
@@ -32,7 +32,7 @@ public class AccountServer extends FxApplication {
 	private static final Logger LOGGER = LogManager.getLogger(AccountServer.class);
 	
 	private final NetworkInstance networkInstance = new ServerInstance((registry, settings) -> {
-		registry.registerListener(new AccountPacketHandler());
+		registry.registerListener(new AccountPacketListener(this));
 		settings.setEventsAllowed(false);
 	});
 	private final Supplier<AccountAgent> accountAgent = new LazyLoad<>(() -> {

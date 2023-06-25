@@ -4,7 +4,6 @@ import javafx.stage.Stage;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
-import net.luis.account.network.AccountPacketHandler;
 import net.luis.client.account.AccountManager;
 import net.luis.client.network.ClientPacketHandler;
 import net.luis.client.players.ClientPlayerList;
