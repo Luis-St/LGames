@@ -45,9 +45,6 @@ public class AccountPacketListener implements PacketListener {
 	
 	}
 	
-	
-	
-	
 	@PacketListener(ClientRegistrationPacket.class)
 	public void handleClientRegistration(@NotNull String name, @NotNull String mail, int passwordHash, @NotNull String firstName, @NotNull String lastName, @NotNull Date birthday) {
 		Account account = this.account.getAccountAgent().createAndLogin(name, mail, passwordHash, firstName, lastName, birthday, AccountType.USER);
