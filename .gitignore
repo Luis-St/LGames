@@ -1,0 +1,9 @@
+# gradle
+build
+.gradle
+
+# project files
+.idea
+
+# logs
+/logs/

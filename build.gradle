@@ -1,0 +1,49 @@
+plugins {
+	id "java"
+	id "org.openjfx.javafxplugin" version "0.0.10"
+}
+
+
+group = "net.luis"
+version = "1.0.0"
+
+repositories {
+    mavenCentral()
+	maven {
+		url uri("${rootProject.projectDir}/maven/repositories")
+	}
+}
+
+javafx {
+	version = "${JavaFx}"
+	modules = ["javafx.controls"]
+}
+
+
+dependencies {
+	// Local
+	implementation "net.luis:LUtils:${LUtils}" // Utility
+	implementation "net.luis:FxUtils:${FxUtils}" // Fx Utility
+	implementation "org.controlsfx:ControlsFx:${ControlsFx}" // Fx
+	// Google
+	implementation "com.google.guava:guava:${GoogleGuava}" // Utility
+	implementation "com.google.code.gson:gson:${GoogleGson}" // Json
+	// Apache
+	implementation "org.apache.logging.log4j:log4j-api:${Log4jAPI}" // Logging
+	implementation "org.apache.logging.log4j:log4j-core:${Log4jCore}" // Logging
+	implementation "org.apache.commons:commons-lang3:${ApacheLang}" // Utility
+	implementation "org.apache.commons:commons-email:${ApacheEmail}" // E-Mail
+	implementation "commons-codec:commons-codec:${ApacheCodec}" // Cryptic
+	implementation "commons-io:commons-io:${ApacheIO}" // IO
+	// Other
+	implementation "net.sf.jopt-simple:jopt-simple:${JoptSimple}" // Startup
+	implementation "com.mojang:datafixerupper:${MojangCodec}" // Codec/Json helper
+	implementation "org.jetbrains:annotations:${JetBrainsAnnotations}" // Annotations
+	// Test
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${JunitJupiter}"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JunitJupiter}"
+}
+
+test {
+	useJUnitPlatform()
+}
